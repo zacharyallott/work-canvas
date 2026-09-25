@@ -11,13 +11,13 @@ import { Spring } from '../core/spring.js';
  * tile slots than images, so images repeat — but never within a column, and
  * where possible not within two columns either side, so copies land far apart.
  *
- * Motion: columns drift vertically on their own, alternating direction at
- * slightly different speeds, and slow down while a tile is hovered. The whole
- * grid shifts left/right with the cursor (cursor left → grid moves right), with
- * a little lag. Scrolling (wheel / trackpad, or a vertical swipe on touch)
- * moves the columns too — each in its own direction, like the drift, at its
- * own speed and through its own spring, so each scroll eases in and out and
- * the columns pull apart and settle one after another. Hover reveals the title. Switching
+ * Motion: all columns drift upward on their own, each at its own pace, and
+ * slow down while a tile is hovered. The whole grid shifts left/right with the
+ * cursor (cursor left → grid moves right), with a little lag. Scrolling (wheel /
+ * trackpad, or a vertical swipe on touch) moves the columns too — down the page
+ * moves them up, back up moves them down — each at its drift pace and through
+ * its own spring, so each scroll eases in and out and the columns pull apart
+ * and settle one after another. Hover reveals the title. Switching
  * to it, the columns fade in where they are (left to right); nothing slides.
  */
 export const config = {
@@ -27,8 +27,9 @@ export const config = {
   firstColumnX: -8,
   // Top of each column's first tile in the frame (design px); repeats for extra columns.
   columnOffsets: [-381, -234, -381, -56, -257, -56, -381],
-  // Direction × relative speed per column; repeats for extra columns.
-  columnSpeeds: [1, -0.82, 1.14, -0.96, 0.9, -1.08, 1.02],
+  // Relative pace per column (all move the same way), for the drift and for scrolling; repeats for extra columns.
+  // Faster columns also settle a scroll sooner, slower ones lag behind.
+  columnSpeeds: [1, 0.55, 1.35, 0.75, 1.15, 0.45, 0.9],
   minScale: 0.72, // column width never drops below 168 × this
   maxScale: 1.35,
   minAspect: 0.62, // taller than this gets cropped (cover)
@@ -41,11 +42,8 @@ export const config = {
 
   // Scroll: wheel / trackpad / vertical swipe moves the columns; eased by a spring
   scroll: {
-    multiplier: 0.35, // px of travel per px scrolled (swipes too), for a speed-1 column
+    multiplier: 0.35, // px of travel per px scrolled (swipes too), for a pace-1 column
     omega: 3, // spring pace (1/s, higher = snappier; ~4/omega s to settle)
-    // Relative speed per column (direction comes from columnSpeeds); repeats like columnOffsets.
-    // Faster columns also settle a little sooner, slower ones lag behind.
-    speeds: [1, 0.55, 1.35, 0.75, 1.15, 0.45, 0.9],
   },
 
   // Horizontal shift from the cursor
@@ -93,7 +91,7 @@ export default class Masonry extends Layout {
     super(engine, cfg);
     this.scroll = 0; // vertical travel from the drift
     // Scroll travel per column pattern slot, each eased by its own spring (kept across resizes).
-    this.scrollSprings = cfg.scroll.speeds.map((v) => new Spring(cfg.scroll.omega * Math.sqrt(v)));
+    this.scrollSprings = cfg.columnSpeeds.map((v) => new Spring(cfg.scroll.omega * Math.sqrt(v)));
     this.slow = 1; // eased hover slowdown multiplier
     this.shiftX = 0; // horizontal offset (px)
     this.shiftV = 0; // horizontal speed for 'drift' mode (px/s)
@@ -170,10 +168,8 @@ export default class Masonry extends Layout {
       // i - 1 so the Figma stagger pattern still starts at the first visible column.
       const len = c.columnOffsets.length;
       const p = (((i - 1) % len) + len) % len;
-      const speed = c.columnSpeeds[p % c.columnSpeeds.length];
-      const k = p % this.scrollSprings.length;
-      const scrollSpeed = Math.sign(speed) * c.scroll.speeds[k];
-      return { baseX: firstX + i * this.pitch, start: c.columnOffsets[p] * s, speed, scrollSpeed, spring: this.scrollSprings[k], length: cum, tiles };
+      const k = p % c.columnSpeeds.length;
+      return { baseX: firstX + i * this.pitch, start: c.columnOffsets[p] * s, pace: c.columnSpeeds[k], spring: this.scrollSprings[k], length: cum, tiles };
     });
   }
 
@@ -206,7 +202,7 @@ export default class Masonry extends Layout {
 
     for (const col of this.columns) {
       const x = ((((col.baseX + this.shiftX - this.origin) % W) + W) % W) + this.origin; // wrap horizontally
-      const pos = col.start + this.scroll * col.speed + col.spring.x * col.scrollSpeed;
+      const pos = col.start - (this.scroll - col.spring.x) * col.pace; // drift and scrolling down both move it up
       for (const t of col.tiles) {
         const L = col.length;
         t.x = x;
