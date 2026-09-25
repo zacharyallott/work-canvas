@@ -14692,12 +14692,12 @@ var Ph = {
 	],
 	columnSpeeds: [
 		1,
-		-.82,
-		1.14,
-		-.96,
-		.9,
-		-1.08,
-		1.02
+		.55,
+		1.35,
+		.75,
+		1.15,
+		.45,
+		.9
 	],
 	minScale: .72,
 	maxScale: 1.35,
@@ -14708,16 +14708,7 @@ var Ph = {
 	hoverEase: 3,
 	scroll: {
 		multiplier: .35,
-		omega: 3,
-		speeds: [
-			1,
-			.55,
-			1.35,
-			.75,
-			1.15,
-			.45,
-			.9
-		]
+		omega: 3
 	},
 	shift: {
 		mode: "offset",
@@ -14752,7 +14743,7 @@ function Fh(e, t) {
 }
 var Ih = class extends Eh {
 	constructor(e, t) {
-		super(e, t), this.scroll = 0, this.scrollSprings = t.scroll.speeds.map((e) => new kh(t.scroll.omega * Math.sqrt(e))), this.slow = 1, this.shiftX = 0, this.shiftV = 0, this.columns = [];
+		super(e, t), this.scroll = 0, this.scrollSprings = t.columnSpeeds.map((e) => new kh(t.scroll.omega * Math.sqrt(e))), this.slow = 1, this.shiftX = 0, this.shiftV = 0, this.columns = [];
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.width / Np.width));
@@ -14784,13 +14775,12 @@ var Ih = class extends Eh {
 			let i = 0, a = e.tiles.map((e) => {
 				let t = this.tiles[h++];
 				return t.w = this.colW, t.h = e.h, t.offsetInCol = i, i += e.h + this.gapPx, t;
-			}), o = t.columnOffsets.length, s = ((r - 1) % o + o) % o, c = t.columnSpeeds[s % t.columnSpeeds.length], l = s % this.scrollSprings.length, u = Math.sign(c) * t.scroll.speeds[l];
+			}), o = t.columnOffsets.length, s = ((r - 1) % o + o) % o, c = s % t.columnSpeeds.length;
 			return {
 				baseX: m + r * this.pitch,
 				start: t.columnOffsets[s] * n,
-				speed: c,
-				scrollSpeed: u,
-				spring: this.scrollSprings[l],
+				pace: t.columnSpeeds[c],
+				spring: this.scrollSprings[c],
 				length: i,
 				tiles: a
 			};
@@ -14803,7 +14793,7 @@ var Ih = class extends Eh {
 		t.shift.mode === "drift" ? (this.shiftV += (c * t.shift.speed * this.s - this.shiftV) * l, this.shiftX += this.shiftV * e) : this.shiftX += (c * t.shift.max * this.s - this.shiftX) * l, this.scrollSprings.forEach((t) => t.update(e));
 		let u = this.colW / t.minAspect + this.gapPx, d = this.totalW, f = null, p = 0;
 		for (let e of this.columns) {
-			let o = ((e.baseX + this.shiftX - this.origin) % d + d) % d + this.origin, s = e.start + this.scroll * e.speed + e.spring.x * e.scrollSpeed;
+			let o = ((e.baseX + this.shiftX - this.origin) % d + d) % d + this.origin, s = e.start - (this.scroll - e.spring.x) * e.pace;
 			for (let c of e.tiles) {
 				let l = e.length;
 				c.x = o, c.y = ((s + c.offsetInCol + u) % l + l) % l - u, c.w = this.colW, c.z = 0, c.alpha = 1, c.reveal = 1, c.gray = a && c !== n.hovered ? t.dimOthers * (1 - this.slow) : 0, c.priority = c.y + c.h > 0 && c.y < i && c.x + c.w > 0 && c.x < r ? this.centerScore(c) : 0, c.priority > p && (p = c.priority, f = c), this.applyTransition(c, Math.min(1, Math.max(0, o / r)));
