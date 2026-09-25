@@ -1,6 +1,6 @@
 {
   "name": "work-canvas",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "Immersive WebGL work header for zacharyallott.com, mounted into a Webflow page.",
   "type": "module",
   "private": true,
