@@ -1,24 +1,20 @@
 /**
- * Tile shader. Every tile is a subdivided 1×1 plane scaled to its pixel size.
+ * Tile shader. Every tile is a 1×1 plane scaled to its pixel size.
  *
- * Vertex:   optional bend (driven by scroll velocity).
- * Fragment: object-fit: cover, rounded corners (SDF, antialiased), hover lens
- *           distortion around the pointer, RGB split, reveal wipe, fade.
+ * Fragment: object-fit: cover, rounded corners (SDF, antialiased), optional
+ * hover zoom, desaturation, reveal wipe and fade. No geometry warping or
+ * distortion — the image is always drawn flat and undistorted.
  *
  * Colours pass straight through (textures are NoColorSpace, renderer output is
  * linear) so pixels match the source files and the CSS background exactly.
  */
 
 export const vertexShader = /* glsl */ `
-  uniform vec2 uSize;     // tile size in CSS px
-  uniform float uBend;    // px of vertical bend at the tile's centre
   varying vec2 vUv;
 
   void main() {
     vUv = uv;
-    vec3 p = position;
-    p.y += sin(uv.x * 3.14159265) * uBend / max(uSize.y, 1.0);
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
 `;
 
@@ -31,11 +27,7 @@ export const fragmentShader = /* glsl */ `
   uniform float uDpr;
   uniform vec3 uBase;       // placeholder colour
 
-  uniform float uHover;     // 0..1
-  uniform vec2 uMouse;      // pointer in tile uv space
-  uniform float uDistort;   // lens strength
   uniform float uZoom;      // extra texture zoom (0 = cover)
-  uniform float uShift;     // RGB split, in uv units
   uniform float uGray;      // 0..1 desaturation
   uniform float uAlpha;
   uniform float uReveal;    // 0..1 wipe from the bottom
@@ -50,24 +42,13 @@ export const fragmentShader = /* glsl */ `
   void main() {
     vec2 uv = vUv;
 
-    // object-fit: cover
+    // object-fit: cover (+ optional zoom around the centre)
     float planeA = uSize.x / max(uSize.y, 1.0);
     float texA = uTexSize.x / max(uTexSize.y, 1.0);
     vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);
     vec2 tuv = (uv - 0.5) * cover / (1.0 + uZoom) + 0.5;
 
-    // hover lens: texels near the pointer are pulled toward it (a soft magnifier)
-    vec2 fromMouse = uv - uMouse;
-    float falloff = smoothstep(0.6, 0.0, length(fromMouse * vec2(planeA, 1.0)));
-    tuv -= fromMouse * cover * falloff * uDistort * uHover;
-
-    vec2 shift = vec2(uShift, 0.0) * cover;
-    vec3 tex = vec3(
-      texture2D(uTex, tuv + shift).r,
-      texture2D(uTex, tuv).g,
-      texture2D(uTex, tuv - shift).b
-    );
-    vec3 col = mix(uBase, tex, uTexReady);
+    vec3 col = mix(uBase, texture2D(uTex, tuv).rgb, uTexReady);
     col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);
 
     // rounded corners, ~1 device px of antialiasing

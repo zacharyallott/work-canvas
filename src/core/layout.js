@@ -52,11 +52,14 @@ export class Layout {
     return this.introEase(clamp01(this.progress * (1 + s) - order * s));
   }
 
-  /** Applies the shared enter/leave look to a tile whose rect is already set. */
-  applyTransition(tile, order, from = { x: 0, y: 80 }) {
+  /**
+   * Applies the shared enter/leave look to a tile whose rect is already set.
+   * `fade: true` = opacity only, no movement or wipe.
+   */
+  applyTransition(tile, order, from = { x: 0, y: 80 }, { fade = false } = {}) {
     const p = this.tileProgress(order);
     if (p >= 1) return;
-    if (this.reduced) {
+    if (this.reduced || fade) {
       tile.alpha *= p;
       return;
     }

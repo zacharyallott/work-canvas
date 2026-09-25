@@ -1,34 +1,40 @@
 import { Layout } from '../core/layout.js';
 import { ARTBOARD } from '../core/defaults.js';
+import { sizePattern, fitSize } from '../core/sizing.js';
 
 /**
  * Version A — Horizontal filmstrip (Figma frame 46, node 1542:5556)
  *
- * One row of 400px tiles, 18px gaps, bottom-aligned 14px above the bottom
- * edge so the tops form a skyline (heights come from each piece's real aspect
- * ratio). Bleeds off both sides and loops forever.
+ * One row of tiles, 16px gaps, bottom-aligned 14px above the bottom edge so
+ * the tops form a skyline. Each tile takes a height from a size scale (no two
+ * neighbours the same) and its width follows from the piece's real aspect
+ * ratio, so both dimensions vary without cropping. Bleeds off both sides and
+ * loops forever.
  *
  * Motion: the cursor steers the drift. Left of centre → the strip drifts
  * right; right of centre → it drifts left. Speed grows with distance from
  * the centre (small dead zone in the middle). The speed eases toward its
  * target, so there's a little lag. Without a cursor (touch, or pointer
  * outside the header) it drifts slowly left; on touch you can also swipe.
- * Speed bends the tiles slightly. Hover reveals the title.
+ * Tiles stay flat (no warp or distortion). Hover reveals the title.
  */
 export const config = {
   // Layout (design px at the 1280×794 artboard; scaled by mount height)
-  tileWidth: 400,
-  gap: 18,
-  minHeight: 250,
-  maxHeight: 516,
+  // Size scale: each tile picks one of these heights (seeded, never the same as
+  // its neighbour). Width = height × the image's aspect ratio.
+  heights: [210, 280, 360, 440, 540],
+  minWidth: 190, // narrower pieces get taller instead (keeps the aspect ratio)
+  maxWidth: 760, // wider pieces get shorter instead
+  gap: 16, // CSS px between tiles (fixed, not scaled with the viewport)
   bottomInset: 14,
   startOffset: -162,
   minScale: 0.55,
   maxScale: 1.35,
-  mobileTileWidth: 0.74, // max fraction of mount width a tile may take on narrow screens
+  mobileMaxWidth: 0.82, // max fraction of mount width a tile may take on narrow screens
+  seed: 7, // change to reshuffle the size pattern
 
   // Cursor drift
-  maxSpeed: 620, // px/s with the cursor at either edge
+  maxSpeed: 480, // px/s with the cursor at either edge
   deadZone: 0.06, // fraction of the half-width around the centre with no drift
   curve: 1.7, // >1 = gentle near the centre, quick toward the edges
   response: 2.2, // how fast the speed follows the cursor (higher = less lag)
@@ -41,12 +47,8 @@ export const config = {
   inertia: 0.94, // velocity kept per 1/60 s
   ease: 0.12, // position smoothing per 1/60 s
 
-  // Velocity effect
-  bend: 1.1, // px of bend per px/frame of speed
-  maxBend: 38,
-
-  // Hover: no lens, no RGB split — hover only brings in the title
-  hover: { distortion: 0, zoom: 0, speed: 7 },
+  // Hover only brings in the title (zoom 0 = the image doesn't move)
+  hover: { zoom: 0, speed: 7 },
 
   // Media
   maxVideos: 4,
@@ -69,7 +71,6 @@ export default class Filmstrip extends Layout {
     this.target = 0;
     this.drift = -cfg.idleSpeed; // px/s, eased toward the cursor-derived speed
     this.velocity = 0; // px/s from touch throws
-    this.speed = 0; // smoothed px per 60fps frame (drives the bend)
   }
 
   resize(vp) {
@@ -77,24 +78,33 @@ export default class Filmstrip extends Layout {
     const s = Math.min(c.maxScale, Math.max(c.minScale, vp.height / ARTBOARD.height));
     this.s = s;
     this.engine.scale = s;
-    this.tileW = Math.min(c.tileWidth * s, vp.width * c.mobileTileWidth);
-    this.gapPx = c.gap * s;
-    this.pitch = this.tileW + this.gapPx;
+    this.gapPx = c.gap;
     this.bottom = vp.height - c.bottomInset * s;
+    const maxW = Math.min(c.maxWidth * s, vp.width * c.mobileMaxWidth);
+    const minW = Math.min(c.minWidth * s, maxW);
+    const maxH = Math.max(...c.heights) * s;
 
-    // Enough tiles that the loop never shows a seam.
-    const needed = Math.ceil((vp.width + this.pitch * 3) / this.pitch);
+    // Enough tiles that the loop never shows a seam (estimate with the smallest tiles).
+    const needed = Math.ceil((vp.width + maxW * 3) / (minW + this.gapPx));
     const count = Math.max(this.items.length, needed);
     if (count !== this.tiles.length) {
       this.tiles.forEach((t) => t.dispose());
       this.makeTiles(this.repeatItems(count));
     }
-    this.length = this.tiles.length * this.pitch;
-    const k = this.tileW / c.tileWidth;
-    for (const t of this.tiles) {
-      t.w = this.tileW;
-      t.h = Math.min(c.maxHeight * k, Math.max(c.minHeight * k, this.tileW / t.item.aspect));
-    }
+
+    // Size each tile: pick a height from the scale, derive the width from the
+    // aspect ratio, and if that's too wide/narrow adjust the height instead.
+    const pattern = sizePattern(this.tiles.length, c.heights.length, c.seed);
+    let x = 0;
+    this.tiles.forEach((t, i) => {
+      const { w, h } = fitSize(t.item.aspect, c.heights[pattern[i]] * s, { minW, maxW, maxH });
+      t.w = w;
+      t.h = h;
+      t.baseX = x;
+      x += w + this.gapPx;
+    });
+    this.length = x;
+    this.margin = maxW + this.gapPx; // wrap margin so tiles leave/enter fully off-screen
   }
 
   /** Target drift speed (px/s) for the current cursor position. */
@@ -114,11 +124,7 @@ export default class Filmstrip extends Layout {
 
     this.target += (this.drift + this.velocity) * dt;
     this.velocity *= Math.pow(c.inertia, dt * 60);
-    const prev = this.offset;
     this.offset += (this.target - this.offset) * (1 - Math.pow(1 - c.ease, dt * 60));
-    const v = (this.offset - prev) / Math.max(dt, 1e-4) / 60;
-    this.speed += (v - this.speed) * Math.min(1, dt * 10);
-    const bend = Math.max(-c.maxBend, Math.min(c.maxBend, this.speed * c.bend)) * this.s;
 
     let featured = null;
     let bestD = Infinity;
@@ -126,15 +132,13 @@ export default class Filmstrip extends Layout {
     const L = this.length;
 
     this.tiles.forEach((t, i) => {
-      const raw = c.startOffset * this.s + i * this.pitch + this.offset;
-      t.x = ((((raw + this.pitch) % L) + L) % L) - this.pitch; // wrap into [-pitch, L - pitch)
+      const raw = c.startOffset * this.s + t.baseX + this.offset;
+      const m = this.margin;
+      t.x = ((((raw + m) % L) + L) % L) - m; // wrap into [-margin, L - margin)
       t.y = this.bottom - t.h;
-      t.w = this.tileW;
       t.z = 0;
       t.alpha = 1;
       t.reveal = 1;
-      t.bend = bend;
-      t.shift = 0;
 
       const visible = t.x + t.w > 0 && t.x < this.vp.width;
       const d = Math.abs(t.x + t.w / 2 - cx);

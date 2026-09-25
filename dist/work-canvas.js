@@ -12667,7 +12667,7 @@ var jp = class {
 }, Mp = {
 	background: "#f2f2f2",
 	placeholder: "#e2e2e2",
-	radius: 8,
+	radius: 4,
 	maxDpr: 2,
 	antialias: !1,
 	maxVideos: 5,
@@ -13056,7 +13056,7 @@ var Zp = class {
 	destroy() {
 		this._unbind?.forEach((e) => e()), this.handlers = {};
 	}
-}, em = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Group'%3e%3cpath%20id='Vector'%20d='M1.77344%201.77486L10.2622%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_2'%20d='M10.2622%201.77486L1.77344%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_3'%20d='M6.01823%200V12'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_4'%20d='M12%206.01921H0'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3c/g%3e%3c/svg%3e", tm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='8'%20height='8'%20viewBox='0%200%208%208'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Ellipse%201'%20style='mix-blend-mode:difference'%3e%3ccircle%20cx='4'%20cy='4'%20r='4'%20fill='%23F2F2F2'/%3e%3c/g%3e%3c/svg%3e", nm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='8'%20height='8'%20viewBox='0%200%208%208'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Ellipse%202'%20style='mix-blend-mode:difference'%3e%3ccircle%20cx='4'%20cy='4'%20r='3.25'%20stroke='%23F2F2F2'%20stroke-width='1.5'/%3e%3c/g%3e%3c/svg%3e", rm = "\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);min-height:var(--wc-min-height,100svh);isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n.wc-root.is-hovering-tile{cursor:pointer}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .6s ease}\n.wc-root.is-ready .wc-canvas{opacity:1}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,500);color:#f2f2f2}\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference}\n.wc-icon{display:block;width:12px;height:12px}\n.wc-icon img{display:block;width:12px;height:12px}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap}\n.wc-tagline .wc-arrow{display:inline-block;transform:rotate(90deg);width:17px;text-align:center}\n.wc-dots{display:flex;gap:6px;align-items:center;pointer-events:auto}\n.wc-dot{appearance:none;border:0;padding:4px;margin:-4px;background:none;cursor:pointer;display:block;line-height:0}\n.wc-dot img{display:block;width:8px;height:8px}\n.wc-dot:focus-visible{outline:1px solid #f2f2f2;outline-offset:2px;border-radius:50%}\n.wc-caption{position:absolute;left:0;top:0;font-size:12px;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:18px;padding:48px 13px 13px;overflow:auto;transition:opacity .6s ease;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 18px;border-radius:8px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n.wc-root.is-ready .wc-fallback{opacity:0;pointer-events:none}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@media (max-width:600px){.wc-tagline{font-size:13px}}\n", im = !1;
+}, em = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Group'%3e%3cpath%20id='Vector'%20d='M1.77344%201.77486L10.2622%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_2'%20d='M10.2622%201.77486L1.77344%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_3'%20d='M6.01823%200V12'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_4'%20d='M12%206.01921H0'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3c/g%3e%3c/svg%3e", tm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='8'%20height='8'%20viewBox='0%200%208%208'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Ellipse%201'%20style='mix-blend-mode:difference'%3e%3ccircle%20cx='4'%20cy='4'%20r='4'%20fill='%23F2F2F2'/%3e%3c/g%3e%3c/svg%3e", nm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='8'%20height='8'%20viewBox='0%200%208%208'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Ellipse%202'%20style='mix-blend-mode:difference'%3e%3ccircle%20cx='4'%20cy='4'%20r='3.25'%20stroke='%23F2F2F2'%20stroke-width='1.5'/%3e%3c/g%3e%3c/svg%3e", rm = "\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);min-height:var(--wc-min-height,100svh);isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n.wc-root.is-hovering-tile{cursor:pointer}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .6s ease}\n.wc-root.is-ready .wc-canvas{opacity:1}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,500);color:#f2f2f2}\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference}\n.wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px)}\n.wc-icon img{display:block;width:100%;height:100%}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap}\n.wc-tagline .wc-arrow{display:inline-block;transform:rotate(90deg);width:17px;text-align:center}\n.wc-dots{display:flex;gap:6px;align-items:center;pointer-events:auto}\n.wc-dot{appearance:none;border:0;padding:4px;margin:-4px;background:none;cursor:pointer;display:block;line-height:0}\n.wc-dot img{display:block;width:8px;height:8px}\n.wc-dot:focus-visible{outline:1px solid #f2f2f2;outline-offset:2px;border-radius:50%}\n.wc-caption{position:absolute;left:0;top:0;font-size:12px;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:16px;padding:48px 13px 13px;overflow:auto;transition:opacity .6s ease;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 16px;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n.wc-root.is-ready .wc-fallback{opacity:0;pointer-events:none}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@media (max-width:600px){.wc-tagline{font-size:13px}}\n", im = !1;
 function am() {
 	if (im) return;
 	im = !0;
@@ -13067,7 +13067,7 @@ var om = class {
 	constructor(e, { layouts: t, current: n, onSelect: r, tagline: i, taglineHref: a, showDots: o = !0, hint: s }) {
 		am(), this.mount = e, this.onSelect = r, this.root = document.createElement("div"), this.root.className = "wc-ui", this.root.innerHTML = `
       <div class="wc-topbar">
-        <span class="wc-icon"><img src="${em}" alt="" width="12" height="12"></span>
+        <span class="wc-icon"><img src="${em}" alt="" width="16" height="16"></span>
         <a class="wc-tagline" href="${a}">${i}<span class="wc-arrow" aria-hidden="true">→</span></a>
         <div class="wc-dots" role="tablist" aria-label="Header version"></div>
       </div>
@@ -13112,7 +13112,7 @@ var om = class {
 				duration: .18,
 				ease: "power2.in"
 			}), t.add(() => {
-				r.shown = e, e && (i.textContent = `${e.item.title}  ↓`, this.captionH = this.caption.offsetHeight);
+				r.shown = e, e && (i.textContent = e.item.caseStudy ? `${e.item.title}  ↓` : e.item.title, this.captionH = this.caption.offsetHeight);
 			}), e && t.fromTo(i, n ? {
 				yPercent: 0,
 				opacity: 0
@@ -13141,7 +13141,7 @@ function sm(e) {
 }
 //#endregion
 //#region src/core/shaders.js
-var cm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uBend;    // px of vertical bend at the tile's centre\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    vec3 p = position;\n    p.y += sin(uv.x * 3.14159265) * uBend / max(uSize.y, 1.0);\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);\n  }\n", lm = "\n  uniform sampler2D uTex;\n  uniform float uTexReady;  // 0 → placeholder colour, 1 → texture (tweened for a fade-in)\n  uniform vec2 uTexSize;    // texture px (only the ratio matters)\n  uniform vec2 uSize;       // tile CSS px\n  uniform float uRadius;    // corner radius, CSS px\n  uniform float uDpr;\n  uniform vec3 uBase;       // placeholder colour\n\n  uniform float uHover;     // 0..1\n  uniform vec2 uMouse;      // pointer in tile uv space\n  uniform float uDistort;   // lens strength\n  uniform float uZoom;      // extra texture zoom (0 = cover)\n  uniform float uShift;     // RGB split, in uv units\n  uniform float uGray;      // 0..1 desaturation\n  uniform float uAlpha;\n  uniform float uReveal;    // 0..1 wipe from the bottom\n\n  varying vec2 vUv;\n\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n\n  void main() {\n    vec2 uv = vUv;\n\n    // object-fit: cover\n    float planeA = uSize.x / max(uSize.y, 1.0);\n    float texA = uTexSize.x / max(uTexSize.y, 1.0);\n    vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);\n    vec2 tuv = (uv - 0.5) * cover / (1.0 + uZoom) + 0.5;\n\n    // hover lens: texels near the pointer are pulled toward it (a soft magnifier)\n    vec2 fromMouse = uv - uMouse;\n    float falloff = smoothstep(0.6, 0.0, length(fromMouse * vec2(planeA, 1.0)));\n    tuv -= fromMouse * cover * falloff * uDistort * uHover;\n\n    vec2 shift = vec2(uShift, 0.0) * cover;\n    vec3 tex = vec3(\n      texture2D(uTex, tuv + shift).r,\n      texture2D(uTex, tuv).g,\n      texture2D(uTex, tuv - shift).b\n    );\n    vec3 col = mix(uBase, tex, uTexReady);\n    col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);\n\n    // rounded corners, ~1 device px of antialiasing\n    float d = sdRoundBox((uv - 0.5) * uSize, uSize * 0.5, uRadius);\n    float aa = 0.75 / uDpr;\n    float mask = 1.0 - smoothstep(-aa, aa, d);\n\n    // reveal wipe (uv.y = 0 at the bottom edge)\n    float reveal = uReveal >= 1.0 ? 1.0 : step(uv.y, uReveal);\n\n    gl_FragColor = vec4(col, uAlpha * mask * reveal);\n  }\n", um = class {
+var cm = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }\n", lm = "\n  uniform sampler2D uTex;\n  uniform float uTexReady;  // 0 → placeholder colour, 1 → texture (tweened for a fade-in)\n  uniform vec2 uTexSize;    // texture px (only the ratio matters)\n  uniform vec2 uSize;       // tile CSS px\n  uniform float uRadius;    // corner radius, CSS px\n  uniform float uDpr;\n  uniform vec3 uBase;       // placeholder colour\n\n  uniform float uZoom;      // extra texture zoom (0 = cover)\n  uniform float uGray;      // 0..1 desaturation\n  uniform float uAlpha;\n  uniform float uReveal;    // 0..1 wipe from the bottom\n\n  varying vec2 vUv;\n\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n\n  void main() {\n    vec2 uv = vUv;\n\n    // object-fit: cover (+ optional zoom around the centre)\n    float planeA = uSize.x / max(uSize.y, 1.0);\n    float texA = uTexSize.x / max(uTexSize.y, 1.0);\n    vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);\n    vec2 tuv = (uv - 0.5) * cover / (1.0 + uZoom) + 0.5;\n\n    vec3 col = mix(uBase, texture2D(uTex, tuv).rgb, uTexReady);\n    col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);\n\n    // rounded corners, ~1 device px of antialiasing\n    float d = sdRoundBox((uv - 0.5) * uSize, uSize * 0.5, uRadius);\n    float aa = 0.75 / uDpr;\n    float mask = 1.0 - smoothstep(-aa, aa, d);\n\n    // reveal wipe (uv.y = 0 at the bottom edge)\n    float reveal = uReveal >= 1.0 ? 1.0 : step(uv.y, uReveal);\n\n    gl_FragColor = vec4(col, uAlpha * mask * reveal);\n  }\n", um = class {
 	constructor(e, t = {}) {
 		this.mount = e, this.options = {
 			...Mp,
@@ -13151,7 +13151,7 @@ var cm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uB
 		this.reducedMotion = n.matches, this._onReducedChange = (e) => this.reducedMotion = e.matches, n.addEventListener?.("change", this._onReducedChange), this._reducedQuery = n, this.isMobile = matchMedia("(pointer: coarse)").matches || window.innerWidth < 768, this.viewport = {
 			width: 1,
 			height: 1
-		}, this.scale = 1, this.dpr = 1, this.time = 0, this.hovered = null, this.pointerUv = new Y(.5, .5), this.focusedItem = null, this.upgradeThreshold = this.options.upgradeThreshold, this.radius = this.options.radius, this.running = !1, this.inView = !0, this.pageVisible = !document.hidden, this.openTile = null, this.openProgress = 0, this._tick = this.tick.bind(this);
+		}, this.scale = 1, this.dpr = 1, this.time = 0, this.hovered = null, this.focusedItem = null, this.upgradeThreshold = this.options.upgradeThreshold, this.radius = this.options.radius, this.running = !1, this.inView = !0, this.pageVisible = !document.hidden, this.openTile = null, this.openProgress = 0, this._tick = this.tick.bind(this);
 	}
 	async init() {
 		let { mount: e } = this;
@@ -13187,7 +13187,7 @@ var cm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uB
 			powerPreference: "high-performance"
 		});
 		if (!e.getContext()) throw Error("no context");
-		e.outputColorSpace = Ya, e.setClearColor(0, 0), e.domElement.className = "wc-canvas", e.domElement.setAttribute("aria-hidden", "true"), this.mount.prepend(e.domElement), this.renderer = e, this.scene = new Ds(), this.camera = new Gl(0, 1, 0, -1, -2e3, 2e3), this.raycaster = new lu(), this.geometry = new al(1, 1, 24, 8), this.emptyTexture = new Jc(new Uint8Array([
+		e.outputColorSpace = Ya, e.setClearColor(0, 0), e.domElement.className = "wc-canvas", e.domElement.setAttribute("aria-hidden", "true"), this.mount.prepend(e.domElement), this.renderer = e, this.scene = new Ds(), this.camera = new Gl(0, 1, 0, -1, -2e3, 2e3), this.raycaster = new lu(), this.geometry = new al(1, 1), this.emptyTexture = new Jc(new Uint8Array([
 			226,
 			226,
 			226,
@@ -13206,15 +13206,10 @@ var cm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uB
 				uRadius: { value: this.options.radius },
 				uDpr: { value: 1 },
 				uBase: { value: new Ts(this.options.placeholder).convertLinearToSRGB() },
-				uHover: { value: 0 },
-				uMouse: { value: new Y(.5, .5) },
-				uDistort: { value: .12 },
 				uZoom: { value: 0 },
-				uShift: { value: 0 },
 				uGray: { value: 0 },
 				uAlpha: { value: 1 },
-				uReveal: { value: 1 },
-				uBend: { value: 0 }
+				uReveal: { value: 1 }
 			}
 		});
 	}
@@ -13295,7 +13290,7 @@ var cm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uB
 		if (this.tapped && this.time < this.tapped.until && this.layout?.tiles.includes(this.tapped.tile)) t = this.tapped.tile;
 		else if (e?.inside && !this.input.pressed?.dragging && !this.openTile && !this.switching && !this.isMobile) {
 			let n = this.pick(e.x, e.y);
-			n && (t = n.tile, this.pointerUv.copy(n.uv));
+			n && (t = n.tile);
 		}
 		t !== this.hovered && (this.hovered = t, this.mount.classList.toggle("is-hovering-tile", !!(this.options.click && t?.item.href)));
 	}
@@ -13307,7 +13302,7 @@ var cm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uB
 		this.openTile = e;
 		let r = {
 			...e.rect,
-			radius: this.radius * this.scale
+			radius: this.radius
 		};
 		e.override = r, e.mesh.renderOrder = 1e4;
 		let { width: i, height: a } = this.viewport, o = this.reducedMotion ? .3 : this.options.openDuration, s = () => window.location.href = n;
@@ -13386,7 +13381,7 @@ var cm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uB
 	}
 }, dm = class {
 	constructor(e, t, n = 0) {
-		this.engine = e, this.item = t, this.index = n, this.x = 0, this.y = 0, this.w = 100, this.h = 100, this.z = 0, this.rotation = 0, this.alpha = 1, this.reveal = 1, this.gray = 0, this.bend = 0, this.shift = 0, this.zoom = 0, this.priority = 0, this.interactive = !0, this.hover = 0, this.mouse = new Y(.5, .5), this.texReady = 0, this.onScreen = !1, this.override = null, this.material = e.baseMaterial.clone(), this.uniforms = this.material.uniforms, this.uniforms.uSize.value = new Y(100, 100), this.uniforms.uTexSize.value = t.texSize, this.uniforms.uMouse.value = this.mouse, this.mesh = new Gc(e.geometry, this.material), this.mesh.frustumCulled = !1, this.mesh.userData.tile = this, e.scene.add(this.mesh);
+		this.engine = e, this.item = t, this.index = n, this.x = 0, this.y = 0, this.w = 100, this.h = 100, this.z = 0, this.rotation = 0, this.alpha = 1, this.reveal = 1, this.gray = 0, this.zoom = 0, this.priority = 0, this.interactive = !0, this.hover = 0, this.texReady = 0, this.onScreen = !1, this.override = null, this.material = e.baseMaterial.clone(), this.uniforms = this.material.uniforms, this.uniforms.uSize.value = new Y(100, 100), this.uniforms.uTexSize.value = t.texSize, this.mesh = new Gc(e.geometry, this.material), this.mesh.frustumCulled = !1, this.mesh.userData.tile = this, e.scene.add(this.mesh);
 	}
 	get rect() {
 		return this.override ?? this;
@@ -13397,11 +13392,13 @@ var cm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uB
 		let c = this.engine.openTile;
 		this.mesh.position.set(r + a / 2, -(i + o / 2), 0), this.mesh.scale.set(a, o, 1), this.mesh.rotation.z = this.override ? 0 : -this.rotation, this.mesh.renderOrder = c === this ? 1e4 : this.z;
 		let l = 1 - Math.exp(-e * (n?.speed ?? 8)), u = this.engine.hovered === this;
-		this.hover += (+!!u - this.hover) * l, u && this.mouse.lerp(this.engine.pointerUv, l), this.texReady += (+!!this.item.ready - this.texReady) * (1 - Math.exp(-e * 6));
+		this.hover += (+!!u - this.hover) * l, this.texReady += (+!!this.item.ready - this.texReady) * (1 - Math.exp(-e * 6));
 		let d = this.uniforms;
-		d.uSize.value.set(a, o), d.uTex.value = this.item.texture ?? this.engine.emptyTexture, d.uTexSize.value = this.item.texSize, d.uTexReady.value = this.item.ready ? this.texReady : 0, d.uRadius.value = this.override?.radius ?? this.engine.radius * this.engine.scale, d.uDpr.value = this.engine.dpr, d.uAlpha.value = this.alpha * (c && c !== this ? 1 - this.engine.openProgress : 1), d.uReveal.value = this.reveal, d.uGray.value = this.gray, d.uBend.value = this.engine.reducedMotion ? 0 : this.bend, d.uShift.value = this.engine.reducedMotion ? 0 : this.shift, d.uHover.value = this.engine.reducedMotion ? 0 : this.hover, d.uDistort.value = n?.distortion ?? .12, d.uZoom.value = this.zoom + this.hover * (n?.zoom ?? .04);
-		let f = Math.max(a, o) * this.engine.dpr, p = this.engine.upgradeThreshold, m = f > p.lg ? 2 : +(f > p.md);
-		this.priority >= 3 && f > p.md * .8 && (m = Math.max(m, 2)), this.item.request(m, this.priority);
+		d.uSize.value.set(a, o), d.uTex.value = this.item.texture ?? this.engine.emptyTexture, d.uTexSize.value = this.item.texSize, d.uTexReady.value = this.item.ready ? this.texReady : 0, d.uRadius.value = this.override?.radius ?? this.engine.radius, d.uDpr.value = this.engine.dpr, d.uAlpha.value = this.alpha * (c && c !== this ? 1 - this.engine.openProgress : 1), d.uReveal.value = this.reveal, d.uGray.value = this.gray;
+		let f = this.engine.reducedMotion ? 0 : this.hover * (n?.zoom ?? 0);
+		d.uZoom.value = this.zoom + f;
+		let p = Math.max(a, o) * this.engine.dpr, m = this.engine.upgradeThreshold, h = p > m.lg ? 2 : +(p > m.md);
+		this.priority >= 3 && p > m.md * .8 && (h = Math.max(h, 2)), this.item.request(h, this.priority);
 	}
 	dispose() {
 		this.engine.scene.remove(this.mesh), this.material.dispose();
@@ -13475,14 +13472,14 @@ var gm = (e) => Math.min(1, Math.max(0, e)), _m = class {
 	applyTransition(e, t, n = {
 		x: 0,
 		y: 80
-	}) {
-		let r = this.tileProgress(t);
-		if (!(r >= 1)) {
-			if (this.reduced) {
-				e.alpha *= r;
+	}, { fade: r = !1 } = {}) {
+		let i = this.tileProgress(t);
+		if (!(i >= 1)) {
+			if (this.reduced || r) {
+				e.alpha *= i;
 				return;
 			}
-			e.x += (n.x ?? 0) * (1 - r), e.y += (n.y ?? 0) * (1 - r), e.reveal = Math.min(e.reveal, r), e.alpha *= Math.min(1, r * 4);
+			e.x += (n.x ?? 0) * (1 - i), e.y += (n.y ?? 0) * (1 - i), e.reveal = Math.min(e.reveal, i), e.alpha *= Math.min(1, i * 4);
 		}
 	}
 	enter() {
@@ -13528,18 +13525,49 @@ var gm = (e) => Math.min(1, Math.max(0, e)), _m = class {
 };
 hm(_m, "defaults", {});
 //#endregion
+//#region src/core/sizing.js
+function vm(e, t, n = 1) {
+	let r = n * 2654435769, i = () => {
+		r = r + 1831565813 | 0;
+		let e = Math.imul(r ^ r >>> 15, 1 | r);
+		return e = e + Math.imul(e ^ e >>> 7, 61 | e) ^ e, ((e ^ e >>> 14) >>> 0) / 4294967296;
+	}, a = [];
+	for (let n = 0; n < e; n++) {
+		let r;
+		do
+			r = Math.floor(i() * t);
+		while (t > 1 && (r === a[n - 1] || n === e - 1 && r === a[0] && t > 2));
+		a.push(r);
+	}
+	return a;
+}
+function ym(e, t, { minW: n, maxW: r, maxH: i }) {
+	let a = t, o = a * e;
+	return o > r && ([o, a] = [r, r / e]), o < n && ([o, a] = [n, n / e]), a > i && (a = i), {
+		w: o,
+		h: a
+	};
+}
+//#endregion
 //#region src/layouts/filmstrip.js
-var vm = {
-	tileWidth: 400,
-	gap: 18,
-	minHeight: 250,
-	maxHeight: 516,
+var bm = {
+	heights: [
+		210,
+		280,
+		360,
+		440,
+		540
+	],
+	minWidth: 190,
+	maxWidth: 760,
+	gap: 16,
 	bottomInset: 14,
 	startOffset: -162,
 	minScale: .55,
 	maxScale: 1.35,
-	mobileTileWidth: .74,
-	maxSpeed: 620,
+	mobileMaxWidth: .82,
+	seed: 7,
+	maxSpeed: 480,
 	deadZone: .06,
 	curve: 1.7,
 	response: 2.2,
@@ -13549,10 +13577,7 @@ var vm = {
 	throw: .9,
 	inertia: .94,
 	ease: .12,
-	bend: 1.1,
-	maxBend: 38,
 	hover: {
-		distortion: 0,
 		zoom: 0,
 		speed: 7
 	},
@@ -13562,17 +13587,24 @@ var vm = {
 	enterDuration: 1.5,
 	leaveDuration: .8,
 	captionInset: [20, 12]
-}, ym = class extends _m {
+}, xm = class extends _m {
 	constructor(e, t) {
-		super(e, t), this.offset = 0, this.target = 0, this.drift = -t.idleSpeed, this.velocity = 0, this.speed = 0;
+		super(e, t), this.offset = 0, this.target = 0, this.drift = -t.idleSpeed, this.velocity = 0;
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.height / Np.height));
-		this.s = n, this.engine.scale = n, this.tileW = Math.min(t.tileWidth * n, e.width * t.mobileTileWidth), this.gapPx = t.gap * n, this.pitch = this.tileW + this.gapPx, this.bottom = e.height - t.bottomInset * n;
-		let r = Math.ceil((e.width + this.pitch * 3) / this.pitch), i = Math.max(this.items.length, r);
-		i !== this.tiles.length && (this.tiles.forEach((e) => e.dispose()), this.makeTiles(this.repeatItems(i))), this.length = this.tiles.length * this.pitch;
-		let a = this.tileW / t.tileWidth;
-		for (let e of this.tiles) e.w = this.tileW, e.h = Math.min(t.maxHeight * a, Math.max(t.minHeight * a, this.tileW / e.item.aspect));
+		this.s = n, this.engine.scale = n, this.gapPx = t.gap, this.bottom = e.height - t.bottomInset * n;
+		let r = Math.min(t.maxWidth * n, e.width * t.mobileMaxWidth), i = Math.min(t.minWidth * n, r), a = Math.max(...t.heights) * n, o = Math.ceil((e.width + r * 3) / (i + this.gapPx)), s = Math.max(this.items.length, o);
+		s !== this.tiles.length && (this.tiles.forEach((e) => e.dispose()), this.makeTiles(this.repeatItems(s)));
+		let c = vm(this.tiles.length, t.heights.length, t.seed), l = 0;
+		this.tiles.forEach((e, o) => {
+			let { w: s, h: u } = ym(e.item.aspect, t.heights[c[o]] * n, {
+				minW: i,
+				maxW: r,
+				maxH: a
+			});
+			e.w = s, e.h = u, e.baseX = l, l += s + this.gapPx;
+		}), this.length = l, this.margin = r + this.gapPx;
 	}
 	targetDrift() {
 		let e = this.config, { nx: t, inside: n } = this.engine.cursor;
@@ -13582,17 +13614,14 @@ var vm = {
 	}
 	update(e) {
 		let t = this.config;
-		this.drift += (this.targetDrift() - this.drift) * (1 - Math.exp(-e * t.response)), this.target += (this.drift + this.velocity) * e, this.velocity *= t.inertia ** (e * 60);
-		let n = this.offset;
-		this.offset += (this.target - this.offset) * (1 - (1 - t.ease) ** (e * 60));
-		let r = (this.offset - n) / Math.max(e, 1e-4) / 60;
-		this.speed += (r - this.speed) * Math.min(1, e * 10);
-		let i = Math.max(-t.maxBend, Math.min(t.maxBend, this.speed * t.bend)) * this.s, a = null, o = Infinity, s = this.vp.width / 2, c = this.length;
-		this.tiles.forEach((e, n) => {
-			e.x = ((t.startOffset * this.s + n * this.pitch + this.offset + this.pitch) % c + c) % c - this.pitch, e.y = this.bottom - e.h, e.w = this.tileW, e.z = 0, e.alpha = 1, e.reveal = 1, e.bend = i, e.shift = 0;
-			let r = e.x + e.w > 0 && e.x < this.vp.width, l = Math.abs(e.x + e.w / 2 - s);
-			r && l < o && (o = l, a = e), e.priority = r ? this.centerScore(e) : 0, this.applyTransition(e, Math.min(1, Math.max(0, e.x / this.vp.width)), { y: e.h * .35 });
-		}), this.featured = a, a && (a.priority = 2), this.engine.hovered && this.tiles.includes(this.engine.hovered) && (this.engine.hovered.priority = 3);
+		this.drift += (this.targetDrift() - this.drift) * (1 - Math.exp(-e * t.response)), this.target += (this.drift + this.velocity) * e, this.velocity *= t.inertia ** (e * 60), this.offset += (this.target - this.offset) * (1 - (1 - t.ease) ** (e * 60));
+		let n = null, r = Infinity, i = this.vp.width / 2, a = this.length;
+		this.tiles.forEach((e, o) => {
+			let s = t.startOffset * this.s + e.baseX + this.offset, c = this.margin;
+			e.x = ((s + c) % a + a) % a - c, e.y = this.bottom - e.h, e.z = 0, e.alpha = 1, e.reveal = 1;
+			let l = e.x + e.w > 0 && e.x < this.vp.width, u = Math.abs(e.x + e.w / 2 - i);
+			l && u < r && (r = u, n = e), e.priority = l ? this.centerScore(e) : 0, this.applyTransition(e, Math.min(1, Math.max(0, e.x / this.vp.width)), { y: e.h * .35 });
+		}), this.featured = n, n && (n.priority = 2), this.engine.hovered && this.tiles.includes(this.engine.hovered) && (this.engine.hovered.priority = 3);
 	}
 	onDrag({ dx: e }) {
 		this.engine.isMobile && (this.target += e * this.config.dragMultiplier, this.velocity = 0);
@@ -13605,13 +13634,20 @@ var vm = {
 		t && (this.target += this.vp.width / 2 - (t.x + t.w / 2));
 	}
 };
-hm(ym, "defaults", vm), hm(ym, "label", "Filmstrip");
+hm(xm, "defaults", bm), hm(xm, "label", "Filmstrip");
 //#endregion
 //#region src/layouts/deck.js
-var bm = {
-	tileWidth: 400,
-	minHeight: 250,
-	maxHeight: 516,
+var Sm = {
+	heights: [
+		220,
+		300,
+		380,
+		460,
+		560
+	],
+	minWidth: 200,
+	maxWidth: 620,
+	seed: 3,
 	slots: [
 		{
 			x: -110,
@@ -13632,7 +13668,7 @@ var bm = {
 	],
 	minScale: .5,
 	maxScale: 1.3,
-	mobileTileWidth: .72,
+	mobileMaxWidth: .72,
 	follow: .38,
 	followRates: [
 		5.5,
@@ -13645,12 +13681,10 @@ var bm = {
 	curve: 1.4,
 	idleInterval: 3.2,
 	dealDuration: .8,
-	dealEase: "power3.out",
+	dealEase: "power2.out",
 	pauseOnHover: !0,
-	incomingDistance: .55,
-	incomingRotation: 7,
+	hoverToFront: !0,
 	hover: {
-		distortion: .1,
 		zoom: .035,
 		speed: 7
 	},
@@ -13660,89 +13694,103 @@ var bm = {
 	enterDuration: 1.3,
 	leaveDuration: .7,
 	captionInset: [16, 12]
-}, xm = (e, t, n) => e + (t - e) * n, Sm = 4, Cm = class extends _m {
+}, Cm = (e, t, n) => e + (t - e) * n, wm = class extends _m {
 	constructor(e, t) {
-		super(e, t), this.head = 0, this.headTarget = 0, this.timer = 0, this.anchors = t.slots.map(() => ({
+		super(e, t), this.makeTiles(this.items);
+		let n = this.tiles.length;
+		this.slotCount = Math.min(t.slots.length, n), this.slotTile = Array.from({ length: this.slotCount }, (e, t) => t), this.slotStamp = Array.from({ length: this.slotCount }, (e, t) => this.slotCount - t), this.stamp = this.slotCount, this.next = this.slotCount % n, this.fading = null, this.timer = 0, this.anchors = t.slots.map(() => ({
 			x: 0,
 			y: 0
-		})), this.dir = {
-			x: 1,
-			y: -.15
-		}, this.makeTiles(this.items);
+		}));
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, Math.min(e.height / Np.height, e.width / Np.width) * 1.05));
-		this.s = n, this.engine.scale = n, this.tileW = Math.min(t.tileWidth * n, e.width * t.mobileTileWidth), this.k = this.tileW / t.tileWidth;
-		for (let e of this.tiles) e.baseH = Math.min(t.maxHeight * this.k, Math.max(t.minHeight * this.k, this.tileW / e.item.aspect));
-	}
-	slotAt(e) {
-		let t = this.config.slots, n = Math.max(0, Math.min(t.length - 1, Math.floor(e))), r = Math.min(t.length - 1, n + 1), i = Math.max(0, Math.min(1, e - n));
-		return {
-			x: xm(t[n].x, t[r].x, i),
-			y: xm(t[n].y, t[r].y, i)
-		};
-	}
-	anchorAt(e) {
-		let t = Math.max(0, Math.min(3, Math.floor(e))), n = Math.min(3, t + 1), r = Math.max(0, Math.min(1, e - t));
-		return {
-			x: xm(this.anchors[t].x, this.anchors[n].x, r),
-			y: xm(this.anchors[t].y, this.anchors[n].y, r)
-		};
+		this.s = n, this.engine.scale = n;
+		let r = Math.min(t.maxWidth * n, e.width * t.mobileMaxWidth), i = Math.min(t.minWidth * n, r);
+		this.k = r / t.maxWidth;
+		let a = Math.max(...t.heights) * this.k, o = vm(this.tiles.length, t.heights.length, t.seed);
+		this.tiles.forEach((e, n) => {
+			let { w: s, h: c } = ym(e.item.aspect, t.heights[o[n]] * this.k, {
+				minW: i,
+				maxW: r,
+				maxH: a
+			});
+			e.baseW = s, e.baseH = c;
+		});
 	}
 	update(e) {
-		let t = this.config, n = this.engine, r = this.tiles.length, { width: i, height: a } = this.vp, { nx: o, ny: s, inside: c } = n.cursor, l = n.hovered && this.tiles.includes(n.hovered), u = c && !this.reduced ? i / 2 * o * t.follow : 0, d = c && !this.reduced ? a / 2 * s * t.follow : 0;
+		let t = this.config, n = this.engine, { width: r, height: i } = this.vp, { nx: a, ny: o, inside: s } = n.cursor, c = n.hovered && this.tiles.includes(n.hovered) ? n.hovered : null, l = s && !this.reduced ? r / 2 * a * t.follow : 0, u = s && !this.reduced ? i / 2 * o * t.follow : 0;
 		if (this.anchors.forEach((n, r) => {
-			let i = 1 - Math.exp(-e * t.followRates[r]);
-			n.x += (u - n.x) * i, n.y += (d - n.y) * i;
-		}), c && (o || s)) {
-			let t = Math.hypot(o, s) || 1, n = 1 - Math.exp(-e * 4);
-			this.dir.x += (o / t - this.dir.x) * n, this.dir.y += (s / t - this.dir.y) * n;
+			let i = 1 - Math.exp(-e * t.followRates[r % t.followRates.length]);
+			n.x += (l - n.x) * i, n.y += (u - n.y) * i;
+		}), c && t.hoverToFront) {
+			let e = this.slotTile.indexOf(c.index);
+			e >= 0 && this.slotStamp[e] !== this.stamp && (this.slotStamp[e] = ++this.stamp);
 		}
-		let f = c ? Math.min(1, Math.hypot(o, s)) : 0, p = c ? xm(t.slowInterval, t.fastInterval, f ** +t.curve) : t.idleInterval;
-		t.pauseOnHover && l || this.reduced || this.progress < 1 || (this.timer += e / p, this.timer >= 1 && (this.timer = Math.min(this.timer - 1, .5), this.stack(p)));
-		let m = i / 2, h = a / 2, g = Math.hypot(this.dir.x, this.dir.y) || 1, _ = this.dir.x / g, v = this.dir.y / g, y = null;
-		this.tiles.forEach((e, n) => {
-			let o = ((n - this.head) % r + r) % r;
-			o > r - 1 && (o -= r), e.rotation = 0, e.alpha = 1, e.reveal = 1, e.gray = 0, e.zoom = 0, e.interactive = o > -.5 && o < Sm, e.w = this.tileW, e.h = e.baseH;
-			let s, c;
-			if (o < 0) {
-				let n = -o, a = this.slotAt(0), l = this.anchorAt(0), u = t.incomingDistance * i;
-				s = l.x + a.x * this.k + _ * u * n, c = l.y + a.y * this.k + v * u * n, e.rotation = Math.sign(_ || 1) * t.incomingRotation * Math.PI * n / 180, e.alpha = 1 - Math.max(0, (-o - .6) / .4), e.z = r + 1;
-			} else if (o <= 3) {
-				let t = this.slotAt(o), n = this.anchorAt(o);
-				s = n.x + t.x * this.k, c = n.y + t.y * this.k, e.z = r - o;
-			} else {
-				let t = Math.min(1, o - 3), n = this.slotAt(3), i = this.anchorAt(3);
-				s = i.x + n.x * this.k, c = i.y + n.y * this.k + 18 * this.k * t, e.alpha = Math.max(0, 1 - t), e.z = r - o;
-			}
-			e.x = m + s - e.w / 2, e.y = h + c - e.h / 2, Math.abs(o) < .5 && (y = e), e.priority = o > -.5 && o < Sm ? 1 - Math.max(0, o) * .2 : 0, this.applyTransition(e, Math.max(0, Math.min(1, (3 - o) / Sm)), { y: a * .55 });
-		}), this.featured = y, y && (y.priority = 3);
-	}
-	stack(e = this.config.slowInterval) {
-		this.headTarget = Math.round(Math.min(this.headTarget, this.head + .5)) - 1, gi.to(this, {
-			head: this.headTarget,
-			duration: Math.min(this.config.dealDuration, e * .9),
-			ease: this.config.dealEase,
-			overwrite: !0
+		let d = s ? Math.min(1, Math.hypot(a, o)) : 0, f = s ? Cm(t.slowInterval, t.fastInterval, d ** +t.curve) : t.idleInterval;
+		t.pauseOnHover && c || this.reduced || this.progress < 1 || (this.timer += e / f, this.timer >= 1 && (this.timer = Math.min(this.timer - 1, .5), this.deal(f)));
+		let p = r / 2, m = i / 2, h = (e, n) => {
+			let r = t.slots[n], i = this.anchors[n];
+			e.w = e.baseW, e.h = e.baseH, e.x = p + i.x + r.x * this.k - e.w / 2, e.y = m + i.y + r.y * this.k - e.h / 2;
+		};
+		for (let e of this.tiles) e.alpha = 0, e.interactive = !1, e.rotation = 0, e.reveal = 1, e.gray = 0, e.zoom = 0, e.priority = 0;
+		let g = [...this.slotStamp].sort((e, t) => t - e), _ = null;
+		this.slotTile.forEach((e, t) => {
+			let n = this.tiles[e];
+			h(n, t), n.z = this.slotStamp[t], n.alpha = this.fading?.to === e ? this.fading.p : 1, n.interactive = !0;
+			let r = g.indexOf(this.slotStamp[t]);
+			n.priority = 1 - r * .2, r === 0 && (_ = n), this.applyTransition(n, Math.max(0, Math.min(1, (this.slotCount - 1 - r) / this.slotCount)), void 0, { fade: !0 });
 		});
+		let v = this.fading;
+		if (v && v.from !== v.to && !this.slotTile.includes(v.from)) {
+			let e = this.tiles[v.from];
+			h(e, v.slot), e.z = v.fromStamp, e.alpha = 1 - v.p;
+		}
+		this.featured = _, _ && (_.priority = 3);
+	}
+	deal(e = this.config.slowInterval, t = null) {
+		let n = this.tiles.length;
+		if (n <= this.slotCount) return;
+		this.finishFade();
+		let r = t ?? this.next;
+		for (let e = 0; this.slotTile.includes(r) && e < n; e++) r = (r + 1) % n;
+		t ?? (this.next = (r + 1) % n);
+		let i = this.slotStamp.indexOf(Math.min(...this.slotStamp)), a = this.slotTile[i];
+		this.fading = {
+			slot: i,
+			from: a,
+			fromStamp: this.slotStamp[i],
+			to: r,
+			p: 0
+		}, this.slotTile[i] = r, this.slotStamp[i] = ++this.stamp;
+		let o = this.reduced ? .2 : Math.min(this.config.dealDuration, e * .9);
+		this.fadeTween = gi.to(this.fading, {
+			p: 1,
+			duration: o,
+			ease: this.config.dealEase,
+			onComplete: () => this.finishFade()
+		});
+	}
+	finishFade() {
+		this.fadeTween?.kill(), this.fadeTween = null, this.fading = null;
 	}
 	focusItem(e) {
 		let t = this.tiles.findIndex((t) => t.item === e);
-		t < 0 || (this.headTarget = t, gi.to(this, {
-			head: t,
-			duration: this.config.dealDuration,
-			ease: this.config.dealEase,
-			overwrite: !0
-		}));
+		if (t < 0) return;
+		let n = this.slotTile.indexOf(t);
+		n >= 0 ? this.slotStamp[n] = ++this.stamp : this.deal(this.config.slowInterval, t);
+	}
+	dispose() {
+		this.finishFade(), super.dispose();
 	}
 };
-hm(Cm, "defaults", bm), hm(Cm, "label", "Deck");
+hm(wm, "defaults", Sm), hm(wm, "label", "Deck");
 //#endregion
 //#region src/layouts/masonry.js
-var wm = {
+var Tm = {
 	columnWidth: 168,
-	gutter: 20,
-	gap: 19,
+	gutter: 16,
+	gap: 16,
 	firstColumnX: -8,
 	columnOffsets: [
 		-381,
@@ -13778,7 +13826,6 @@ var wm = {
 	},
 	dimOthers: 0,
 	hover: {
-		distortion: .16,
 		zoom: .06,
 		speed: 8
 	},
@@ -13789,7 +13836,7 @@ var wm = {
 	leaveDuration: .8,
 	captionInset: [14, 13]
 };
-function Tm(e, t) {
+function Em(e, t) {
 	let n = t * 2654435769, r = () => {
 		n = n + 1831565813 | 0;
 		let e = Math.imul(n ^ n >>> 15, 1 | n);
@@ -13801,13 +13848,13 @@ function Tm(e, t) {
 	}
 	return i;
 }
-var Em = class extends _m {
+var Dm = class extends _m {
 	constructor(e, t) {
 		super(e, t), this.scroll = 0, this.slow = 1, this.shiftX = 0, this.shiftV = 0, this.columns = [];
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.width / Np.width));
-		this.s = n, this.engine.scale = n, this.colW = t.columnWidth * n, this.pitch = (t.columnWidth + t.gutter) * n, this.gapPx = t.gap * n;
+		this.s = n, this.engine.scale = n, this.colW = t.columnWidth * n, this.pitch = t.columnWidth * n + t.gutter, this.gapPx = t.gap;
 		let r = t.shift.mode === "drift" ? this.pitch : t.shift.max * n, i = Math.max(3, Math.ceil((e.width + 2 * r) / this.pitch) + 2);
 		this.totalW = i * this.pitch;
 		let a = this.colW / t.minAspect, o = e.height + 2 * (a + this.gapPx), s = (e) => this.colW / Math.min(t.maxAspect, Math.max(t.minAspect, e.aspect)), c = Array.from({ length: i }, () => ({
@@ -13815,7 +13862,7 @@ var Em = class extends _m {
 			length: 0
 		})), l = this.items.length, u = this.items;
 		for (let e = 0; c.some((e) => e.length < o) || e < l; e++) {
-			e > 0 && e % l === 0 && (u = Tm(this.items, e / l));
+			e > 0 && e % l === 0 && (u = Em(this.items, e / l));
 			let t = c.reduce((e, t) => t.length < e.length ? t : e), n = u[e % l];
 			if (t.tiles.push({
 				item: n,
@@ -13857,32 +13904,32 @@ var Em = class extends _m {
 		this.featured = f, f && (f.priority = 2), a && (n.hovered.priority = 3);
 	}
 };
-hm(Em, "defaults", wm), hm(Em, "label", "Masonry");
+hm(Dm, "defaults", Tm), hm(Dm, "label", "Masonry");
 //#endregion
 //#region src/main.js
-var Dm = [
+var Om = [
 	{
 		key: "a",
 		name: "Filmstrip",
-		Layout: ym,
-		config: vm
+		Layout: xm,
+		config: bm
 	},
 	{
 		key: "b",
 		name: "Deck",
-		Layout: Cm,
-		config: bm
+		Layout: wm,
+		config: Sm
 	},
 	{
 		key: "c",
 		name: "Masonry",
-		Layout: Em,
-		config: wm
+		Layout: Dm,
+		config: Tm
 	}
 ];
-async function Om(e, t = {}) {
+async function km(e, t = {}) {
 	if (e.__workCanvas) return e.__workCanvas;
-	let n = e.dataset, r = new URLSearchParams(location.search).get("v"), i = parseInt(t.maxVideos ?? n.maxVideos, 10), a = Dm.map((e) => ({
+	let n = e.dataset, r = new URLSearchParams(location.search).get("v"), i = parseInt(t.maxVideos ?? n.maxVideos, 10), a = Om.map((e) => ({
 		...e,
 		config: {
 			...e.config,
@@ -13902,14 +13949,14 @@ async function Om(e, t = {}) {
 	});
 	return e.__workCanvas = o, await o.init(), o;
 }
-function km() {
-	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Om(e));
+function Am() {
+	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => km(e));
 }
 typeof window < "u" && (window.WorkCanvas = {
-	mount: Om,
-	LAYOUTS: Dm
-}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", km, { once: !0 }) : km());
+	mount: km,
+	LAYOUTS: Om
+}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", Am, { once: !0 }) : Am());
 //#endregion
-export { Dm as LAYOUTS, um as WorkCanvas, Om as mount };
+export { Om as LAYOUTS, um as WorkCanvas, km as mount };
 
 //# sourceMappingURL=work-canvas.js.map

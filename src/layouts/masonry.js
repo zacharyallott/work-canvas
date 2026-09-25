@@ -4,7 +4,7 @@ import { ARTBOARD } from '../core/defaults.js';
 /**
  * Version C — Masonry columns (Figma frame 45, node 1542:5489)
  *
- * Seven 168px columns on a 188px pitch, 19px vertical gaps, staggered starts
+ * Seven 168px columns with 16px gutters and 16px vertical gaps, staggered starts
  * (offsets from the frame), bleeding off the top and bottom. Tile heights
  * come from real aspect ratios. Items repeat as needed to fill each column.
  *
@@ -15,8 +15,8 @@ import { ARTBOARD } from '../core/defaults.js';
  */
 export const config = {
   columnWidth: 168,
-  gutter: 20,
-  gap: 19,
+  gutter: 16, // CSS px between columns (fixed, not scaled with the viewport)
+  gap: 16, // CSS px between tiles in a column (fixed)
   firstColumnX: -8,
   // Top of each column's first tile in the frame (design px); repeats for extra columns.
   columnOffsets: [-381, -234, -381, -56, -257, -56, -381],
@@ -42,7 +42,7 @@ export const config = {
   },
   dimOthers: 0, // 0..1 desaturate non-hovered tiles while hovering
 
-  hover: { distortion: 0.16, zoom: 0.06, speed: 8 },
+  hover: { zoom: 0.06, speed: 8 }, // subtle zoom inside the tile, no distortion
   maxVideos: 6,
 
   easing: 'expo.out',
@@ -88,8 +88,8 @@ export default class Masonry extends Layout {
     this.s = s;
     this.engine.scale = s;
     this.colW = c.columnWidth * s;
-    this.pitch = (c.columnWidth + c.gutter) * s;
-    this.gapPx = c.gap * s;
+    this.pitch = c.columnWidth * s + c.gutter;
+    this.gapPx = c.gap;
 
     // Enough columns to cover the mount plus the furthest shift on either side (and a spare to wrap).
     const reach = c.shift.mode === 'drift' ? this.pitch : c.shift.max * s;

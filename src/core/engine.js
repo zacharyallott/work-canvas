@@ -31,11 +31,10 @@ export class WorkCanvas {
     this.isMobile = matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
 
     this.viewport = { width: 1, height: 1 };
-    this.scale = 1; // set by the active layout; scales radius etc.
+    this.scale = 1; // set by the active layout (tile sizes, caption inset)
     this.dpr = 1;
     this.time = 0;
     this.hovered = null;
-    this.pointerUv = new THREE.Vector2(0.5, 0.5);
     this.focusedItem = null; // item focused via keyboard (real links)
     this.upgradeThreshold = this.options.upgradeThreshold;
     this.radius = this.options.radius;
@@ -122,8 +121,8 @@ export class WorkCanvas {
     this.camera = new THREE.OrthographicCamera(0, 1, 0, -1, -2000, 2000);
     this.raycaster = new THREE.Raycaster();
 
-    // One shared, subdivided plane (subdivisions let the vertex bend look smooth).
-    this.geometry = new THREE.PlaneGeometry(1, 1, 24, 8);
+    // One shared plane for every tile.
+    this.geometry = new THREE.PlaneGeometry(1, 1);
     this.emptyTexture = new THREE.DataTexture(new Uint8Array([226, 226, 226, 255]), 1, 1);
     this.emptyTexture.needsUpdate = true;
     this.baseMaterial = new THREE.ShaderMaterial({
@@ -140,15 +139,10 @@ export class WorkCanvas {
         uRadius: { value: this.options.radius },
         uDpr: { value: 1 },
         uBase: { value: new THREE.Color(this.options.placeholder).convertLinearToSRGB() },
-        uHover: { value: 0 },
-        uMouse: { value: new THREE.Vector2(0.5, 0.5) },
-        uDistort: { value: 0.12 },
         uZoom: { value: 0 },
-        uShift: { value: 0 },
         uGray: { value: 0 },
         uAlpha: { value: 1 },
         uReveal: { value: 1 },
-        uBend: { value: 0 },
       },
     });
   }
@@ -275,10 +269,7 @@ export class WorkCanvas {
       next = this.tapped.tile; // touch: a tapped tile keeps its caption for a moment
     } else if (p?.inside && !this.input.pressed?.dragging && !this.openTile && !this.switching && !this.isMobile) {
       const hit = this.pick(p.x, p.y);
-      if (hit) {
-        next = hit.tile;
-        this.pointerUv.copy(hit.uv);
-      }
+      if (hit) next = hit.tile;
     }
     if (next !== this.hovered) {
       this.hovered = next;
@@ -297,7 +288,7 @@ export class WorkCanvas {
     if (this.openTile) return true;
 
     this.openTile = tile;
-    const from = { ...tile.rect, radius: this.radius * this.scale };
+    const from = { ...tile.rect, radius: this.radius };
     tile.override = from;
     tile.mesh.renderOrder = 10000;
     const { width, height } = this.viewport;

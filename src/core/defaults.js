@@ -4,10 +4,10 @@
  * Figma artboard and are scaled to the mount size at runtime.
  */
 export const DEFAULTS = {
-  // Look (from Figma: Light #F2F2F2, 8px radius, #676767 placeholder blocks)
+  // Look (Figma: Light #F2F2F2, #676767 placeholder blocks; radius reduced from the frame's 8px to 4px)
   background: '#f2f2f2',
   placeholder: '#e2e2e2',
-  radius: 8,
+  radius: 4, // corner radius in CSS px (fixed at every screen size)
 
   // Renderer
   maxDpr: 2,

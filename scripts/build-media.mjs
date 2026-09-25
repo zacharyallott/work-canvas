@@ -300,13 +300,14 @@ async function main() {
       id,
       label: project?.label ?? deriveLabel(name),
       href: project?.href ?? '',
+      caseStudy: Boolean(project?.caseStudy),
       source: name,
       sourceHash: hash.slice(0, 16),
     };
 
     const cached = cache[id];
     if (!FORCE && cached?.hash === hash && prevById.has(id)) {
-      items.push({ ...prevById.get(id), label: base.label, href: base.href });
+      items.push({ ...prevById.get(id), label: base.label, href: base.href, caseStudy: base.caseStudy });
       console.log(`· ${name} (unchanged)`);
       continue;
     }

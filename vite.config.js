@@ -37,7 +37,7 @@ function mockWebflowItems() {
           const mp4 = m.type === 'video' ? m.sources.find((s) => s.type === 'video/mp4')?.src : '';
           return img + (mp4 ? `<div class="work-video-${n + 1}">${esc(mp4)}</div>` : empty(`work-video-${n + 1}`));
         });
-        const caseStudy = media[0].href ? '<div class="work-case-study">Full case study</div>' : '';
+        const caseStudy = media[0].caseStudy ? '<div class="work-case-study">Full case study</div>' : '';
         return `      <div role="listitem" class="w-dyn-item"><div class="work-item"><div class="work-title">${esc(title)}</div>${empty('work-description')}${empty('work-services')}${caseStudy}${slots.join('')}</div></div>`;
       })
       .join('\n');

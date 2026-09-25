@@ -31,15 +31,12 @@ export class Tile {
     this.alpha = 1;
     this.reveal = 1;
     this.gray = 0;
-    this.bend = 0;
-    this.shift = 0;
     this.zoom = 0;
     this.priority = 0;
     this.interactive = true;
 
     // Engine-controlled
     this.hover = 0; // eased 0..1
-    this.mouse = new THREE.Vector2(0.5, 0.5);
     this.texReady = 0;
     this.onScreen = false;
     this.override = null; // { x, y, w, h, radius } used by the open-project transition
@@ -49,7 +46,6 @@ export class Tile {
     this.uniforms = this.material.uniforms;
     this.uniforms.uSize.value = new THREE.Vector2(100, 100);
     this.uniforms.uTexSize.value = item.texSize;
-    this.uniforms.uMouse.value = this.mouse;
 
     this.mesh = new THREE.Mesh(engine.geometry, this.material);
     this.mesh.frustumCulled = false; // visibility is decided in sync()
@@ -86,7 +82,6 @@ export class Tile {
     const k = 1 - Math.exp(-dt * (hoverCfg?.speed ?? 8));
     const hovered = this.engine.hovered === this;
     this.hover += ((hovered ? 1 : 0) - this.hover) * k;
-    if (hovered) this.mouse.lerp(this.engine.pointerUv, k);
     this.texReady += ((this.item.ready ? 1 : 0) - this.texReady) * (1 - Math.exp(-dt * 6));
 
     const u = this.uniforms;
@@ -94,16 +89,13 @@ export class Tile {
     u.uTex.value = this.item.texture ?? this.engine.emptyTexture;
     u.uTexSize.value = this.item.texSize;
     u.uTexReady.value = this.item.ready ? this.texReady : 0;
-    u.uRadius.value = this.override?.radius ?? this.engine.radius * this.engine.scale;
+    u.uRadius.value = this.override?.radius ?? this.engine.radius; // fixed CSS px, not scaled
     u.uDpr.value = this.engine.dpr;
     u.uAlpha.value = this.alpha * (opening && opening !== this ? 1 - this.engine.openProgress : 1);
     u.uReveal.value = this.reveal;
     u.uGray.value = this.gray;
-    u.uBend.value = this.engine.reducedMotion ? 0 : this.bend;
-    u.uShift.value = this.engine.reducedMotion ? 0 : this.shift;
-    u.uHover.value = this.engine.reducedMotion ? 0 : this.hover;
-    u.uDistort.value = hoverCfg?.distortion ?? 0.12;
-    u.uZoom.value = this.zoom + this.hover * (hoverCfg?.zoom ?? 0.04);
+    const hoverZoom = this.engine.reducedMotion ? 0 : this.hover * (hoverCfg?.zoom ?? 0);
+    u.uZoom.value = this.zoom + hoverZoom;
 
     // Media requests: pick an image level from the drawn size in device px.
     const devicePx = Math.max(w, h) * this.engine.dpr;

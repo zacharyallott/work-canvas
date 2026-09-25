@@ -7,7 +7,7 @@ import dotEmpty from '../ui/dot-empty.svg';
  * DOM layer on top of the canvas: top bar (ZA icon, tagline, version dots),
  * the floating caption, the static fallback grid, and a visually-hidden
  * wrapper for the real links. Styles are injected once and scoped to .wc-*.
- * Values from Figma: 13px inset, 12px icon, 16px tagline, 8px dots / 6px gap,
+ * Values from Figma: 13px inset, 16px tagline, 8px dots / 6px gap (icon enlarged from 12px to 16px),
  * 12px caption, text #F2F2F2 with mix-blend-mode: difference.
  */
 
@@ -20,8 +20,8 @@ const CSS = `
 /* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */
 .wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,500);color:#f2f2f2}
 .wc-topbar{position:absolute;left:13px;right:13px;top:13px;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference}
-.wc-icon{display:block;width:12px;height:12px}
-.wc-icon img{display:block;width:12px;height:12px}
+.wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px)}
+.wc-icon img{display:block;width:100%;height:100%}
 .wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap}
 .wc-tagline .wc-arrow{display:inline-block;transform:rotate(90deg);width:17px;text-align:center}
 .wc-dots{display:flex;gap:6px;align-items:center;pointer-events:auto}
@@ -31,8 +31,8 @@ const CSS = `
 .wc-caption{position:absolute;left:0;top:0;font-size:12px;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}
 .wc-caption-inner{display:block;transform:translateY(110%)}
 .wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}
-.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:18px;padding:48px 13px 13px;overflow:auto;transition:opacity .6s ease;cursor:auto}
-.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 18px;border-radius:8px;overflow:hidden;background:#e2e2e2}
+.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:16px;padding:48px 13px 13px;overflow:auto;transition:opacity .6s ease;cursor:auto}
+.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 16px;border-radius:4px;overflow:hidden;background:#e2e2e2}
 .wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}
 .wc-root.is-ready .wc-fallback{opacity:0;pointer-events:none}
 .wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}
@@ -59,7 +59,7 @@ export class UI {
     this.root.className = 'wc-ui';
     this.root.innerHTML = `
       <div class="wc-topbar">
-        <span class="wc-icon"><img src="${zaIcon}" alt="" width="12" height="12"></span>
+        <span class="wc-icon"><img src="${zaIcon}" alt="" width="16" height="16"></span>
         <a class="wc-tagline" href="${taglineHref}">${tagline}<span class="wc-arrow" aria-hidden="true">→</span></a>
         <div class="wc-dots" role="tablist" aria-label="Header version"></div>
       </div>
@@ -116,7 +116,8 @@ export class UI {
   }
 
   /**
-   * Caption for the hovered tile: "Title  ↓", bottom-left inside the tile,
+   * Caption for the hovered tile: the project title, plus "  ↓" only when the
+   * project has a full case study (CMS switch). Bottom-left inside the tile,
    * `inset` px from its edges. It slides up into view through a mask when a
    * tile is hovered and out when the pointer leaves; the position tracks the
    * tile every frame.
@@ -135,7 +136,7 @@ export class UI {
       tl.add(() => {
         s.shown = tile;
         if (tile) {
-          inner.textContent = `${tile.item.title}  ↓`;
+          inner.textContent = tile.item.caseStudy ? `${tile.item.title}  ↓` : tile.item.title;
           this.captionH = this.caption.offsetHeight; // measured once per text change, not per frame
         }
       });

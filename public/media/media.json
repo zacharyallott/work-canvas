@@ -1,7 +1,7 @@
 {
-  "generated": "2026-09-24T23:35:14.817Z",
-  "count": 35,
-  "images": 27,
+  "generated": "2026-09-25T02:55:29.553Z",
+  "count": 37,
+  "images": 29,
   "videos": 8,
   "items": [
     {
@@ -39,7 +39,8 @@
         "height": 320,
         "bytes": 2792
       },
-      "aspect": 1.5004
+      "aspect": 1.5004,
+      "caseStudy": false
     },
     {
       "id": "boa-allott-10",
@@ -76,7 +77,8 @@
         "height": 320,
         "bytes": 6090
       },
-      "aspect": 1.5013
+      "aspect": 1.5013,
+      "caseStudy": true
     },
     {
       "id": "boa-allott-11",
@@ -107,7 +109,84 @@
           "bytes": 882493
         }
       ],
-      "aspect": 1.7763
+      "aspect": 1.7763,
+      "caseStudy": true
+    },
+    {
+      "id": "bonnell-allott-01",
+      "label": "Bonnell",
+      "href": "",
+      "caseStudy": true,
+      "source": "Bonnell-Allott-01.jpg",
+      "sourceHash": "9bb82062d554b9fb",
+      "type": "image",
+      "width": 9504,
+      "height": 6336,
+      "images": {
+        "sm": {
+          "src": "media/bonnell-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 4852
+        },
+        "md": {
+          "src": "media/bonnell-allott-01-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 25678
+        },
+        "lg": {
+          "src": "media/bonnell-allott-01-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 83436
+        }
+      },
+      "poster": {
+        "src": "media/bonnell-allott-01-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 4852
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "bonnell-allott-02",
+      "label": "Bonnell",
+      "href": "",
+      "caseStudy": true,
+      "source": "Bonnell-Allott-02.jpg",
+      "sourceHash": "5b9cbc65ceef43bb",
+      "type": "image",
+      "width": 4500,
+      "height": 3000,
+      "images": {
+        "sm": {
+          "src": "media/bonnell-allott-02-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 21040
+        },
+        "md": {
+          "src": "media/bonnell-allott-02-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 217660
+        },
+        "lg": {
+          "src": "media/bonnell-allott-02-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 641374
+        }
+      },
+      "poster": {
+        "src": "media/bonnell-allott-02-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 21040
+      },
+      "aspect": 1.5
     },
     {
       "id": "burton-zebs-allott-01",
@@ -144,7 +223,8 @@
         "height": 480,
         "bytes": 12900
       },
-      "aspect": 0.6667
+      "aspect": 0.6667,
+      "caseStudy": true
     },
     {
       "id": "burton-zebs-allott-02",
@@ -181,7 +261,8 @@
         "height": 320,
         "bytes": 10874
       },
-      "aspect": 1.5
+      "aspect": 1.5,
+      "caseStudy": true
     },
     {
       "id": "cinco-brand-site-allott-10",
@@ -218,7 +299,8 @@
         "height": 480,
         "bytes": 7464
       },
-      "aspect": 1
+      "aspect": 1,
+      "caseStudy": true
     },
     {
       "id": "cinco-screencomp-2",
@@ -249,7 +331,8 @@
           "bytes": 496395
         }
       ],
-      "aspect": 1.5
+      "aspect": 1.5,
+      "caseStudy": true
     },
     {
       "id": "dialpad-allott-01",
@@ -286,7 +369,8 @@
         "height": 320,
         "bytes": 21186
       },
-      "aspect": 1.4997
+      "aspect": 1.4997,
+      "caseStudy": true
     },
     {
       "id": "dialpad-allott-03",
@@ -323,7 +407,8 @@
         "height": 320,
         "bytes": 10020
       },
-      "aspect": 1.5
+      "aspect": 1.5,
+      "caseStudy": true
     },
     {
       "id": "gt-dealerbook",
@@ -360,7 +445,8 @@
         "height": 320,
         "bytes": 5512
       },
-      "aspect": 1.5
+      "aspect": 1.5,
+      "caseStudy": true
     },
     {
       "id": "gt-mobile-1",
@@ -391,7 +477,8 @@
           "bytes": 1629315
         }
       ],
-      "aspect": 1.5
+      "aspect": 1.5,
+      "caseStudy": true
     },
     {
       "id": "koya-allott-01",
@@ -422,7 +509,8 @@
           "bytes": 740794
         }
       ],
-      "aspect": 1.7763
+      "aspect": 1.7763,
+      "caseStudy": false
     },
     {
       "id": "koya-allott-02",
@@ -459,7 +547,8 @@
         "height": 320,
         "bytes": 8776
       },
-      "aspect": 1.5
+      "aspect": 1.5,
+      "caseStudy": false
     },
     {
       "id": "microsoft-teams-bus",
@@ -496,7 +585,8 @@
         "height": 320,
         "bytes": 30450
       },
-      "aspect": 1.5
+      "aspect": 1.5,
+      "caseStudy": false
     },
     {
       "id": "microsoft-teams-busad-allott",
@@ -533,7 +623,8 @@
         "height": 320,
         "bytes": 14100
       },
-      "aspect": 1.5
+      "aspect": 1.5,
+      "caseStudy": false
     },
     {
       "id": "mih-allott-01",
@@ -570,7 +661,8 @@
         "height": 320,
         "bytes": 7062
       },
-      "aspect": 1.5
+      "aspect": 1.5,
+      "caseStudy": true
     },
     {
       "id": "mih-allott-02",
@@ -601,7 +693,8 @@
           "bytes": 780489
         }
       ],
-      "aspect": 1.5
+      "aspect": 1.5,
+      "caseStudy": true
     },
     {
       "id": "mni-allott-01",
@@ -632,7 +725,8 @@
           "bytes": 1503452
         }
       ],
-      "aspect": 1.4555
+      "aspect": 1.4555,
+      "caseStudy": true
     },
     {
       "id": "mni-allott-02",
@@ -669,7 +763,8 @@
         "height": 313,
         "bytes": 30560
       },
-      "aspect": 1.5336
+      "aspect": 1.5336,
+      "caseStudy": true
     },
     {
       "id": "nixon-dork-allott-02",
@@ -706,7 +801,8 @@
         "height": 480,
         "bytes": 19004
       },
-      "aspect": 1
+      "aspect": 1,
+      "caseStudy": true
     },
     {
       "id": "nixon-dork-allott-01",
@@ -743,7 +839,8 @@
         "height": 320,
         "bytes": 27704
       },
-      "aspect": 1.5
+      "aspect": 1.5,
+      "caseStudy": true
     },
     {
       "id": "nixon-push-allott-01",
@@ -774,7 +871,8 @@
           "bytes": 2086591
         }
       ],
-      "aspect": 2.3377
+      "aspect": 2.3377,
+      "caseStudy": true
     },
     {
       "id": "nixon-push-allott-02",
@@ -811,7 +909,8 @@
         "height": 288,
         "bytes": 7136
       },
-      "aspect": 1.6667
+      "aspect": 1.6667,
+      "caseStudy": true
     },
     {
       "id": "otis-allott-01",
@@ -848,7 +947,8 @@
         "height": 320,
         "bytes": 19864
       },
-      "aspect": 1.4994
+      "aspect": 1.4994,
+      "caseStudy": true
     },
     {
       "id": "otis-allott-02",
@@ -885,7 +985,8 @@
         "height": 480,
         "bytes": 14480
       },
-      "aspect": 1
+      "aspect": 1,
+      "caseStudy": true
     },
     {
       "id": "smi-kor-comp-magspread-v1-r4",
@@ -922,7 +1023,8 @@
         "height": 300,
         "bytes": 2318
       },
-      "aspect": 1.6005
+      "aspect": 1.6005,
+      "caseStudy": false
     },
     {
       "id": "smi-kor-comp-retail-display-v1-r4",
@@ -959,7 +1061,8 @@
         "height": 262,
         "bytes": 4620
       },
-      "aspect": 1.8349
+      "aspect": 1.8349,
+      "caseStudy": false
     },
     {
       "id": "solace-identity-allott-bikecards-01",
@@ -996,7 +1099,8 @@
         "height": 288,
         "bytes": 20146
       },
-      "aspect": 1.6674
+      "aspect": 1.6674,
+      "caseStudy": false
     },
     {
       "id": "solace-identity-allott-downtube-01",
@@ -1033,7 +1137,8 @@
         "height": 288,
         "bytes": 10004
       },
-      "aspect": 1.6687
+      "aspect": 1.6687,
+      "caseStudy": false
     },
     {
       "id": "sram-xplr-allott-101",
@@ -1070,7 +1175,8 @@
         "height": 318,
         "bytes": 38200
       },
-      "aspect": 1.5079
+      "aspect": 1.5079,
+      "caseStudy": false
     },
     {
       "id": "stelo-allott-01",
@@ -1107,7 +1213,8 @@
         "height": 320,
         "bytes": 4772
       },
-      "aspect": 1.5013
+      "aspect": 1.5013,
+      "caseStudy": true
     },
     {
       "id": "stelo-allott-02",
@@ -1144,7 +1251,8 @@
         "height": 384,
         "bytes": 11446
       },
-      "aspect": 1.25
+      "aspect": 1.25,
+      "caseStudy": true
     },
     {
       "id": "tinkercad-allott-01",
@@ -1175,7 +1283,8 @@
           "bytes": 411119
         }
       ],
-      "aspect": 1.5
+      "aspect": 1.5,
+      "caseStudy": false
     },
     {
       "id": "tjb-allott-01",
@@ -1212,7 +1321,8 @@
         "height": 320,
         "bytes": 7592
       },
-      "aspect": 1.5004
+      "aspect": 1.5004,
+      "caseStudy": true
     },
     {
       "id": "tjb-allott-02",
@@ -1249,7 +1359,8 @@
         "height": 310,
         "bytes": 29788
       },
-      "aspect": 1.55
+      "aspect": 1.55,
+      "caseStudy": true
     }
   ]
 }
