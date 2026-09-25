@@ -25,7 +25,7 @@ import { EASE } from './motion.js';
  */
 
 export const PROJECT_CONFIG = {
-  pullDistance: 1.2, // × view height of scrolling past the end to go back to the work
+  pullDistance: 0.95, // × view height of scrolling past the end to go back to the work
   gatePause: 0.25, // s without scroll input before a pull can start, so a fling stops at the end
   fadeFrom: 0.15, // pull progress where the fade starts
   lift: 72, // px the images rise over a full pull (they resist rather than follow)
