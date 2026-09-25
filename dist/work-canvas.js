@@ -14196,6 +14196,12 @@ var gh = {
 	minWidth: 200,
 	maxWidth: 620,
 	seed: 3,
+	fillOrder: [
+		3,
+		1,
+		0,
+		2
+	],
 	slots: [
 		{
 			x: -110,
@@ -14252,7 +14258,7 @@ var gh = {
 	constructor(e, t) {
 		super(e, t), this.makeTiles(this.items);
 		let n = this.tiles.length;
-		this.slotCount = Math.min(t.slots.length, n), this.slotTile = Array.from({ length: this.slotCount }, (e, t) => t), this.slotStamp = Array.from({ length: this.slotCount }, (e, t) => this.slotCount - t), this.stamp = this.slotCount, this.next = this.slotCount % n, this.fading = null, this.timer = 0, this.travel = 0, this.lastPointer = null, this.anchors = t.slots.map(() => ({
+		this.slotCount = Math.min(t.slots.length, n), this.fillOrder = t.fillOrder.filter((e) => e < this.slotCount), this.slotTile = Array.from({ length: this.slotCount }, () => -1), this.slotStamp = Array.from({ length: this.slotCount }, () => 0), this.slotTile[this.fillOrder[0]] = 0, this.slotStamp[this.fillOrder[0]] = 1, this.stamp = 1, this.next = 1 % n, this.fading = null, this.timer = 0, this.travel = 0, this.lastPointer = null, this.anchors = t.slots.map(() => ({
 			x: 0,
 			y: 0
 		}));
@@ -14294,39 +14300,40 @@ var gh = {
 			e.w = e.baseW, e.h = e.baseH, e.x = _ + i.x + r.x * this.k - e.w / 2, e.y = v + i.y + r.y * this.k - e.h / 2;
 		};
 		for (let e of this.tiles) e.alpha = 0, e.interactive = !1, e.rotation = 0, e.reveal = 1, e.gray = 0, e.zoom = 0, e.priority = 0;
-		let b = [...this.slotStamp].sort((e, t) => t - e), x = null;
+		let b = this.slotTile.filter((e) => e >= 0).length, x = this.slotStamp.filter((e, t) => this.slotTile[t] >= 0).sort((e, t) => t - e), S = null;
 		this.slotTile.forEach((e, t) => {
+			if (e < 0) return;
 			let n = this.tiles[e];
 			y(n, t), n.z = this.slotStamp[t], n.alpha = this.fading?.to === e ? this.fading.p : 1, n.interactive = !0;
-			let r = b.indexOf(this.slotStamp[t]);
-			n.priority = 1 - r * .2, r === 0 && (x = n), this.applyTransition(n, Math.max(0, Math.min(1, (this.slotCount - 1 - r) / this.slotCount)));
+			let r = x.indexOf(this.slotStamp[t]);
+			n.priority = 1 - r * .2, r === 0 && (S = n), this.applyTransition(n, Math.max(0, Math.min(1, (b - 1 - r) / Math.max(1, b))));
 		});
-		let S = this.fading;
-		if (S && S.from !== S.to && !this.slotTile.includes(S.from)) {
-			let e = this.tiles[S.from];
-			y(e, S.slot), e.z = S.fromStamp, e.alpha = 1 - S.p;
+		let C = this.fading;
+		if (C && C.from >= 0 && C.from !== C.to && !this.slotTile.includes(C.from)) {
+			let e = this.tiles[C.from];
+			y(e, C.slot), e.z = C.fromStamp, e.alpha = 1 - C.p;
 		}
-		this.featured = x, x && (x.priority = 3);
+		this.featured = S, S && (S.priority = 3);
 	}
 	deal(e = null) {
 		let t = this.tiles.length;
-		if (t <= this.slotCount) return;
+		if (t <= this.slotTile.filter((e) => e >= 0).length) return;
 		this.finishFade();
 		let n = e ?? this.next;
 		for (let e = 0; this.slotTile.includes(n) && e < t; e++) n = (n + 1) % t;
 		e ?? (this.next = (n + 1) % t);
-		let r = this.slotStamp.indexOf(Math.min(...this.slotStamp)), i = this.slotTile[r];
+		let r = this.fillOrder.find((e) => this.slotTile[e] < 0), i = this.slotStamp.indexOf(Math.min(...this.slotStamp.filter((e, t) => this.slotTile[t] >= 0))), a = r ?? i, o = this.slotTile[a];
 		this.fading = {
-			slot: r,
-			from: i,
-			fromStamp: this.slotStamp[r],
+			slot: a,
+			from: o,
+			fromStamp: this.slotStamp[a],
 			to: n,
 			p: 0
-		}, this.slotTile[r] = n, this.slotStamp[r] = ++this.stamp;
-		let a = this.config.dealDuration;
+		}, this.slotTile[a] = n, this.slotStamp[a] = ++this.stamp;
+		let s = this.config.dealDuration;
 		this.fadeTween = mi.to(this.fading, {
 			p: 1,
-			duration: a,
+			duration: s,
 			ease: this.config.dealEase,
 			onComplete: () => this.finishFade()
 		});

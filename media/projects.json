@@ -19,6 +19,7 @@
     { "match": "^Stelo-",               "label": "Stelo",                     "href": "/projects/stelo", "caseStudy": true },
     { "match": "^TJB-",                 "label": "The James Brand",           "href": "/projects/the-james-brand", "caseStudy": true },
     { "match": "^Tinkercad-",           "label": "Tinkercad",                 "href": "", "caseStudy": false },
+    { "match": "^vilafilm",             "label": "Vilafilm",                  "href": "", "caseStudy": false },
     { "match": "^solace-",              "label": "Solace Cycles",             "href": "/projects/solace-cycles", "caseStudy": false },
     { "match": "Tosdal",                "label": "Tosdal APC",                "href": "/projects/tosdal-law", "caseStudy": false }
   ],

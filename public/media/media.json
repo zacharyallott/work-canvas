@@ -1,8 +1,8 @@
 {
-  "generated": "2026-09-25T02:55:29.553Z",
-  "count": 37,
-  "images": 29,
-  "videos": 8,
+  "generated": "2026-09-25T04:54:27.323Z",
+  "count": 39,
+  "images": 30,
+  "videos": 9,
   "items": [
     {
       "id": "20-tosdal-identity-cover",
@@ -1361,6 +1361,76 @@
       },
       "aspect": 1.55,
       "caseStudy": true
+    },
+    {
+      "id": "vilafilm-animation-test-v1",
+      "label": "Vilafilm",
+      "href": "",
+      "caseStudy": false,
+      "source": "VilaFilm_Animation_Test_v1.mp4",
+      "sourceHash": "30c1a2648b058bac",
+      "type": "video",
+      "width": 1080,
+      "height": 608,
+      "duration": 9.01,
+      "sourceDuration": 9.01,
+      "poster": {
+        "src": "media/vilafilm-animation-test-v1-poster.webp",
+        "width": 1080,
+        "height": 608,
+        "bytes": 7510
+      },
+      "sources": [
+        {
+          "src": "media/vilafilm-animation-test-v1.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 163298
+        },
+        {
+          "src": "media/vilafilm-animation-test-v1.mp4",
+          "type": "video/mp4",
+          "bytes": 1638173
+        }
+      ],
+      "aspect": 1.7763
+    },
+    {
+      "id": "vilafilm-identity-allott-01-copy-2",
+      "label": "Vilafilm",
+      "href": "",
+      "caseStudy": false,
+      "source": "vilafilm-identity-allott-01 copy 2.jpg",
+      "sourceHash": "96928cc0137cd09f",
+      "type": "image",
+      "width": 3601,
+      "height": 2159,
+      "images": {
+        "sm": {
+          "src": "media/vilafilm-identity-allott-01-copy-2-sm.webp",
+          "width": 480,
+          "height": 288,
+          "bytes": 3110
+        },
+        "md": {
+          "src": "media/vilafilm-identity-allott-01-copy-2-md.webp",
+          "width": 1280,
+          "height": 767,
+          "bytes": 10738
+        },
+        "lg": {
+          "src": "media/vilafilm-identity-allott-01-copy-2-lg.webp",
+          "width": 2048,
+          "height": 1228,
+          "bytes": 20108
+        }
+      },
+      "poster": {
+        "src": "media/vilafilm-identity-allott-01-copy-2-sm.webp",
+        "width": 480,
+        "height": 288,
+        "bytes": 3110
+      },
+      "aspect": 1.6679
     }
   ]
 }

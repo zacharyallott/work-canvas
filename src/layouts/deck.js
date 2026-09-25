@@ -17,9 +17,10 @@ import { sizePattern, fitSize } from '../core/sizing.js';
  * differently, so the pile fans out the further the cursor gets from the
  * centre and trails as it moves. Depth belongs to the position, not to the
  * stacking order, so cards still don't shift when a new one comes in. Cards never move
- * between positions: a new card fades in on top, in the position of the
- * oldest card, which fades out underneath it; the other cards stay exactly as
- * they are. After `interval` s without a new card the next one comes in on
+ * between positions. It starts with a single card; each new card fades in on
+ * top in the next empty position, and once all four are filled, in the
+ * position of the oldest card, which fades out underneath it. The other cards
+ * stay exactly as they are. After `interval` s without a new card the next one comes in on
  * its own; moving the cursor brings in more — one per `moveStep` px of
  * travel, so faster movement stacks faster. Hovering a card pauses the
  * stacking and brings that card to the front (in place).
@@ -31,6 +32,8 @@ export const config = {
   maxWidth: 620, // wider cards get shorter instead
   seed: 3, // change to reshuffle which card gets which size
   // The four card positions, offset from the pile centre in design px (from Figma).
+  // They fill in `fillOrder` (the first card sits near the centre).
+  fillOrder: [3, 1, 0, 2],
   slots: [
     { x: -110, y: 0 },
     { x: 67, y: 0 },
@@ -77,12 +80,15 @@ export default class Deck extends Layout {
     const n = this.tiles.length;
     this.slotCount = Math.min(cfg.slots.length, n);
 
-    // Which tile sits in each position, and its stacking stamp (higher = nearer the top).
-    // Starts like the Figma frame: position 0 on top … position 3 at the bottom.
-    this.slotTile = Array.from({ length: this.slotCount }, (_, k) => k);
-    this.slotStamp = Array.from({ length: this.slotCount }, (_, k) => this.slotCount - k);
-    this.stamp = this.slotCount;
-    this.next = this.slotCount % n; // next tile to deal
+    // Which tile sits in each position (-1 = empty), and its stacking stamp (higher = nearer the top).
+    // Starts with one card; the rest fill in as cards are dealt.
+    this.fillOrder = cfg.fillOrder.filter((k) => k < this.slotCount);
+    this.slotTile = Array.from({ length: this.slotCount }, () => -1);
+    this.slotStamp = Array.from({ length: this.slotCount }, () => 0);
+    this.slotTile[this.fillOrder[0]] = 0;
+    this.slotStamp[this.fillOrder[0]] = 1;
+    this.stamp = 1;
+    this.next = 1 % n; // next tile to deal
     this.fading = null; // { slot, from, fromStamp, to, p } while a new card fades in
 
     this.timer = 0; // s since the last card
@@ -182,9 +188,11 @@ export default class Deck extends Layout {
       t.priority = 0;
     }
 
-    const order = [...this.slotStamp].sort((a, b) => b - a); // stamps, top first
+    const filled = this.slotTile.filter((ti) => ti >= 0).length;
+    const order = this.slotStamp.filter((_, k) => this.slotTile[k] >= 0).sort((a, b) => b - a); // stamps, top first
     let top = null;
     this.slotTile.forEach((ti, k) => {
+      if (ti < 0) return; // empty position
       const t = this.tiles[ti];
       place(t, k);
       t.z = this.slotStamp[k];
@@ -194,12 +202,12 @@ export default class Deck extends Layout {
       t.priority = 1 - rank * 0.2;
       if (rank === 0) top = t;
       // Entering the deck: cards fade in, bottom first.
-      this.applyTransition(t, Math.max(0, Math.min(1, (this.slotCount - 1 - rank) / this.slotCount)));
+      this.applyTransition(t, Math.max(0, Math.min(1, (filled - 1 - rank) / Math.max(1, filled))));
     });
 
     // The replaced card fades out underneath, in place.
     const f = this.fading;
-    if (f && f.from !== f.to && !this.slotTile.includes(f.from)) {
+    if (f && f.from >= 0 && f.from !== f.to && !this.slotTile.includes(f.from)) {
       const t = this.tiles[f.from];
       place(t, f.slot);
       t.z = f.fromStamp;
@@ -210,17 +218,20 @@ export default class Deck extends Layout {
     if (top) top.priority = 3;
   }
 
-  /** Bring the next card in: it fades in on top, in place of the oldest card. */
+  /** Bring the next card in: it fades in on top, in the next empty position, or else in place of the oldest card. */
   deal(tileIndex = null) {
     const n = this.tiles.length;
-    if (n <= this.slotCount) return;
+    const filled = this.slotTile.filter((ti) => ti >= 0).length;
+    if (n <= filled) return; // every card is already showing
     this.finishFade();
 
     let to = tileIndex ?? this.next;
     for (let guard = 0; this.slotTile.includes(to) && guard < n; guard++) to = (to + 1) % n;
     if (tileIndex == null) this.next = (to + 1) % n;
 
-    const slot = this.slotStamp.indexOf(Math.min(...this.slotStamp)); // the oldest card's position
+    const empty = this.fillOrder.find((k) => this.slotTile[k] < 0);
+    const oldest = this.slotStamp.indexOf(Math.min(...this.slotStamp.filter((_, k) => this.slotTile[k] >= 0)));
+    const slot = empty ?? oldest;
     const from = this.slotTile[slot];
     this.fading = { slot, from, fromStamp: this.slotStamp[slot], to, p: 0 };
     this.slotTile[slot] = to;
