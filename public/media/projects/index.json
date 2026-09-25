@@ -1144,6 +1144,228 @@
     "folder": "06_TJB",
     "items": [
       {
+        "id": "00-header-header-image-01",
+        "label": "The James Brand",
+        "href": "/projects/the-james-brand",
+        "caseStudy": true,
+        "source": "00-Header_Header-Image-01.webp",
+        "sourceHash": "3bd9c52682e99309",
+        "type": "image",
+        "width": 2100,
+        "height": 1400,
+        "images": {
+          "sm": {
+            "src": "media/projects/the-james-brand/00-header-header-image-01-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 25328
+          },
+          "md": {
+            "src": "media/projects/the-james-brand/00-header-header-image-01-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 186330
+          },
+          "lg": {
+            "src": "media/projects/the-james-brand/00-header-header-image-01-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 398472
+          }
+        },
+        "poster": {
+          "src": "media/projects/the-james-brand/00-header-header-image-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 25328
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "1-large",
+        "label": "1 Large",
+        "href": "",
+        "caseStudy": false,
+        "source": "1-Large.webp",
+        "sourceHash": "9b108d08438fa3f1",
+        "type": "image",
+        "width": 1956,
+        "height": 1304,
+        "images": {
+          "sm": {
+            "src": "media/projects/the-james-brand/1-large-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 11166
+          },
+          "md": {
+            "src": "media/projects/the-james-brand/1-large-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 93512
+          },
+          "lg": {
+            "src": "media/projects/the-james-brand/1-large-lg.webp",
+            "width": 1956,
+            "height": 1304,
+            "bytes": 239346
+          }
+        },
+        "poster": {
+          "src": "media/projects/the-james-brand/1-large-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 11166
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "1-medium",
+        "label": "Microsoft Innovation Hub",
+        "href": "/projects/microsoft-innovation-hub",
+        "caseStudy": true,
+        "source": "1-Medium.webp",
+        "sourceHash": "4938bcccb385a77d",
+        "type": "image",
+        "width": 1707,
+        "height": 1137,
+        "images": {
+          "sm": {
+            "src": "media/projects/the-james-brand/1-medium-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 7500
+          },
+          "md": {
+            "src": "media/projects/the-james-brand/1-medium-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 33186
+          },
+          "lg": {
+            "src": "media/projects/the-james-brand/1-medium-lg.webp",
+            "width": 1707,
+            "height": 1137,
+            "bytes": 60094
+          }
+        },
+        "poster": {
+          "src": "media/projects/the-james-brand/1-medium-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 7500
+        },
+        "aspect": 1.5013
+      },
+      {
+        "id": "04-tjb-digital",
+        "label": "The James Brand",
+        "href": "/projects/the-james-brand",
+        "caseStudy": true,
+        "source": "04_TJB-Digital.mp4",
+        "sourceHash": "56c34824a49ea85f",
+        "type": "video",
+        "width": 1080,
+        "height": 718,
+        "duration": 7.04,
+        "sourceDuration": 7.04,
+        "poster": {
+          "src": "media/projects/the-james-brand/04-tjb-digital-poster.webp",
+          "width": 1080,
+          "height": 718,
+          "bytes": 48752
+        },
+        "sources": [
+          {
+            "src": "media/projects/the-james-brand/04-tjb-digital.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 449879
+          },
+          {
+            "src": "media/projects/the-james-brand/04-tjb-digital.mp4",
+            "type": "video/mp4",
+            "bytes": 392097
+          }
+        ],
+        "aspect": 1.5042
+      },
+      {
+        "id": "07-image-module-1-large",
+        "label": "The James Brand",
+        "href": "/projects/the-james-brand",
+        "caseStudy": true,
+        "source": "07-Image-Module_1-Large.webp",
+        "sourceHash": "406d1e0d3e715dca",
+        "type": "image",
+        "width": 1956,
+        "height": 1304,
+        "images": {
+          "sm": {
+            "src": "media/projects/the-james-brand/07-image-module-1-large-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 19584
+          },
+          "md": {
+            "src": "media/projects/the-james-brand/07-image-module-1-large-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 108474
+          },
+          "lg": {
+            "src": "media/projects/the-james-brand/07-image-module-1-large-lg.webp",
+            "width": 1956,
+            "height": 1304,
+            "bytes": 215938
+          }
+        },
+        "poster": {
+          "src": "media/projects/the-james-brand/07-image-module-1-large-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 19584
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "header-image-01",
+        "label": "Header Image",
+        "href": "",
+        "caseStudy": false,
+        "source": "Header-Image-01.webp",
+        "sourceHash": "7905aef99f928520",
+        "type": "image",
+        "width": 2100,
+        "height": 1400,
+        "images": {
+          "sm": {
+            "src": "media/projects/the-james-brand/header-image-01-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 14676
+          },
+          "md": {
+            "src": "media/projects/the-james-brand/header-image-01-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 70840
+          },
+          "lg": {
+            "src": "media/projects/the-james-brand/header-image-01-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 133936
+          }
+        },
+        "poster": {
+          "src": "media/projects/the-james-brand/header-image-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 14676
+        },
+        "aspect": 1.5
+      },
+      {
         "id": "tjb-allott-01",
         "label": "The James Brand",
         "href": "/projects/the-james-brand",
