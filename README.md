@@ -38,6 +38,7 @@ src/
     about.js           about copy: statement, client columns, links
     project.js         project view (DOM page) + end-of-page pull
     seo.js             crawlable project links + JSON-LD
+    embed.js           YouTube/Vimeo links → embedded players
     motion.js          shared eases (every animation uses these)
     sizing.js          size scale shared by the filmstrip and deck
     data.js            reads .work-item elements (CMS list) from the DOM
@@ -137,6 +138,8 @@ Collection **Projects** (URL slug `work`):
 | Image 2 video | Link | optional MP4 URL; plays in place of Image 2 |
 | Image 3–13 (+ video) | Image / Link | the project view's gallery (usually the project's folder) |
 
+**Video links:** an "Image N video" field takes either an MP4 URL (a muted loop in place of the image) or a **YouTube / Vimeo link** (an embedded player with sound in the project view). For a YouTube/Vimeo link the slot's image is the thumbnail shown with a play button until pressed (optional: without one, YouTube's own thumbnail is used, and Vimeo shows its player straight away). The player only loads when someone presses play. In Image 1/2 the homepage tile shows the image; the player appears in the project view.
+
 Tiles are ordered by the list's sort: every project's Image 1 first, then every project's Image 2, so neighbours come from different projects. The CMS can't host MP4s, so video URLs point at a tagged release on jsDelivr (or any bucket). Run videos through `npm run media` first.
 
 ### 2. Markup (on the **Home** page, `/`)
@@ -223,7 +226,7 @@ A copy of Home (same header, same Collection List) with its own SEO title, descr
 Page settings → Custom code → Before `</body>` tag, on Home, About and the Projects template:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.7/dist/work-canvas.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.8/dist/work-canvas.js"></script>
 ```
 
 When you release, bump the version on all three, and `data-media-base` on each `#work-canvas`.

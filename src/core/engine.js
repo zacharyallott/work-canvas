@@ -469,7 +469,7 @@ export class WorkCanvas {
     if (this.aboutOpen) this.toggleAbout(false, { fromHistory: true }); // the project gets its own history entry
 
     const view = this.ui.project;
-    const hero = { type: item.type, bestSrc: item.bestSrc, srcset: item.srcset, sources: item.sources, poster: item.poster, hash: item.hash, aspect: item.aspect, alt: project.title };
+    const hero = { type: item.type, bestSrc: item.bestSrc, srcset: item.srcset, sources: item.sources, poster: item.poster, hash: item.hash, embed: item.embed, aspect: item.aspect, alt: project.title };
     await preload(hero.bestSrc); // cached already, so the DOM copy appears without a flash
 
     this.projectOpen = true;

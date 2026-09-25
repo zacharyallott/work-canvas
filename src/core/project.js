@@ -1,5 +1,6 @@
 import gsap from 'gsap';
 import { EASE } from './motion.js';
+import { autoplaySrc } from './embed.js';
 
 /**
  * Project view (Figma frame 50, node 1553:6590).
@@ -49,6 +50,13 @@ const CSS = `
 .wc-project-item:nth-child(4n+3){width:51.8%}
 .wc-project-item img{display:block;width:100%;height:auto}
 .wc-project-item video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* External video (YouTube / Vimeo): thumbnail + play button until pressed, then the player. */
+.wc-project-item iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.wc-embed{appearance:none;position:absolute;inset:0;display:block;width:100%;height:100%;margin:0;padding:0;border:0;background:#111;cursor:pointer}
+.wc-embed img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.wc-embed-play{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:#f2f2f2}
+.wc-embed-play::after{content:"";position:absolute;left:22px;top:19px;border-style:solid;border-width:9px 0 9px 14px;border-color:transparent transparent transparent #111}
+.wc-embed:focus-visible{outline:2px solid #111;outline-offset:2px}
 .wc-project-media{will-change:opacity,translate}
 .wc-project-info{will-change:opacity}
 @media (max-width:700px){
@@ -80,6 +88,7 @@ const baseName = (url) =>
  */
 const idsOf = (it) => {
   const strong = it.hash ? [`h:${it.hash}`] : [];
+  if (it.embed) strong.push(`e:${it.embed.provider}:${it.embed.id}`);
   const weak = [];
   for (const url of [it.src, it.poster, it.video]) {
     if (!url) continue;
@@ -93,6 +102,34 @@ const idsOf = (it) => {
 const samePicture = (a, b) =>
   a.strong.some((k) => b.strong.includes(k)) ||
   ((!a.strong.length || !b.strong.length) && a.weak.some((k) => b.weak.includes(k)));
+
+/** An embedded player. */
+function playerFrame(src, title) {
+  const frame = document.createElement('iframe');
+  frame.src = src;
+  frame.title = title;
+  frame.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media';
+  frame.allowFullscreen = true;
+  frame.referrerPolicy = 'strict-origin-when-cross-origin';
+  return frame;
+}
+
+/**
+ * A YouTube/Vimeo slot: the CMS image (or YouTube's thumbnail) with a play
+ * button, sized to the image (16:9 without one). No image and no thumbnail
+ * (Vimeo): the player itself.
+ */
+function embedItem(it, projectTitle) {
+  const own = it.src && it.src !== it.embed.thumb; // the slot's own image, not YouTube's
+  const ratio = own && it.aspect ? it.aspect.toFixed(4) : '16 / 9';
+  const title = `${projectTitle} — video`;
+  const inner = it.src
+    ? `<button type="button" class="wc-embed" data-src="${esc(autoplaySrc(it.embed))}" data-title="${esc(title)}" aria-label="Play video: ${esc(projectTitle)}">` +
+      `<img src="${esc(it.src)}"${own && it.srcset ? ` srcset="${esc(it.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ''} alt="" ${it.hero ? 'decoding="sync"' : 'loading="lazy" decoding="async"'}${own ? '' : ' data-no-fit'}>` +
+      `<span class="wc-embed-play" aria-hidden="true"></span></button>`
+    : playerFrame(it.embed.src, title).outerHTML.replace('<iframe', '<iframe loading="lazy"');
+  return `<li class="wc-project-item is-embed${it.hero ? ' is-hero' : ''}" style="aspect-ratio:${ratio}">${inner}</li>`;
+}
 
 export class ProjectView {
   constructor(uiRoot, { onEnd } = {}) {
@@ -114,6 +151,11 @@ export class ProjectView {
     this.scroll.addEventListener('wheel', (e) => this.onWheel(e), { passive: true });
     this.scroll.addEventListener('touchstart', (e) => this.onTouchStart(e), { passive: true });
     this.scroll.addEventListener('touchmove', (e) => this.onTouchMove(e), { passive: true });
+    // Pressing an external video's thumbnail swaps in its player, playing.
+    this.scroll.addEventListener('click', (e) => {
+      const button = e.target.closest('.wc-embed');
+      if (button) button.replaceWith(playerFrame(button.dataset.src, button.dataset.title));
+    });
     this.io = new IntersectionObserver(
       (entries) => entries.forEach((e) => (e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause())),
       { root: this.scroll, threshold: 0.25 },
@@ -129,7 +171,7 @@ export class ProjectView {
     const heroSrc = hero ? hero.bestSrc : '';
     const items = [];
     if (hero) {
-      items.push({ type: hero.type, src: heroSrc, srcset: hero.srcset, video: hero.sources?.at(-1)?.src, poster: hero.poster, hash: hero.hash, aspect: hero.aspect, alt: project.title, hero: true });
+      items.push({ type: hero.embed ? 'embed' : hero.type, src: heroSrc, srcset: hero.srcset, video: hero.embed ? '' : hero.sources?.at(-1)?.src, embed: hero.embed, poster: hero.poster, hash: hero.hash, aspect: hero.aspect, alt: project.title, hero: true });
     }
     // No picture twice: skip gallery entries that match the hero or an earlier entry.
     const kept = items.map(idsOf);
@@ -154,6 +196,7 @@ export class ProjectView {
       <ul class="wc-project-media" aria-label="${esc(project.title)} images">
         ${items
           .map((it) => {
+            if (it.type === 'embed' && it.embed) return embedItem(it, project.title);
             // Known ratio up front (hero); otherwise a 3:2 placeholder until the image reports its size.
             const ratio = ` style="aspect-ratio:${it.aspect ? it.aspect.toFixed(4) : '1.5'}"`;
             const img = `<img crossorigin="anonymous" src="${esc(it.src)}"${it.srcset ? ` srcset="${esc(it.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ''} alt="${esc(it.alt)}" ${it.hero ? 'decoding="sync"' : 'loading="lazy" decoding="async"'}>`;
@@ -165,10 +208,11 @@ export class ProjectView {
     this.resetPull();
     this.scroll.scrollTop = 0;
     this.el.querySelectorAll('.wc-project-item img').forEach((img) => {
+      const item = img.closest('.wc-project-item');
       const fit = () => {
         if (!img.naturalWidth) return;
-        img.parentElement.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`;
-        img.parentElement.classList.add('is-loaded');
+        if (!img.hasAttribute('data-no-fit')) item.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`;
+        item.classList.add('is-loaded');
       };
       if (img.complete) fit();
       img.addEventListener('load', fit); // again if srcset swaps in another size

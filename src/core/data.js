@@ -28,6 +28,7 @@
  * Tiles are ordered slot by slot — every project's first piece, then every
  * project's second — so the same project rarely sits next to itself.
  */
+import { parseEmbed } from './embed.js';
 
 const VIDEO_EXT = /\.(mp4|webm|mov|m4v)(\?|#|$)/i;
 
@@ -100,13 +101,16 @@ export function readItems(mount) {
       for (let n = perProject + 1; n <= GALLERY_MAX; n++) {
         const img = imgOf(n);
         const image = resolve(attr(`image-${n}`) || img?.getAttribute('src'));
-        const video = resolve(attr(`video-${n}`) || text(`work-video-${n}`));
-        if (!image && !video) continue;
+        const link = resolve(attr(`video-${n}`) || text(`work-video-${n}`));
+        const embed = parseEmbed(link); // YouTube / Vimeo: an embedded player instead of a muted loop
+        const video = embed ? '' : link;
+        if (!image && !video && !embed) continue;
         project.gallery.push({
-          type: video ? 'video' : 'image',
-          src: image,
-          srcset: img?.getAttribute('srcset') || '',
+          type: embed ? 'embed' : video ? 'video' : 'image',
+          src: image || embed?.thumb || '',
+          srcset: image ? img?.getAttribute('srcset') || '' : '',
           video,
+          embed,
           alt: img?.getAttribute('alt') || project.title,
           hash: img?.dataset.hash || '', // content hash (local mock only; on Webflow the asset id does this job)
         });
@@ -116,14 +120,17 @@ export function readItems(mount) {
       for (let n = 1; n <= perProject; n++) {
         const img = imgOf(n);
         const image = resolve(attr(`image-${n}`) || img?.getAttribute('src'));
-        const video = resolve(attr(`video-${n}`) || text(`work-video-${n}`));
+        const link = resolve(attr(`video-${n}`) || text(`work-video-${n}`));
+        // A YouTube/Vimeo link can't be a canvas texture: the tile shows the image, the project view the player.
+        const embed = parseEmbed(link);
+        const video = embed ? '' : link;
         if (!image && !video) continue;
         // Webflow's responsive variants (…-p-500, -p-1080, …) become the texture levels when present.
         const levels = img ? srcsetLevels(parseSrcset(img.getAttribute('srcset'), resolve)) : [];
         const media = video
           ? { type: 'video', poster: levels[0]?.src || image, images: [], sources: videoSources(video, resolve(attr(`video-${n}-webm`))) }
           : { type: 'image', poster: levels[0]?.src || image, images: levels.length ? levels : singleImageLevels(image), sources: [] };
-        (slots[n - 1] ||= []).push({ ...project, ...media, project: shared, slot: n, hash: img?.dataset.hash || '', aspect: parseFloat(attr(`aspect-${n}`)) || 0 });
+        (slots[n - 1] ||= []).push({ ...project, ...media, project: shared, slot: n, embed, hash: img?.dataset.hash || '', aspect: parseFloat(attr(`aspect-${n}`)) || 0 });
       }
       return;
     }
