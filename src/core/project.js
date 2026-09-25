@@ -61,7 +61,7 @@ const CSS = `
    faded in over the thumbnail once the player has loaded. */
 .wc-project-item.is-loop{container-type:size;background:#111}
 .wc-project-item.is-loop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.wc-project-item.is-loop iframe{left:50%;top:50%;inset:auto;width:max(100cqw,calc(100cqh * 16 / 9));height:max(100cqh,calc(100cqw * 9 / 16));translate:-50% -50%;pointer-events:none;opacity:0;transition:opacity .4s linear}
+.wc-project-item.is-loop iframe{inset:auto;left:50%;top:50%;width:max(100cqw,calc(100cqh * 16 / 9));height:max(100cqh,calc(100cqw * 9 / 16));translate:-50% -50%;pointer-events:none;opacity:0;transition:opacity .4s linear}
 .wc-project-item.is-loop iframe.is-on{opacity:1}
 .wc-project-media{will-change:opacity,translate}
 .wc-project-info{will-change:opacity}
