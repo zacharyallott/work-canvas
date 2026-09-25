@@ -1,0 +1,224 @@
+{
+  "generated": "2026-09-25T03:14:19.607Z",
+  "count": 6,
+  "images": 4,
+  "videos": 2,
+  "items": [
+    {
+      "id": "boa-allott-02",
+      "label": "BOA Performfit Wrap",
+      "href": "/projects/boa",
+      "caseStudy": true,
+      "source": "BOA-Allott-02.webp",
+      "sourceHash": "ce7440c202d90880",
+      "type": "image",
+      "width": 1707,
+      "height": 1137,
+      "images": {
+        "sm": {
+          "src": "media/projects/boa/boa-allott-02-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 8012
+        },
+        "md": {
+          "src": "media/projects/boa/boa-allott-02-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 35040
+        },
+        "lg": {
+          "src": "media/projects/boa/boa-allott-02-lg.webp",
+          "width": 1707,
+          "height": 1137,
+          "bytes": 60080
+        }
+      },
+      "poster": {
+        "src": "media/projects/boa/boa-allott-02-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 8012
+      },
+      "aspect": 1.5013
+    },
+    {
+      "id": "boa-allott-03",
+      "label": "BOA Performfit Wrap",
+      "href": "/projects/boa",
+      "caseStudy": true,
+      "source": "BOA-Allott-03.webp",
+      "sourceHash": "19aae7794c2f5697",
+      "type": "image",
+      "width": 1956,
+      "height": 1304,
+      "images": {
+        "sm": {
+          "src": "media/projects/boa/boa-allott-03-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 4042
+        },
+        "md": {
+          "src": "media/projects/boa/boa-allott-03-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 18116
+        },
+        "lg": {
+          "src": "media/projects/boa/boa-allott-03-lg.webp",
+          "width": 1956,
+          "height": 1304,
+          "bytes": 32968
+        }
+      },
+      "poster": {
+        "src": "media/projects/boa/boa-allott-03-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 4042
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "boa-allott-04",
+      "label": "BOA Performfit Wrap",
+      "href": "/projects/boa",
+      "caseStudy": true,
+      "source": "BOA-Allott-04.webp",
+      "sourceHash": "5226a668d31515ab",
+      "type": "image",
+      "width": 1707,
+      "height": 1137,
+      "images": {
+        "sm": {
+          "src": "media/projects/boa/boa-allott-04-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 2704
+        },
+        "md": {
+          "src": "media/projects/boa/boa-allott-04-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 14334
+        },
+        "lg": {
+          "src": "media/projects/boa/boa-allott-04-lg.webp",
+          "width": 1707,
+          "height": 1137,
+          "bytes": 26852
+        }
+      },
+      "poster": {
+        "src": "media/projects/boa/boa-allott-04-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 2704
+      },
+      "aspect": 1.5013
+    },
+    {
+      "id": "boa-allott-10",
+      "label": "BOA Performfit Wrap",
+      "href": "/projects/boa",
+      "caseStudy": true,
+      "source": "BOA-Allott-10.webp",
+      "sourceHash": "7276b58dfaf55e5a",
+      "type": "image",
+      "width": 1707,
+      "height": 1137,
+      "images": {
+        "sm": {
+          "src": "media/projects/boa/boa-allott-10-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 6090
+        },
+        "md": {
+          "src": "media/projects/boa/boa-allott-10-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 28210
+        },
+        "lg": {
+          "src": "media/projects/boa/boa-allott-10-lg.webp",
+          "width": 1707,
+          "height": 1137,
+          "bytes": 49170
+        }
+      },
+      "poster": {
+        "src": "media/projects/boa/boa-allott-10-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 6090
+      },
+      "aspect": 1.5013
+    },
+    {
+      "id": "boa-pfw-3d-generic-low-full-clean",
+      "label": "BOA Performfit Wrap",
+      "href": "/projects/boa",
+      "caseStudy": true,
+      "source": "BOA-PFW-3D-Generic-Low-Full-Clean.mp4",
+      "sourceHash": "bee5f6d0d62b7680",
+      "type": "video",
+      "width": 1080,
+      "height": 608,
+      "duration": 12,
+      "sourceDuration": 26,
+      "poster": {
+        "src": "media/projects/boa/boa-pfw-3d-generic-low-full-clean-poster.webp",
+        "width": 1080,
+        "height": 608,
+        "bytes": 9762
+      },
+      "sources": [
+        {
+          "src": "media/projects/boa/boa-pfw-3d-generic-low-full-clean.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 502811
+        },
+        {
+          "src": "media/projects/boa/boa-pfw-3d-generic-low-full-clean.mp4",
+          "type": "video/mp4",
+          "bytes": 882493
+        }
+      ],
+      "aspect": 1.7763
+    },
+    {
+      "id": "boa-pfw-allup",
+      "label": "BOA Performfit Wrap",
+      "href": "/projects/boa",
+      "caseStudy": true,
+      "source": "BOA-PFW-Allup.mp4",
+      "sourceHash": "845908b15feff376",
+      "type": "video",
+      "width": 1080,
+      "height": 720,
+      "duration": 12,
+      "sourceDuration": 26.8,
+      "poster": {
+        "src": "media/projects/boa/boa-pfw-allup-poster.webp",
+        "width": 1080,
+        "height": 720,
+        "bytes": 11540
+      },
+      "sources": [
+        {
+          "src": "media/projects/boa/boa-pfw-allup.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 766932
+        },
+        {
+          "src": "media/projects/boa/boa-pfw-allup.mp4",
+          "type": "video/mp4",
+          "bytes": 1013355
+        }
+      ],
+      "aspect": 1.5
+    }
+  ]
+}

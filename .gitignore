@@ -5,3 +5,5 @@ media/.cache.json
 *.tmp.png
 media/pipeline.log
 .claude/
+media/.cache-projects/
+media/projects-pipeline.log

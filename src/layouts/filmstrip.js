@@ -5,7 +5,7 @@ import { sizePattern, fitSize } from '../core/sizing.js';
 /**
  * Version A — Horizontal filmstrip (Figma frame 46, node 1542:5556)
  *
- * One row of tiles, 16px gaps, bottom-aligned 14px above the bottom edge so
+ * One row of tiles, 12px gaps, bottom-aligned 12px above the bottom edge so
  * the tops form a skyline. Each tile takes a height from a size scale (no two
  * neighbours the same) and its width follows from the piece's real aspect
  * ratio, so both dimensions vary without cropping. Bleeds off both sides and
@@ -25,8 +25,8 @@ export const config = {
   heights: [210, 280, 360, 440, 540],
   minWidth: 190, // narrower pieces get taller instead (keeps the aspect ratio)
   maxWidth: 760, // wider pieces get shorter instead
-  gap: 16, // CSS px between tiles (fixed, not scaled with the viewport)
-  bottomInset: 14,
+  gap: 12, // CSS px between tiles (fixed, not scaled with the viewport)
+  bottomInset: 12, // CSS px from the bottom edge (fixed)
   startOffset: -162,
   minScale: 0.55,
   maxScale: 1.35,
@@ -79,7 +79,7 @@ export default class Filmstrip extends Layout {
     this.s = s;
     this.engine.scale = s;
     this.gapPx = c.gap;
-    this.bottom = vp.height - c.bottomInset * s;
+    this.bottom = vp.height - c.bottomInset;
     const maxW = Math.min(c.maxWidth * s, vp.width * c.mobileMaxWidth);
     const minW = Math.min(c.minWidth * s, maxW);
     const maxH = Math.max(...c.heights) * s;

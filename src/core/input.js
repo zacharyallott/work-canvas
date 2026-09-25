@@ -56,6 +56,7 @@ export class Input {
 
   onDown(e) {
     if (e.button !== 0) return;
+    if (e.target.closest?.('[data-wc-no-input]')) return; // project view / about: native scroll + selection
     const p = this.local(e);
     this.pressed = { x: p.x, y: p.y, lastX: p.x, lastY: p.y, t: performance.now(), vx: 0, vy: 0, dragging: false, type: e.pointerType, id: e.pointerId };
     this.emit('down', p);
@@ -115,6 +116,7 @@ export class Input {
   }
 
   onWheel(e) {
+    if (e.target.closest?.('[data-wc-no-input]')) return;
     const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? this.el.clientHeight : 1;
     const dx = e.deltaX * unit;
     const dy = e.deltaY * unit;

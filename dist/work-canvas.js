@@ -12710,8 +12710,8 @@ var Lp = (e) => [{
 }, {
 	src: e,
 	maxEdge: 0
-}], Rp = (e) => /^(true|1|yes|on)$/i.test(String(e ?? "").trim());
-function zp(e) {
+}], Rp = (e) => /^(true|1|yes|on)$/i.test(String(e ?? "").trim()), zp = 20;
+function Bp(e) {
 	let t = e.dataset.items || ".work-item", n = e.dataset.mediaBase || document.baseURI, r = parseInt(e.dataset.perProject, 10) || 2, i = (e) => e && e.trim() ? new URL(e.trim(), n).href : "", a = [];
 	return document.querySelectorAll(t).forEach((e, t) => {
 		let n = e.dataset, o = (t) => {
@@ -12719,6 +12719,7 @@ function zp(e) {
 			return n && !n.classList.contains("w-dyn-bind-empty") && !n.classList.contains("w-condition-invisible") ? n : null;
 		}, s = (e) => o(e)?.textContent.trim() || "", c = {
 			projectIndex: t,
+			slug: n.slug || s("work-slug"),
 			title: n.title || s("work-title") || (e.querySelector(".work-title") ? "" : e.textContent.trim()),
 			caseStudy: e.querySelector(".work-case-study") ? !!o("work-case-study") : Rp(n.caseStudy),
 			description: n.description || s("work-description"),
@@ -12730,26 +12731,39 @@ function zp(e) {
 			return t && n && !/placeholder\./.test(n) ? t : null;
 		};
 		if (l("image-1") || l("video-1") || e.querySelector("[class*=\"work-image-\"], [class*=\"work-video-\"]")) {
-			for (let e = 1; e <= r; e++) {
-				var d;
+			c.gallery = [];
+			for (let e = r + 1; e <= zp; e++) {
 				let t = u(e), n = i(l(`image-${e}`) || t?.getAttribute("src")), r = i(l(`video-${e}`) || s(`work-video-${e}`));
-				if (!n && !r) continue;
-				let o = t ? Ip(Fp(t.getAttribute("srcset"), i)) : [], f = r ? {
+				(n || r) && c.gallery.push({
+					type: r ? "video" : "image",
+					src: n,
+					srcset: t?.getAttribute("srcset") || "",
+					video: r,
+					alt: t?.getAttribute("alt") || c.title
+				});
+			}
+			let e = c;
+			for (let t = 1; t <= r; t++) {
+				var d;
+				let n = u(t), r = i(l(`image-${t}`) || n?.getAttribute("src")), o = i(l(`video-${t}`) || s(`work-video-${t}`));
+				if (!r && !o) continue;
+				let f = n ? Ip(Fp(n.getAttribute("srcset"), i)) : [], p = o ? {
 					type: "video",
-					poster: o[0]?.src || n,
+					poster: f[0]?.src || r,
 					images: [],
-					sources: Bp(r, i(l(`video-${e}-webm`)))
+					sources: Vp(o, i(l(`video-${t}-webm`)))
 				} : {
 					type: "image",
-					poster: o[0]?.src || n,
-					images: o.length ? o : Lp(n),
+					poster: f[0]?.src || r,
+					images: f.length ? f : Lp(r),
 					sources: []
 				};
-				(a[d = e - 1] || (a[d] = [])).push({
+				(a[d = t - 1] || (a[d] = [])).push({
 					...c,
-					...f,
-					slot: e,
-					aspect: parseFloat(l(`aspect-${e}`)) || 0
+					...p,
+					project: e,
+					slot: t,
+					aspect: parseFloat(l(`aspect-${t}`)) || 0
 				});
 			}
 			return;
@@ -12764,7 +12778,7 @@ function zp(e) {
 			type: m,
 			poster: g,
 			images: h,
-			sources: m === "video" ? Bp(f, i(n.srcWebm)) : [],
+			sources: m === "video" ? Vp(f, i(n.srcWebm)) : [],
 			slot: 1,
 			aspect: _
 		});
@@ -12774,7 +12788,7 @@ function zp(e) {
 		id: `item-${t}`
 	}));
 }
-function Bp(e, t) {
+function Vp(e, t) {
 	let n = [];
 	return t && n.push({
 		src: t,
@@ -12784,11 +12798,11 @@ function Bp(e, t) {
 		type: "video/mp4"
 	}), n;
 }
-async function Vp(e, t = 8e3) {
+async function Hp(e, t = 8e3) {
 	let n = e.filter((e) => !e.aspect);
-	await Promise.all(n.map((e) => Hp(e, t).then((t) => e.aspect = t || 1.5)));
+	await Promise.all(n.map((e) => Up(e, t).then((t) => e.aspect = t || 1.5)));
 }
-function Hp(e, t) {
+function Up(e, t) {
 	return new Promise((n) => {
 		let r = (e) => {
 			clearInterval(a), clearTimeout(i), n(e);
@@ -12804,37 +12818,37 @@ function Hp(e, t) {
 }
 //#endregion
 //#region src/core/media.js
-var Up = [
+var Wp = [
 	"sm",
 	"md",
 	"lg"
-], Wp = 4, Gp = 2;
-function Kp(e) {
+], Gp = 4, Kp = 2;
+function qp(e) {
 	return new Promise((t, n) => {
 		let r = new Image();
 		r.crossOrigin = "anonymous", r.decoding = "async", r.onload = () => t(r), r.onerror = n, r.src = e;
 	});
 }
-function qp(e, t) {
+function Jp(e, t) {
 	let n = e.naturalWidth || e.width, r = e.naturalHeight || e.height;
 	if (!t || Math.max(n, r) <= t) return e;
 	let i = t / Math.max(n, r), a = Math.round(n * i), o = Math.round(r * i), s = e, c = n, l = r;
-	for (; c / 2 > a;) c = Math.round(c / 2), l = Math.round(l / 2), s = Jp(s, c, l);
-	return Jp(s, a, o);
+	for (; c / 2 > a;) c = Math.round(c / 2), l = Math.round(l / 2), s = Yp(s, c, l);
+	return Yp(s, a, o);
 }
-function Jp(e, t, n) {
+function Yp(e, t, n) {
 	let r = document.createElement("canvas");
 	r.width = t, r.height = n;
 	let i = r.getContext("2d");
 	return i.imageSmoothingEnabled = !0, i.imageSmoothingQuality = "high", i.drawImage(e, 0, 0, t, n), r;
 }
-function Yp(e) {
+function Xp(e) {
 	return e.colorSpace = "", e.generateMipmaps = !0, e.minFilter = Pi, e.magFilter = Mi, e.wrapS = e.wrapT = Di, e;
 }
-function Xp(e) {
+function Zp(e) {
 	return document.createElement("video").canPlayType(e) !== "";
 }
-var Zp = class {
+var Qp = class {
 	constructor(e, t) {
 		Object.assign(this, e), this.manager = t, this.texture = null, this.texSize = new Y(this.aspect * 100, 100), this.ready = !1, this.textures = [], this.loading = /* @__PURE__ */ new Set(), this.failed = /* @__PURE__ */ new Set(), this.lastWanted = [
 			0,
@@ -12856,8 +12870,17 @@ var Zp = class {
 	urlFor(e) {
 		return this.levelSpec(e).src;
 	}
+	get bestSrc() {
+		if (this.type === "video") return this.poster;
+		for (let e = this.textures.length - 1; e >= 0; e--) if (this.textures[e]) return this.urlFor(e);
+		return this.urlFor(0);
+	}
+	get srcset() {
+		let e = /* @__PURE__ */ new Set();
+		return this.images.filter((t) => t.width && !e.has(t.src) && e.add(t.src)).map((e) => `${e.src} ${e.width}w`).join(", ");
+	}
 	get maxLevel() {
-		return this.type === "video" ? 0 : Math.max(0, Math.min(Up.length, this.images.length) - 1);
+		return this.type === "video" ? 0 : Math.max(0, Math.min(Wp.length, this.images.length) - 1);
 	}
 	setTexture(e, t, n) {
 		this.texture = e, this.texSize.set(t, n), this.ready = !0;
@@ -12865,12 +12888,12 @@ var Zp = class {
 	dispose() {
 		this.textures.forEach((e) => e?.dispose()), this.textures = [], this.videoTexture?.dispose(), this.video && (this.video.pause(), this.video.removeAttribute("src"), this.video.querySelectorAll("source").forEach((e) => e.remove()), this.video.load(), this.video = null);
 	}
-}, Qp = class {
+}, $p = class {
 	constructor(e, { maxVideos: t = 5, videoPolicy: n = "all", downgradeAfter: r = 8, maxTextureEdge: i = 1280 } = {}) {
-		this.renderer = e, this.maxTextureEdge = i, this.maxVideos = t, this.videoPolicy = n, this.downgradeAfter = r, this.enabled = !0, this.items = [], this.inFlight = 0, this.queue = [], this.uploads = [], this.av1 = Xp("video/webm; codecs=\"av01.0.05M.08\"");
+		this.renderer = e, this.maxTextureEdge = i, this.maxVideos = t, this.videoPolicy = n, this.downgradeAfter = r, this.enabled = !0, this.items = [], this.inFlight = 0, this.queue = [], this.uploads = [], this.av1 = Zp("video/webm; codecs=\"av01.0.05M.08\"");
 	}
 	add(e) {
-		let t = new Zp(e, this);
+		let t = new Qp(e, this);
 		return this.items.push(t), t;
 	}
 	preload() {
@@ -12880,12 +12903,12 @@ var Zp = class {
 		e.textures[t] || e.loading.has(t) || e.failed.has(t) || !e.urlFor(t) || (e.loading.add(t), this.queue.push([e, t]), this.pump());
 	}
 	pump() {
-		for (; this.inFlight < Wp && this.queue.length;) {
+		for (; this.inFlight < Gp && this.queue.length;) {
 			this.queue.sort((e, t) => t[0].priority - e[0].priority || e[1] - t[1]);
 			let [e, t] = this.queue.shift();
 			this.inFlight++;
 			let n = e.levelSpec(t);
-			Kp(n.src).then((r) => this.uploads.push([
+			qp(n.src).then((r) => this.uploads.push([
 				e,
 				r,
 				t,
@@ -12901,8 +12924,8 @@ var Zp = class {
 		for (let e of this.items) e.wantLevel = -1, e.priority = 0;
 	}
 	endFrame(e) {
-		for (let e = 0; e < Gp && this.uploads.length; e++) {
-			let [e, t, n, r] = this.uploads.shift(), i = Yp(new Ro(qp(t, r)));
+		for (let e = 0; e < Kp && this.uploads.length; e++) {
+			let [e, t, n, r] = this.uploads.shift(), i = Xp(new Ro(Jp(t, r)));
 			i.needsUpdate = !0, this.renderer.initTexture(i), e.textures[n] = i, e.loading.delete(n), n >= e.textures.length - 1 && !e.playing && e.setTexture(i, i.image.width, i.image.height);
 		}
 		if (!this.enabled) return;
@@ -12948,7 +12971,7 @@ var Zp = class {
 	dispose() {
 		this.items.forEach((e) => e.dispose()), this.items = [], this.queue = [], this.uploads = [];
 	}
-}, $p = class {
+}, em = class {
 	constructor(e, { clickSlop: t = 6, wheel: n = "page" } = {}) {
 		this.el = e, this.clickSlop = t, this.wheelMode = n, this.handlers = {}, this.pointer = {
 			x: 0,
@@ -12976,7 +12999,7 @@ var Zp = class {
 		};
 	}
 	onDown(e) {
-		if (e.button !== 0) return;
+		if (e.button !== 0 || e.target.closest?.("[data-wc-no-input]")) return;
 		let t = this.local(e);
 		this.pressed = {
 			x: t.x,
@@ -13041,6 +13064,7 @@ var Zp = class {
 		}, this.emit("move", this.pointer));
 	}
 	onWheel(e) {
+		if (e.target.closest?.("[data-wc-no-input]")) return;
 		let t = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? this.el.clientHeight : 1, n = e.deltaX * t, r = e.deltaY * t, i = Math.abs(n) > Math.abs(r);
 		(this.wheelMode === "capture" || i) && (e.preventDefault(), this.emit("wheel", {
 			dx: n,
@@ -13056,40 +13080,293 @@ var Zp = class {
 	destroy() {
 		this._unbind?.forEach((e) => e()), this.handlers = {};
 	}
-}, em = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Group'%3e%3cpath%20id='Vector'%20d='M1.77344%201.77486L10.2622%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_2'%20d='M10.2622%201.77486L1.77344%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_3'%20d='M6.01823%200V12'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_4'%20d='M12%206.01921H0'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3c/g%3e%3c/svg%3e", tm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='8'%20height='8'%20viewBox='0%200%208%208'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Ellipse%201'%20style='mix-blend-mode:difference'%3e%3ccircle%20cx='4'%20cy='4'%20r='4'%20fill='%23F2F2F2'/%3e%3c/g%3e%3c/svg%3e", nm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='8'%20height='8'%20viewBox='0%200%208%208'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Ellipse%202'%20style='mix-blend-mode:difference'%3e%3ccircle%20cx='4'%20cy='4'%20r='3.25'%20stroke='%23F2F2F2'%20stroke-width='1.5'/%3e%3c/g%3e%3c/svg%3e", rm = "\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);min-height:var(--wc-min-height,100svh);isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n.wc-root.is-hovering-tile{cursor:pointer}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .6s ease}\n.wc-root.is-ready .wc-canvas{opacity:1}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,500);color:#f2f2f2}\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference}\n.wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px)}\n.wc-icon img{display:block;width:100%;height:100%}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap}\n.wc-tagline .wc-arrow{display:inline-block;transform:rotate(90deg);width:17px;text-align:center}\n.wc-dots{display:flex;gap:6px;align-items:center;pointer-events:auto}\n.wc-dot{appearance:none;border:0;padding:4px;margin:-4px;background:none;cursor:pointer;display:block;line-height:0}\n.wc-dot img{display:block;width:8px;height:8px}\n.wc-dot:focus-visible{outline:1px solid #f2f2f2;outline-offset:2px;border-radius:50%}\n.wc-caption{position:absolute;left:0;top:0;font-size:12px;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:16px;padding:48px 13px 13px;overflow:auto;transition:opacity .6s ease;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 16px;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n.wc-root.is-ready .wc-fallback{opacity:0;pointer-events:none}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@media (max-width:600px){.wc-tagline{font-size:13px}}\n", im = !1;
-function am() {
-	if (im) return;
-	im = !0;
-	let e = document.createElement("style");
-	e.dataset.workCanvas = "", e.textContent = rm, document.head.appendChild(e);
+}, tm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Group'%3e%3cpath%20id='Vector'%20d='M1.77344%201.77486L10.2622%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_2'%20d='M10.2622%201.77486L1.77344%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_3'%20d='M6.01823%200V12'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_4'%20d='M12%206.01921H0'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3c/g%3e%3c/svg%3e", nm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='8'%20height='8'%20viewBox='0%200%208%208'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Ellipse%201'%20style='mix-blend-mode:difference'%3e%3ccircle%20cx='4'%20cy='4'%20r='4'%20fill='%23F2F2F2'/%3e%3c/g%3e%3c/svg%3e", rm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='8'%20height='8'%20viewBox='0%200%208%208'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Ellipse%202'%20style='mix-blend-mode:difference'%3e%3ccircle%20cx='4'%20cy='4'%20r='3.25'%20stroke='%23F2F2F2'%20stroke-width='1.5'/%3e%3c/g%3e%3c/svg%3e", im = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='36'%20height='36'%20viewBox='0%200%2036%2036'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Group'%3e%3cpath%20id='Vector'%20d='M5.32031%205.32452L30.7866%2030.7908'%20stroke='%23F7F7F7'%20stroke-width='4.5'/%3e%3cpath%20id='Vector_2'%20d='M30.7866%205.32452L5.32031%2030.7908'%20stroke='%23F7F7F7'%20stroke-width='4.5'/%3e%3cpath%20id='Vector_3'%20d='M18.0586%200V36'%20stroke='%23F7F7F7'%20stroke-width='4.5'/%3e%3cpath%20id='Vector_4'%20d='M36%2018.0577H0'%20stroke='%23F7F7F7'%20stroke-width='4.5'/%3e%3c/g%3e%3c/svg%3e", am = {
+	statement: "An interdisciplinary design practice for deepening and expanding brand connections with conceptually driven solutions that are at once simple, functional & emotional.",
+	clients: [
+		[
+			"SRAM",
+			"Cannondale",
+			"GT Bikes",
+			"Aspen Snowmass",
+			"BOA",
+			"The James Brand",
+			"Nixon",
+			"Smith Optics",
+			"Burton"
+		],
+		[
+			"Autodesk",
+			"Microsoft",
+			"Xbox",
+			"Dialpad",
+			"Electronic Arts",
+			"Gogoro",
+			"Surfline"
+		],
+		[
+			"Under Armour",
+			"Adidas",
+			"Mattel",
+			"Dexcom"
+		]
+	],
+	links: [
+		{
+			label: "email",
+			href: "mailto:zacharyallott@gmail.com"
+		},
+		{
+			label: "linkedin",
+			href: "https://www.linkedin.com/in/zacharyallott/"
+		},
+		{
+			label: "are.na",
+			href: "https://www.are.na/zachary-allott"
+		}
+	],
+	copyright: `${(/* @__PURE__ */ new Date()).getFullYear()} Zachary Allott`
+}, om = (e) => String(e).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+function sm() {
+	let e = document.querySelector("[data-work-about]");
+	return e ? e.innerHTML : `
+    <p class="wc-about-statement">${om(am.statement)}<img src="${im}" alt="" width="36" height="36"></p>
+    <div class="wc-about-clients" aria-label="Selected clients">
+      ${am.clients.map((e) => `<ul>${e.map((e) => `<li>${om(e)}</li>`).join("")}</ul>`).join("")}
+    </div>
+    <div class="wc-about-footer">
+      <nav class="wc-about-links" aria-label="Contact">
+        ${am.links.map((e) => {
+		let t = e.href.startsWith("http") ? " target=\"_blank\" rel=\"noopener\"" : "";
+		return `<a href="${om(e.href)}"${t}>${om(e.label)} <span class="wc-link-arrow" aria-hidden="true"><span class="wc-link-track"><span>→</span><span class="is-next">→</span></span></span></a>`;
+	}).join("")}
+      </nav>
+      <p class="wc-about-copy"><span aria-hidden="true">©</span><span class="wc-sr"> ${om(am.copyright)}</span></p>
+    </div>`;
 }
-var om = class {
-	constructor(e, { layouts: t, current: n, onSelect: r, tagline: i, taglineHref: a, showDots: o = !0, hint: s }) {
-		am(), this.mount = e, this.onSelect = r, this.root = document.createElement("div"), this.root.className = "wc-ui", this.root.innerHTML = `
+//#endregion
+//#region src/core/project.js
+var cm = {
+	runway: .6,
+	friction: .5,
+	closeAt: .98
+}, lm = "\n.wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .45s ease,visibility 0s linear .45s}\n.wc-root.is-project .wc-project{opacity:1;visibility:visible;pointer-events:auto;transition:opacity 0s,visibility 0s}\n.wc-project-scroll{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:285px minmax(0,1fr);column-gap:53px;padding:52px 15px 12px 19px;box-sizing:border-box;-webkit-user-select:text;user-select:text}\n.wc-project-info{grid-column:1;grid-row:1;align-self:start;position:sticky;top:var(--wc-info-top,60vh);display:flex;flex-direction:column;gap:7px;color:#000}\n.wc-project-title{margin:0;font-size:16px;line-height:1;font-weight:500}\n.wc-project-desc{margin:0;max-width:271px;font-size:16px;line-height:1.1;font-weight:400;color:#5f5f5f}\n.wc-project-services{display:flex;flex-wrap:wrap;column-gap:12px;row-gap:2px;margin:0;padding:0;list-style:none;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase;font-weight:500}\n.wc-project-media{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-end;gap:12px;margin:0;padding:0;list-style:none}\n.wc-project-item{position:relative;width:73.5%;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-project-item:nth-child(4n+2){width:100%}\n.wc-project-item:nth-child(4n+3){width:51.8%}\n.wc-project-item img{display:block;width:100%;height:auto}\n.wc-project-item video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-project-end{grid-column:1/-1;grid-row:2;pointer-events:none}\n.wc-project-media,.wc-project-info{will-change:opacity,transform}\n@media (max-width:700px){\n  .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}\n  .wc-project-info{position:static;grid-row:1;margin-bottom:24px}\n  .wc-project-media{grid-column:1;grid-row:2}\n  .wc-project-end{grid-row:3}\n  .wc-project-item,.wc-project-item:nth-child(n){width:100%}\n}\n", um = !1, dm = (e) => String(e ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"), fm = (e) => decodeURIComponent(String(e).split(/[?#]/)[0].split("/").pop() || "").replace(/^[0-9a-f]{24}_/, "").replace(/(-p-\d+)?\.[a-z0-9]+$/i, "").replace(/-(sm|md|lg|poster)$/, ""), pm = class {
+	constructor(e, { onEnd: t } = {}) {
+		if (!um) {
+			um = !0;
+			let e = document.createElement("style");
+			e.textContent = lm, document.head.appendChild(e);
+		}
+		this.el = document.createElement("div"), this.el.className = "wc-project", this.el.dataset.wcNoInput = "", this.el.setAttribute("aria-hidden", "true"), this.el.innerHTML = "<div class=\"wc-project-scroll\" tabindex=\"-1\"></div>", this.scroll = this.el.firstElementChild, e.prepend(this.el), this.onEnd = t, this.scroll.addEventListener("scroll", () => this.onScroll(), { passive: !0 }), this.io = new IntersectionObserver((e) => e.forEach((e) => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), {
+			root: this.scroll,
+			threshold: .25
+		});
+	}
+	render(e, t) {
+		this.clear();
+		let n = t ? t.bestSrc : "", r = [];
+		t && r.push({
+			type: t.type,
+			src: n,
+			srcset: t.srcset,
+			video: t.sources?.at(-1)?.src,
+			aspect: t.aspect,
+			alt: e.title,
+			hero: !0
+		});
+		let i = new Set(r.map((e) => fm(e.video || e.src)));
+		for (let t of e.gallery ?? []) {
+			let e = fm(t.video || t.src);
+			i.has(e) || (i.add(e), r.push(t));
+		}
+		let a = (e.services || "").split(/\s*(?:,|→|\n)\s*/).map((e) => e.trim()).filter(Boolean);
+		this.scroll.innerHTML = `
+      <div class="wc-project-info">
+        <h2 class="wc-project-title">${dm(e.title)}</h2>
+        ${e.description ? `<p class="wc-project-desc">${dm(e.description)}</p>` : ""}
+        ${a.length ? `<ul class="wc-project-services">${a.map((e) => `<li>${dm(e)}</li>`).join("")}</ul>` : ""}
+      </div>
+      <ul class="wc-project-media" aria-label="${dm(e.title)} images">
+        ${r.map((e) => {
+			let t = ` style="aspect-ratio:${e.aspect ? e.aspect.toFixed(4) : "1.5"}"`, n = `<img crossorigin="anonymous" src="${dm(e.src)}"${e.srcset ? ` srcset="${dm(e.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="${dm(e.alt)}" ${e.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}>`, r = e.type === "video" && e.video ? `<video src="${dm(e.video)}" crossorigin="anonymous" muted loop playsinline preload="metadata"></video>` : "";
+			return `<li class="wc-project-item${e.hero ? " is-hero" : ""}"${t}>${n}${r}</li>`;
+		}).join("")}
+      </ul>
+      <div class="wc-project-end" aria-hidden="true" style="height:${Math.round(cm.runway * 100)}vh"></div>`, this.ended = !1, this.scroll.scrollTop = 0, this.el.querySelectorAll(".wc-project-item img").forEach((e) => {
+			let t = () => e.naturalWidth && (e.parentElement.style.aspectRatio = `${e.naturalWidth} / ${e.naturalHeight}`);
+			e.complete ? t() : e.addEventListener("load", t, { once: !0 });
+		}), this.el.querySelectorAll("video").forEach((e) => {
+			e.muted = !0, this.io.observe(e);
+		}), this.layoutInfo();
+	}
+	layoutInfo() {
+		let e = this.el.querySelector(".wc-project-info");
+		if (!e) return;
+		let t = parseFloat(getComputedStyle(this.scroll).paddingTop) || 0, n = this.el.clientHeight - 41 - e.offsetHeight - t;
+		this.el.style.setProperty("--wc-info-top", `${Math.max(0, n)}px`);
+	}
+	onScroll() {
+		let e = this.scroll.querySelector(".wc-project-end");
+		if (!e || this.ended) return;
+		let t = e.offsetHeight, n = this.scroll.scrollHeight - this.scroll.clientHeight - t, r = t > 0 ? Math.min(1, Math.max(0, (this.scroll.scrollTop - n) / t)) : 0, i = this.scroll.querySelectorAll(".wc-project-media, .wc-project-info"), a = r * t * cm.friction, o = 1 - Math.min(1, r / cm.closeAt);
+		i.forEach((e) => {
+			e.style.opacity = r > 0 ? String(o) : "", e.style.translate = r > 0 ? `0 ${a}px` : "";
+		}), r >= cm.closeAt && (this.ended = !0, this.onEnd?.());
+	}
+	heroRect() {
+		let e = this.el.querySelector(".wc-project-item.is-hero");
+		if (!e) return null;
+		let t = e.getBoundingClientRect(), n = this.el.getBoundingClientRect();
+		return {
+			x: t.left - n.left,
+			y: t.top - n.top,
+			w: t.width,
+			h: t.height
+		};
+	}
+	reveal({ reduced: e = !1 } = {}) {
+		this.el.setAttribute("aria-hidden", "false");
+		let t = this.el.querySelectorAll(".wc-project-info, .wc-project-item:not(.is-hero)");
+		gi.fromTo(t, {
+			opacity: 0,
+			y: e ? 0 : 16
+		}, {
+			opacity: 1,
+			y: 0,
+			duration: .6,
+			ease: "power3.out",
+			stagger: e ? 0 : .08,
+			clearProps: "transform"
+		}), this.scroll.focus({ preventScroll: !0 });
+	}
+	hide() {
+		this.el.setAttribute("aria-hidden", "true"), this.el.querySelectorAll("video").forEach((e) => e.pause()), clearTimeout(this.clearTimer), this.clearTimer = setTimeout(() => this.clear(), 500);
+	}
+	clear() {
+		this.el.querySelectorAll("video").forEach((e) => {
+			this.io.unobserve(e), e.pause(), e.removeAttribute("src"), e.load();
+		}), this.scroll.innerHTML = "";
+	}
+	destroy() {
+		this.clear(), this.io.disconnect(), this.el.remove();
+	}
+}, mm = "\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);min-height:var(--wc-min-height,100svh);isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n.wc-root.is-hovering-tile{cursor:pointer}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .6s ease}\n.wc-root.is-ready .wc-canvas{opacity:1}\n.wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,500);color:#f2f2f2}\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference}\n.wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px);padding:0;border:0;background:none;pointer-events:auto;cursor:pointer}\n.wc-icon:focus-visible{outline:1px solid #f2f2f2;outline-offset:3px}\n.wc-icon img{display:block;width:100%;height:100%}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}\n.wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}\n/* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */\n.wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden}\n.wc-arrow-track{position:absolute;left:0;top:0;width:17px;height:17px}\n.wc-arrow-glyph{position:absolute;left:0;top:0;width:17px;height:17px;line-height:17px;text-align:center;transform:rotate(90deg)}\n.wc-arrow-glyph.is-next{top:-17px}\n.wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}\n.wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}\n/* About (Figma frame 49): bottom-anchored statement + client columns. */\n.wc-about{position:absolute;left:0;right:0;bottom:0;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .5s ease,visibility 0s linear .5s}\n.wc-root.is-about .wc-about{opacity:1;visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}\n.wc-about .wc-w{display:inline-block;will-change:transform,opacity}\n.wc-about-statement{margin:0;max-width:22.84em;font-size:clamp(26px,3.75vw,48px);line-height:1.25;letter-spacing:.02em;font-weight:500}\n.wc-about-statement img{display:inline-block;width:.75em;height:.75em;margin-left:.3em;vertical-align:-.06em}\n.wc-about-clients{display:flex;justify-content:space-between;gap:16px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:500;font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}\n.wc-about-clients ul{list-style:none;margin:0;padding:0;width:155px}\n.wc-about-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;line-height:1;font-weight:500}\n.wc-about-links{display:flex;gap:16px;font-size:16px}\n.wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}\n/* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */\n.wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}\n.wc-link-track{position:absolute;inset:0}\n.wc-link-track>span{position:absolute;left:0;top:0;width:1em;line-height:1em;text-align:center}\n.wc-link-track>span.is-next{left:-1em}\n.wc-about-links a:focus-visible{outline:1px solid currentColor;outline-offset:3px}\n.wc-about-copy{margin:0;font-size:16px}\n.wc-dots{display:flex;gap:6px;align-items:center;pointer-events:auto}\n.wc-dot{appearance:none;border:0;padding:4px;margin:-4px;background:none;cursor:pointer;display:block;line-height:0}\n.wc-dot img{display:block;width:8px;height:8px}\n.wc-dot:focus-visible{outline:1px solid #f2f2f2;outline-offset:2px;border-radius:50%}\n.wc-caption{position:absolute;left:0;top:0;font-size:12px;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .6s ease;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 12px;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n.wc-root.is-ready .wc-fallback{opacity:0;pointer-events:none}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-clients ul{width:auto}.wc-about-footer{margin-top:4px}}\n", hm = !1;
+function gm() {
+	if (hm) return;
+	hm = !0;
+	let e = document.createElement("style");
+	e.dataset.workCanvas = "", e.textContent = mm, document.head.appendChild(e);
+}
+var _m = class {
+	constructor(e, { layouts: t, current: n, onSelect: r, onAbout: i, onHome: a, tagline: o, showDots: s = !0, hint: c }) {
+		gm(), this.mount = e, this.onSelect = r;
+		let l = `wc-about-${Math.random().toString(36).slice(2, 8)}`;
+		this.root = document.createElement("div"), this.root.className = "wc-ui", this.root.innerHTML = `
       <div class="wc-topbar">
-        <span class="wc-icon"><img src="${em}" alt="" width="16" height="16"></span>
-        <a class="wc-tagline" href="${a}">${i}<span class="wc-arrow" aria-hidden="true">→</span></a>
+        <button type="button" class="wc-icon" aria-label="Back to the work"><img src="${tm}" alt="" width="16" height="16"></button>
+        <a class="wc-tagline" href="#${l}" role="button" aria-expanded="false" aria-controls="${l}">
+          <span>${o}</span>
+          <span class="wc-arrow" aria-hidden="true"><span class="wc-arrow-track"><span class="wc-arrow-glyph">→</span><span class="wc-arrow-glyph is-next">→</span></span></span>
+        </a>
         <div class="wc-dots" role="tablist" aria-label="Header version"></div>
       </div>
       <div class="wc-caption" aria-hidden="true"><span class="wc-caption-inner"></span></div>
-      ${s ? `<div class="wc-hint" aria-hidden="true">${s}</div>` : ""}
-    `, this.caption = this.root.querySelector(".wc-caption"), this.captionInner = this.root.querySelector(".wc-caption-inner"), this.dots = this.root.querySelector(".wc-dots"), o && (this.dotButtons = t.map(({ key: e, name: t }, n) => {
+      <section class="wc-about" id="${l}" aria-label="About" data-wc-no-input>${sm()}</section>
+      ${c ? `<div class="wc-hint" aria-hidden="true">${c}</div>` : ""}
+    `, this.caption = this.root.querySelector(".wc-caption"), this.captionInner = this.root.querySelector(".wc-caption-inner"), this.dots = this.root.querySelector(".wc-dots"), this.tagline = this.root.querySelector(".wc-tagline"), this.about = this.root.querySelector(".wc-about"), vm(this.about.querySelector(".wc-about-statement")), this.about.querySelectorAll(".wc-about-links a").forEach((e) => {
+			let t = e.querySelector(".wc-link-track");
+			if (!t) return;
+			let n, r = () => {
+				n?.isActive() || matchMedia("(prefers-reduced-motion: reduce)").matches || (n = gi.fromTo(t, { x: 0 }, {
+					x: () => t.offsetWidth,
+					duration: .5,
+					ease: "power3.inOut",
+					onComplete: () => gi.set(t, { x: 0 })
+				}));
+			};
+			e.addEventListener("pointerenter", r), e.addEventListener("focus", r);
+		}), this.arrowTrack = this.root.querySelector(".wc-arrow-track"), this.tagline.addEventListener("click", (e) => {
+			e.preventDefault(), i?.();
+		}), this.tagline.addEventListener("pointerdown", (e) => e.stopPropagation());
+		let u = this.root.querySelector(".wc-icon");
+		u.addEventListener("click", (e) => {
+			e.preventDefault(), a?.();
+		}), u.addEventListener("pointerdown", (e) => e.stopPropagation()), this.tagline.addEventListener("pointerenter", () => this.loopArrow()), this.tagline.addEventListener("focus", () => this.loopArrow()), s && (this.dotButtons = t.map(({ key: e, name: t }, n) => {
 			let r = document.createElement("button");
-			return r.type = "button", r.className = "wc-dot", r.setAttribute("role", "tab"), r.setAttribute("aria-label", `Version ${e.toUpperCase()}: ${t}`), r.innerHTML = `<img src="${nm}" alt="" width="8" height="8">`, r.addEventListener("click", (t) => {
+			return r.type = "button", r.className = "wc-dot", r.setAttribute("role", "tab"), r.setAttribute("aria-label", `Version ${e.toUpperCase()}: ${t}`), r.innerHTML = `<img src="${rm}" alt="" width="8" height="8">`, r.addEventListener("click", (t) => {
 				t.stopPropagation(), this.onSelect(e);
 			}), r.addEventListener("pointerdown", (e) => e.stopPropagation()), this.dots.appendChild(r), {
 				key: e,
 				b: r
 			};
-		}), this.setActive(n)), e.appendChild(this.root), this.captionState = {
+		}), this.setActive(n)), e.appendChild(this.root), this.project = new pm(this.root, {}), this.captionState = {
 			target: null,
 			shown: null
 		};
 	}
+	loopArrow() {
+		if (this.arrowTween?.isActive() || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+		let e = this.tagline.classList.contains("is-up") ? -1 : 1;
+		this.arrowTween = gi.fromTo(this.arrowTrack, { y: 0 }, {
+			y: 17 * e,
+			duration: .55,
+			ease: "power3.inOut",
+			onComplete: () => gi.set(this.arrowTrack, { y: 0 })
+		});
+	}
+	setAbout(e) {
+		this.flipArrow(e), this.tagline.setAttribute("aria-expanded", String(e)), this.about.setAttribute("aria-hidden", String(!e));
+		let t = this.about.querySelectorAll(".wc-about-statement .wc-w"), n = this.about.querySelectorAll(".wc-about-clients ul"), r = this.about.querySelector(".wc-about-footer");
+		if (this.aboutTl?.kill(), !e) return;
+		let i = matchMedia("(prefers-reduced-motion: reduce)").matches;
+		gi.set([
+			...t,
+			...n,
+			r
+		].filter(Boolean), {
+			opacity: 0,
+			y: i ? 0 : 10
+		});
+		let a = [], o = null;
+		t.forEach((e) => {
+			let t = e.offsetTop + e.offsetHeight / 2;
+			(o === null || Math.abs(t - o) > e.offsetHeight * .5) && a.push([]), a[a.length - 1].push(e), o = t;
+		}), this.aboutTl = gi.timeline({ delay: .35 }), a.forEach((e, t) => this.aboutTl.to(e, {
+			opacity: 1,
+			y: 0,
+			duration: .7,
+			ease: "power3.out"
+		}, i ? 0 : t * .12)), this.aboutTl.to(n, {
+			opacity: 1,
+			y: 0,
+			duration: .6,
+			ease: "power3.out",
+			stagger: i ? 0 : .15
+		}, i ? 0 : "-=0.25").to(r, {
+			opacity: 1,
+			y: 0,
+			duration: .5,
+			ease: "power3.out"
+		}, i ? 0 : "-=0.3");
+	}
+	flipArrow(e) {
+		if (this.tagline.classList.contains("is-up") === e) return;
+		let t = this.tagline.querySelector(".wc-arrow");
+		this.arrowFlip?.kill(), this.arrowFlip = gi.timeline().to(t, {
+			opacity: 0,
+			duration: .15,
+			ease: "power1.in"
+		}).add(() => {
+			this.arrowTween?.progress(1), this.tagline.classList.toggle("is-up", e);
+		}).to(t, {
+			opacity: 1,
+			duration: .25,
+			ease: "power1.out"
+		});
+	}
 	setActive(e) {
 		this.dotButtons?.forEach(({ key: t, b: n }) => {
 			let r = t === e;
-			n.setAttribute("aria-selected", String(r)), n.querySelector("img").src = r ? tm : nm;
+			n.setAttribute("aria-selected", String(r)), n.querySelector("img").src = r ? nm : rm;
 		});
 	}
 	renderFallback(e) {
@@ -13133,15 +13410,43 @@ var om = class {
 		}
 	}
 	destroy() {
-		this.root.remove(), this.fallback?.remove();
+		this.project?.destroy(), this.root.remove(), this.fallback?.remove();
 	}
 };
-function sm(e) {
+function vm(e) {
+	if (!e) return;
+	let t = (e) => {
+		for (let n of [...e.childNodes]) if (n.nodeType === Node.TEXT_NODE) {
+			let e = document.createDocumentFragment();
+			n.textContent.split(/(\s+)/).forEach((t) => {
+				if (t) {
+					if (/^\s+$/.test(t)) e.appendChild(document.createTextNode(t));
+					else {
+						let n = document.createElement("span");
+						n.className = "wc-w", n.textContent = t, e.appendChild(n);
+					}
+				}
+			}), n.replaceWith(e);
+		} else n.nodeName === "IMG" ? n.classList.add("wc-w") : n.nodeType === Node.ELEMENT_NODE && !n.classList.contains("wc-w") && t(n);
+	};
+	t(e);
+}
+function ym(e) {
 	for (let { el: t } of e) (t.matches("a[href]") || t.querySelector("a[href]")) && (t.closest("[data-work-list]") ?? t).classList.add("wc-sr");
 }
 //#endregion
 //#region src/core/shaders.js
-var cm = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }\n", lm = "\n  uniform sampler2D uTex;\n  uniform float uTexReady;  // 0 → placeholder colour, 1 → texture (tweened for a fade-in)\n  uniform vec2 uTexSize;    // texture px (only the ratio matters)\n  uniform vec2 uSize;       // tile CSS px\n  uniform float uRadius;    // corner radius, CSS px\n  uniform float uDpr;\n  uniform vec3 uBase;       // placeholder colour\n\n  uniform float uZoom;      // extra texture zoom (0 = cover)\n  uniform float uGray;      // 0..1 desaturation\n  uniform float uAlpha;\n  uniform float uReveal;    // 0..1 wipe from the bottom\n\n  varying vec2 vUv;\n\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n\n  void main() {\n    vec2 uv = vUv;\n\n    // object-fit: cover (+ optional zoom around the centre)\n    float planeA = uSize.x / max(uSize.y, 1.0);\n    float texA = uTexSize.x / max(uTexSize.y, 1.0);\n    vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);\n    vec2 tuv = (uv - 0.5) * cover / (1.0 + uZoom) + 0.5;\n\n    vec3 col = mix(uBase, texture2D(uTex, tuv).rgb, uTexReady);\n    col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);\n\n    // rounded corners, ~1 device px of antialiasing\n    float d = sdRoundBox((uv - 0.5) * uSize, uSize * 0.5, uRadius);\n    float aa = 0.75 / uDpr;\n    float mask = 1.0 - smoothstep(-aa, aa, d);\n\n    // reveal wipe (uv.y = 0 at the bottom edge)\n    float reveal = uReveal >= 1.0 ? 1.0 : step(uv.y, uReveal);\n\n    gl_FragColor = vec4(col, uAlpha * mask * reveal);\n  }\n", um = class {
+var bm = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }\n", xm = "\n  uniform sampler2D uTex;\n  uniform float uTexReady;  // 0 → placeholder colour, 1 → texture (tweened for a fade-in)\n  uniform vec2 uTexSize;    // texture px (only the ratio matters)\n  uniform vec2 uSize;       // tile CSS px\n  uniform float uRadius;    // corner radius, CSS px\n  uniform float uDpr;\n  uniform vec3 uBase;       // placeholder colour\n\n  uniform float uZoom;      // extra texture zoom (0 = cover)\n  uniform float uGray;      // 0..1 desaturation\n  uniform float uAlpha;\n  uniform float uReveal;    // 0..1 wipe from the bottom\n\n  varying vec2 vUv;\n\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n\n  void main() {\n    vec2 uv = vUv;\n\n    // object-fit: cover (+ optional zoom around the centre)\n    float planeA = uSize.x / max(uSize.y, 1.0);\n    float texA = uTexSize.x / max(uTexSize.y, 1.0);\n    vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);\n    vec2 tuv = (uv - 0.5) * cover / (1.0 + uZoom) + 0.5;\n\n    vec3 col = mix(uBase, texture2D(uTex, tuv).rgb, uTexReady);\n    col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);\n\n    // rounded corners, ~1 device px of antialiasing\n    float d = sdRoundBox((uv - 0.5) * uSize, uSize * 0.5, uRadius);\n    float aa = 0.75 / uDpr;\n    float mask = 1.0 - smoothstep(-aa, aa, d);\n\n    // reveal wipe (uv.y = 0 at the bottom edge)\n    float reveal = uReveal >= 1.0 ? 1.0 : step(uv.y, uReveal);\n\n    gl_FragColor = vec4(col, uAlpha * mask * reveal);\n  }\n";
+//#endregion
+//#region src/core/engine.js
+function Sm(e) {
+	return new Promise((t) => {
+		if (!e) return t();
+		let n = new Image();
+		n.crossOrigin = "anonymous", n.onload = n.onerror = () => t(), n.src = e;
+	});
+}
+var Cm = class {
 	constructor(e, t = {}) {
 		this.mount = e, this.options = {
 			...Mp,
@@ -13155,29 +13460,34 @@ var cm = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Positi
 	}
 	async init() {
 		let { mount: e } = this;
-		if (e.classList.add("wc-root"), this.items = zp(e), !this.items.length) return console.warn("[work-canvas] no .work-item elements found — nothing to render."), this;
-		await Vp(this.items), sm(this.items);
+		if (e.classList.add("wc-root"), this.items = Bp(e), !this.items.length) return console.warn("[work-canvas] no .work-item elements found — nothing to render."), this;
+		await Hp(this.items), ym(this.items);
 		let t = this.options.layout && this.layoutDefs.some((e) => e.key === this.options.layout) ? this.options.layout : this.layoutDefs[0].key;
-		this.ui = new om(e, {
+		this.ui = new _m(e, {
 			layouts: this.layoutDefs,
 			current: t,
 			onSelect: (e) => this.setLayout(e),
+			onAbout: () => this.toggleAbout(),
+			onHome: () => this.projectOpen ? this.closeProject() : this.toggleAbout(!1),
 			tagline: this.options.tagline,
-			taglineHref: this.options.taglineHref,
 			showDots: this.options.switcher && this.layoutDefs.length > 1,
 			hint: this.options.hint
-		}), this.ui.renderFallback(this.items);
+		}), this.ui.renderFallback(this.items), this.ui.setAbout(!1), this.ui.project.onEnd = () => this.closeProject(), this._onKey = (e) => {
+			e.key === "Escape" && (this.projectOpen ? this.closeProject() : this.aboutOpen && this.toggleAbout(!1));
+		}, document.addEventListener("keydown", this._onKey);
 		try {
 			this.createRenderer();
 		} catch (t) {
 			return console.warn("[work-canvas] WebGL unavailable, keeping the static grid.", t), e.classList.add("is-fallback"), this;
 		}
-		return this.media = new Qp(this.renderer, {
+		this.media = new $p(this.renderer, {
 			maxVideos: this.options.maxVideos,
 			videoPolicy: this.isMobile && this.options.mobileVideo === "focused" || this.reducedMotion ? "focused" : "all",
 			downgradeAfter: this.options.downgradeAfter,
 			maxTextureEdge: this.isMobile ? this.options.maxTextureEdgeMobile : this.options.maxTextureEdge
-		}), this.mediaItems = this.items.map((e) => this.media.add(e)), this.media.preload(), this.bindInput(), this.bindObservers(), this.bindKeyboard(), this.resize(), this.start(), await this.whenThumbsReady(), e.classList.add("is-ready"), await this.setLayout(t, { initial: !0 }), this;
+		}), this.mediaItems = this.items.map((e) => this.media.add(e)), this.media.preload(), this.bindInput(), this.bindObservers(), this.bindKeyboard(), this.resize(), this.start(), await this.whenThumbsReady(), e.classList.add("is-ready"), await this.setLayout(t, { initial: !0 });
+		let n = new URLSearchParams(location.search).get("project");
+		return n && this.openProjectBySlug(n, { push: !1 }), this;
 	}
 	createRenderer() {
 		let e = new jp({
@@ -13193,8 +13503,8 @@ var cm = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Positi
 			226,
 			255
 		]), 1, 1), this.emptyTexture.needsUpdate = !0, this.baseMaterial = new ml({
-			vertexShader: cm,
-			fragmentShader: lm,
+			vertexShader: bm,
+			fragmentShader: xm,
 			transparent: !0,
 			depthTest: !1,
 			depthWrite: !1,
@@ -13220,7 +13530,10 @@ var cm = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Positi
 		this.running && (this.running = !1, gi.ticker.remove(this._tick), this.media?.pauseAll(), this.media && (this.media.enabled = !1));
 	}
 	updateRunning() {
-		this.inView && this.pageVisible ? this.start() : this.stop();
+		this.inView && this.pageVisible && !this.aboutOpen && !this.projectOpen ? this.start() : this.stop();
+	}
+	toggleAbout(e = !this.aboutOpen) {
+		e !== this.aboutOpen && (e && this.projectOpen && this.closeProject(), this.aboutOpen = e, this.mount.classList.toggle("is-about", e), this.ui?.setAbout(e), clearTimeout(this._aboutTimer), e ? (this.hovered = null, this.tapped = null, this.mount.classList.remove("is-hovering-tile"), this._aboutTimer = setTimeout(() => this.updateRunning(), 650)) : this.updateRunning());
 	}
 	whenThumbsReady(e = .8, t = 2500) {
 		let n = performance.now();
@@ -13232,7 +13545,7 @@ var cm = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Positi
 		});
 	}
 	async setLayout(e, { initial: t = !1 } = {}) {
-		if (this.switching || e === this.layoutKey || !this.renderer) return;
+		if (this.aboutOpen && this.toggleAbout(!1), this.projectOpen && this.closeProject(), this.switching || e === this.layoutKey || !this.renderer) return;
 		let n = this.layoutDefs.find((t) => t.key === e);
 		if (n) {
 			if (this.switching = !0, this.ui?.setActive(e), this.options.syncUrl) {
@@ -13255,7 +13568,7 @@ var cm = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Positi
 			for (let t of r.tiles) t.sync(n, this.viewport, e);
 		}
 		if (this.media.endFrame(this.time), r && this.ui) {
-			let e = this.openTile ? null : r.captionTile(), t = (r.config.captionInset ?? [20, 12]).map((e) => e * Math.min(1, this.scale));
+			let e = this.openTile || this.aboutOpen || this.projectOpen ? null : r.captionTile(), t = (r.config.captionInset ?? [20, 12]).map((e) => e * Math.min(1, this.scale));
 			this.ui.updateCaption(e?.onScreen ? e : null, t, this.reducedMotion);
 		}
 		this.renderer.render(this.scene, this.camera);
@@ -13288,63 +13601,98 @@ var cm = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Positi
 	updateHover() {
 		let e = this.input?.pointer, t = null;
 		if (this.tapped && this.time < this.tapped.until && this.layout?.tiles.includes(this.tapped.tile)) t = this.tapped.tile;
-		else if (e?.inside && !this.input.pressed?.dragging && !this.openTile && !this.switching && !this.isMobile) {
+		else if (e?.inside && !this.input.pressed?.dragging && !this.openTile && !this.switching && !this.isMobile && !this.aboutOpen && !this.projectOpen) {
 			let n = this.pick(e.x, e.y);
 			n && (t = n.tile);
 		}
-		t !== this.hovered && (this.hovered = t, this.mount.classList.toggle("is-hovering-tile", !!(this.options.click && t?.item.href)));
+		t !== this.hovered && (this.hovered = t, this.mount.classList.toggle("is-hovering-tile", !!(t?.item.caseStudy && t.item.project)));
 	}
-	open(e, t) {
-		let n = e?.item.href;
-		if (!n) return !1;
-		if (t && (t.metaKey || t.ctrlKey || t.shiftKey || t.button === 1)) return window.open(n, "_blank", "noopener"), !0;
-		if (this.openTile) return !0;
+	async openProject(e, { push: t = !0, morph: n = !0 } = {}) {
+		let r = e?.item, i = r?.project;
+		if (!i || !r.caseStudy || this.openTile || this.projectOpen) return !1;
+		this.aboutOpen && this.toggleAbout(!1);
+		let a = this.ui.project, o = {
+			type: r.type,
+			bestSrc: r.bestSrc,
+			srcset: r.srcset,
+			sources: r.sources,
+			aspect: r.aspect,
+			alt: i.title
+		};
+		await Sm(o.bestSrc), this.projectOpen = !0, this.hovered = null, this.mount.classList.remove("is-hovering-tile"), a.render(i, o);
+		let s = a.heroRect();
+		t && this.pushProjectState(i.slug);
+		let c = () => {
+			this.mount.classList.add("is-project"), a.reveal({ reduced: this.reducedMotion }), clearTimeout(this._projectTimer), this._projectTimer = setTimeout(() => this.updateRunning(), 500);
+		};
+		if (!n || this.reducedMotion || !s) return c(), !0;
 		this.openTile = e;
-		let r = {
+		let l = {
 			...e.rect,
 			radius: this.radius
 		};
-		e.override = r, e.mesh.renderOrder = 1e4;
-		let { width: i, height: a } = this.viewport, o = this.reducedMotion ? .3 : this.options.openDuration, s = () => window.location.href = n;
-		return this.reducedMotion ? (gi.to(this, {
-			openProgress: 1,
-			duration: o,
-			onComplete: s
-		}), !0) : (gi.timeline({
+		e.override = l;
+		let u = this.options.openDuration;
+		return gi.timeline({
 			defaults: {
-				duration: o,
+				duration: u,
 				ease: this.options.openEase
 			},
-			onComplete: s
+			onComplete: c
 		}).to(this, {
 			openProgress: 1,
-			duration: o * .6
-		}, 0).to(r, {
-			x: 0,
-			y: 0,
-			w: i,
-			h: a,
-			radius: 0
-		}, 0), !0);
+			duration: u * .6
+		}, 0).to(l, {
+			...s,
+			radius: this.radius
+		}, 0), !0;
+	}
+	openProjectBySlug(e, t) {
+		let n = this.layout?.tiles.find((t) => t.item.project?.slug === e && t.item.caseStudy);
+		return n ? this.openProject(n, {
+			...t,
+			morph: !1
+		}) : !1;
+	}
+	closeProject({ fromHistory: e = !1 } = {}) {
+		this.projectOpen && (this.projectOpen = !1, clearTimeout(this._projectTimer), gi.killTweensOf(this), this.mount.classList.remove("is-project"), this.ui.project.hide(), this.resetOpen(), this.updateRunning(), !e && history.state?.wcProject ? history.back() : e || this.replaceProjectParam(null));
+	}
+	pushProjectState(e) {
+		if (!e) return;
+		let t = new URL(location.href);
+		t.searchParams.set("project", e), history.pushState({
+			...history.state || {},
+			wcProject: e
+		}, "", t);
+	}
+	replaceProjectParam(e) {
+		let t = new URL(location.href);
+		e ? t.searchParams.set("project", e) : t.searchParams.delete("project"), history.replaceState({
+			...history.state || {},
+			wcProject: e || void 0
+		}, "", t);
 	}
 	resetOpen() {
 		this.openTile && (gi.killTweensOf(this), this.openTile.override = null, this.openTile = null, this.openProgress = 0);
 	}
 	bindInput() {
 		let e = this.mount.dataset.wheel || this.options.wheel;
-		this.input = new $p(this.mount, {
+		this.input = new em(this.mount, {
 			clickSlop: this.options.clickSlop,
 			wheel: e
 		});
-		let t = () => this.switching || this.openTile || !this.layout;
+		let t = () => this.switching || this.openTile || this.projectOpen || this.aboutOpen || !this.layout;
 		this.input.on("drag", (e) => !t() && this.layout.onDrag?.(e)).on("release", (e) => !t() && this.layout.onRelease?.(e)).on("wheel", (e) => !t() && this.layout.onWheel?.(e)).on("scroll", (e) => !t() && this.inView && this.layout.onScroll?.(e)).on("tap", ({ x: e, y: n, event: r }) => {
 			if (t()) return;
 			let i = this.pick(e, n);
 			this.isMobile && i && (this.tapped = {
 				tile: i.tile,
 				until: this.time + this.options.tapCaptionFor
-			}), !this.layout.onTap?.(i?.tile ?? null, r) && i && this.options.click && this.open(i.tile, r);
-		}), this._onPageShow = (e) => e.persisted && this.resetOpen(), window.addEventListener("pageshow", this._onPageShow);
+			}), !this.layout.onTap?.(i?.tile ?? null, r) && i?.tile.item.caseStudy && this.openProject(i.tile);
+		}), this._onPopState = (e) => {
+			let t = e.state?.wcProject || new URLSearchParams(location.search).get("project");
+			t && !this.projectOpen ? this.openProjectBySlug(t, { push: !1 }) : !t && this.projectOpen && this.closeProject({ fromHistory: !0 });
+		}, window.addEventListener("popstate", this._onPopState), this._onPageShow = (e) => e.persisted && this.resetOpen(), window.addEventListener("pageshow", this._onPageShow);
 	}
 	bindObservers() {
 		this.resizeObserver = new ResizeObserver(() => this.resize()), this.resizeObserver.observe(this.mount), this.intersection = new IntersectionObserver(([e]) => {
@@ -13374,12 +13722,12 @@ var cm = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Positi
 			right: t,
 			top: 0,
 			bottom: -n
-		}), this.camera.updateProjectionMatrix(), this.isMobile = matchMedia("(pointer: coarse)").matches || window.innerWidth < 768, this.layout?.resize(this.viewport);
+		}), this.camera.updateProjectionMatrix(), this.isMobile = matchMedia("(pointer: coarse)").matches || window.innerWidth < 768, this.layout?.resize(this.viewport), this.projectOpen && this.ui?.project.layoutInfo();
 	}
 	destroy() {
-		this.stop(), gi.killTweensOf(this), this.resizeObserver?.disconnect(), this.intersection?.disconnect(), document.removeEventListener("visibilitychange", this._onVisibility), window.removeEventListener("pageshow", this._onPageShow), this._reducedQuery.removeEventListener?.("change", this._onReducedChange), this._focusHandlers?.forEach((e) => e()), this.input?.destroy(), this.layout?.dispose(), this.media?.dispose(), this.geometry?.dispose(), this.baseMaterial?.dispose(), this.emptyTexture?.dispose(), this.renderer && (this.renderer.dispose(), this.renderer.forceContextLoss(), this.renderer.domElement.remove()), this.ui?.destroy(), this.mount.classList.remove("wc-root", "is-ready", "is-fallback", "is-hovering-tile", "is-dragging");
+		this.stop(), gi.killTweensOf(this), this.resizeObserver?.disconnect(), this.intersection?.disconnect(), document.removeEventListener("visibilitychange", this._onVisibility), document.removeEventListener("keydown", this._onKey), clearTimeout(this._aboutTimer), window.removeEventListener("pageshow", this._onPageShow), window.removeEventListener("popstate", this._onPopState), clearTimeout(this._projectTimer), this._reducedQuery.removeEventListener?.("change", this._onReducedChange), this._focusHandlers?.forEach((e) => e()), this.input?.destroy(), this.layout?.dispose(), this.media?.dispose(), this.geometry?.dispose(), this.baseMaterial?.dispose(), this.emptyTexture?.dispose(), this.renderer && (this.renderer.dispose(), this.renderer.forceContextLoss(), this.renderer.domElement.remove()), this.ui?.destroy(), this.mount.classList.remove("wc-root", "is-ready", "is-fallback", "is-hovering-tile", "is-dragging");
 	}
-}, dm = class {
+}, wm = class {
 	constructor(e, t, n = 0) {
 		this.engine = e, this.item = t, this.index = n, this.x = 0, this.y = 0, this.w = 100, this.h = 100, this.z = 0, this.rotation = 0, this.alpha = 1, this.reveal = 1, this.gray = 0, this.zoom = 0, this.priority = 0, this.interactive = !0, this.hover = 0, this.texReady = 0, this.onScreen = !1, this.override = null, this.material = e.baseMaterial.clone(), this.uniforms = this.material.uniforms, this.uniforms.uSize.value = new Y(100, 100), this.uniforms.uTexSize.value = t.texSize, this.mesh = new Gc(e.geometry, this.material), this.mesh.frustumCulled = !1, this.mesh.userData.tile = this, e.scene.add(this.mesh);
 	}
@@ -13406,36 +13754,36 @@ var cm = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Positi
 };
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/typeof.js
-function fm(e) {
+function Tm(e) {
 	"@babel/helpers - typeof";
-	return fm = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
+	return Tm = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
 		return typeof e;
 	} : function(e) {
 		return e && typeof Symbol == "function" && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
-	}, fm(e);
+	}, Tm(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/toPrimitive.js
-function pm(e, t) {
-	if (fm(e) != "object" || !e) return e;
+function Em(e, t) {
+	if (Tm(e) != "object" || !e) return e;
 	var n = e[Symbol.toPrimitive];
 	if (n !== void 0) {
 		var r = n.call(e, t || "default");
-		if (fm(r) != "object") return r;
+		if (Tm(r) != "object") return r;
 		throw TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return (t === "string" ? String : Number)(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/toPropertyKey.js
-function mm(e) {
-	var t = pm(e, "string");
-	return fm(t) == "symbol" ? t : t + "";
+function Dm(e) {
+	var t = Em(e, "string");
+	return Tm(t) == "symbol" ? t : t + "";
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/defineProperty.js
-function hm(e, t, n) {
-	return (t = mm(t)) in e ? Object.defineProperty(e, t, {
+function Om(e, t, n) {
+	return (t = Dm(t)) in e ? Object.defineProperty(e, t, {
 		value: n,
 		enumerable: !0,
 		configurable: !0,
@@ -13444,7 +13792,7 @@ function hm(e, t, n) {
 }
 //#endregion
 //#region src/core/layout.js
-var gm = (e) => Math.min(1, Math.max(0, e)), _m = class {
+var km = (e) => Math.min(1, Math.max(0, e)), Am = class {
 	constructor(e, t) {
 		this.engine = e, this.config = t, this.tiles = [], this.featured = null, this.progress = 0, this.introEase = gi.parseEase(t.easing ?? "power3.out");
 	}
@@ -13458,7 +13806,7 @@ var gm = (e) => Math.min(1, Math.max(0, e)), _m = class {
 		return this.engine.reducedMotion;
 	}
 	makeTiles(e) {
-		return this.tiles = e.map((e, t) => new dm(this.engine, e, t)), this.tiles;
+		return this.tiles = e.map((e, t) => new wm(this.engine, e, t)), this.tiles;
 	}
 	repeatItems(e) {
 		let t = [];
@@ -13467,7 +13815,7 @@ var gm = (e) => Math.min(1, Math.max(0, e)), _m = class {
 	}
 	tileProgress(e) {
 		let t = this.config.stagger ?? .4;
-		return this.introEase(gm(this.progress * (1 + t) - e * t));
+		return this.introEase(km(this.progress * (1 + t) - e * t));
 	}
 	applyTransition(e, t, n = {
 		x: 0,
@@ -13515,7 +13863,7 @@ var gm = (e) => Math.min(1, Math.max(0, e)), _m = class {
 	}
 	centerScore(e) {
 		let t = (e.x + e.w / 2 - this.vp.width / 2) / this.vp.width, n = (e.y + e.h / 2 - this.vp.height / 2) / this.vp.height;
-		return gm(1 - Math.hypot(t, n)) * .99 + .01;
+		return km(1 - Math.hypot(t, n)) * .99 + .01;
 	}
 	resize() {}
 	update() {}
@@ -13523,10 +13871,10 @@ var gm = (e) => Math.min(1, Math.max(0, e)), _m = class {
 		gi.killTweensOf(this), this.tiles.forEach((e) => e.dispose()), this.tiles = [];
 	}
 };
-hm(_m, "defaults", {});
+Om(Am, "defaults", {});
 //#endregion
 //#region src/core/sizing.js
-function vm(e, t, n = 1) {
+function jm(e, t, n = 1) {
 	let r = n * 2654435769, i = () => {
 		r = r + 1831565813 | 0;
 		let e = Math.imul(r ^ r >>> 15, 1 | r);
@@ -13541,7 +13889,7 @@ function vm(e, t, n = 1) {
 	}
 	return a;
 }
-function ym(e, t, { minW: n, maxW: r, maxH: i }) {
+function Mm(e, t, { minW: n, maxW: r, maxH: i }) {
 	let a = t, o = a * e;
 	return o > r && ([o, a] = [r, r / e]), o < n && ([o, a] = [n, n / e]), a > i && (a = i), {
 		w: o,
@@ -13550,7 +13898,7 @@ function ym(e, t, { minW: n, maxW: r, maxH: i }) {
 }
 //#endregion
 //#region src/layouts/filmstrip.js
-var bm = {
+var Nm = {
 	heights: [
 		210,
 		280,
@@ -13560,8 +13908,8 @@ var bm = {
 	],
 	minWidth: 190,
 	maxWidth: 760,
-	gap: 16,
-	bottomInset: 14,
+	gap: 12,
+	bottomInset: 12,
 	startOffset: -162,
 	minScale: .55,
 	maxScale: 1.35,
@@ -13587,18 +13935,18 @@ var bm = {
 	enterDuration: 1.5,
 	leaveDuration: .8,
 	captionInset: [20, 12]
-}, xm = class extends _m {
+}, Pm = class extends Am {
 	constructor(e, t) {
 		super(e, t), this.offset = 0, this.target = 0, this.drift = -t.idleSpeed, this.velocity = 0;
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.height / Np.height));
-		this.s = n, this.engine.scale = n, this.gapPx = t.gap, this.bottom = e.height - t.bottomInset * n;
+		this.s = n, this.engine.scale = n, this.gapPx = t.gap, this.bottom = e.height - t.bottomInset;
 		let r = Math.min(t.maxWidth * n, e.width * t.mobileMaxWidth), i = Math.min(t.minWidth * n, r), a = Math.max(...t.heights) * n, o = Math.ceil((e.width + r * 3) / (i + this.gapPx)), s = Math.max(this.items.length, o);
 		s !== this.tiles.length && (this.tiles.forEach((e) => e.dispose()), this.makeTiles(this.repeatItems(s)));
-		let c = vm(this.tiles.length, t.heights.length, t.seed), l = 0;
+		let c = jm(this.tiles.length, t.heights.length, t.seed), l = 0;
 		this.tiles.forEach((e, o) => {
-			let { w: s, h: u } = ym(e.item.aspect, t.heights[c[o]] * n, {
+			let { w: s, h: u } = Mm(e.item.aspect, t.heights[c[o]] * n, {
 				minW: i,
 				maxW: r,
 				maxH: a
@@ -13634,10 +13982,10 @@ var bm = {
 		t && (this.target += this.vp.width / 2 - (t.x + t.w / 2));
 	}
 };
-hm(xm, "defaults", bm), hm(xm, "label", "Filmstrip");
+Om(Pm, "defaults", Nm), Om(Pm, "label", "Filmstrip");
 //#endregion
 //#region src/layouts/deck.js
-var Sm = {
+var Fm = {
 	heights: [
 		220,
 		300,
@@ -13676,11 +14024,10 @@ var Sm = {
 		3,
 		2.2
 	],
-	slowInterval: 2.4,
-	fastInterval: .4,
-	curve: 1.4,
+	moveStep: 90,
+	maxPerFrame: 1,
 	idleInterval: 3.2,
-	dealDuration: .8,
+	dealDuration: .12,
 	dealEase: "power2.out",
 	pauseOnHover: !0,
 	hoverToFront: !0,
@@ -13694,11 +14041,11 @@ var Sm = {
 	enterDuration: 1.3,
 	leaveDuration: .7,
 	captionInset: [16, 12]
-}, Cm = (e, t, n) => e + (t - e) * n, wm = class extends _m {
+}, Im = class extends Am {
 	constructor(e, t) {
 		super(e, t), this.makeTiles(this.items);
 		let n = this.tiles.length;
-		this.slotCount = Math.min(t.slots.length, n), this.slotTile = Array.from({ length: this.slotCount }, (e, t) => t), this.slotStamp = Array.from({ length: this.slotCount }, (e, t) => this.slotCount - t), this.stamp = this.slotCount, this.next = this.slotCount % n, this.fading = null, this.timer = 0, this.anchors = t.slots.map(() => ({
+		this.slotCount = Math.min(t.slots.length, n), this.slotTile = Array.from({ length: this.slotCount }, (e, t) => t), this.slotStamp = Array.from({ length: this.slotCount }, (e, t) => this.slotCount - t), this.stamp = this.slotCount, this.next = this.slotCount % n, this.fading = null, this.timer = 0, this.travel = 0, this.lastPointer = null, this.anchors = t.slots.map(() => ({
 			x: 0,
 			y: 0
 		}));
@@ -13708,9 +14055,9 @@ var Sm = {
 		this.s = n, this.engine.scale = n;
 		let r = Math.min(t.maxWidth * n, e.width * t.mobileMaxWidth), i = Math.min(t.minWidth * n, r);
 		this.k = r / t.maxWidth;
-		let a = Math.max(...t.heights) * this.k, o = vm(this.tiles.length, t.heights.length, t.seed);
+		let a = Math.max(...t.heights) * this.k, o = jm(this.tiles.length, t.heights.length, t.seed);
 		this.tiles.forEach((e, n) => {
-			let { w: s, h: c } = ym(e.item.aspect, t.heights[o[n]] * this.k, {
+			let { w: s, h: c } = Mm(e.item.aspect, t.heights[o[n]] * this.k, {
 				minW: i,
 				maxW: r,
 				maxH: a
@@ -13727,8 +14074,16 @@ var Sm = {
 			let e = this.slotTile.indexOf(c.index);
 			e >= 0 && this.slotStamp[e] !== this.stamp && (this.slotStamp[e] = ++this.stamp);
 		}
-		let d = s ? Math.min(1, Math.hypot(a, o)) : 0, f = s ? Cm(t.slowInterval, t.fastInterval, d ** +t.curve) : t.idleInterval;
-		t.pauseOnHover && c || this.reduced || this.progress < 1 || (this.timer += e / f, this.timer >= 1 && (this.timer = Math.min(this.timer - 1, .5), this.deal(f)));
+		let d = t.pauseOnHover && c || this.reduced || this.progress < 1, f = n.input?.pointer;
+		if (s && f) {
+			this.lastPointer && !d && (this.travel += Math.hypot(f.x - this.lastPointer.x, f.y - this.lastPointer.y)), this.lastPointer = {
+				x: f.x,
+				y: f.y
+			};
+			let e = t.moveStep * this.s;
+			for (let n = 0; this.travel >= e && n < t.maxPerFrame; n++) this.travel -= e, this.deal();
+			this.travel = Math.min(this.travel, e * 2), this.timer = 0;
+		} else this.lastPointer = null, this.travel = 0, d || (this.timer += e / t.idleInterval, this.timer >= 1 && (this.timer = 0, this.deal()));
 		let p = r / 2, m = i / 2, h = (e, n) => {
 			let r = t.slots[n], i = this.anchors[n];
 			e.w = e.baseW, e.h = e.baseH, e.x = p + i.x + r.x * this.k - e.w / 2, e.y = m + i.y + r.y * this.k - e.h / 2;
@@ -13748,25 +14103,25 @@ var Sm = {
 		}
 		this.featured = _, _ && (_.priority = 3);
 	}
-	deal(e = this.config.slowInterval, t = null) {
-		let n = this.tiles.length;
-		if (n <= this.slotCount) return;
+	deal(e = null) {
+		let t = this.tiles.length;
+		if (t <= this.slotCount) return;
 		this.finishFade();
-		let r = t ?? this.next;
-		for (let e = 0; this.slotTile.includes(r) && e < n; e++) r = (r + 1) % n;
-		t ?? (this.next = (r + 1) % n);
-		let i = this.slotStamp.indexOf(Math.min(...this.slotStamp)), a = this.slotTile[i];
+		let n = e ?? this.next;
+		for (let e = 0; this.slotTile.includes(n) && e < t; e++) n = (n + 1) % t;
+		e ?? (this.next = (n + 1) % t);
+		let r = this.slotStamp.indexOf(Math.min(...this.slotStamp)), i = this.slotTile[r];
 		this.fading = {
-			slot: i,
-			from: a,
-			fromStamp: this.slotStamp[i],
-			to: r,
+			slot: r,
+			from: i,
+			fromStamp: this.slotStamp[r],
+			to: n,
 			p: 0
-		}, this.slotTile[i] = r, this.slotStamp[i] = ++this.stamp;
-		let o = this.reduced ? .2 : Math.min(this.config.dealDuration, e * .9);
+		}, this.slotTile[r] = n, this.slotStamp[r] = ++this.stamp;
+		let a = this.config.dealDuration;
 		this.fadeTween = gi.to(this.fading, {
 			p: 1,
-			duration: o,
+			duration: a,
 			ease: this.config.dealEase,
 			onComplete: () => this.finishFade()
 		});
@@ -13778,19 +14133,19 @@ var Sm = {
 		let t = this.tiles.findIndex((t) => t.item === e);
 		if (t < 0) return;
 		let n = this.slotTile.indexOf(t);
-		n >= 0 ? this.slotStamp[n] = ++this.stamp : this.deal(this.config.slowInterval, t);
+		n >= 0 ? this.slotStamp[n] = ++this.stamp : this.deal(t);
 	}
 	dispose() {
 		this.finishFade(), super.dispose();
 	}
 };
-hm(wm, "defaults", Sm), hm(wm, "label", "Deck");
+Om(Im, "defaults", Fm), Om(Im, "label", "Deck");
 //#endregion
 //#region src/layouts/masonry.js
-var Tm = {
+var Lm = {
 	columnWidth: 168,
-	gutter: 16,
-	gap: 16,
+	gutter: 12,
+	gap: 12,
 	firstColumnX: -8,
 	columnOffsets: [
 		-381,
@@ -13836,7 +14191,7 @@ var Tm = {
 	leaveDuration: .8,
 	captionInset: [14, 13]
 };
-function Em(e, t) {
+function Rm(e, t) {
 	let n = t * 2654435769, r = () => {
 		n = n + 1831565813 | 0;
 		let e = Math.imul(n ^ n >>> 15, 1 | n);
@@ -13848,7 +14203,7 @@ function Em(e, t) {
 	}
 	return i;
 }
-var Dm = class extends _m {
+var zm = class extends Am {
 	constructor(e, t) {
 		super(e, t), this.scroll = 0, this.slow = 1, this.shiftX = 0, this.shiftV = 0, this.columns = [];
 	}
@@ -13862,7 +14217,7 @@ var Dm = class extends _m {
 			length: 0
 		})), l = this.items.length, u = this.items;
 		for (let e = 0; c.some((e) => e.length < o) || e < l; e++) {
-			e > 0 && e % l === 0 && (u = Em(this.items, e / l));
+			e > 0 && e % l === 0 && (u = Rm(this.items, e / l));
 			let t = c.reduce((e, t) => t.length < e.length ? t : e), n = u[e % l];
 			if (t.tiles.push({
 				item: n,
@@ -13904,32 +14259,32 @@ var Dm = class extends _m {
 		this.featured = f, f && (f.priority = 2), a && (n.hovered.priority = 3);
 	}
 };
-hm(Dm, "defaults", Tm), hm(Dm, "label", "Masonry");
+Om(zm, "defaults", Lm), Om(zm, "label", "Masonry");
 //#endregion
 //#region src/main.js
-var Om = [
+var Bm = [
 	{
 		key: "a",
 		name: "Filmstrip",
-		Layout: xm,
-		config: bm
+		Layout: Pm,
+		config: Nm
 	},
 	{
 		key: "b",
 		name: "Deck",
-		Layout: wm,
-		config: Sm
+		Layout: Im,
+		config: Fm
 	},
 	{
 		key: "c",
 		name: "Masonry",
-		Layout: Dm,
-		config: Tm
+		Layout: zm,
+		config: Lm
 	}
 ];
-async function km(e, t = {}) {
+async function Vm(e, t = {}) {
 	if (e.__workCanvas) return e.__workCanvas;
-	let n = e.dataset, r = new URLSearchParams(location.search).get("v"), i = parseInt(t.maxVideos ?? n.maxVideos, 10), a = Om.map((e) => ({
+	let n = e.dataset, r = new URLSearchParams(location.search).get("v"), i = parseInt(t.maxVideos ?? n.maxVideos, 10), a = Bm.map((e) => ({
 		...e,
 		config: {
 			...e.config,
@@ -13937,26 +14292,25 @@ async function km(e, t = {}) {
 		}
 	}));
 	i && a.forEach((e) => e.config.maxVideos = i);
-	let o = new um(e, {
+	let o = new Cm(e, {
 		layouts: a,
 		layout: t.layout ?? r ?? n.layout ?? "a",
 		switcher: t.switcher ?? n.switcher !== "false",
 		syncUrl: t.syncUrl ?? n.syncUrl === "true",
 		tagline: t.tagline ?? n.tagline ?? "design &amp; direction made to move",
-		taglineHref: t.taglineHref ?? n.taglineHref ?? "#work",
 		hint: t.hint ?? n.hint,
 		...t
 	});
 	return e.__workCanvas = o, await o.init(), o;
 }
-function Am() {
-	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => km(e));
+function Hm() {
+	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Vm(e));
 }
 typeof window < "u" && (window.WorkCanvas = {
-	mount: km,
-	LAYOUTS: Om
-}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", Am, { once: !0 }) : Am());
+	mount: Vm,
+	LAYOUTS: Bm
+}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", Hm, { once: !0 }) : Hm());
 //#endregion
-export { Om as LAYOUTS, um as WorkCanvas, km as mount };
+export { Bm as LAYOUTS, Cm as WorkCanvas, Vm as mount };
 
 //# sourceMappingURL=work-canvas.js.map

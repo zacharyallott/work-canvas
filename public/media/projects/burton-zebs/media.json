@@ -1,0 +1,160 @@
+{
+  "generated": "2026-09-25T03:14:22.231Z",
+  "count": 4,
+  "images": 4,
+  "videos": 0,
+  "items": [
+    {
+      "id": "burton-zebs-allott-01",
+      "label": "Burton Zebs",
+      "href": "",
+      "caseStudy": true,
+      "source": "Burton-Zebs-Allott-01.jpg",
+      "sourceHash": "71a8a99cd618ff65",
+      "type": "image",
+      "width": 4000,
+      "height": 6000,
+      "images": {
+        "sm": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-01-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 12900
+        },
+        "md": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-01-md.webp",
+          "width": 853,
+          "height": 1280,
+          "bytes": 76836
+        },
+        "lg": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-01-lg.webp",
+          "width": 1365,
+          "height": 2048,
+          "bytes": 176354
+        }
+      },
+      "poster": {
+        "src": "media/projects/burton-zebs/burton-zebs-allott-01-sm.webp",
+        "width": 320,
+        "height": 480,
+        "bytes": 12900
+      },
+      "aspect": 0.6667
+    },
+    {
+      "id": "burton-zebs-allott-02",
+      "label": "Burton Zebs",
+      "href": "",
+      "caseStudy": true,
+      "source": "Burton-Zebs-Allott-02.jpg",
+      "sourceHash": "852d4e8ba0452a9e",
+      "type": "image",
+      "width": 6000,
+      "height": 4000,
+      "images": {
+        "sm": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-02-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 10874
+        },
+        "md": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-02-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 55162
+        },
+        "lg": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-02-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 122498
+        }
+      },
+      "poster": {
+        "src": "media/projects/burton-zebs/burton-zebs-allott-02-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 10874
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "burton-zebs-allott-03",
+      "label": "Burton Zebs",
+      "href": "",
+      "caseStudy": true,
+      "source": "Burton-Zebs-Allott-03.jpg",
+      "sourceHash": "05bdba939042c688",
+      "type": "image",
+      "width": 3000,
+      "height": 2000,
+      "images": {
+        "sm": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-03-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 14864
+        },
+        "md": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-03-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 119402
+        },
+        "lg": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-03-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 363328
+        }
+      },
+      "poster": {
+        "src": "media/projects/burton-zebs/burton-zebs-allott-03-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 14864
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "burton-zebs-allott-04",
+      "label": "Burton Zebs",
+      "href": "",
+      "caseStudy": true,
+      "source": "Burton-Zebs-Allott-04.jpg",
+      "sourceHash": "a025fdc9158ddefb",
+      "type": "image",
+      "width": 3000,
+      "height": 2000,
+      "images": {
+        "sm": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-04-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 8232
+        },
+        "md": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-04-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 51190
+        },
+        "lg": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-04-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 112492
+        }
+      },
+      "poster": {
+        "src": "media/projects/burton-zebs/burton-zebs-allott-04-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 8232
+      },
+      "aspect": 1.5
+    }
+  ]
+}

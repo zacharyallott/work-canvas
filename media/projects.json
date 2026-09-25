@@ -22,6 +22,22 @@
     { "match": "^solace-",              "label": "Solace Cycles",             "href": "/projects/solace-cycles", "caseStudy": false },
     { "match": "Tosdal",                "label": "Tosdal APC",                "href": "/projects/tosdal-law", "caseStudy": false }
   ],
+  "caseStudies": {
+    "_readme": "Project folders in 2026_SiteCompilation → CMS item slug. `npm run media:projects` processes each folder into public/media/projects/<slug>/ for the project view (CMS Image 3 onward).",
+    "02_BOA": "boa",
+    "03_Burton": "burton-zebs",
+    "04_Bonnell": "bonnell",
+    "04_Dialpad": "dialpad",
+    "05_Stelo": "stelo",
+    "06_TJB": "the-james-brand",
+    "07_NixonDork": "nixon-the-dork",
+    "08_NixonPushForward": "nixon-push-forward",
+    "09_CincoDesign": "cinco-design",
+    "10_OtisMountain": "otis-mountain-get-down",
+    "11_MusicNotImpossible": "mni",
+    "12_GTBikes": "gt-bikes",
+    "13_MicrosoftInnovationHub": "microsoft-innovation-hub"
+  },
   "video": {
     "_readme": "Per-file overrides, keyed by source filename. start/duration trim the loop (default: first `maxSeconds` s). crop = 'w:h:x:y' in source px (find with: ffmpeg -i file -vf cropdetect -f null -).",
     "MNI-Allott-01.mp4":       { "start": 0, "duration": 12 },

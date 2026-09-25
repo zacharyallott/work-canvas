@@ -1,0 +1,186 @@
+{
+  "generated": "2026-09-25T03:15:14.102Z",
+  "count": 5,
+  "images": 3,
+  "videos": 2,
+  "items": [
+    {
+      "id": "1-medium",
+      "label": "1 Medium",
+      "href": "",
+      "caseStudy": false,
+      "source": "1-Medium.webp",
+      "sourceHash": "6cb5ad6d12cdeb0a",
+      "type": "image",
+      "width": 2276,
+      "height": 1516,
+      "images": {
+        "sm": {
+          "src": "media/projects/microsoft-innovation-hub/1-medium-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 6570
+        },
+        "md": {
+          "src": "media/projects/microsoft-innovation-hub/1-medium-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 40382
+        },
+        "lg": {
+          "src": "media/projects/microsoft-innovation-hub/1-medium-lg.webp",
+          "width": 2048,
+          "height": 1364,
+          "bytes": 95118
+        }
+      },
+      "poster": {
+        "src": "media/projects/microsoft-innovation-hub/1-medium-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 6570
+      },
+      "aspect": 1.5013
+    },
+    {
+      "id": "2up-02",
+      "label": "2Up",
+      "href": "",
+      "caseStudy": false,
+      "source": "2Up-02.webp",
+      "sourceHash": "a9f4564a7976cfd6",
+      "type": "image",
+      "width": 1280,
+      "height": 1280,
+      "images": {
+        "sm": {
+          "src": "media/projects/microsoft-innovation-hub/2up-02-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 9836
+        },
+        "md": {
+          "src": "media/projects/microsoft-innovation-hub/2up-02-md.webp",
+          "width": 1280,
+          "height": 1280,
+          "bytes": 36310
+        },
+        "lg": {
+          "src": "media/projects/microsoft-innovation-hub/2up-02-lg.webp",
+          "width": 1280,
+          "height": 1280,
+          "bytes": 37828
+        }
+      },
+      "poster": {
+        "src": "media/projects/microsoft-innovation-hub/2up-02-sm.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 9836
+      },
+      "aspect": 1
+    },
+    {
+      "id": "conference-stage-mockup-fast",
+      "label": "Conference Stage Mockup Fast",
+      "href": "",
+      "caseStudy": false,
+      "source": "Conference Stage Mockup Fast.mp4",
+      "sourceHash": "a046d7623daea674",
+      "type": "video",
+      "width": 1080,
+      "height": 788,
+      "duration": 12,
+      "sourceDuration": 22.36,
+      "poster": {
+        "src": "media/projects/microsoft-innovation-hub/conference-stage-mockup-fast-poster.webp",
+        "width": 1080,
+        "height": 788,
+        "bytes": 79946
+      },
+      "sources": [
+        {
+          "src": "media/projects/microsoft-innovation-hub/conference-stage-mockup-fast.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 1057545
+        },
+        {
+          "src": "media/projects/microsoft-innovation-hub/conference-stage-mockup-fast.mp4",
+          "type": "video/mp4",
+          "bytes": 871744
+        }
+      ],
+      "aspect": 1.3706
+    },
+    {
+      "id": "inset-l-1",
+      "label": "Inset L",
+      "href": "",
+      "caseStudy": false,
+      "source": "Inset-L-1.webp",
+      "sourceHash": "1818ca70e06d09f3",
+      "type": "image",
+      "width": 1956,
+      "height": 1304,
+      "images": {
+        "sm": {
+          "src": "media/projects/microsoft-innovation-hub/inset-l-1-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 7062
+        },
+        "md": {
+          "src": "media/projects/microsoft-innovation-hub/inset-l-1-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 36026
+        },
+        "lg": {
+          "src": "media/projects/microsoft-innovation-hub/inset-l-1-lg.webp",
+          "width": 1956,
+          "height": 1304,
+          "bytes": 82658
+        }
+      },
+      "poster": {
+        "src": "media/projects/microsoft-innovation-hub/inset-l-1-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 7062
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "mih-screen-comp-vertical",
+      "label": "Microsoft Innovation Hub",
+      "href": "/projects/microsoft-innovation-hub",
+      "caseStudy": true,
+      "source": "MIH-Screen-Comp-Vertical.mp4",
+      "sourceHash": "872766149dd0dfef",
+      "type": "video",
+      "width": 1080,
+      "height": 720,
+      "duration": 12,
+      "sourceDuration": 45.05,
+      "poster": {
+        "src": "media/projects/microsoft-innovation-hub/mih-screen-comp-vertical-poster.webp",
+        "width": 1080,
+        "height": 720,
+        "bytes": 19734
+      },
+      "sources": [
+        {
+          "src": "media/projects/microsoft-innovation-hub/mih-screen-comp-vertical.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 596351
+        },
+        {
+          "src": "media/projects/microsoft-innovation-hub/mih-screen-comp-vertical.mp4",
+          "type": "video/mp4",
+          "bytes": 780489
+        }
+      ],
+      "aspect": 1.5
+    }
+  ]
+}

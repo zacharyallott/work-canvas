@@ -4,7 +4,7 @@ import { ARTBOARD } from '../core/defaults.js';
 /**
  * Version C — Masonry columns (Figma frame 45, node 1542:5489)
  *
- * Seven 168px columns with 16px gutters and 16px vertical gaps, staggered starts
+ * Seven 168px columns with 12px gutters and 12px vertical gaps, staggered starts
  * (offsets from the frame), bleeding off the top and bottom. Tile heights
  * come from real aspect ratios. Items repeat as needed to fill each column.
  *
@@ -15,8 +15,8 @@ import { ARTBOARD } from '../core/defaults.js';
  */
 export const config = {
   columnWidth: 168,
-  gutter: 16, // CSS px between columns (fixed, not scaled with the viewport)
-  gap: 16, // CSS px between tiles in a column (fixed)
+  gutter: 12, // CSS px between columns (fixed, not scaled with the viewport)
+  gap: 12, // CSS px between tiles in a column (fixed)
   firstColumnX: -8,
   // Top of each column's first tile in the frame (design px); repeats for extra columns.
   columnOffsets: [-381, -234, -381, -56, -257, -56, -381],

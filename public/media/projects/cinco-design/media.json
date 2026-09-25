@@ -1,0 +1,256 @@
+{
+  "generated": "2026-09-25T03:14:51.314Z",
+  "count": 7,
+  "images": 4,
+  "videos": 3,
+  "items": [
+    {
+      "id": "artd-c02-device-019",
+      "label": "ARTD C02 Device",
+      "href": "",
+      "caseStudy": false,
+      "source": "ARTD-C02-Device-019.mp4",
+      "sourceHash": "b82c7c31d8180a24",
+      "type": "video",
+      "width": 1080,
+      "height": 720,
+      "duration": 12,
+      "sourceDuration": 30,
+      "poster": {
+        "src": "media/projects/cinco-design/artd-c02-device-019-poster.webp",
+        "width": 1080,
+        "height": 720,
+        "bytes": 22696
+      },
+      "sources": [
+        {
+          "src": "media/projects/cinco-design/artd-c02-device-019.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 343767
+        },
+        {
+          "src": "media/projects/cinco-design/artd-c02-device-019.mp4",
+          "type": "video/mp4",
+          "bytes": 525101
+        }
+      ],
+      "aspect": 1.5
+    },
+    {
+      "id": "cinco-brand-site-allott-06",
+      "label": "Cinco Design",
+      "href": "/projects/cinco-design",
+      "caseStudy": true,
+      "source": "Cinco-Brand-Site-Allott-06.webp",
+      "sourceHash": "24d53f08420bb81a",
+      "type": "image",
+      "width": 1400,
+      "height": 933,
+      "images": {
+        "sm": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-06-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 4682
+        },
+        "md": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-06-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 15540
+        },
+        "lg": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-06-lg.webp",
+          "width": 1400,
+          "height": 933,
+          "bytes": 18776
+        }
+      },
+      "poster": {
+        "src": "media/projects/cinco-design/cinco-brand-site-allott-06-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 4682
+      },
+      "aspect": 1.5005
+    },
+    {
+      "id": "cinco-brand-site-allott-10",
+      "label": "Cinco Design",
+      "href": "/projects/cinco-design",
+      "caseStudy": true,
+      "source": "Cinco-Brand-Site-Allott-10.webp",
+      "sourceHash": "a5070ab68106ee8e",
+      "type": "image",
+      "width": 1200,
+      "height": 1200,
+      "images": {
+        "sm": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-10-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 7464
+        },
+        "md": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-10-md.webp",
+          "width": 1200,
+          "height": 1200,
+          "bytes": 28844
+        },
+        "lg": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-10-lg.webp",
+          "width": 1200,
+          "height": 1200,
+          "bytes": 30328
+        }
+      },
+      "poster": {
+        "src": "media/projects/cinco-design/cinco-brand-site-allott-10-sm.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 7464
+      },
+      "aspect": 1
+    },
+    {
+      "id": "cinco-brand-site-allott-11",
+      "label": "Cinco Design",
+      "href": "/projects/cinco-design",
+      "caseStudy": true,
+      "source": "Cinco-Brand-Site-Allott-11.webp",
+      "sourceHash": "5af804648874c3ed",
+      "type": "image",
+      "width": 1400,
+      "height": 856,
+      "images": {
+        "sm": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-11-sm.webp",
+          "width": 480,
+          "height": 293,
+          "bytes": 20328
+        },
+        "md": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-11-md.webp",
+          "width": 1280,
+          "height": 783,
+          "bytes": 138352
+        },
+        "lg": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-11-lg.webp",
+          "width": 1400,
+          "height": 856,
+          "bytes": 209676
+        }
+      },
+      "poster": {
+        "src": "media/projects/cinco-design/cinco-brand-site-allott-11-sm.webp",
+        "width": 480,
+        "height": 293,
+        "bytes": 20328
+      },
+      "aspect": 1.6355
+    },
+    {
+      "id": "cinco-brand-site-allott-14",
+      "label": "Cinco Design",
+      "href": "/projects/cinco-design",
+      "caseStudy": true,
+      "source": "Cinco-Brand-Site-Allott-14.webp",
+      "sourceHash": "5dd0f00ecfcdc5fd",
+      "type": "image",
+      "width": 1400,
+      "height": 856,
+      "images": {
+        "sm": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-14-sm.webp",
+          "width": 480,
+          "height": 293,
+          "bytes": 9202
+        },
+        "md": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-14-md.webp",
+          "width": 1280,
+          "height": 783,
+          "bytes": 34062
+        },
+        "lg": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-14-lg.webp",
+          "width": 1400,
+          "height": 856,
+          "bytes": 42360
+        }
+      },
+      "poster": {
+        "src": "media/projects/cinco-design/cinco-brand-site-allott-14-sm.webp",
+        "width": 480,
+        "height": 293,
+        "bytes": 9202
+      },
+      "aspect": 1.6355
+    },
+    {
+      "id": "cinco-screencomp-2",
+      "label": "Cinco Design",
+      "href": "/projects/cinco-design",
+      "caseStudy": true,
+      "source": "Cinco-ScreenComp_2.mp4",
+      "sourceHash": "447d78eeb3af5282",
+      "type": "video",
+      "width": 1080,
+      "height": 720,
+      "duration": 4.76,
+      "sourceDuration": 4.76,
+      "poster": {
+        "src": "media/projects/cinco-design/cinco-screencomp-2-poster.webp",
+        "width": 1080,
+        "height": 720,
+        "bytes": 44844
+      },
+      "sources": [
+        {
+          "src": "media/projects/cinco-design/cinco-screencomp-2.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 469266
+        },
+        {
+          "src": "media/projects/cinco-design/cinco-screencomp-2.mp4",
+          "type": "video/mp4",
+          "bytes": 496395
+        }
+      ],
+      "aspect": 1.5
+    },
+    {
+      "id": "cinco-tv-screen",
+      "label": "Cinco Design",
+      "href": "/projects/cinco-design",
+      "caseStudy": true,
+      "source": "Cinco-TV-Screen.mp4",
+      "sourceHash": "9e62369388655b6f",
+      "type": "video",
+      "width": 1080,
+      "height": 720,
+      "duration": 12,
+      "sourceDuration": 20,
+      "poster": {
+        "src": "media/projects/cinco-design/cinco-tv-screen-poster.webp",
+        "width": 1080,
+        "height": 720,
+        "bytes": 16812
+      },
+      "sources": [
+        {
+          "src": "media/projects/cinco-design/cinco-tv-screen.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 423357
+        },
+        {
+          "src": "media/projects/cinco-design/cinco-tv-screen.mp4",
+          "type": "video/mp4",
+          "bytes": 564090
+        }
+      ],
+      "aspect": 1.5
+    }
+  ]
+}

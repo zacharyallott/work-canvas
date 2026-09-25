@@ -1,0 +1,274 @@
+{
+  "generated": "2026-09-25T03:14:37.530Z",
+  "count": 7,
+  "images": 7,
+  "videos": 0,
+  "items": [
+    {
+      "id": "01-intro-image-inset-l",
+      "label": "01 Intro Image Inset L",
+      "href": "",
+      "caseStudy": false,
+      "source": "01-Intro-Image_Inset-L.webp",
+      "sourceHash": "66247b95a3bc6060",
+      "type": "image",
+      "width": 2608,
+      "height": 1738,
+      "images": {
+        "sm": {
+          "src": "media/projects/stelo/01-intro-image-inset-l-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 18740
+        },
+        "md": {
+          "src": "media/projects/stelo/01-intro-image-inset-l-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 98036
+        },
+        "lg": {
+          "src": "media/projects/stelo/01-intro-image-inset-l-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 178566
+        }
+      },
+      "poster": {
+        "src": "media/projects/stelo/01-intro-image-inset-l-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 18740
+      },
+      "aspect": 1.5006
+    },
+    {
+      "id": "3img-stagger-right-tall-01-copy",
+      "label": "3IMG Stagger Right Tall 01 copy",
+      "href": "",
+      "caseStudy": false,
+      "source": "3IMG-Stagger-Right-Tall-01 copy.webp",
+      "sourceHash": "db3b483835ce1acb",
+      "type": "image",
+      "width": 1274,
+      "height": 1274,
+      "images": {
+        "sm": {
+          "src": "media/projects/stelo/3img-stagger-right-tall-01-copy-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 10836
+        },
+        "md": {
+          "src": "media/projects/stelo/3img-stagger-right-tall-01-copy-md.webp",
+          "width": 1274,
+          "height": 1274,
+          "bytes": 101746
+        },
+        "lg": {
+          "src": "media/projects/stelo/3img-stagger-right-tall-01-copy-lg.webp",
+          "width": 1274,
+          "height": 1274,
+          "bytes": 107598
+        }
+      },
+      "poster": {
+        "src": "media/projects/stelo/3img-stagger-right-tall-01-copy-sm.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 10836
+      },
+      "aspect": 1
+    },
+    {
+      "id": "15-image-module-1-large",
+      "label": "15 Image Module 1 Large",
+      "href": "",
+      "caseStudy": false,
+      "source": "15-Image-Module_1-Large.webp",
+      "sourceHash": "93a8b467f0e79bd9",
+      "type": "image",
+      "width": 2608,
+      "height": 1738,
+      "images": {
+        "sm": {
+          "src": "media/projects/stelo/15-image-module-1-large-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 7514
+        },
+        "md": {
+          "src": "media/projects/stelo/15-image-module-1-large-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 34558
+        },
+        "lg": {
+          "src": "media/projects/stelo/15-image-module-1-large-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 63698
+        }
+      },
+      "poster": {
+        "src": "media/projects/stelo/15-image-module-1-large-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 7514
+      },
+      "aspect": 1.5006
+    },
+    {
+      "id": "17-image-module-1-medium",
+      "label": "17 Image Module 1 Medium",
+      "href": "",
+      "caseStudy": false,
+      "source": "17-Image-Module_1-Medium.webp",
+      "sourceHash": "11818abd0265038b",
+      "type": "image",
+      "width": 2276,
+      "height": 1516,
+      "images": {
+        "sm": {
+          "src": "media/projects/stelo/17-image-module-1-medium-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 4772
+        },
+        "md": {
+          "src": "media/projects/stelo/17-image-module-1-medium-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 23074
+        },
+        "lg": {
+          "src": "media/projects/stelo/17-image-module-1-medium-lg.webp",
+          "width": 2048,
+          "height": 1364,
+          "bytes": 52190
+        }
+      },
+      "poster": {
+        "src": "media/projects/stelo/17-image-module-1-medium-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 4772
+      },
+      "aspect": 1.5013
+    },
+    {
+      "id": "fullbleed-tall",
+      "label": "FullBleed Tall",
+      "href": "",
+      "caseStudy": false,
+      "source": "FullBleed-Tall.webp",
+      "sourceHash": "d6381e9095e76910",
+      "type": "image",
+      "width": 2800,
+      "height": 2240,
+      "images": {
+        "sm": {
+          "src": "media/projects/stelo/fullbleed-tall-sm.webp",
+          "width": 480,
+          "height": 384,
+          "bytes": 11446
+        },
+        "md": {
+          "src": "media/projects/stelo/fullbleed-tall-md.webp",
+          "width": 1280,
+          "height": 1024,
+          "bytes": 52128
+        },
+        "lg": {
+          "src": "media/projects/stelo/fullbleed-tall-lg.webp",
+          "width": 2048,
+          "height": 1638,
+          "bytes": 123798
+        }
+      },
+      "poster": {
+        "src": "media/projects/stelo/fullbleed-tall-sm.webp",
+        "width": 480,
+        "height": 384,
+        "bytes": 11446
+      },
+      "aspect": 1.25
+    },
+    {
+      "id": "work-frame-4-5-1",
+      "label": "Work Frame 4:5",
+      "href": "",
+      "caseStudy": false,
+      "source": "Work-Frame-4:5-1.webp",
+      "sourceHash": "4509c7dd39cd1848",
+      "type": "image",
+      "width": 1286,
+      "height": 1280,
+      "images": {
+        "sm": {
+          "src": "media/projects/stelo/work-frame-4-5-1-sm.webp",
+          "width": 480,
+          "height": 478,
+          "bytes": 3512
+        },
+        "md": {
+          "src": "media/projects/stelo/work-frame-4-5-1-md.webp",
+          "width": 1280,
+          "height": 1274,
+          "bytes": 11282
+        },
+        "lg": {
+          "src": "media/projects/stelo/work-frame-4-5-1-lg.webp",
+          "width": 1286,
+          "height": 1280,
+          "bytes": 12150
+        }
+      },
+      "poster": {
+        "src": "media/projects/stelo/work-frame-4-5-1-sm.webp",
+        "width": 480,
+        "height": 478,
+        "bytes": 3512
+      },
+      "aspect": 1.0047
+    },
+    {
+      "id": "work-frame-4-5",
+      "label": "Work Frame 4:5",
+      "href": "",
+      "caseStudy": false,
+      "source": "Work-Frame-4:5.webp",
+      "sourceHash": "46d0e5166e32f0d5",
+      "type": "image",
+      "width": 1280,
+      "height": 1280,
+      "images": {
+        "sm": {
+          "src": "media/projects/stelo/work-frame-4-5-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 2346
+        },
+        "md": {
+          "src": "media/projects/stelo/work-frame-4-5-md.webp",
+          "width": 1280,
+          "height": 1280,
+          "bytes": 14812
+        },
+        "lg": {
+          "src": "media/projects/stelo/work-frame-4-5-lg.webp",
+          "width": 1280,
+          "height": 1280,
+          "bytes": 15342
+        }
+      },
+      "poster": {
+        "src": "media/projects/stelo/work-frame-4-5-sm.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 2346
+      },
+      "aspect": 1
+    }
+  ]
+}

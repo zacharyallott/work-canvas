@@ -1,0 +1,224 @@
+{
+  "generated": "2026-09-25T03:15:08.839Z",
+  "count": 6,
+  "images": 4,
+  "videos": 2,
+  "items": [
+    {
+      "id": "1-large-tall",
+      "label": "1 Large Tall",
+      "href": "",
+      "caseStudy": false,
+      "source": "1-Large-Tall.webp",
+      "sourceHash": "9bcd528557d71606",
+      "type": "image",
+      "width": 1956,
+      "height": 1565,
+      "images": {
+        "sm": {
+          "src": "media/projects/gt-bikes/1-large-tall-sm.webp",
+          "width": 480,
+          "height": 384,
+          "bytes": 13934
+        },
+        "md": {
+          "src": "media/projects/gt-bikes/1-large-tall-md.webp",
+          "width": 1280,
+          "height": 1024,
+          "bytes": 96792
+        },
+        "lg": {
+          "src": "media/projects/gt-bikes/1-large-tall-lg.webp",
+          "width": 1956,
+          "height": 1565,
+          "bytes": 256644
+        }
+      },
+      "poster": {
+        "src": "media/projects/gt-bikes/1-large-tall-sm.webp",
+        "width": 480,
+        "height": 384,
+        "bytes": 13934
+      },
+      "aspect": 1.2498
+    },
+    {
+      "id": "1-medium",
+      "label": "1 Medium",
+      "href": "",
+      "caseStudy": false,
+      "source": "1-Medium.webp",
+      "sourceHash": "4e9bf7c82625a6ef",
+      "type": "image",
+      "width": 1707,
+      "height": 1137,
+      "images": {
+        "sm": {
+          "src": "media/projects/gt-bikes/1-medium-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 22326
+        },
+        "md": {
+          "src": "media/projects/gt-bikes/1-medium-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 102288
+        },
+        "lg": {
+          "src": "media/projects/gt-bikes/1-medium-lg.webp",
+          "width": 1707,
+          "height": 1137,
+          "bytes": 169148
+        }
+      },
+      "poster": {
+        "src": "media/projects/gt-bikes/1-medium-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 22326
+      },
+      "aspect": 1.5013
+    },
+    {
+      "id": "gt-dealerbook",
+      "label": "GT Bikes",
+      "href": "/projects/gt-bikes",
+      "caseStudy": true,
+      "source": "GT-DealerBook.jpg",
+      "sourceHash": "e8980693276507a4",
+      "type": "image",
+      "width": 9000,
+      "height": 6000,
+      "images": {
+        "sm": {
+          "src": "media/projects/gt-bikes/gt-dealerbook-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 5512
+        },
+        "md": {
+          "src": "media/projects/gt-bikes/gt-dealerbook-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 30170
+        },
+        "lg": {
+          "src": "media/projects/gt-bikes/gt-dealerbook-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 63894
+        }
+      },
+      "poster": {
+        "src": "media/projects/gt-bikes/gt-dealerbook-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 5512
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "gt-mobile-1",
+      "label": "GT Bikes",
+      "href": "/projects/gt-bikes",
+      "caseStudy": true,
+      "source": "GT-Mobile_1.mp4",
+      "sourceHash": "2eb170a2cd3900ba",
+      "type": "video",
+      "width": 1080,
+      "height": 720,
+      "duration": 12,
+      "sourceDuration": 14,
+      "poster": {
+        "src": "media/projects/gt-bikes/gt-mobile-1-poster.webp",
+        "width": 1080,
+        "height": 720,
+        "bytes": 112024
+      },
+      "sources": [
+        {
+          "src": "media/projects/gt-bikes/gt-mobile-1.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 1635320
+        },
+        {
+          "src": "media/projects/gt-bikes/gt-mobile-1.mp4",
+          "type": "video/mp4",
+          "bytes": 1629315
+        }
+      ],
+      "aspect": 1.5
+    },
+    {
+      "id": "gt-refreshmotion-inout",
+      "label": "GT Bikes",
+      "href": "/projects/gt-bikes",
+      "caseStudy": true,
+      "source": "GT-RefreshMotion-InOut.mov",
+      "sourceHash": "998e38d87a6c1ea6",
+      "type": "video",
+      "width": 1080,
+      "height": 608,
+      "duration": 5.03,
+      "sourceDuration": 5.03,
+      "poster": {
+        "src": "media/projects/gt-bikes/gt-refreshmotion-inout-poster.webp",
+        "width": 1080,
+        "height": 608,
+        "bytes": 2154
+      },
+      "sources": [
+        {
+          "src": "media/projects/gt-bikes/gt-refreshmotion-inout.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 26901
+        },
+        {
+          "src": "media/projects/gt-bikes/gt-refreshmotion-inout.mp4",
+          "type": "video/mp4",
+          "bytes": 30075
+        }
+      ],
+      "aspect": 1.7763
+    },
+    {
+      "id": "header-image-01",
+      "label": "Header Image",
+      "href": "",
+      "caseStudy": false,
+      "source": "Header-Image-01.webp",
+      "sourceHash": "32ef2afdf8043fb3",
+      "type": "image",
+      "width": 2100,
+      "height": 1400,
+      "images": {
+        "sm": {
+          "src": "media/projects/gt-bikes/header-image-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 13732
+        },
+        "md": {
+          "src": "media/projects/gt-bikes/header-image-01-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 61352
+        },
+        "lg": {
+          "src": "media/projects/gt-bikes/header-image-01-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 112362
+        }
+      },
+      "poster": {
+        "src": "media/projects/gt-bikes/header-image-01-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 13732
+      },
+      "aspect": 1.5
+    }
+  ]
+}

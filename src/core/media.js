@@ -121,6 +121,22 @@ export class MediaItem {
     return this.levelSpec(level).src;
   }
 
+  /** URL of the largest image already on the GPU (so a DOM copy shows instantly from cache). */
+  get bestSrc() {
+    if (this.type === 'video') return this.poster;
+    for (let l = this.textures.length - 1; l >= 0; l--) if (this.textures[l]) return this.urlFor(l);
+    return this.urlFor(0);
+  }
+
+  /** srcset built from the known image levels (skips levels without a width). */
+  get srcset() {
+    const seen = new Set();
+    return this.images
+      .filter((l) => l.width && !seen.has(l.src) && seen.add(l.src))
+      .map((l) => `${l.src} ${l.width}w`)
+      .join(', ');
+  }
+
   get maxLevel() {
     return this.type === 'video' ? 0 : Math.max(0, Math.min(LEVELS.length, this.images.length) - 1);
   }

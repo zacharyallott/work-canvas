@@ -1,0 +1,55 @@
+{
+  "_readme": "Case-study copy per CMS slug, pulled from each project's page on zacharyallott.com (.project-text-info and .project-type). Mirrors the CMS Short description / Services fields; the local mock reads it.",
+  "boa": {
+    "description": "Campaign content & visual center, showcasing the performance benefits of the original lacing innovator.",
+    "services": "Creative Direction, Visual Center, Campaign Content"
+  },
+  "dialpad": {
+    "description": "An identity overhaul to bring an AI customer-service originator to the new era of agentic.",
+    "services": "Creative Direction, Brand Identity, Motion Design"
+  },
+  "stelo": {
+    "description": "A comprehensive visual identity for the launch of the first over-the-counter glucose biosensor.",
+    "services": "Creative Direction, Brand Identity, Art Direction, Packaging, Digital Design"
+  },
+  "the-james-brand": {
+    "description": "Started with a belief that what you carry says something about you, The James Brand created a brand that made products with the adventurer in mind – for those who live outside of an instagram feed.",
+    "services": "Brand Identity, Site Design, Campaign"
+  },
+  "nixon-the-dork": {
+    "description": "Campaign direction and visual center for the re-launch of nixon's watch with a personality all its own, the dork too.",
+    "services": "Campaign, Content"
+  },
+  "nixon-push-forward": {
+    "description": "Development of an evolved visual center to solidify Nixon's position and extend it beyond action sports.",
+    "services": "Campaign, Content"
+  },
+  "cinco-design": {
+    "description": "An evolved identity and online presence for a leader in brand building, 25 years in.",
+    "services": "Creative Direction, Brand Identity, Digital Design"
+  },
+  "otis-mountain-get-down": {
+    "description": "A weekend of music, experience and community in the adirondacks of upstate new york. otis is a cooperatively produced festival in its tenth year running.",
+    "services": "Event Identity, Creative Direction, Event Production"
+  },
+  "mni": {
+    "description": "An identity for haptic technology brand that was born from the needs of the deaf and hard of hearing communities.",
+    "services": "Creative Direction, Brand Identity, Content"
+  },
+  "gt-bikes": {
+    "description": "A refreshed brand identity, and digital experience for one of biking's original brands.",
+    "services": "Creative Direction, Brand Identity, Digital Design"
+  },
+  "microsoft-innovation-hub": {
+    "description": "Identity & content to celebrate the relaunch of a global hub for collaboration.",
+    "services": "Creative Direction, Brand Identity, Content"
+  },
+  "burton-zebs": {
+    "description": "",
+    "services": ""
+  },
+  "bonnell": {
+    "description": "",
+    "services": ""
+  }
+}

@@ -28,11 +28,21 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
+// ─── CLI ─────────────────────────────────────────────────────────────────────
+const args = process.argv.slice(2);
+const flag = (name) => args.includes(`--${name}`);
+const opt = (name) => {
+  const i = args.indexOf(`--${name}`);
+  return i >= 0 ? args[i + 1] : undefined;
+};
+
 // ─── Config ──────────────────────────────────────────────────────────────────
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const OUT_DIR = path.join(ROOT, 'public/media');
+// Defaults process the showcase; scripts/build-projects.mjs reuses this for each project folder.
+const OUT_DIR = path.resolve(ROOT, opt('out') ?? 'public/media');
 const MANIFEST = path.join(OUT_DIR, 'media.json');
-const CACHE = path.join(ROOT, 'media/.cache.json'); // source hash → outputs, for incremental runs
+const CACHE = path.resolve(ROOT, opt('cache') ?? 'media/.cache.json'); // source hash → outputs, for incremental runs
+const URL_PREFIX = opt('prefix') ?? 'media/'; // how manifest paths start (relative to /public)
 const PROJECTS = path.join(ROOT, 'media/projects.json');
 
 const DEFAULT_SRC_CANDIDATES = [
@@ -61,17 +71,10 @@ const CONFIG = {
   },
   extensions: {
     image: ['.jpg', '.jpeg', '.png', '.webp', '.avif', '.tif', '.tiff'],
-    video: ['.mp4', '.mov', '.m4v', '.webm'],
+    video: ['.mp4', '.mov', '.m4v', '.webm', '.gif'], // animated GIFs become looping MP4s
   },
 };
 
-// ─── CLI ─────────────────────────────────────────────────────────────────────
-const args = process.argv.slice(2);
-const flag = (name) => args.includes(`--${name}`);
-const opt = (name) => {
-  const i = args.indexOf(`--${name}`);
-  return i >= 0 ? args[i + 1] : undefined;
-};
 const FORCE = flag('force');
 if (flag('no-webm')) CONFIG.video.webm = false;
 const ONLY = opt('only');
@@ -170,7 +173,7 @@ async function processImage(src, id) {
       .resize(rw, rh, { fit: 'fill' })
       .webp({ quality: CONFIG.image.quality[key], effort: 5, smartSubsample: true })
       .toFile(path.join(OUT_DIR, file));
-    variants[key] = { src: `media/${file}`, width: info.width, height: info.height, bytes: info.size };
+    variants[key] = { src: `${URL_PREFIX}${file}`, width: info.width, height: info.height, bytes: info.size };
   }
   return { type: 'image', width: w, height: h, images: variants, poster: variants.sm };
 }
@@ -214,10 +217,10 @@ async function processVideo(src, id, trim) {
     ]);
     const { size } = await fs.stat(path.join(OUT_DIR, webm));
     // AV1 first: browsers pick the first <source> they can play.
-    sources.push({ src: `media/${webm}`, type: 'video/webm; codecs="av01.0.05M.08"', bytes: size });
+    sources.push({ src: `${URL_PREFIX}${webm}`, type: 'video/webm; codecs="av01.0.05M.08"', bytes: size });
   }
   const { size: mp4Size } = await fs.stat(path.join(OUT_DIR, mp4));
-  sources.push({ src: `media/${mp4}`, type: 'video/mp4', bytes: mp4Size });
+  sources.push({ src: `${URL_PREFIX}${mp4}`, type: 'video/mp4', bytes: mp4Size });
 
   // Poster: grab a frame from the *trimmed output* so it matches the first loop.
   const posterPng = path.join(OUT_DIR, `${id}-poster.tmp.png`);
@@ -235,7 +238,7 @@ async function processVideo(src, id, trim) {
     height: oh,
     duration: Number(duration.toFixed(2)),
     sourceDuration: Number(info.duration.toFixed(2)),
-    poster: { src: `media/${posterFile}`, width: pInfo.width, height: pInfo.height, bytes: pInfo.size },
+    poster: { src: `${URL_PREFIX}${posterFile}`, width: pInfo.width, height: pInfo.height, bytes: pInfo.size },
     sources,
   };
 }
@@ -250,6 +253,7 @@ async function main() {
     process.exit(1);
   }
   await fs.mkdir(OUT_DIR, { recursive: true });
+  await fs.mkdir(path.dirname(CACHE), { recursive: true });
 
   const projects = JSON.parse(await fs.readFile(PROJECTS, 'utf8'));
   const cache = existsSync(CACHE) ? JSON.parse(await fs.readFile(CACHE, 'utf8')) : {};

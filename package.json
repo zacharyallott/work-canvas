@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "media": "node scripts/build-media.mjs",
     "media:force": "node scripts/build-media.mjs --force",
-    "release": "node scripts/release.mjs"
+    "release": "node scripts/release.mjs",
+    "media:projects": "node scripts/build-projects.mjs"
   },
   "dependencies": {
     "gsap": "^3.15.0",

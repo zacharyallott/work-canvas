@@ -16,10 +16,11 @@ import { sizePattern, fitSize } from '../core/sizing.js';
  * positions lags a bit differently, so the pile trails. Cards never move
  * between positions: a new card fades in on top, in the position of the
  * oldest card, which fades out underneath it; the other cards stay exactly as
- * they are. The further the cursor is from the centre, the faster new cards
- * come in. Hovering a card pauses the stacking and brings that card to the
- * front (in place). Without a cursor (touch / pointer elsewhere) it stacks
- * slowly on its own.
+ * they are. Moving the cursor brings in new cards — one per `moveStep` px of
+ * travel, so faster movement stacks faster and a still cursor adds none.
+ * Hovering a card pauses the stacking and brings that card to the front (in
+ * place). Without a cursor (touch / pointer elsewhere) it stacks slowly on
+ * its own.
  */
 export const config = {
   // Size scale (design px): each card picks one of these heights; width = height × aspect.
@@ -42,12 +43,11 @@ export const config = {
   follow: 0.38, // how far the pile moves toward the cursor (fraction of the cursor's offset from centre)
   followRates: [5.5, 4, 3, 2.2], // per position (1/s; lower = more lag), so the pile trails
 
-  // Stacking pace
-  slowInterval: 2.4, // s between cards with the cursor near the centre
-  fastInterval: 0.4, // s between cards with the cursor at the edge
-  curve: 1.4, // >1 = pace picks up mostly toward the edges
-  idleInterval: 3.2, // s between cards with no cursor over the header
-  dealDuration: 0.8, // max s for a new card to fade in (shortened at fast paces)
+  // New cards: driven by cursor movement
+  moveStep: 90, // design px of cursor travel per new card (lower = more cards)
+  maxPerFrame: 1, // cap on cards added in a single frame during very fast moves
+  idleInterval: 3.2, // s between cards when there's no cursor (touch / pointer off the header)
+  dealDuration: 0.12, // s for a new card to fade in (0 = instant cut)
   dealEase: 'power2.out',
   pauseOnHover: true,
   hoverToFront: true, // hovering a card brings it to the top of the pile
@@ -62,7 +62,6 @@ export const config = {
   captionInset: [16, 12],
 };
 
-const lerp = (a, b, t) => a + (b - a) * t;
 
 export default class Deck extends Layout {
   static defaults = config;
@@ -82,7 +81,9 @@ export default class Deck extends Layout {
     this.next = this.slotCount % n; // next tile to deal
     this.fading = null; // { slot, from, fromStamp, to, p } while a new card fades in
 
-    this.timer = 0; // 0..1 progress toward the next card
+    this.timer = 0; // 0..1 progress toward the next card (idle, no cursor)
+    this.travel = 0; // cursor travel (px) since the last card
+    this.lastPointer = null;
     this.anchors = cfg.slots.map(() => ({ x: 0, y: 0 })); // per-position lagged pile offset, screen px
   }
 
@@ -125,15 +126,29 @@ export default class Deck extends Layout {
       if (k >= 0 && this.slotStamp[k] !== this.stamp) this.slotStamp[k] = ++this.stamp;
     }
 
-    // Stacking pace: faster the further the cursor is from the centre; paused on hover.
-    const dist = inside ? Math.min(1, Math.hypot(nx, ny)) : 0;
-    const interval = inside ? lerp(c.slowInterval, c.fastInterval, Math.pow(dist, c.curve)) : c.idleInterval;
+    // New cards: one for every `moveStep` px the cursor travels; none while it's still
+    // or hovering a card. With no cursor (touch / elsewhere) a card every `idleInterval` s.
     const paused = (c.pauseOnHover && hovered) || this.reduced || this.progress < 1;
-    if (!paused) {
-      this.timer += dt / interval;
-      if (this.timer >= 1) {
-        this.timer = Math.min(this.timer - 1, 0.5);
-        this.deal(interval);
+    const p = e.input?.pointer;
+    if (inside && p) {
+      if (this.lastPointer && !paused) this.travel += Math.hypot(p.x - this.lastPointer.x, p.y - this.lastPointer.y);
+      this.lastPointer = { x: p.x, y: p.y };
+      const step = c.moveStep * this.s;
+      for (let n = 0; this.travel >= step && n < c.maxPerFrame; n++) {
+        this.travel -= step;
+        this.deal();
+      }
+      this.travel = Math.min(this.travel, step * 2); // don't bank a backlog from one big swipe
+      this.timer = 0;
+    } else {
+      this.lastPointer = null;
+      this.travel = 0;
+      if (!paused) {
+        this.timer += dt / c.idleInterval;
+        if (this.timer >= 1) {
+          this.timer = 0;
+          this.deal();
+        }
       }
     }
 
@@ -187,7 +202,7 @@ export default class Deck extends Layout {
   }
 
   /** Bring the next card in: it fades in on top, in place of the oldest card. */
-  deal(interval = this.config.slowInterval, tileIndex = null) {
+  deal(tileIndex = null) {
     const n = this.tiles.length;
     if (n <= this.slotCount) return;
     this.finishFade();
@@ -202,7 +217,7 @@ export default class Deck extends Layout {
     this.slotTile[slot] = to;
     this.slotStamp[slot] = ++this.stamp;
 
-    const duration = this.reduced ? 0.2 : Math.min(this.config.dealDuration, interval * 0.9);
+    const duration = this.config.dealDuration;
     this.fadeTween = gsap.to(this.fading, { p: 1, duration, ease: this.config.dealEase, onComplete: () => this.finishFade() });
   }
 
@@ -217,7 +232,7 @@ export default class Deck extends Layout {
     if (i < 0) return;
     const k = this.slotTile.indexOf(i);
     if (k >= 0) this.slotStamp[k] = ++this.stamp; // already in the pile: bring to front
-    else this.deal(this.config.slowInterval, i);
+    else this.deal(i);
   }
 
   dispose() {

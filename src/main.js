@@ -10,7 +10,7 @@
  *   data-media-base="https://…/"  base URL for relative media paths
  *   data-wheel="page|capture"  whether the header consumes vertical wheel
  *   data-max-videos="5"        concurrent video cap (overrides layouts)
- *   data-tagline="…"           top bar text
+ *   data-tagline="…"           top bar text (click opens the about section)
  *
  * Manual use:  import { mount } from '…/work-canvas.js'; const wc = await mount(el, { layout: 'b' }); wc.destroy();
  */
@@ -43,7 +43,6 @@ export async function mount(el, options = {}) {
     switcher: options.switcher ?? d.switcher !== 'false',
     syncUrl: options.syncUrl ?? d.syncUrl === 'true',
     tagline: options.tagline ?? d.tagline ?? 'design &amp; direction made to move',
-    taglineHref: options.taglineHref ?? d.taglineHref ?? '#work',
     hint: options.hint ?? d.hint,
     ...options,
   });

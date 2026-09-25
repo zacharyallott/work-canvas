@@ -1,0 +1,192 @@
+{
+  "generated": "2026-09-25T03:15:03.050Z",
+  "count": 5,
+  "images": 4,
+  "videos": 1,
+  "items": [
+    {
+      "id": "mni-badge-01",
+      "label": "Music: Not Impossible",
+      "href": "/projects/mni",
+      "caseStudy": true,
+      "source": "MNI-Badge-01.jpg",
+      "sourceHash": "a42b033020595f09",
+      "type": "image",
+      "width": 6400,
+      "height": 4400,
+      "images": {
+        "sm": {
+          "src": "media/projects/mni/mni-badge-01-sm.webp",
+          "width": 480,
+          "height": 330,
+          "bytes": 5714
+        },
+        "md": {
+          "src": "media/projects/mni/mni-badge-01-md.webp",
+          "width": 1280,
+          "height": 880,
+          "bytes": 33974
+        },
+        "lg": {
+          "src": "media/projects/mni/mni-badge-01-lg.webp",
+          "width": 2048,
+          "height": 1408,
+          "bytes": 73584
+        }
+      },
+      "poster": {
+        "src": "media/projects/mni/mni-badge-01-sm.webp",
+        "width": 480,
+        "height": 330,
+        "bytes": 5714
+      },
+      "aspect": 1.4545
+    },
+    {
+      "id": "mni-billboard-01",
+      "label": "Music: Not Impossible",
+      "href": "/projects/mni",
+      "caseStudy": true,
+      "source": "MNI-Billboard-01.jpg",
+      "sourceHash": "829d70d945cf4f3a",
+      "type": "image",
+      "width": 6016,
+      "height": 4000,
+      "images": {
+        "sm": {
+          "src": "media/projects/mni/mni-billboard-01-sm.webp",
+          "width": 480,
+          "height": 319,
+          "bytes": 10138
+        },
+        "md": {
+          "src": "media/projects/mni/mni-billboard-01-md.webp",
+          "width": 1280,
+          "height": 851,
+          "bytes": 67108
+        },
+        "lg": {
+          "src": "media/projects/mni/mni-billboard-01-lg.webp",
+          "width": 2048,
+          "height": 1362,
+          "bytes": 177194
+        }
+      },
+      "poster": {
+        "src": "media/projects/mni/mni-billboard-01-sm.webp",
+        "width": 480,
+        "height": 319,
+        "bytes": 10138
+      },
+      "aspect": 1.504
+    },
+    {
+      "id": "mni-poster-01",
+      "label": "Music: Not Impossible",
+      "href": "/projects/mni",
+      "caseStudy": true,
+      "source": "MNI-Poster-01.jpg",
+      "sourceHash": "fbade3e07b82782d",
+      "type": "image",
+      "width": 5918,
+      "height": 3859,
+      "images": {
+        "sm": {
+          "src": "media/projects/mni/mni-poster-01-sm.webp",
+          "width": 480,
+          "height": 313,
+          "bytes": 30560
+        },
+        "md": {
+          "src": "media/projects/mni/mni-poster-01-md.webp",
+          "width": 1280,
+          "height": 835,
+          "bytes": 191390
+        },
+        "lg": {
+          "src": "media/projects/mni/mni-poster-01-lg.webp",
+          "width": 2048,
+          "height": 1335,
+          "bytes": 412618
+        }
+      },
+      "poster": {
+        "src": "media/projects/mni/mni-poster-01-sm.webp",
+        "width": 480,
+        "height": 313,
+        "bytes": 30560
+      },
+      "aspect": 1.5336
+    },
+    {
+      "id": "venue-screen-02-standard-mockup-3",
+      "label": "Venue Screen 02 Standard Mockup",
+      "href": "",
+      "caseStudy": false,
+      "source": "Venue-Screen-02-Standard-Mockup 3.mp4",
+      "sourceHash": "c73250b60e9bf55b",
+      "type": "video",
+      "width": 1080,
+      "height": 742,
+      "duration": 12,
+      "sourceDuration": 59.99,
+      "poster": {
+        "src": "media/projects/mni/venue-screen-02-standard-mockup-3-poster.webp",
+        "width": 1080,
+        "height": 742,
+        "bytes": 39090
+      },
+      "sources": [
+        {
+          "src": "media/projects/mni/venue-screen-02-standard-mockup-3.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 1125421
+        },
+        {
+          "src": "media/projects/mni/venue-screen-02-standard-mockup-3.mp4",
+          "type": "video/mp4",
+          "bytes": 1503452
+        }
+      ],
+      "aspect": 1.4555
+    },
+    {
+      "id": "wall-sign-standard-mockup-01",
+      "label": "Wall Sign Standard Mockup",
+      "href": "",
+      "caseStudy": false,
+      "source": "Wall-Sign-Standard-Mockup-01.jpg",
+      "sourceHash": "5e81090cbe1854a5",
+      "type": "image",
+      "width": 6400,
+      "height": 4400,
+      "images": {
+        "sm": {
+          "src": "media/projects/mni/wall-sign-standard-mockup-01-sm.webp",
+          "width": 480,
+          "height": 330,
+          "bytes": 10616
+        },
+        "md": {
+          "src": "media/projects/mni/wall-sign-standard-mockup-01-md.webp",
+          "width": 1280,
+          "height": 880,
+          "bytes": 47098
+        },
+        "lg": {
+          "src": "media/projects/mni/wall-sign-standard-mockup-01-lg.webp",
+          "width": 2048,
+          "height": 1408,
+          "bytes": 98150
+        }
+      },
+      "poster": {
+        "src": "media/projects/mni/wall-sign-standard-mockup-01-sm.webp",
+        "width": 480,
+        "height": 330,
+        "bytes": 10616
+      },
+      "aspect": 1.4545
+    }
+  ]
+}

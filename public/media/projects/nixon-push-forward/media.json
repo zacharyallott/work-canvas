@@ -1,0 +1,116 @@
+{
+  "generated": "2026-09-25T03:14:45.990Z",
+  "count": 3,
+  "images": 2,
+  "videos": 1,
+  "items": [
+    {
+      "id": "nixon-push-allott-01",
+      "label": "Nixon: Push Forward",
+      "href": "/projects/nixon-push-forward",
+      "caseStudy": true,
+      "source": "Nixon-Push-Allott-01.mp4",
+      "sourceHash": "b55c4c3546bc09f8",
+      "type": "video",
+      "width": 1080,
+      "height": 462,
+      "duration": 12,
+      "sourceDuration": 43.22,
+      "poster": {
+        "src": "media/projects/nixon-push-forward/nixon-push-allott-01-poster.webp",
+        "width": 1080,
+        "height": 462,
+        "bytes": 31240
+      },
+      "sources": [
+        {
+          "src": "media/projects/nixon-push-forward/nixon-push-allott-01.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 1087051
+        },
+        {
+          "src": "media/projects/nixon-push-forward/nixon-push-allott-01.mp4",
+          "type": "video/mp4",
+          "bytes": 2086591
+        }
+      ],
+      "aspect": 2.3377
+    },
+    {
+      "id": "nixon-push-allott-02",
+      "label": "Nixon: Push Forward",
+      "href": "/projects/nixon-push-forward",
+      "caseStudy": true,
+      "source": "Nixon-Push-Allott-02.jpg",
+      "sourceHash": "883827ab5ffc9721",
+      "type": "image",
+      "width": 2500,
+      "height": 1500,
+      "images": {
+        "sm": {
+          "src": "media/projects/nixon-push-forward/nixon-push-allott-02-sm.webp",
+          "width": 480,
+          "height": 288,
+          "bytes": 7136
+        },
+        "md": {
+          "src": "media/projects/nixon-push-forward/nixon-push-allott-02-md.webp",
+          "width": 1280,
+          "height": 768,
+          "bytes": 48572
+        },
+        "lg": {
+          "src": "media/projects/nixon-push-forward/nixon-push-allott-02-lg.webp",
+          "width": 2048,
+          "height": 1229,
+          "bytes": 133430
+        }
+      },
+      "poster": {
+        "src": "media/projects/nixon-push-forward/nixon-push-allott-02-sm.webp",
+        "width": 480,
+        "height": 288,
+        "bytes": 7136
+      },
+      "aspect": 1.6667
+    },
+    {
+      "id": "nixon-push-allott-03",
+      "label": "Nixon: Push Forward",
+      "href": "/projects/nixon-push-forward",
+      "caseStudy": true,
+      "source": "Nixon-Push-Allott-03.jpg",
+      "sourceHash": "f981125385622466",
+      "type": "image",
+      "width": 2500,
+      "height": 1500,
+      "images": {
+        "sm": {
+          "src": "media/projects/nixon-push-forward/nixon-push-allott-03-sm.webp",
+          "width": 480,
+          "height": 288,
+          "bytes": 5936
+        },
+        "md": {
+          "src": "media/projects/nixon-push-forward/nixon-push-allott-03-md.webp",
+          "width": 1280,
+          "height": 768,
+          "bytes": 26326
+        },
+        "lg": {
+          "src": "media/projects/nixon-push-forward/nixon-push-allott-03-lg.webp",
+          "width": 2048,
+          "height": 1229,
+          "bytes": 63674
+        }
+      },
+      "poster": {
+        "src": "media/projects/nixon-push-forward/nixon-push-allott-03-sm.webp",
+        "width": 480,
+        "height": 288,
+        "bytes": 5936
+      },
+      "aspect": 1.6667
+    }
+  ]
+}

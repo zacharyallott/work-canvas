@@ -16,6 +16,17 @@ import { vertexShader, fragmentShader } from './shaders.js';
  *
  * Coordinates: layouts work in CSS px from the mount's top-left, y down.
  */
+/** Resolves when an image URL is in the cache (or failed) — never rejects. */
+function preload(src) {
+  return new Promise((resolve) => {
+    if (!src) return resolve();
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = img.onerror = () => resolve();
+    img.src = src;
+  });
+}
+
 export class WorkCanvas {
   constructor(mount, options = {}) {
     this.mount = mount;
@@ -66,12 +77,21 @@ export class WorkCanvas {
       layouts: this.layoutDefs,
       current: initial,
       onSelect: (key) => this.setLayout(key),
+      onAbout: () => this.toggleAbout(),
+      onHome: () => (this.projectOpen ? this.closeProject() : this.toggleAbout(false)),
       tagline: this.options.tagline,
-      taglineHref: this.options.taglineHref,
       showDots: this.options.switcher && this.layoutDefs.length > 1,
       hint: this.options.hint,
     });
     this.ui.renderFallback(this.items);
+    this.ui.setAbout(false);
+    this.ui.project.onEnd = () => this.closeProject(); // scrolled through the end runway
+    this._onKey = (e) => {
+      if (e.key !== 'Escape') return;
+      if (this.projectOpen) this.closeProject();
+      else if (this.aboutOpen) this.toggleAbout(false);
+    };
+    document.addEventListener('keydown', this._onKey);
 
     try {
       this.createRenderer();
@@ -99,6 +119,10 @@ export class WorkCanvas {
     await this.whenThumbsReady();
     mount.classList.add('is-ready');
     await this.setLayout(initial, { initial: true });
+
+    // Deep link: ?project=<slug> opens that project straight away.
+    const slug = new URLSearchParams(location.search).get('project');
+    if (slug) this.openProjectBySlug(slug, { push: false });
     return this;
   }
 
@@ -163,8 +187,31 @@ export class WorkCanvas {
   }
 
   updateRunning() {
-    const shouldRun = this.inView && this.pageVisible;
+    const shouldRun = this.inView && this.pageVisible && !this.aboutOpen && !this.projectOpen;
     shouldRun ? this.start() : this.stop();
+  }
+
+  // ─── About section ─────────────────────────────────────────────────────────
+  /**
+   * Tagline click: the images fade out (CSS on .wc-canvas) and the about
+   * section fades in. Rendering pauses once the fade has finished and resumes
+   * as soon as it closes.
+   */
+  toggleAbout(open = !this.aboutOpen) {
+    if (open === this.aboutOpen) return;
+    if (open && this.projectOpen) this.closeProject();
+    this.aboutOpen = open;
+    this.mount.classList.toggle('is-about', open);
+    this.ui?.setAbout(open);
+    clearTimeout(this._aboutTimer);
+    if (open) {
+      this.hovered = null;
+      this.tapped = null;
+      this.mount.classList.remove('is-hovering-tile');
+      this._aboutTimer = setTimeout(() => this.updateRunning(), 650);
+    } else {
+      this.updateRunning();
+    }
   }
 
   /** Resolves once most thumbnails are on the GPU (or after a timeout). */
@@ -182,6 +229,8 @@ export class WorkCanvas {
 
   // ─── Layouts ───────────────────────────────────────────────────────────────
   async setLayout(key, { initial = false } = {}) {
+    if (this.aboutOpen) this.toggleAbout(false); // dots always bring the images back
+    if (this.projectOpen) this.closeProject();
     if (this.switching || key === this.layoutKey || !this.renderer) return;
     const def = this.layoutDefs.find((l) => l.key === key);
     if (!def) return;
@@ -224,7 +273,7 @@ export class WorkCanvas {
     this.media.endFrame(this.time);
 
     if (layout && this.ui) {
-      const tile = this.openTile ? null : layout.captionTile();
+      const tile = this.openTile || this.aboutOpen || this.projectOpen ? null : layout.captionTile();
       const inset = (layout.config.captionInset ?? [20, 12]).map((v) => v * Math.min(1, this.scale));
       this.ui.updateCaption(tile?.onScreen ? tile : null, inset, this.reducedMotion);
     }
@@ -267,43 +316,95 @@ export class WorkCanvas {
     let next = null;
     if (this.tapped && this.time < this.tapped.until && this.layout?.tiles.includes(this.tapped.tile)) {
       next = this.tapped.tile; // touch: a tapped tile keeps its caption for a moment
-    } else if (p?.inside && !this.input.pressed?.dragging && !this.openTile && !this.switching && !this.isMobile) {
+    } else if (p?.inside && !this.input.pressed?.dragging && !this.openTile && !this.switching && !this.isMobile && !this.aboutOpen && !this.projectOpen) {
       const hit = this.pick(p.x, p.y);
       if (hit) next = hit.tile;
     }
     if (next !== this.hovered) {
       this.hovered = next;
-      this.mount.classList.toggle('is-hovering-tile', Boolean(this.options.click && next?.item.href));
+      // Pointer cursor only where a click does something: case-study projects.
+      this.mount.classList.toggle('is-hovering-tile', Boolean(next?.item.caseStudy && next.item.project));
     }
   }
 
-  // ─── Open project transition ───────────────────────────────────────────────
-  open(tile, event) {
-    const href = tile?.item.href;
-    if (!href) return false;
-    if (event && (event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1)) {
-      window.open(href, '_blank', 'noopener');
+  // ─── Project view ──────────────────────────────────────────────────────────
+  /**
+   * Click on a case-study tile: the tile glides to where its image sits at
+   * the top of the project page while every other tile fades; then the DOM
+   * page takes over (same image, same place) and the rest of it fades in.
+   * Pushes ?project=<slug> so the browser Back button returns to the work.
+   */
+  async openProject(tile, { push = true, morph = true } = {}) {
+    const item = tile?.item;
+    const project = item?.project;
+    if (!project || !item.caseStudy || this.openTile || this.projectOpen) return false;
+    if (this.aboutOpen) this.toggleAbout(false);
+
+    const view = this.ui.project;
+    const hero = { type: item.type, bestSrc: item.bestSrc, srcset: item.srcset, sources: item.sources, aspect: item.aspect, alt: project.title };
+    await preload(hero.bestSrc); // cached already, so the DOM copy appears without a flash
+
+    this.projectOpen = true;
+    this.hovered = null;
+    this.mount.classList.remove('is-hovering-tile');
+    view.render(project, hero);
+    const target = view.heroRect();
+    if (push) this.pushProjectState(project.slug);
+
+    const finish = () => {
+      this.mount.classList.add('is-project'); // DOM page on, canvas off (CSS)
+      view.reveal({ reduced: this.reducedMotion });
+      clearTimeout(this._projectTimer);
+      this._projectTimer = setTimeout(() => this.updateRunning(), 500);
+    };
+
+    if (!morph || this.reducedMotion || !target) {
+      finish();
       return true;
     }
-    if (this.openTile) return true;
-
     this.openTile = tile;
     const from = { ...tile.rect, radius: this.radius };
     tile.override = from;
-    tile.mesh.renderOrder = 10000;
-    const { width, height } = this.viewport;
-    const duration = this.reducedMotion ? 0.3 : this.options.openDuration;
-    const go = () => (window.location.href = href);
-
-    if (this.reducedMotion) {
-      gsap.to(this, { openProgress: 1, duration, onComplete: go });
-      return true;
-    }
+    const duration = this.options.openDuration;
     gsap
-      .timeline({ defaults: { duration, ease: this.options.openEase }, onComplete: go })
+      .timeline({ defaults: { duration, ease: this.options.openEase }, onComplete: finish })
       .to(this, { openProgress: 1, duration: duration * 0.6 }, 0)
-      .to(from, { x: 0, y: 0, w: width, h: height, radius: 0 }, 0);
+      .to(from, { ...target, radius: this.radius }, 0);
     return true;
+  }
+
+  /** Opens a project without a clicked tile (deep link / browser forward). */
+  openProjectBySlug(slug, opts) {
+    const tile = this.layout?.tiles.find((t) => t.item.project?.slug === slug && t.item.caseStudy);
+    if (!tile) return false;
+    // No morph from a tile the visitor didn't click: straight crossfade.
+    return this.openProject(tile, { ...opts, morph: false });
+  }
+
+  closeProject({ fromHistory = false } = {}) {
+    if (!this.projectOpen) return;
+    this.projectOpen = false;
+    clearTimeout(this._projectTimer);
+    gsap.killTweensOf(this);
+    this.mount.classList.remove('is-project'); // canvas fades back in, page fades out
+    this.ui.project.hide();
+    this.resetOpen();
+    this.updateRunning();
+    if (!fromHistory && history.state?.wcProject) history.back();
+    else if (!fromHistory) this.replaceProjectParam(null);
+  }
+
+  pushProjectState(slug) {
+    if (!slug) return;
+    const url = new URL(location.href);
+    url.searchParams.set('project', slug);
+    history.pushState({ ...(history.state || {}), wcProject: slug }, '', url);
+  }
+
+  replaceProjectParam(slug) {
+    const url = new URL(location.href);
+    slug ? url.searchParams.set('project', slug) : url.searchParams.delete('project');
+    history.replaceState({ ...(history.state || {}), wcProject: slug || undefined }, '', url);
   }
 
   resetOpen() {
@@ -318,7 +419,7 @@ export class WorkCanvas {
   bindInput() {
     const wheel = this.mount.dataset.wheel || this.options.wheel;
     this.input = new Input(this.mount, { clickSlop: this.options.clickSlop, wheel });
-    const busy = () => this.switching || this.openTile || !this.layout;
+    const busy = () => this.switching || this.openTile || this.projectOpen || this.aboutOpen || !this.layout;
     this.input
       .on('drag', (e) => !busy() && this.layout.onDrag?.(e))
       .on('release', (e) => !busy() && this.layout.onRelease?.(e))
@@ -329,10 +430,17 @@ export class WorkCanvas {
         const hit = this.pick(x, y);
         if (this.isMobile && hit) this.tapped = { tile: hit.tile, until: this.time + this.options.tapCaptionFor };
         const handled = this.layout.onTap?.(hit?.tile ?? null, event);
-        if (!handled && hit && this.options.click) this.open(hit.tile, event);
+        if (!handled && hit?.tile.item.caseStudy) this.openProject(hit.tile);
       });
 
-    // Back/forward cache: undo the open transition when returning.
+    // Browser Back/Forward between the work and a project.
+    this._onPopState = (e) => {
+      const slug = e.state?.wcProject || new URLSearchParams(location.search).get('project');
+      if (slug && !this.projectOpen) this.openProjectBySlug(slug, { push: false });
+      else if (!slug && this.projectOpen) this.closeProject({ fromHistory: true });
+    };
+    window.addEventListener('popstate', this._onPopState);
+    // Back/forward cache: undo a half-finished transition when returning.
     this._onPageShow = (e) => e.persisted && this.resetOpen();
     window.addEventListener('pageshow', this._onPageShow);
   }
@@ -384,6 +492,7 @@ export class WorkCanvas {
     this.camera.updateProjectionMatrix();
     this.isMobile = matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
     this.layout?.resize(this.viewport);
+    if (this.projectOpen) this.ui?.project.layoutInfo();
   }
 
   // ─── Teardown ──────────────────────────────────────────────────────────────
@@ -393,7 +502,11 @@ export class WorkCanvas {
     this.resizeObserver?.disconnect();
     this.intersection?.disconnect();
     document.removeEventListener('visibilitychange', this._onVisibility);
+    document.removeEventListener('keydown', this._onKey);
+    clearTimeout(this._aboutTimer);
     window.removeEventListener('pageshow', this._onPageShow);
+    window.removeEventListener('popstate', this._onPopState);
+    clearTimeout(this._projectTimer);
     this._reducedQuery.removeEventListener?.('change', this._onReducedChange);
     this._focusHandlers?.forEach((off) => off());
     this.input?.destroy();

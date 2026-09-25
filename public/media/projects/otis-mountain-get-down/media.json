@@ -1,0 +1,420 @@
+{
+  "generated": "2026-09-25T03:14:57.407Z",
+  "count": 11,
+  "images": 10,
+  "videos": 1,
+  "items": [
+    {
+      "id": "fivestars-08",
+      "label": "FiveStars",
+      "href": "",
+      "caseStudy": false,
+      "source": "FiveStars_08.jpg",
+      "sourceHash": "93e3b47fc3610253",
+      "type": "image",
+      "width": 3600,
+      "height": 2401,
+      "images": {
+        "sm": {
+          "src": "media/projects/otis-mountain-get-down/fivestars-08-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 19864
+        },
+        "md": {
+          "src": "media/projects/otis-mountain-get-down/fivestars-08-md.webp",
+          "width": 1280,
+          "height": 854,
+          "bytes": 149866
+        },
+        "lg": {
+          "src": "media/projects/otis-mountain-get-down/fivestars-08-lg.webp",
+          "width": 2048,
+          "height": 1366,
+          "bytes": 400454
+        }
+      },
+      "poster": {
+        "src": "media/projects/otis-mountain-get-down/fivestars-08-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 19864
+      },
+      "aspect": 1.4994
+    },
+    {
+      "id": "fivestars-09",
+      "label": "FiveStars",
+      "href": "",
+      "caseStudy": false,
+      "source": "FiveStars_09.jpg",
+      "sourceHash": "3383effdd2ecbe44",
+      "type": "image",
+      "width": 2401,
+      "height": 3600,
+      "images": {
+        "sm": {
+          "src": "media/projects/otis-mountain-get-down/fivestars-09-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 30752
+        },
+        "md": {
+          "src": "media/projects/otis-mountain-get-down/fivestars-09-md.webp",
+          "width": 854,
+          "height": 1280,
+          "bytes": 167128
+        },
+        "lg": {
+          "src": "media/projects/otis-mountain-get-down/fivestars-09-lg.webp",
+          "width": 1366,
+          "height": 2048,
+          "bytes": 410806
+        }
+      },
+      "poster": {
+        "src": "media/projects/otis-mountain-get-down/fivestars-09-sm.webp",
+        "width": 320,
+        "height": 480,
+        "bytes": 30752
+      },
+      "aspect": 0.6669
+    },
+    {
+      "id": "fivestars-36",
+      "label": "FiveStars",
+      "href": "",
+      "caseStudy": false,
+      "source": "FiveStars_36.jpg",
+      "sourceHash": "32f9c79dc0569f7e",
+      "type": "image",
+      "width": 3600,
+      "height": 2401,
+      "images": {
+        "sm": {
+          "src": "media/projects/otis-mountain-get-down/fivestars-36-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 13100
+        },
+        "md": {
+          "src": "media/projects/otis-mountain-get-down/fivestars-36-md.webp",
+          "width": 1280,
+          "height": 854,
+          "bytes": 115480
+        },
+        "lg": {
+          "src": "media/projects/otis-mountain-get-down/fivestars-36-lg.webp",
+          "width": 2048,
+          "height": 1366,
+          "bytes": 498160
+        }
+      },
+      "poster": {
+        "src": "media/projects/otis-mountain-get-down/fivestars-36-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 13100
+      },
+      "aspect": 1.4994
+    },
+    {
+      "id": "otis-identity-allott-12",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "caseStudy": true,
+      "source": "Otis-Identity-Allott-12.gif",
+      "sourceHash": "d386db9e784c6b05",
+      "type": "video",
+      "width": 1080,
+      "height": 690,
+      "duration": 1.65,
+      "sourceDuration": 1.65,
+      "poster": {
+        "src": "media/projects/otis-mountain-get-down/otis-identity-allott-12-poster.webp",
+        "width": 1080,
+        "height": 690,
+        "bytes": 3620
+      },
+      "sources": [
+        {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-12.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 8926
+        },
+        {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-12.mp4",
+          "type": "video/mp4",
+          "bytes": 13811
+        }
+      ],
+      "aspect": 1.5652
+    },
+    {
+      "id": "otis-identity-allott-13",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "caseStudy": true,
+      "source": "Otis-Identity-Allott-13.jpg",
+      "sourceHash": "d196dccd88c7813f",
+      "type": "image",
+      "width": 3840,
+      "height": 2160,
+      "images": {
+        "sm": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-13-sm.webp",
+          "width": 480,
+          "height": 270,
+          "bytes": 12886
+        },
+        "md": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-13-md.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 82684
+        },
+        "lg": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-13-lg.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 277920
+        }
+      },
+      "poster": {
+        "src": "media/projects/otis-mountain-get-down/otis-identity-allott-13-sm.webp",
+        "width": 480,
+        "height": 270,
+        "bytes": 12886
+      },
+      "aspect": 1.7778
+    },
+    {
+      "id": "otis-identity-allott-14",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "caseStudy": true,
+      "source": "Otis-Identity-Allott-14.jpg",
+      "sourceHash": "722bd22bdcba05e8",
+      "type": "image",
+      "width": 3840,
+      "height": 2160,
+      "images": {
+        "sm": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-14-sm.webp",
+          "width": 480,
+          "height": 270,
+          "bytes": 16222
+        },
+        "md": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-14-md.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 98934
+        },
+        "lg": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-14-lg.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 221522
+        }
+      },
+      "poster": {
+        "src": "media/projects/otis-mountain-get-down/otis-identity-allott-14-sm.webp",
+        "width": 480,
+        "height": 270,
+        "bytes": 16222
+      },
+      "aspect": 1.7778
+    },
+    {
+      "id": "otis-identity-allott-16",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "caseStudy": true,
+      "source": "Otis-Identity-Allott-16.jpg",
+      "sourceHash": "9243561924e7d2e9",
+      "type": "image",
+      "width": 3840,
+      "height": 2160,
+      "images": {
+        "sm": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-16-sm.webp",
+          "width": 480,
+          "height": 270,
+          "bytes": 15824
+        },
+        "md": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-16-md.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 179540
+        },
+        "lg": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-16-lg.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 675614
+        }
+      },
+      "poster": {
+        "src": "media/projects/otis-mountain-get-down/otis-identity-allott-16-sm.webp",
+        "width": 480,
+        "height": 270,
+        "bytes": 15824
+      },
+      "aspect": 1.7778
+    },
+    {
+      "id": "otis-identity-allott-18",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "caseStudy": true,
+      "source": "Otis-Identity-Allott-18.jpg",
+      "sourceHash": "f0aad959a67947e3",
+      "type": "image",
+      "width": 1920,
+      "height": 1080,
+      "images": {
+        "sm": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-18-sm.webp",
+          "width": 480,
+          "height": 270,
+          "bytes": 31850
+        },
+        "md": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-18-md.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 223592
+        },
+        "lg": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-18-lg.webp",
+          "width": 1920,
+          "height": 1080,
+          "bytes": 469066
+        }
+      },
+      "poster": {
+        "src": "media/projects/otis-mountain-get-down/otis-identity-allott-18-sm.webp",
+        "width": 480,
+        "height": 270,
+        "bytes": 31850
+      },
+      "aspect": 1.7778
+    },
+    {
+      "id": "otis2023-selects-r1-9379-1",
+      "label": "Otis2023 Selects R1 9379",
+      "href": "",
+      "caseStudy": false,
+      "source": "Otis2023_Selects_R1-9379 1.webp",
+      "sourceHash": "e2a2009138900192",
+      "type": "image",
+      "width": 2880,
+      "height": 2880,
+      "images": {
+        "sm": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-1-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 14480
+        },
+        "md": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-1-md.webp",
+          "width": 1280,
+          "height": 1280,
+          "bytes": 82430
+        },
+        "lg": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-1-lg.webp",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 219976
+        }
+      },
+      "poster": {
+        "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-1-sm.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 14480
+      },
+      "aspect": 1
+    },
+    {
+      "id": "otis2023-selects-r1-9379-2",
+      "label": "Otis2023 Selects R1 9379",
+      "href": "",
+      "caseStudy": false,
+      "source": "Otis2023_Selects_R1-9379 2.webp",
+      "sourceHash": "f8d25a285eae5c2e",
+      "type": "image",
+      "width": 2880,
+      "height": 2058,
+      "images": {
+        "sm": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-2-sm.webp",
+          "width": 480,
+          "height": 343,
+          "bytes": 9224
+        },
+        "md": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-2-md.webp",
+          "width": 1280,
+          "height": 915,
+          "bytes": 57620
+        },
+        "lg": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-2-lg.webp",
+          "width": 2048,
+          "height": 1463,
+          "bytes": 165426
+        }
+      },
+      "poster": {
+        "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-2-sm.webp",
+        "width": 480,
+        "height": 343,
+        "bytes": 9224
+      },
+      "aspect": 1.3994
+    },
+    {
+      "id": "otis2023-selects-r1-9379-3",
+      "label": "Otis2023 Selects R1 9379",
+      "href": "",
+      "caseStudy": false,
+      "source": "Otis2023_Selects_R1-9379 3.webp",
+      "sourceHash": "5470af83b0aae5f0",
+      "type": "image",
+      "width": 2880,
+      "height": 2058,
+      "images": {
+        "sm": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-sm.webp",
+          "width": 480,
+          "height": 343,
+          "bytes": 6940
+        },
+        "md": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-md.webp",
+          "width": 1280,
+          "height": 915,
+          "bytes": 64922
+        },
+        "lg": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-lg.webp",
+          "width": 2048,
+          "height": 1463,
+          "bytes": 178272
+        }
+      },
+      "poster": {
+        "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-sm.webp",
+        "width": 480,
+        "height": 343,
+        "bytes": 6940
+      },
+      "aspect": 1.3994
+    }
+  ]
+}

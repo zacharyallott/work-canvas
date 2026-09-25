@@ -16,6 +16,9 @@
  *     <div class="work-video-1">https://…/boa-11.mp4</div> optional MP4 URL
  *     <img class="work-image-2" src srcset>
  *     <div class="work-video-2"></div>
+ *     <div class="work-slug">boa</div>                     for ?project= links
+ *     <img class="work-image-3"> … <img class="work-image-13">  project view gallery
+ *     <div class="work-video-3"> … (optional MP4 per gallery slot)
  *   </div>
  *
  * The same thing as data attributes (data-title, data-image-1, data-video-1, …)
@@ -54,6 +57,7 @@ const singleImageLevels = (src) => [
 ];
 
 const bool = (v) => /^(true|1|yes|on)$/i.test(String(v ?? '').trim());
+const GALLERY_MAX = 20; // highest Image N slot read for the project view
 
 export function readItems(mount) {
   const selector = mount.dataset.items || '.work-item';
@@ -73,6 +77,7 @@ export function readItems(mount) {
     const text = (cls) => child(cls)?.textContent.trim() || '';
     const project = {
       projectIndex,
+      slug: d.slug || text('work-slug'),
       title: d.title || text('work-title') || (el.querySelector('.work-title') ? '' : el.textContent.trim()),
       caseStudy: el.querySelector('.work-case-study') ? Boolean(child('work-case-study')) : bool(d.caseStudy),
       description: d.description || text('work-description'),
@@ -90,6 +95,22 @@ export function readItems(mount) {
     };
     const isCms = attr('image-1') || attr('video-1') || el.querySelector('[class*="work-image-"], [class*="work-video-"]');
     if (isCms) {
+      // Project view gallery: every slot after the showcase ones (Image 3 onward).
+      project.gallery = [];
+      for (let n = perProject + 1; n <= GALLERY_MAX; n++) {
+        const img = imgOf(n);
+        const image = resolve(attr(`image-${n}`) || img?.getAttribute('src'));
+        const video = resolve(attr(`video-${n}`) || text(`work-video-${n}`));
+        if (!image && !video) continue;
+        project.gallery.push({
+          type: video ? 'video' : 'image',
+          src: image,
+          srcset: img?.getAttribute('srcset') || '',
+          video,
+          alt: img?.getAttribute('alt') || project.title,
+        });
+      }
+      const shared = project; // every tile from this project points at the same object
       // CMS format: numbered slots.
       for (let n = 1; n <= perProject; n++) {
         const img = imgOf(n);
@@ -101,7 +122,7 @@ export function readItems(mount) {
         const media = video
           ? { type: 'video', poster: levels[0]?.src || image, images: [], sources: videoSources(video, resolve(attr(`video-${n}-webm`))) }
           : { type: 'image', poster: levels[0]?.src || image, images: levels.length ? levels : singleImageLevels(image), sources: [] };
-        (slots[n - 1] ||= []).push({ ...project, ...media, slot: n, aspect: parseFloat(attr(`aspect-${n}`)) || 0 });
+        (slots[n - 1] ||= []).push({ ...project, ...media, project: shared, slot: n, aspect: parseFloat(attr(`aspect-${n}`)) || 0 });
       }
       return;
     }

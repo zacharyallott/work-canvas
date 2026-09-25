@@ -1,0 +1,2871 @@
+{
+  "boa": {
+    "folder": "02_BOA",
+    "items": [
+      {
+        "id": "boa-allott-02",
+        "label": "BOA Performfit Wrap",
+        "href": "/projects/boa",
+        "caseStudy": true,
+        "source": "BOA-Allott-02.webp",
+        "sourceHash": "ce7440c202d90880",
+        "type": "image",
+        "width": 1707,
+        "height": 1137,
+        "images": {
+          "sm": {
+            "src": "media/projects/boa/boa-allott-02-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 8012
+          },
+          "md": {
+            "src": "media/projects/boa/boa-allott-02-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 35040
+          },
+          "lg": {
+            "src": "media/projects/boa/boa-allott-02-lg.webp",
+            "width": 1707,
+            "height": 1137,
+            "bytes": 60080
+          }
+        },
+        "poster": {
+          "src": "media/projects/boa/boa-allott-02-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 8012
+        },
+        "aspect": 1.5013
+      },
+      {
+        "id": "boa-allott-03",
+        "label": "BOA Performfit Wrap",
+        "href": "/projects/boa",
+        "caseStudy": true,
+        "source": "BOA-Allott-03.webp",
+        "sourceHash": "19aae7794c2f5697",
+        "type": "image",
+        "width": 1956,
+        "height": 1304,
+        "images": {
+          "sm": {
+            "src": "media/projects/boa/boa-allott-03-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 4042
+          },
+          "md": {
+            "src": "media/projects/boa/boa-allott-03-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 18116
+          },
+          "lg": {
+            "src": "media/projects/boa/boa-allott-03-lg.webp",
+            "width": 1956,
+            "height": 1304,
+            "bytes": 32968
+          }
+        },
+        "poster": {
+          "src": "media/projects/boa/boa-allott-03-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 4042
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "boa-allott-04",
+        "label": "BOA Performfit Wrap",
+        "href": "/projects/boa",
+        "caseStudy": true,
+        "source": "BOA-Allott-04.webp",
+        "sourceHash": "5226a668d31515ab",
+        "type": "image",
+        "width": 1707,
+        "height": 1137,
+        "images": {
+          "sm": {
+            "src": "media/projects/boa/boa-allott-04-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 2704
+          },
+          "md": {
+            "src": "media/projects/boa/boa-allott-04-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 14334
+          },
+          "lg": {
+            "src": "media/projects/boa/boa-allott-04-lg.webp",
+            "width": 1707,
+            "height": 1137,
+            "bytes": 26852
+          }
+        },
+        "poster": {
+          "src": "media/projects/boa/boa-allott-04-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 2704
+        },
+        "aspect": 1.5013
+      },
+      {
+        "id": "boa-allott-10",
+        "label": "BOA Performfit Wrap",
+        "href": "/projects/boa",
+        "caseStudy": true,
+        "source": "BOA-Allott-10.webp",
+        "sourceHash": "7276b58dfaf55e5a",
+        "type": "image",
+        "width": 1707,
+        "height": 1137,
+        "images": {
+          "sm": {
+            "src": "media/projects/boa/boa-allott-10-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 6090
+          },
+          "md": {
+            "src": "media/projects/boa/boa-allott-10-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 28210
+          },
+          "lg": {
+            "src": "media/projects/boa/boa-allott-10-lg.webp",
+            "width": 1707,
+            "height": 1137,
+            "bytes": 49170
+          }
+        },
+        "poster": {
+          "src": "media/projects/boa/boa-allott-10-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 6090
+        },
+        "aspect": 1.5013
+      },
+      {
+        "id": "boa-pfw-3d-generic-low-full-clean",
+        "label": "BOA Performfit Wrap",
+        "href": "/projects/boa",
+        "caseStudy": true,
+        "source": "BOA-PFW-3D-Generic-Low-Full-Clean.mp4",
+        "sourceHash": "bee5f6d0d62b7680",
+        "type": "video",
+        "width": 1080,
+        "height": 608,
+        "duration": 12,
+        "sourceDuration": 26,
+        "poster": {
+          "src": "media/projects/boa/boa-pfw-3d-generic-low-full-clean-poster.webp",
+          "width": 1080,
+          "height": 608,
+          "bytes": 9762
+        },
+        "sources": [
+          {
+            "src": "media/projects/boa/boa-pfw-3d-generic-low-full-clean.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 502811
+          },
+          {
+            "src": "media/projects/boa/boa-pfw-3d-generic-low-full-clean.mp4",
+            "type": "video/mp4",
+            "bytes": 882493
+          }
+        ],
+        "aspect": 1.7763
+      },
+      {
+        "id": "boa-pfw-allup",
+        "label": "BOA Performfit Wrap",
+        "href": "/projects/boa",
+        "caseStudy": true,
+        "source": "BOA-PFW-Allup.mp4",
+        "sourceHash": "845908b15feff376",
+        "type": "video",
+        "width": 1080,
+        "height": 720,
+        "duration": 12,
+        "sourceDuration": 26.8,
+        "poster": {
+          "src": "media/projects/boa/boa-pfw-allup-poster.webp",
+          "width": 1080,
+          "height": 720,
+          "bytes": 11540
+        },
+        "sources": [
+          {
+            "src": "media/projects/boa/boa-pfw-allup.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 766932
+          },
+          {
+            "src": "media/projects/boa/boa-pfw-allup.mp4",
+            "type": "video/mp4",
+            "bytes": 1013355
+          }
+        ],
+        "aspect": 1.5
+      }
+    ]
+  },
+  "burton-zebs": {
+    "folder": "03_Burton",
+    "items": [
+      {
+        "id": "burton-zebs-allott-01",
+        "label": "Burton Zebs",
+        "href": "",
+        "caseStudy": true,
+        "source": "Burton-Zebs-Allott-01.jpg",
+        "sourceHash": "71a8a99cd618ff65",
+        "type": "image",
+        "width": 4000,
+        "height": 6000,
+        "images": {
+          "sm": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-01-sm.webp",
+            "width": 320,
+            "height": 480,
+            "bytes": 12900
+          },
+          "md": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-01-md.webp",
+            "width": 853,
+            "height": 1280,
+            "bytes": 76836
+          },
+          "lg": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-01-lg.webp",
+            "width": 1365,
+            "height": 2048,
+            "bytes": 176354
+          }
+        },
+        "poster": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-01-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 12900
+        },
+        "aspect": 0.6667
+      },
+      {
+        "id": "burton-zebs-allott-02",
+        "label": "Burton Zebs",
+        "href": "",
+        "caseStudy": true,
+        "source": "Burton-Zebs-Allott-02.jpg",
+        "sourceHash": "852d4e8ba0452a9e",
+        "type": "image",
+        "width": 6000,
+        "height": 4000,
+        "images": {
+          "sm": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-02-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 10874
+          },
+          "md": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-02-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 55162
+          },
+          "lg": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-02-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 122498
+          }
+        },
+        "poster": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-02-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 10874
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "burton-zebs-allott-03",
+        "label": "Burton Zebs",
+        "href": "",
+        "caseStudy": true,
+        "source": "Burton-Zebs-Allott-03.jpg",
+        "sourceHash": "05bdba939042c688",
+        "type": "image",
+        "width": 3000,
+        "height": 2000,
+        "images": {
+          "sm": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-03-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 14864
+          },
+          "md": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-03-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 119402
+          },
+          "lg": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-03-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 363328
+          }
+        },
+        "poster": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-03-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 14864
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "burton-zebs-allott-04",
+        "label": "Burton Zebs",
+        "href": "",
+        "caseStudy": true,
+        "source": "Burton-Zebs-Allott-04.jpg",
+        "sourceHash": "a025fdc9158ddefb",
+        "type": "image",
+        "width": 3000,
+        "height": 2000,
+        "images": {
+          "sm": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-04-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 8232
+          },
+          "md": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-04-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 51190
+          },
+          "lg": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-04-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 112492
+          }
+        },
+        "poster": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-04-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 8232
+        },
+        "aspect": 1.5
+      }
+    ]
+  },
+  "bonnell": {
+    "folder": "04_Bonnell",
+    "items": [
+      {
+        "id": "26-bonnell",
+        "label": "26 Bonnell",
+        "href": "",
+        "caseStudy": false,
+        "source": "26-Bonnell.webp",
+        "sourceHash": "8e42f4eea4d12116",
+        "type": "image",
+        "width": 2880,
+        "height": 1620,
+        "images": {
+          "sm": {
+            "src": "media/projects/bonnell/26-bonnell-sm.webp",
+            "width": 480,
+            "height": 270,
+            "bytes": 8242
+          },
+          "md": {
+            "src": "media/projects/bonnell/26-bonnell-md.webp",
+            "width": 1280,
+            "height": 720,
+            "bytes": 41264
+          },
+          "lg": {
+            "src": "media/projects/bonnell/26-bonnell-lg.webp",
+            "width": 2048,
+            "height": 1152,
+            "bytes": 88356
+          }
+        },
+        "poster": {
+          "src": "media/projects/bonnell/26-bonnell-sm.webp",
+          "width": 480,
+          "height": 270,
+          "bytes": 8242
+        },
+        "aspect": 1.7778
+      },
+      {
+        "id": "bonnell-allott-01",
+        "label": "Bonnell",
+        "href": "",
+        "caseStudy": true,
+        "source": "Bonnell-Allott-01.jpg",
+        "sourceHash": "9bb82062d554b9fb",
+        "type": "image",
+        "width": 9504,
+        "height": 6336,
+        "images": {
+          "sm": {
+            "src": "media/projects/bonnell/bonnell-allott-01-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 4852
+          },
+          "md": {
+            "src": "media/projects/bonnell/bonnell-allott-01-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 25678
+          },
+          "lg": {
+            "src": "media/projects/bonnell/bonnell-allott-01-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 83436
+          }
+        },
+        "poster": {
+          "src": "media/projects/bonnell/bonnell-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 4852
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "bonnell-allott-02-2",
+        "label": "Bonnell",
+        "href": "",
+        "caseStudy": true,
+        "source": "Bonnell-Allott-02 2.jpg",
+        "sourceHash": "5b9cbc65ceef43bb",
+        "type": "image",
+        "width": 4500,
+        "height": 3000,
+        "images": {
+          "sm": {
+            "src": "media/projects/bonnell/bonnell-allott-02-2-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 21040
+          },
+          "md": {
+            "src": "media/projects/bonnell/bonnell-allott-02-2-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 217660
+          },
+          "lg": {
+            "src": "media/projects/bonnell/bonnell-allott-02-2-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 641374
+          }
+        },
+        "poster": {
+          "src": "media/projects/bonnell/bonnell-allott-02-2-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 21040
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "bonnell-allott-02",
+        "label": "Bonnell",
+        "href": "",
+        "caseStudy": true,
+        "source": "Bonnell-Allott-02.jpg",
+        "sourceHash": "7467d8bad1b60023",
+        "type": "image",
+        "width": 9257,
+        "height": 6956,
+        "images": {
+          "sm": {
+            "src": "media/projects/bonnell/bonnell-allott-02-sm.webp",
+            "width": 480,
+            "height": 361,
+            "bytes": 2846
+          },
+          "md": {
+            "src": "media/projects/bonnell/bonnell-allott-02-md.webp",
+            "width": 1280,
+            "height": 962,
+            "bytes": 14938
+          },
+          "lg": {
+            "src": "media/projects/bonnell/bonnell-allott-02-lg.webp",
+            "width": 2048,
+            "height": 1539,
+            "bytes": 33964
+          }
+        },
+        "poster": {
+          "src": "media/projects/bonnell/bonnell-allott-02-sm.webp",
+          "width": 480,
+          "height": 361,
+          "bytes": 2846
+        },
+        "aspect": 1.3308
+      },
+      {
+        "id": "frame-227",
+        "label": "Frame",
+        "href": "",
+        "caseStudy": false,
+        "source": "Frame 227.webp",
+        "sourceHash": "cbaa9229e18e3068",
+        "type": "image",
+        "width": 990,
+        "height": 813,
+        "images": {
+          "sm": {
+            "src": "media/projects/bonnell/frame-227-sm.webp",
+            "width": 480,
+            "height": 394,
+            "bytes": 7634
+          },
+          "md": {
+            "src": "media/projects/bonnell/frame-227-md.webp",
+            "width": 990,
+            "height": 813,
+            "bytes": 23296
+          },
+          "lg": {
+            "src": "media/projects/bonnell/frame-227-lg.webp",
+            "width": 990,
+            "height": 813,
+            "bytes": 24602
+          }
+        },
+        "poster": {
+          "src": "media/projects/bonnell/frame-227-sm.webp",
+          "width": 480,
+          "height": 394,
+          "bytes": 7634
+        },
+        "aspect": 1.2177
+      },
+      {
+        "id": "lyrs-048",
+        "label": "LYRS",
+        "href": "",
+        "caseStudy": false,
+        "source": "LYRS_048.jpg",
+        "sourceHash": "ccd5caa8c4064779",
+        "type": "image",
+        "width": 4500,
+        "height": 3000,
+        "images": {
+          "sm": {
+            "src": "media/projects/bonnell/lyrs-048-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 20792
+          },
+          "md": {
+            "src": "media/projects/bonnell/lyrs-048-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 225990
+          },
+          "lg": {
+            "src": "media/projects/bonnell/lyrs-048-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 656612
+          }
+        },
+        "poster": {
+          "src": "media/projects/bonnell/lyrs-048-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 20792
+        },
+        "aspect": 1.5
+      }
+    ]
+  },
+  "dialpad": {
+    "folder": "04_Dialpad",
+    "items": [
+      {
+        "id": "acte-macbook-mockup-005",
+        "label": "ACTE MACBOOK MOCKUP",
+        "href": "",
+        "caseStudy": false,
+        "source": "ACTE-MACBOOK-MOCKUP-005.jpg",
+        "sourceHash": "5564a0453af183c5",
+        "type": "image",
+        "width": 4000,
+        "height": 6000,
+        "images": {
+          "sm": {
+            "src": "media/projects/dialpad/acte-macbook-mockup-005-sm.webp",
+            "width": 320,
+            "height": 480,
+            "bytes": 9898
+          },
+          "md": {
+            "src": "media/projects/dialpad/acte-macbook-mockup-005-md.webp",
+            "width": 853,
+            "height": 1280,
+            "bytes": 71542
+          },
+          "lg": {
+            "src": "media/projects/dialpad/acte-macbook-mockup-005-lg.webp",
+            "width": 1365,
+            "height": 2048,
+            "bytes": 185392
+          }
+        },
+        "poster": {
+          "src": "media/projects/dialpad/acte-macbook-mockup-005-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 9898
+        },
+        "aspect": 0.6667
+      },
+      {
+        "id": "dialpad-allott-01",
+        "label": "Dialpad",
+        "href": "/projects/dialpad",
+        "caseStudy": true,
+        "source": "Dialpad-Allott-01.webp",
+        "sourceHash": "e8111d038396c762",
+        "type": "image",
+        "width": 2701,
+        "height": 1801,
+        "images": {
+          "sm": {
+            "src": "media/projects/dialpad/dialpad-allott-01-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 21186
+          },
+          "md": {
+            "src": "media/projects/dialpad/dialpad-allott-01-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 128938
+          },
+          "lg": {
+            "src": "media/projects/dialpad/dialpad-allott-01-lg.webp",
+            "width": 2048,
+            "height": 1366,
+            "bytes": 261592
+          }
+        },
+        "poster": {
+          "src": "media/projects/dialpad/dialpad-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 21186
+        },
+        "aspect": 1.4997
+      },
+      {
+        "id": "dialpad-allott-03",
+        "label": "Dialpad",
+        "href": "/projects/dialpad",
+        "caseStudy": true,
+        "source": "Dialpad-Allott-03.webp",
+        "sourceHash": "dac32924bdcfc5d3",
+        "type": "image",
+        "width": 2400,
+        "height": 1600,
+        "images": {
+          "sm": {
+            "src": "media/projects/dialpad/dialpad-allott-03-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 10020
+          },
+          "md": {
+            "src": "media/projects/dialpad/dialpad-allott-03-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 85126
+          },
+          "lg": {
+            "src": "media/projects/dialpad/dialpad-allott-03-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 170620
+          }
+        },
+        "poster": {
+          "src": "media/projects/dialpad/dialpad-allott-03-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 10020
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "in-situ-005",
+        "label": "IN SITU",
+        "href": "",
+        "caseStudy": false,
+        "source": "IN-SITU-005.mp4",
+        "sourceHash": "124b6bc6ab66ecc1",
+        "type": "video",
+        "width": 1080,
+        "height": 720,
+        "duration": 12,
+        "sourceDuration": 14.97,
+        "poster": {
+          "src": "media/projects/dialpad/in-situ-005-poster.webp",
+          "width": 1080,
+          "height": 720,
+          "bytes": 34676
+        },
+        "sources": [
+          {
+            "src": "media/projects/dialpad/in-situ-005.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 475656
+          },
+          {
+            "src": "media/projects/dialpad/in-situ-005.mp4",
+            "type": "video/mp4",
+            "bytes": 568193
+          }
+        ],
+        "aspect": 1.5
+      }
+    ]
+  },
+  "stelo": {
+    "folder": "05_Stelo",
+    "items": [
+      {
+        "id": "01-intro-image-inset-l",
+        "label": "01 Intro Image Inset L",
+        "href": "",
+        "caseStudy": false,
+        "source": "01-Intro-Image_Inset-L.webp",
+        "sourceHash": "66247b95a3bc6060",
+        "type": "image",
+        "width": 2608,
+        "height": 1738,
+        "images": {
+          "sm": {
+            "src": "media/projects/stelo/01-intro-image-inset-l-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 18740
+          },
+          "md": {
+            "src": "media/projects/stelo/01-intro-image-inset-l-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 98036
+          },
+          "lg": {
+            "src": "media/projects/stelo/01-intro-image-inset-l-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 178566
+          }
+        },
+        "poster": {
+          "src": "media/projects/stelo/01-intro-image-inset-l-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 18740
+        },
+        "aspect": 1.5006
+      },
+      {
+        "id": "3img-stagger-right-tall-01-copy",
+        "label": "3IMG Stagger Right Tall 01 copy",
+        "href": "",
+        "caseStudy": false,
+        "source": "3IMG-Stagger-Right-Tall-01 copy.webp",
+        "sourceHash": "db3b483835ce1acb",
+        "type": "image",
+        "width": 1274,
+        "height": 1274,
+        "images": {
+          "sm": {
+            "src": "media/projects/stelo/3img-stagger-right-tall-01-copy-sm.webp",
+            "width": 480,
+            "height": 480,
+            "bytes": 10836
+          },
+          "md": {
+            "src": "media/projects/stelo/3img-stagger-right-tall-01-copy-md.webp",
+            "width": 1274,
+            "height": 1274,
+            "bytes": 101746
+          },
+          "lg": {
+            "src": "media/projects/stelo/3img-stagger-right-tall-01-copy-lg.webp",
+            "width": 1274,
+            "height": 1274,
+            "bytes": 107598
+          }
+        },
+        "poster": {
+          "src": "media/projects/stelo/3img-stagger-right-tall-01-copy-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 10836
+        },
+        "aspect": 1
+      },
+      {
+        "id": "15-image-module-1-large",
+        "label": "15 Image Module 1 Large",
+        "href": "",
+        "caseStudy": false,
+        "source": "15-Image-Module_1-Large.webp",
+        "sourceHash": "93a8b467f0e79bd9",
+        "type": "image",
+        "width": 2608,
+        "height": 1738,
+        "images": {
+          "sm": {
+            "src": "media/projects/stelo/15-image-module-1-large-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 7514
+          },
+          "md": {
+            "src": "media/projects/stelo/15-image-module-1-large-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 34558
+          },
+          "lg": {
+            "src": "media/projects/stelo/15-image-module-1-large-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 63698
+          }
+        },
+        "poster": {
+          "src": "media/projects/stelo/15-image-module-1-large-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 7514
+        },
+        "aspect": 1.5006
+      },
+      {
+        "id": "17-image-module-1-medium",
+        "label": "17 Image Module 1 Medium",
+        "href": "",
+        "caseStudy": false,
+        "source": "17-Image-Module_1-Medium.webp",
+        "sourceHash": "11818abd0265038b",
+        "type": "image",
+        "width": 2276,
+        "height": 1516,
+        "images": {
+          "sm": {
+            "src": "media/projects/stelo/17-image-module-1-medium-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 4772
+          },
+          "md": {
+            "src": "media/projects/stelo/17-image-module-1-medium-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 23074
+          },
+          "lg": {
+            "src": "media/projects/stelo/17-image-module-1-medium-lg.webp",
+            "width": 2048,
+            "height": 1364,
+            "bytes": 52190
+          }
+        },
+        "poster": {
+          "src": "media/projects/stelo/17-image-module-1-medium-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 4772
+        },
+        "aspect": 1.5013
+      },
+      {
+        "id": "fullbleed-tall",
+        "label": "FullBleed Tall",
+        "href": "",
+        "caseStudy": false,
+        "source": "FullBleed-Tall.webp",
+        "sourceHash": "d6381e9095e76910",
+        "type": "image",
+        "width": 2800,
+        "height": 2240,
+        "images": {
+          "sm": {
+            "src": "media/projects/stelo/fullbleed-tall-sm.webp",
+            "width": 480,
+            "height": 384,
+            "bytes": 11446
+          },
+          "md": {
+            "src": "media/projects/stelo/fullbleed-tall-md.webp",
+            "width": 1280,
+            "height": 1024,
+            "bytes": 52128
+          },
+          "lg": {
+            "src": "media/projects/stelo/fullbleed-tall-lg.webp",
+            "width": 2048,
+            "height": 1638,
+            "bytes": 123798
+          }
+        },
+        "poster": {
+          "src": "media/projects/stelo/fullbleed-tall-sm.webp",
+          "width": 480,
+          "height": 384,
+          "bytes": 11446
+        },
+        "aspect": 1.25
+      },
+      {
+        "id": "work-frame-4-5-1",
+        "label": "Work Frame 4:5",
+        "href": "",
+        "caseStudy": false,
+        "source": "Work-Frame-4:5-1.webp",
+        "sourceHash": "4509c7dd39cd1848",
+        "type": "image",
+        "width": 1286,
+        "height": 1280,
+        "images": {
+          "sm": {
+            "src": "media/projects/stelo/work-frame-4-5-1-sm.webp",
+            "width": 480,
+            "height": 478,
+            "bytes": 3512
+          },
+          "md": {
+            "src": "media/projects/stelo/work-frame-4-5-1-md.webp",
+            "width": 1280,
+            "height": 1274,
+            "bytes": 11282
+          },
+          "lg": {
+            "src": "media/projects/stelo/work-frame-4-5-1-lg.webp",
+            "width": 1286,
+            "height": 1280,
+            "bytes": 12150
+          }
+        },
+        "poster": {
+          "src": "media/projects/stelo/work-frame-4-5-1-sm.webp",
+          "width": 480,
+          "height": 478,
+          "bytes": 3512
+        },
+        "aspect": 1.0047
+      },
+      {
+        "id": "work-frame-4-5",
+        "label": "Work Frame 4:5",
+        "href": "",
+        "caseStudy": false,
+        "source": "Work-Frame-4:5.webp",
+        "sourceHash": "46d0e5166e32f0d5",
+        "type": "image",
+        "width": 1280,
+        "height": 1280,
+        "images": {
+          "sm": {
+            "src": "media/projects/stelo/work-frame-4-5-sm.webp",
+            "width": 480,
+            "height": 480,
+            "bytes": 2346
+          },
+          "md": {
+            "src": "media/projects/stelo/work-frame-4-5-md.webp",
+            "width": 1280,
+            "height": 1280,
+            "bytes": 14812
+          },
+          "lg": {
+            "src": "media/projects/stelo/work-frame-4-5-lg.webp",
+            "width": 1280,
+            "height": 1280,
+            "bytes": 15342
+          }
+        },
+        "poster": {
+          "src": "media/projects/stelo/work-frame-4-5-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 2346
+        },
+        "aspect": 1
+      }
+    ]
+  },
+  "the-james-brand": {
+    "folder": "06_TJB",
+    "items": [
+      {
+        "id": "tjb-allott-01",
+        "label": "The James Brand",
+        "href": "/projects/the-james-brand",
+        "caseStudy": true,
+        "source": "TJB-Allott-01.jpg",
+        "sourceHash": "b194ef5704447527",
+        "type": "image",
+        "width": 2000,
+        "height": 1333,
+        "images": {
+          "sm": {
+            "src": "media/projects/the-james-brand/tjb-allott-01-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 7592
+          },
+          "md": {
+            "src": "media/projects/the-james-brand/tjb-allott-01-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 37158
+          },
+          "lg": {
+            "src": "media/projects/the-james-brand/tjb-allott-01-lg.webp",
+            "width": 2000,
+            "height": 1333,
+            "bytes": 80420
+          }
+        },
+        "poster": {
+          "src": "media/projects/the-james-brand/tjb-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 7592
+        },
+        "aspect": 1.5004
+      },
+      {
+        "id": "tjb-allott-02",
+        "label": "The James Brand",
+        "href": "/projects/the-james-brand",
+        "caseStudy": true,
+        "source": "TJB-Allott-02.webp",
+        "sourceHash": "1121851fdebddd9f",
+        "type": "image",
+        "width": 1581,
+        "height": 1020,
+        "images": {
+          "sm": {
+            "src": "media/projects/the-james-brand/tjb-allott-02-sm.webp",
+            "width": 480,
+            "height": 310,
+            "bytes": 29788
+          },
+          "md": {
+            "src": "media/projects/the-james-brand/tjb-allott-02-md.webp",
+            "width": 1280,
+            "height": 826,
+            "bytes": 190264
+          },
+          "lg": {
+            "src": "media/projects/the-james-brand/tjb-allott-02-lg.webp",
+            "width": 1581,
+            "height": 1020,
+            "bytes": 370154
+          }
+        },
+        "poster": {
+          "src": "media/projects/the-james-brand/tjb-allott-02-sm.webp",
+          "width": 480,
+          "height": 310,
+          "bytes": 29788
+        },
+        "aspect": 1.55
+      },
+      {
+        "id": "tjb-allott-03",
+        "label": "The James Brand",
+        "href": "/projects/the-james-brand",
+        "caseStudy": true,
+        "source": "TJB-Allott-03.jpg",
+        "sourceHash": "915349c635a95599",
+        "type": "image",
+        "width": 2560,
+        "height": 1440,
+        "images": {
+          "sm": {
+            "src": "media/projects/the-james-brand/tjb-allott-03-sm.webp",
+            "width": 480,
+            "height": 270,
+            "bytes": 3212
+          },
+          "md": {
+            "src": "media/projects/the-james-brand/tjb-allott-03-md.webp",
+            "width": 1280,
+            "height": 720,
+            "bytes": 19580
+          },
+          "lg": {
+            "src": "media/projects/the-james-brand/tjb-allott-03-lg.webp",
+            "width": 2048,
+            "height": 1152,
+            "bytes": 46892
+          }
+        },
+        "poster": {
+          "src": "media/projects/the-james-brand/tjb-allott-03-sm.webp",
+          "width": 480,
+          "height": 270,
+          "bytes": 3212
+        },
+        "aspect": 1.7778
+      },
+      {
+        "id": "tjb-allott-04",
+        "label": "The James Brand",
+        "href": "/projects/the-james-brand",
+        "caseStudy": true,
+        "source": "TJB-Allott-04.webp",
+        "sourceHash": "754234f66900befd",
+        "type": "image",
+        "width": 837,
+        "height": 1116,
+        "images": {
+          "sm": {
+            "src": "media/projects/the-james-brand/tjb-allott-04-sm.webp",
+            "width": 360,
+            "height": 480,
+            "bytes": 2524
+          },
+          "md": {
+            "src": "media/projects/the-james-brand/tjb-allott-04-md.webp",
+            "width": 837,
+            "height": 1116,
+            "bytes": 8358
+          },
+          "lg": {
+            "src": "media/projects/the-james-brand/tjb-allott-04-lg.webp",
+            "width": 837,
+            "height": 1116,
+            "bytes": 8714
+          }
+        },
+        "poster": {
+          "src": "media/projects/the-james-brand/tjb-allott-04-sm.webp",
+          "width": 360,
+          "height": 480,
+          "bytes": 2524
+        },
+        "aspect": 0.75
+      },
+      {
+        "id": "tjb-allott-05",
+        "label": "The James Brand",
+        "href": "/projects/the-james-brand",
+        "caseStudy": true,
+        "source": "TJB-Allott-05.webp",
+        "sourceHash": "59e69d38ffee931c",
+        "type": "image",
+        "width": 837,
+        "height": 837,
+        "images": {
+          "sm": {
+            "src": "media/projects/the-james-brand/tjb-allott-05-sm.webp",
+            "width": 480,
+            "height": 480,
+            "bytes": 7834
+          },
+          "md": {
+            "src": "media/projects/the-james-brand/tjb-allott-05-md.webp",
+            "width": 837,
+            "height": 837,
+            "bytes": 20228
+          },
+          "lg": {
+            "src": "media/projects/the-james-brand/tjb-allott-05-lg.webp",
+            "width": 837,
+            "height": 837,
+            "bytes": 21554
+          }
+        },
+        "poster": {
+          "src": "media/projects/the-james-brand/tjb-allott-05-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 7834
+        },
+        "aspect": 1
+      },
+      {
+        "id": "tjb-allott-06",
+        "label": "The James Brand",
+        "href": "/projects/the-james-brand",
+        "caseStudy": true,
+        "source": "TJB-Allott-06.webp",
+        "sourceHash": "cf7cebea37c55208",
+        "type": "image",
+        "width": 837,
+        "height": 1116,
+        "images": {
+          "sm": {
+            "src": "media/projects/the-james-brand/tjb-allott-06-sm.webp",
+            "width": 360,
+            "height": 480,
+            "bytes": 7382
+          },
+          "md": {
+            "src": "media/projects/the-james-brand/tjb-allott-06-md.webp",
+            "width": 837,
+            "height": 1116,
+            "bytes": 41206
+          },
+          "lg": {
+            "src": "media/projects/the-james-brand/tjb-allott-06-lg.webp",
+            "width": 837,
+            "height": 1116,
+            "bytes": 45080
+          }
+        },
+        "poster": {
+          "src": "media/projects/the-james-brand/tjb-allott-06-sm.webp",
+          "width": 360,
+          "height": 480,
+          "bytes": 7382
+        },
+        "aspect": 0.75
+      },
+      {
+        "id": "tjb-allott-07",
+        "label": "The James Brand",
+        "href": "/projects/the-james-brand",
+        "caseStudy": true,
+        "source": "TJB-Allott-07.webp",
+        "sourceHash": "638a850d1112ef1b",
+        "type": "image",
+        "width": 1956,
+        "height": 1304,
+        "images": {
+          "sm": {
+            "src": "media/projects/the-james-brand/tjb-allott-07-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 14108
+          },
+          "md": {
+            "src": "media/projects/the-james-brand/tjb-allott-07-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 79968
+          },
+          "lg": {
+            "src": "media/projects/the-james-brand/tjb-allott-07-lg.webp",
+            "width": 1956,
+            "height": 1304,
+            "bytes": 200140
+          }
+        },
+        "poster": {
+          "src": "media/projects/the-james-brand/tjb-allott-07-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 14108
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "tjb-system-animation",
+        "label": "The James Brand",
+        "href": "/projects/the-james-brand",
+        "caseStudy": true,
+        "source": "TJB-System-Animation.mp4",
+        "sourceHash": "18475ef420c4613e",
+        "type": "video",
+        "width": 1080,
+        "height": 720,
+        "duration": 12,
+        "sourceDuration": 21.52,
+        "poster": {
+          "src": "media/projects/the-james-brand/tjb-system-animation-poster.webp",
+          "width": 1080,
+          "height": 720,
+          "bytes": 3836
+        },
+        "sources": [
+          {
+            "src": "media/projects/the-james-brand/tjb-system-animation.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 321254
+          },
+          {
+            "src": "media/projects/the-james-brand/tjb-system-animation.mp4",
+            "type": "video/mp4",
+            "bytes": 462684
+          }
+        ],
+        "aspect": 1.5
+      }
+    ]
+  },
+  "nixon-the-dork": {
+    "folder": "07_NixonDork",
+    "items": [
+      {
+        "id": "nix-dork-retail",
+        "label": "NIX Dork Retail",
+        "href": "",
+        "caseStudy": false,
+        "source": "NIX_Dork_Retail.jpg",
+        "sourceHash": "08ccecb198e120f0",
+        "type": "image",
+        "width": 5670,
+        "height": 3780,
+        "images": {
+          "sm": {
+            "src": "media/projects/nixon-the-dork/nix-dork-retail-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 11704
+          },
+          "md": {
+            "src": "media/projects/nixon-the-dork/nix-dork-retail-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 73994
+          },
+          "lg": {
+            "src": "media/projects/nixon-the-dork/nix-dork-retail-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 240958
+          }
+        },
+        "poster": {
+          "src": "media/projects/nixon-the-dork/nix-dork-retail-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 11704
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "nixon-dork-allott-02",
+        "label": "Nixon: The Dork",
+        "href": "/projects/nixon-the-dork",
+        "caseStudy": true,
+        "source": "Nixon_Dork_Allott_02.jpg",
+        "sourceHash": "9f97de98a9c5dc0a",
+        "type": "image",
+        "width": 1800,
+        "height": 1800,
+        "images": {
+          "sm": {
+            "src": "media/projects/nixon-the-dork/nixon-dork-allott-02-sm.webp",
+            "width": 480,
+            "height": 480,
+            "bytes": 19004
+          },
+          "md": {
+            "src": "media/projects/nixon-the-dork/nixon-dork-allott-02-md.webp",
+            "width": 1280,
+            "height": 1280,
+            "bytes": 136156
+          },
+          "lg": {
+            "src": "media/projects/nixon-the-dork/nixon-dork-allott-02-lg.webp",
+            "width": 1800,
+            "height": 1800,
+            "bytes": 274356
+          }
+        },
+        "poster": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-02-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 19004
+        },
+        "aspect": 1
+      },
+      {
+        "id": "nixon-dork-allott-01",
+        "label": "Nixon: The Dork",
+        "href": "/projects/nixon-the-dork",
+        "caseStudy": true,
+        "source": "Nixon-Dork-Allott-01.jpg",
+        "sourceHash": "94492ddbcc7ff766",
+        "type": "image",
+        "width": 6000,
+        "height": 4000,
+        "images": {
+          "sm": {
+            "src": "media/projects/nixon-the-dork/nixon-dork-allott-01-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 27704
+          },
+          "md": {
+            "src": "media/projects/nixon-the-dork/nixon-dork-allott-01-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 156148
+          },
+          "lg": {
+            "src": "media/projects/nixon-the-dork/nixon-dork-allott-01-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 347824
+          }
+        },
+        "poster": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 27704
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "nixon-dork-allott-04",
+        "label": "Nixon: The Dork",
+        "href": "/projects/nixon-the-dork",
+        "caseStudy": true,
+        "source": "nixon-dork-allott-04.jpg",
+        "sourceHash": "8aaa53d2a7bf95e4",
+        "type": "image",
+        "width": 1800,
+        "height": 1079,
+        "images": {
+          "sm": {
+            "src": "media/projects/nixon-the-dork/nixon-dork-allott-04-sm.webp",
+            "width": 480,
+            "height": 288,
+            "bytes": 11964
+          },
+          "md": {
+            "src": "media/projects/nixon-the-dork/nixon-dork-allott-04-md.webp",
+            "width": 1280,
+            "height": 767,
+            "bytes": 57938
+          },
+          "lg": {
+            "src": "media/projects/nixon-the-dork/nixon-dork-allott-04-lg.webp",
+            "width": 1800,
+            "height": 1079,
+            "bytes": 100940
+          }
+        },
+        "poster": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-04-sm.webp",
+          "width": 480,
+          "height": 288,
+          "bytes": 11964
+        },
+        "aspect": 1.6682
+      }
+    ]
+  },
+  "nixon-push-forward": {
+    "folder": "08_NixonPushForward",
+    "items": [
+      {
+        "id": "nixon-push-allott-01",
+        "label": "Nixon: Push Forward",
+        "href": "/projects/nixon-push-forward",
+        "caseStudy": true,
+        "source": "Nixon-Push-Allott-01.mp4",
+        "sourceHash": "b55c4c3546bc09f8",
+        "type": "video",
+        "width": 1080,
+        "height": 462,
+        "duration": 12,
+        "sourceDuration": 43.22,
+        "poster": {
+          "src": "media/projects/nixon-push-forward/nixon-push-allott-01-poster.webp",
+          "width": 1080,
+          "height": 462,
+          "bytes": 31240
+        },
+        "sources": [
+          {
+            "src": "media/projects/nixon-push-forward/nixon-push-allott-01.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 1087051
+          },
+          {
+            "src": "media/projects/nixon-push-forward/nixon-push-allott-01.mp4",
+            "type": "video/mp4",
+            "bytes": 2086591
+          }
+        ],
+        "aspect": 2.3377
+      },
+      {
+        "id": "nixon-push-allott-02",
+        "label": "Nixon: Push Forward",
+        "href": "/projects/nixon-push-forward",
+        "caseStudy": true,
+        "source": "Nixon-Push-Allott-02.jpg",
+        "sourceHash": "883827ab5ffc9721",
+        "type": "image",
+        "width": 2500,
+        "height": 1500,
+        "images": {
+          "sm": {
+            "src": "media/projects/nixon-push-forward/nixon-push-allott-02-sm.webp",
+            "width": 480,
+            "height": 288,
+            "bytes": 7136
+          },
+          "md": {
+            "src": "media/projects/nixon-push-forward/nixon-push-allott-02-md.webp",
+            "width": 1280,
+            "height": 768,
+            "bytes": 48572
+          },
+          "lg": {
+            "src": "media/projects/nixon-push-forward/nixon-push-allott-02-lg.webp",
+            "width": 2048,
+            "height": 1229,
+            "bytes": 133430
+          }
+        },
+        "poster": {
+          "src": "media/projects/nixon-push-forward/nixon-push-allott-02-sm.webp",
+          "width": 480,
+          "height": 288,
+          "bytes": 7136
+        },
+        "aspect": 1.6667
+      },
+      {
+        "id": "nixon-push-allott-03",
+        "label": "Nixon: Push Forward",
+        "href": "/projects/nixon-push-forward",
+        "caseStudy": true,
+        "source": "Nixon-Push-Allott-03.jpg",
+        "sourceHash": "f981125385622466",
+        "type": "image",
+        "width": 2500,
+        "height": 1500,
+        "images": {
+          "sm": {
+            "src": "media/projects/nixon-push-forward/nixon-push-allott-03-sm.webp",
+            "width": 480,
+            "height": 288,
+            "bytes": 5936
+          },
+          "md": {
+            "src": "media/projects/nixon-push-forward/nixon-push-allott-03-md.webp",
+            "width": 1280,
+            "height": 768,
+            "bytes": 26326
+          },
+          "lg": {
+            "src": "media/projects/nixon-push-forward/nixon-push-allott-03-lg.webp",
+            "width": 2048,
+            "height": 1229,
+            "bytes": 63674
+          }
+        },
+        "poster": {
+          "src": "media/projects/nixon-push-forward/nixon-push-allott-03-sm.webp",
+          "width": 480,
+          "height": 288,
+          "bytes": 5936
+        },
+        "aspect": 1.6667
+      }
+    ]
+  },
+  "cinco-design": {
+    "folder": "09_CincoDesign",
+    "items": [
+      {
+        "id": "artd-c02-device-019",
+        "label": "ARTD C02 Device",
+        "href": "",
+        "caseStudy": false,
+        "source": "ARTD-C02-Device-019.mp4",
+        "sourceHash": "b82c7c31d8180a24",
+        "type": "video",
+        "width": 1080,
+        "height": 720,
+        "duration": 12,
+        "sourceDuration": 30,
+        "poster": {
+          "src": "media/projects/cinco-design/artd-c02-device-019-poster.webp",
+          "width": 1080,
+          "height": 720,
+          "bytes": 22696
+        },
+        "sources": [
+          {
+            "src": "media/projects/cinco-design/artd-c02-device-019.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 343767
+          },
+          {
+            "src": "media/projects/cinco-design/artd-c02-device-019.mp4",
+            "type": "video/mp4",
+            "bytes": 525101
+          }
+        ],
+        "aspect": 1.5
+      },
+      {
+        "id": "cinco-brand-site-allott-06",
+        "label": "Cinco Design",
+        "href": "/projects/cinco-design",
+        "caseStudy": true,
+        "source": "Cinco-Brand-Site-Allott-06.webp",
+        "sourceHash": "24d53f08420bb81a",
+        "type": "image",
+        "width": 1400,
+        "height": 933,
+        "images": {
+          "sm": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-06-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 4682
+          },
+          "md": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-06-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 15540
+          },
+          "lg": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-06-lg.webp",
+            "width": 1400,
+            "height": 933,
+            "bytes": 18776
+          }
+        },
+        "poster": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-06-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 4682
+        },
+        "aspect": 1.5005
+      },
+      {
+        "id": "cinco-brand-site-allott-10",
+        "label": "Cinco Design",
+        "href": "/projects/cinco-design",
+        "caseStudy": true,
+        "source": "Cinco-Brand-Site-Allott-10.webp",
+        "sourceHash": "a5070ab68106ee8e",
+        "type": "image",
+        "width": 1200,
+        "height": 1200,
+        "images": {
+          "sm": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-10-sm.webp",
+            "width": 480,
+            "height": 480,
+            "bytes": 7464
+          },
+          "md": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-10-md.webp",
+            "width": 1200,
+            "height": 1200,
+            "bytes": 28844
+          },
+          "lg": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-10-lg.webp",
+            "width": 1200,
+            "height": 1200,
+            "bytes": 30328
+          }
+        },
+        "poster": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-10-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 7464
+        },
+        "aspect": 1
+      },
+      {
+        "id": "cinco-brand-site-allott-11",
+        "label": "Cinco Design",
+        "href": "/projects/cinco-design",
+        "caseStudy": true,
+        "source": "Cinco-Brand-Site-Allott-11.webp",
+        "sourceHash": "5af804648874c3ed",
+        "type": "image",
+        "width": 1400,
+        "height": 856,
+        "images": {
+          "sm": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-11-sm.webp",
+            "width": 480,
+            "height": 293,
+            "bytes": 20328
+          },
+          "md": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-11-md.webp",
+            "width": 1280,
+            "height": 783,
+            "bytes": 138352
+          },
+          "lg": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-11-lg.webp",
+            "width": 1400,
+            "height": 856,
+            "bytes": 209676
+          }
+        },
+        "poster": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-11-sm.webp",
+          "width": 480,
+          "height": 293,
+          "bytes": 20328
+        },
+        "aspect": 1.6355
+      },
+      {
+        "id": "cinco-brand-site-allott-14",
+        "label": "Cinco Design",
+        "href": "/projects/cinco-design",
+        "caseStudy": true,
+        "source": "Cinco-Brand-Site-Allott-14.webp",
+        "sourceHash": "5dd0f00ecfcdc5fd",
+        "type": "image",
+        "width": 1400,
+        "height": 856,
+        "images": {
+          "sm": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-14-sm.webp",
+            "width": 480,
+            "height": 293,
+            "bytes": 9202
+          },
+          "md": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-14-md.webp",
+            "width": 1280,
+            "height": 783,
+            "bytes": 34062
+          },
+          "lg": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-14-lg.webp",
+            "width": 1400,
+            "height": 856,
+            "bytes": 42360
+          }
+        },
+        "poster": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-14-sm.webp",
+          "width": 480,
+          "height": 293,
+          "bytes": 9202
+        },
+        "aspect": 1.6355
+      },
+      {
+        "id": "cinco-screencomp-2",
+        "label": "Cinco Design",
+        "href": "/projects/cinco-design",
+        "caseStudy": true,
+        "source": "Cinco-ScreenComp_2.mp4",
+        "sourceHash": "447d78eeb3af5282",
+        "type": "video",
+        "width": 1080,
+        "height": 720,
+        "duration": 4.76,
+        "sourceDuration": 4.76,
+        "poster": {
+          "src": "media/projects/cinco-design/cinco-screencomp-2-poster.webp",
+          "width": 1080,
+          "height": 720,
+          "bytes": 44844
+        },
+        "sources": [
+          {
+            "src": "media/projects/cinco-design/cinco-screencomp-2.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 469266
+          },
+          {
+            "src": "media/projects/cinco-design/cinco-screencomp-2.mp4",
+            "type": "video/mp4",
+            "bytes": 496395
+          }
+        ],
+        "aspect": 1.5
+      },
+      {
+        "id": "cinco-tv-screen",
+        "label": "Cinco Design",
+        "href": "/projects/cinco-design",
+        "caseStudy": true,
+        "source": "Cinco-TV-Screen.mp4",
+        "sourceHash": "9e62369388655b6f",
+        "type": "video",
+        "width": 1080,
+        "height": 720,
+        "duration": 12,
+        "sourceDuration": 20,
+        "poster": {
+          "src": "media/projects/cinco-design/cinco-tv-screen-poster.webp",
+          "width": 1080,
+          "height": 720,
+          "bytes": 16812
+        },
+        "sources": [
+          {
+            "src": "media/projects/cinco-design/cinco-tv-screen.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 423357
+          },
+          {
+            "src": "media/projects/cinco-design/cinco-tv-screen.mp4",
+            "type": "video/mp4",
+            "bytes": 564090
+          }
+        ],
+        "aspect": 1.5
+      }
+    ]
+  },
+  "otis-mountain-get-down": {
+    "folder": "10_OtisMountain",
+    "items": [
+      {
+        "id": "fivestars-08",
+        "label": "FiveStars",
+        "href": "",
+        "caseStudy": false,
+        "source": "FiveStars_08.jpg",
+        "sourceHash": "93e3b47fc3610253",
+        "type": "image",
+        "width": 3600,
+        "height": 2401,
+        "images": {
+          "sm": {
+            "src": "media/projects/otis-mountain-get-down/fivestars-08-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 19864
+          },
+          "md": {
+            "src": "media/projects/otis-mountain-get-down/fivestars-08-md.webp",
+            "width": 1280,
+            "height": 854,
+            "bytes": 149866
+          },
+          "lg": {
+            "src": "media/projects/otis-mountain-get-down/fivestars-08-lg.webp",
+            "width": 2048,
+            "height": 1366,
+            "bytes": 400454
+          }
+        },
+        "poster": {
+          "src": "media/projects/otis-mountain-get-down/fivestars-08-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 19864
+        },
+        "aspect": 1.4994
+      },
+      {
+        "id": "fivestars-09",
+        "label": "FiveStars",
+        "href": "",
+        "caseStudy": false,
+        "source": "FiveStars_09.jpg",
+        "sourceHash": "3383effdd2ecbe44",
+        "type": "image",
+        "width": 2401,
+        "height": 3600,
+        "images": {
+          "sm": {
+            "src": "media/projects/otis-mountain-get-down/fivestars-09-sm.webp",
+            "width": 320,
+            "height": 480,
+            "bytes": 30752
+          },
+          "md": {
+            "src": "media/projects/otis-mountain-get-down/fivestars-09-md.webp",
+            "width": 854,
+            "height": 1280,
+            "bytes": 167128
+          },
+          "lg": {
+            "src": "media/projects/otis-mountain-get-down/fivestars-09-lg.webp",
+            "width": 1366,
+            "height": 2048,
+            "bytes": 410806
+          }
+        },
+        "poster": {
+          "src": "media/projects/otis-mountain-get-down/fivestars-09-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 30752
+        },
+        "aspect": 0.6669
+      },
+      {
+        "id": "fivestars-36",
+        "label": "FiveStars",
+        "href": "",
+        "caseStudy": false,
+        "source": "FiveStars_36.jpg",
+        "sourceHash": "32f9c79dc0569f7e",
+        "type": "image",
+        "width": 3600,
+        "height": 2401,
+        "images": {
+          "sm": {
+            "src": "media/projects/otis-mountain-get-down/fivestars-36-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 13100
+          },
+          "md": {
+            "src": "media/projects/otis-mountain-get-down/fivestars-36-md.webp",
+            "width": 1280,
+            "height": 854,
+            "bytes": 115480
+          },
+          "lg": {
+            "src": "media/projects/otis-mountain-get-down/fivestars-36-lg.webp",
+            "width": 2048,
+            "height": 1366,
+            "bytes": 498160
+          }
+        },
+        "poster": {
+          "src": "media/projects/otis-mountain-get-down/fivestars-36-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 13100
+        },
+        "aspect": 1.4994
+      },
+      {
+        "id": "otis-identity-allott-12",
+        "label": "Otis Mountain Get Down",
+        "href": "/projects/otis-mountain-get-down",
+        "caseStudy": true,
+        "source": "Otis-Identity-Allott-12.gif",
+        "sourceHash": "d386db9e784c6b05",
+        "type": "video",
+        "width": 1080,
+        "height": 690,
+        "duration": 1.65,
+        "sourceDuration": 1.65,
+        "poster": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-12-poster.webp",
+          "width": 1080,
+          "height": 690,
+          "bytes": 3620
+        },
+        "sources": [
+          {
+            "src": "media/projects/otis-mountain-get-down/otis-identity-allott-12.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 8926
+          },
+          {
+            "src": "media/projects/otis-mountain-get-down/otis-identity-allott-12.mp4",
+            "type": "video/mp4",
+            "bytes": 13811
+          }
+        ],
+        "aspect": 1.5652
+      },
+      {
+        "id": "otis-identity-allott-13",
+        "label": "Otis Mountain Get Down",
+        "href": "/projects/otis-mountain-get-down",
+        "caseStudy": true,
+        "source": "Otis-Identity-Allott-13.jpg",
+        "sourceHash": "d196dccd88c7813f",
+        "type": "image",
+        "width": 3840,
+        "height": 2160,
+        "images": {
+          "sm": {
+            "src": "media/projects/otis-mountain-get-down/otis-identity-allott-13-sm.webp",
+            "width": 480,
+            "height": 270,
+            "bytes": 12886
+          },
+          "md": {
+            "src": "media/projects/otis-mountain-get-down/otis-identity-allott-13-md.webp",
+            "width": 1280,
+            "height": 720,
+            "bytes": 82684
+          },
+          "lg": {
+            "src": "media/projects/otis-mountain-get-down/otis-identity-allott-13-lg.webp",
+            "width": 2048,
+            "height": 1152,
+            "bytes": 277920
+          }
+        },
+        "poster": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-13-sm.webp",
+          "width": 480,
+          "height": 270,
+          "bytes": 12886
+        },
+        "aspect": 1.7778
+      },
+      {
+        "id": "otis-identity-allott-14",
+        "label": "Otis Mountain Get Down",
+        "href": "/projects/otis-mountain-get-down",
+        "caseStudy": true,
+        "source": "Otis-Identity-Allott-14.jpg",
+        "sourceHash": "722bd22bdcba05e8",
+        "type": "image",
+        "width": 3840,
+        "height": 2160,
+        "images": {
+          "sm": {
+            "src": "media/projects/otis-mountain-get-down/otis-identity-allott-14-sm.webp",
+            "width": 480,
+            "height": 270,
+            "bytes": 16222
+          },
+          "md": {
+            "src": "media/projects/otis-mountain-get-down/otis-identity-allott-14-md.webp",
+            "width": 1280,
+            "height": 720,
+            "bytes": 98934
+          },
+          "lg": {
+            "src": "media/projects/otis-mountain-get-down/otis-identity-allott-14-lg.webp",
+            "width": 2048,
+            "height": 1152,
+            "bytes": 221522
+          }
+        },
+        "poster": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-14-sm.webp",
+          "width": 480,
+          "height": 270,
+          "bytes": 16222
+        },
+        "aspect": 1.7778
+      },
+      {
+        "id": "otis-identity-allott-16",
+        "label": "Otis Mountain Get Down",
+        "href": "/projects/otis-mountain-get-down",
+        "caseStudy": true,
+        "source": "Otis-Identity-Allott-16.jpg",
+        "sourceHash": "9243561924e7d2e9",
+        "type": "image",
+        "width": 3840,
+        "height": 2160,
+        "images": {
+          "sm": {
+            "src": "media/projects/otis-mountain-get-down/otis-identity-allott-16-sm.webp",
+            "width": 480,
+            "height": 270,
+            "bytes": 15824
+          },
+          "md": {
+            "src": "media/projects/otis-mountain-get-down/otis-identity-allott-16-md.webp",
+            "width": 1280,
+            "height": 720,
+            "bytes": 179540
+          },
+          "lg": {
+            "src": "media/projects/otis-mountain-get-down/otis-identity-allott-16-lg.webp",
+            "width": 2048,
+            "height": 1152,
+            "bytes": 675614
+          }
+        },
+        "poster": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-16-sm.webp",
+          "width": 480,
+          "height": 270,
+          "bytes": 15824
+        },
+        "aspect": 1.7778
+      },
+      {
+        "id": "otis-identity-allott-18",
+        "label": "Otis Mountain Get Down",
+        "href": "/projects/otis-mountain-get-down",
+        "caseStudy": true,
+        "source": "Otis-Identity-Allott-18.jpg",
+        "sourceHash": "f0aad959a67947e3",
+        "type": "image",
+        "width": 1920,
+        "height": 1080,
+        "images": {
+          "sm": {
+            "src": "media/projects/otis-mountain-get-down/otis-identity-allott-18-sm.webp",
+            "width": 480,
+            "height": 270,
+            "bytes": 31850
+          },
+          "md": {
+            "src": "media/projects/otis-mountain-get-down/otis-identity-allott-18-md.webp",
+            "width": 1280,
+            "height": 720,
+            "bytes": 223592
+          },
+          "lg": {
+            "src": "media/projects/otis-mountain-get-down/otis-identity-allott-18-lg.webp",
+            "width": 1920,
+            "height": 1080,
+            "bytes": 469066
+          }
+        },
+        "poster": {
+          "src": "media/projects/otis-mountain-get-down/otis-identity-allott-18-sm.webp",
+          "width": 480,
+          "height": 270,
+          "bytes": 31850
+        },
+        "aspect": 1.7778
+      },
+      {
+        "id": "otis2023-selects-r1-9379-1",
+        "label": "Otis2023 Selects R1 9379",
+        "href": "",
+        "caseStudy": false,
+        "source": "Otis2023_Selects_R1-9379 1.webp",
+        "sourceHash": "e2a2009138900192",
+        "type": "image",
+        "width": 2880,
+        "height": 2880,
+        "images": {
+          "sm": {
+            "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-1-sm.webp",
+            "width": 480,
+            "height": 480,
+            "bytes": 14480
+          },
+          "md": {
+            "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-1-md.webp",
+            "width": 1280,
+            "height": 1280,
+            "bytes": 82430
+          },
+          "lg": {
+            "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-1-lg.webp",
+            "width": 2048,
+            "height": 2048,
+            "bytes": 219976
+          }
+        },
+        "poster": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-1-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 14480
+        },
+        "aspect": 1
+      },
+      {
+        "id": "otis2023-selects-r1-9379-2",
+        "label": "Otis2023 Selects R1 9379",
+        "href": "",
+        "caseStudy": false,
+        "source": "Otis2023_Selects_R1-9379 2.webp",
+        "sourceHash": "f8d25a285eae5c2e",
+        "type": "image",
+        "width": 2880,
+        "height": 2058,
+        "images": {
+          "sm": {
+            "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-2-sm.webp",
+            "width": 480,
+            "height": 343,
+            "bytes": 9224
+          },
+          "md": {
+            "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-2-md.webp",
+            "width": 1280,
+            "height": 915,
+            "bytes": 57620
+          },
+          "lg": {
+            "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-2-lg.webp",
+            "width": 2048,
+            "height": 1463,
+            "bytes": 165426
+          }
+        },
+        "poster": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-2-sm.webp",
+          "width": 480,
+          "height": 343,
+          "bytes": 9224
+        },
+        "aspect": 1.3994
+      },
+      {
+        "id": "otis2023-selects-r1-9379-3",
+        "label": "Otis2023 Selects R1 9379",
+        "href": "",
+        "caseStudy": false,
+        "source": "Otis2023_Selects_R1-9379 3.webp",
+        "sourceHash": "5470af83b0aae5f0",
+        "type": "image",
+        "width": 2880,
+        "height": 2058,
+        "images": {
+          "sm": {
+            "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-sm.webp",
+            "width": 480,
+            "height": 343,
+            "bytes": 6940
+          },
+          "md": {
+            "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-md.webp",
+            "width": 1280,
+            "height": 915,
+            "bytes": 64922
+          },
+          "lg": {
+            "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-lg.webp",
+            "width": 2048,
+            "height": 1463,
+            "bytes": 178272
+          }
+        },
+        "poster": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-sm.webp",
+          "width": 480,
+          "height": 343,
+          "bytes": 6940
+        },
+        "aspect": 1.3994
+      }
+    ]
+  },
+  "mni": {
+    "folder": "11_MusicNotImpossible",
+    "items": [
+      {
+        "id": "mni-badge-01",
+        "label": "Music: Not Impossible",
+        "href": "/projects/mni",
+        "caseStudy": true,
+        "source": "MNI-Badge-01.jpg",
+        "sourceHash": "a42b033020595f09",
+        "type": "image",
+        "width": 6400,
+        "height": 4400,
+        "images": {
+          "sm": {
+            "src": "media/projects/mni/mni-badge-01-sm.webp",
+            "width": 480,
+            "height": 330,
+            "bytes": 5714
+          },
+          "md": {
+            "src": "media/projects/mni/mni-badge-01-md.webp",
+            "width": 1280,
+            "height": 880,
+            "bytes": 33974
+          },
+          "lg": {
+            "src": "media/projects/mni/mni-badge-01-lg.webp",
+            "width": 2048,
+            "height": 1408,
+            "bytes": 73584
+          }
+        },
+        "poster": {
+          "src": "media/projects/mni/mni-badge-01-sm.webp",
+          "width": 480,
+          "height": 330,
+          "bytes": 5714
+        },
+        "aspect": 1.4545
+      },
+      {
+        "id": "mni-billboard-01",
+        "label": "Music: Not Impossible",
+        "href": "/projects/mni",
+        "caseStudy": true,
+        "source": "MNI-Billboard-01.jpg",
+        "sourceHash": "829d70d945cf4f3a",
+        "type": "image",
+        "width": 6016,
+        "height": 4000,
+        "images": {
+          "sm": {
+            "src": "media/projects/mni/mni-billboard-01-sm.webp",
+            "width": 480,
+            "height": 319,
+            "bytes": 10138
+          },
+          "md": {
+            "src": "media/projects/mni/mni-billboard-01-md.webp",
+            "width": 1280,
+            "height": 851,
+            "bytes": 67108
+          },
+          "lg": {
+            "src": "media/projects/mni/mni-billboard-01-lg.webp",
+            "width": 2048,
+            "height": 1362,
+            "bytes": 177194
+          }
+        },
+        "poster": {
+          "src": "media/projects/mni/mni-billboard-01-sm.webp",
+          "width": 480,
+          "height": 319,
+          "bytes": 10138
+        },
+        "aspect": 1.504
+      },
+      {
+        "id": "mni-poster-01",
+        "label": "Music: Not Impossible",
+        "href": "/projects/mni",
+        "caseStudy": true,
+        "source": "MNI-Poster-01.jpg",
+        "sourceHash": "fbade3e07b82782d",
+        "type": "image",
+        "width": 5918,
+        "height": 3859,
+        "images": {
+          "sm": {
+            "src": "media/projects/mni/mni-poster-01-sm.webp",
+            "width": 480,
+            "height": 313,
+            "bytes": 30560
+          },
+          "md": {
+            "src": "media/projects/mni/mni-poster-01-md.webp",
+            "width": 1280,
+            "height": 835,
+            "bytes": 191390
+          },
+          "lg": {
+            "src": "media/projects/mni/mni-poster-01-lg.webp",
+            "width": 2048,
+            "height": 1335,
+            "bytes": 412618
+          }
+        },
+        "poster": {
+          "src": "media/projects/mni/mni-poster-01-sm.webp",
+          "width": 480,
+          "height": 313,
+          "bytes": 30560
+        },
+        "aspect": 1.5336
+      },
+      {
+        "id": "venue-screen-02-standard-mockup-3",
+        "label": "Venue Screen 02 Standard Mockup",
+        "href": "",
+        "caseStudy": false,
+        "source": "Venue-Screen-02-Standard-Mockup 3.mp4",
+        "sourceHash": "c73250b60e9bf55b",
+        "type": "video",
+        "width": 1080,
+        "height": 742,
+        "duration": 12,
+        "sourceDuration": 59.99,
+        "poster": {
+          "src": "media/projects/mni/venue-screen-02-standard-mockup-3-poster.webp",
+          "width": 1080,
+          "height": 742,
+          "bytes": 39090
+        },
+        "sources": [
+          {
+            "src": "media/projects/mni/venue-screen-02-standard-mockup-3.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 1125421
+          },
+          {
+            "src": "media/projects/mni/venue-screen-02-standard-mockup-3.mp4",
+            "type": "video/mp4",
+            "bytes": 1503452
+          }
+        ],
+        "aspect": 1.4555
+      },
+      {
+        "id": "wall-sign-standard-mockup-01",
+        "label": "Wall Sign Standard Mockup",
+        "href": "",
+        "caseStudy": false,
+        "source": "Wall-Sign-Standard-Mockup-01.jpg",
+        "sourceHash": "5e81090cbe1854a5",
+        "type": "image",
+        "width": 6400,
+        "height": 4400,
+        "images": {
+          "sm": {
+            "src": "media/projects/mni/wall-sign-standard-mockup-01-sm.webp",
+            "width": 480,
+            "height": 330,
+            "bytes": 10616
+          },
+          "md": {
+            "src": "media/projects/mni/wall-sign-standard-mockup-01-md.webp",
+            "width": 1280,
+            "height": 880,
+            "bytes": 47098
+          },
+          "lg": {
+            "src": "media/projects/mni/wall-sign-standard-mockup-01-lg.webp",
+            "width": 2048,
+            "height": 1408,
+            "bytes": 98150
+          }
+        },
+        "poster": {
+          "src": "media/projects/mni/wall-sign-standard-mockup-01-sm.webp",
+          "width": 480,
+          "height": 330,
+          "bytes": 10616
+        },
+        "aspect": 1.4545
+      }
+    ]
+  },
+  "gt-bikes": {
+    "folder": "12_GTBikes",
+    "items": [
+      {
+        "id": "1-large-tall",
+        "label": "1 Large Tall",
+        "href": "",
+        "caseStudy": false,
+        "source": "1-Large-Tall.webp",
+        "sourceHash": "9bcd528557d71606",
+        "type": "image",
+        "width": 1956,
+        "height": 1565,
+        "images": {
+          "sm": {
+            "src": "media/projects/gt-bikes/1-large-tall-sm.webp",
+            "width": 480,
+            "height": 384,
+            "bytes": 13934
+          },
+          "md": {
+            "src": "media/projects/gt-bikes/1-large-tall-md.webp",
+            "width": 1280,
+            "height": 1024,
+            "bytes": 96792
+          },
+          "lg": {
+            "src": "media/projects/gt-bikes/1-large-tall-lg.webp",
+            "width": 1956,
+            "height": 1565,
+            "bytes": 256644
+          }
+        },
+        "poster": {
+          "src": "media/projects/gt-bikes/1-large-tall-sm.webp",
+          "width": 480,
+          "height": 384,
+          "bytes": 13934
+        },
+        "aspect": 1.2498
+      },
+      {
+        "id": "1-medium",
+        "label": "1 Medium",
+        "href": "",
+        "caseStudy": false,
+        "source": "1-Medium.webp",
+        "sourceHash": "4e9bf7c82625a6ef",
+        "type": "image",
+        "width": 1707,
+        "height": 1137,
+        "images": {
+          "sm": {
+            "src": "media/projects/gt-bikes/1-medium-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 22326
+          },
+          "md": {
+            "src": "media/projects/gt-bikes/1-medium-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 102288
+          },
+          "lg": {
+            "src": "media/projects/gt-bikes/1-medium-lg.webp",
+            "width": 1707,
+            "height": 1137,
+            "bytes": 169148
+          }
+        },
+        "poster": {
+          "src": "media/projects/gt-bikes/1-medium-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 22326
+        },
+        "aspect": 1.5013
+      },
+      {
+        "id": "gt-dealerbook",
+        "label": "GT Bikes",
+        "href": "/projects/gt-bikes",
+        "caseStudy": true,
+        "source": "GT-DealerBook.jpg",
+        "sourceHash": "e8980693276507a4",
+        "type": "image",
+        "width": 9000,
+        "height": 6000,
+        "images": {
+          "sm": {
+            "src": "media/projects/gt-bikes/gt-dealerbook-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 5512
+          },
+          "md": {
+            "src": "media/projects/gt-bikes/gt-dealerbook-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 30170
+          },
+          "lg": {
+            "src": "media/projects/gt-bikes/gt-dealerbook-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 63894
+          }
+        },
+        "poster": {
+          "src": "media/projects/gt-bikes/gt-dealerbook-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 5512
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "gt-mobile-1",
+        "label": "GT Bikes",
+        "href": "/projects/gt-bikes",
+        "caseStudy": true,
+        "source": "GT-Mobile_1.mp4",
+        "sourceHash": "2eb170a2cd3900ba",
+        "type": "video",
+        "width": 1080,
+        "height": 720,
+        "duration": 12,
+        "sourceDuration": 14,
+        "poster": {
+          "src": "media/projects/gt-bikes/gt-mobile-1-poster.webp",
+          "width": 1080,
+          "height": 720,
+          "bytes": 112024
+        },
+        "sources": [
+          {
+            "src": "media/projects/gt-bikes/gt-mobile-1.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 1635320
+          },
+          {
+            "src": "media/projects/gt-bikes/gt-mobile-1.mp4",
+            "type": "video/mp4",
+            "bytes": 1629315
+          }
+        ],
+        "aspect": 1.5
+      },
+      {
+        "id": "gt-refreshmotion-inout",
+        "label": "GT Bikes",
+        "href": "/projects/gt-bikes",
+        "caseStudy": true,
+        "source": "GT-RefreshMotion-InOut.mov",
+        "sourceHash": "998e38d87a6c1ea6",
+        "type": "video",
+        "width": 1080,
+        "height": 608,
+        "duration": 5.03,
+        "sourceDuration": 5.03,
+        "poster": {
+          "src": "media/projects/gt-bikes/gt-refreshmotion-inout-poster.webp",
+          "width": 1080,
+          "height": 608,
+          "bytes": 2154
+        },
+        "sources": [
+          {
+            "src": "media/projects/gt-bikes/gt-refreshmotion-inout.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 26901
+          },
+          {
+            "src": "media/projects/gt-bikes/gt-refreshmotion-inout.mp4",
+            "type": "video/mp4",
+            "bytes": 30075
+          }
+        ],
+        "aspect": 1.7763
+      },
+      {
+        "id": "header-image-01",
+        "label": "Header Image",
+        "href": "",
+        "caseStudy": false,
+        "source": "Header-Image-01.webp",
+        "sourceHash": "32ef2afdf8043fb3",
+        "type": "image",
+        "width": 2100,
+        "height": 1400,
+        "images": {
+          "sm": {
+            "src": "media/projects/gt-bikes/header-image-01-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 13732
+          },
+          "md": {
+            "src": "media/projects/gt-bikes/header-image-01-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 61352
+          },
+          "lg": {
+            "src": "media/projects/gt-bikes/header-image-01-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 112362
+          }
+        },
+        "poster": {
+          "src": "media/projects/gt-bikes/header-image-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 13732
+        },
+        "aspect": 1.5
+      }
+    ]
+  },
+  "microsoft-innovation-hub": {
+    "folder": "13_MicrosoftInnovationHub",
+    "items": [
+      {
+        "id": "1-medium",
+        "label": "1 Medium",
+        "href": "",
+        "caseStudy": false,
+        "source": "1-Medium.webp",
+        "sourceHash": "6cb5ad6d12cdeb0a",
+        "type": "image",
+        "width": 2276,
+        "height": 1516,
+        "images": {
+          "sm": {
+            "src": "media/projects/microsoft-innovation-hub/1-medium-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 6570
+          },
+          "md": {
+            "src": "media/projects/microsoft-innovation-hub/1-medium-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 40382
+          },
+          "lg": {
+            "src": "media/projects/microsoft-innovation-hub/1-medium-lg.webp",
+            "width": 2048,
+            "height": 1364,
+            "bytes": 95118
+          }
+        },
+        "poster": {
+          "src": "media/projects/microsoft-innovation-hub/1-medium-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 6570
+        },
+        "aspect": 1.5013
+      },
+      {
+        "id": "2up-02",
+        "label": "2Up",
+        "href": "",
+        "caseStudy": false,
+        "source": "2Up-02.webp",
+        "sourceHash": "a9f4564a7976cfd6",
+        "type": "image",
+        "width": 1280,
+        "height": 1280,
+        "images": {
+          "sm": {
+            "src": "media/projects/microsoft-innovation-hub/2up-02-sm.webp",
+            "width": 480,
+            "height": 480,
+            "bytes": 9836
+          },
+          "md": {
+            "src": "media/projects/microsoft-innovation-hub/2up-02-md.webp",
+            "width": 1280,
+            "height": 1280,
+            "bytes": 36310
+          },
+          "lg": {
+            "src": "media/projects/microsoft-innovation-hub/2up-02-lg.webp",
+            "width": 1280,
+            "height": 1280,
+            "bytes": 37828
+          }
+        },
+        "poster": {
+          "src": "media/projects/microsoft-innovation-hub/2up-02-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 9836
+        },
+        "aspect": 1
+      },
+      {
+        "id": "conference-stage-mockup-fast",
+        "label": "Conference Stage Mockup Fast",
+        "href": "",
+        "caseStudy": false,
+        "source": "Conference Stage Mockup Fast.mp4",
+        "sourceHash": "a046d7623daea674",
+        "type": "video",
+        "width": 1080,
+        "height": 788,
+        "duration": 12,
+        "sourceDuration": 22.36,
+        "poster": {
+          "src": "media/projects/microsoft-innovation-hub/conference-stage-mockup-fast-poster.webp",
+          "width": 1080,
+          "height": 788,
+          "bytes": 79946
+        },
+        "sources": [
+          {
+            "src": "media/projects/microsoft-innovation-hub/conference-stage-mockup-fast.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 1057545
+          },
+          {
+            "src": "media/projects/microsoft-innovation-hub/conference-stage-mockup-fast.mp4",
+            "type": "video/mp4",
+            "bytes": 871744
+          }
+        ],
+        "aspect": 1.3706
+      },
+      {
+        "id": "inset-l-1",
+        "label": "Inset L",
+        "href": "",
+        "caseStudy": false,
+        "source": "Inset-L-1.webp",
+        "sourceHash": "1818ca70e06d09f3",
+        "type": "image",
+        "width": 1956,
+        "height": 1304,
+        "images": {
+          "sm": {
+            "src": "media/projects/microsoft-innovation-hub/inset-l-1-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 7062
+          },
+          "md": {
+            "src": "media/projects/microsoft-innovation-hub/inset-l-1-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 36026
+          },
+          "lg": {
+            "src": "media/projects/microsoft-innovation-hub/inset-l-1-lg.webp",
+            "width": 1956,
+            "height": 1304,
+            "bytes": 82658
+          }
+        },
+        "poster": {
+          "src": "media/projects/microsoft-innovation-hub/inset-l-1-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 7062
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "mih-screen-comp-vertical",
+        "label": "Microsoft Innovation Hub",
+        "href": "/projects/microsoft-innovation-hub",
+        "caseStudy": true,
+        "source": "MIH-Screen-Comp-Vertical.mp4",
+        "sourceHash": "872766149dd0dfef",
+        "type": "video",
+        "width": 1080,
+        "height": 720,
+        "duration": 12,
+        "sourceDuration": 45.05,
+        "poster": {
+          "src": "media/projects/microsoft-innovation-hub/mih-screen-comp-vertical-poster.webp",
+          "width": 1080,
+          "height": 720,
+          "bytes": 19734
+        },
+        "sources": [
+          {
+            "src": "media/projects/microsoft-innovation-hub/mih-screen-comp-vertical.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 596351
+          },
+          {
+            "src": "media/projects/microsoft-innovation-hub/mih-screen-comp-vertical.mp4",
+            "type": "video/mp4",
+            "bytes": 780489
+          }
+        ],
+        "aspect": 1.5
+      }
+    ]
+  }
+}

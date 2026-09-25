@@ -1,0 +1,236 @@
+{
+  "generated": "2026-09-25T03:14:25.987Z",
+  "count": 6,
+  "images": 6,
+  "videos": 0,
+  "items": [
+    {
+      "id": "26-bonnell",
+      "label": "26 Bonnell",
+      "href": "",
+      "caseStudy": false,
+      "source": "26-Bonnell.webp",
+      "sourceHash": "8e42f4eea4d12116",
+      "type": "image",
+      "width": 2880,
+      "height": 1620,
+      "images": {
+        "sm": {
+          "src": "media/projects/bonnell/26-bonnell-sm.webp",
+          "width": 480,
+          "height": 270,
+          "bytes": 8242
+        },
+        "md": {
+          "src": "media/projects/bonnell/26-bonnell-md.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 41264
+        },
+        "lg": {
+          "src": "media/projects/bonnell/26-bonnell-lg.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 88356
+        }
+      },
+      "poster": {
+        "src": "media/projects/bonnell/26-bonnell-sm.webp",
+        "width": 480,
+        "height": 270,
+        "bytes": 8242
+      },
+      "aspect": 1.7778
+    },
+    {
+      "id": "bonnell-allott-01",
+      "label": "Bonnell",
+      "href": "",
+      "caseStudy": true,
+      "source": "Bonnell-Allott-01.jpg",
+      "sourceHash": "9bb82062d554b9fb",
+      "type": "image",
+      "width": 9504,
+      "height": 6336,
+      "images": {
+        "sm": {
+          "src": "media/projects/bonnell/bonnell-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 4852
+        },
+        "md": {
+          "src": "media/projects/bonnell/bonnell-allott-01-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 25678
+        },
+        "lg": {
+          "src": "media/projects/bonnell/bonnell-allott-01-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 83436
+        }
+      },
+      "poster": {
+        "src": "media/projects/bonnell/bonnell-allott-01-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 4852
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "bonnell-allott-02-2",
+      "label": "Bonnell",
+      "href": "",
+      "caseStudy": true,
+      "source": "Bonnell-Allott-02 2.jpg",
+      "sourceHash": "5b9cbc65ceef43bb",
+      "type": "image",
+      "width": 4500,
+      "height": 3000,
+      "images": {
+        "sm": {
+          "src": "media/projects/bonnell/bonnell-allott-02-2-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 21040
+        },
+        "md": {
+          "src": "media/projects/bonnell/bonnell-allott-02-2-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 217660
+        },
+        "lg": {
+          "src": "media/projects/bonnell/bonnell-allott-02-2-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 641374
+        }
+      },
+      "poster": {
+        "src": "media/projects/bonnell/bonnell-allott-02-2-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 21040
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "bonnell-allott-02",
+      "label": "Bonnell",
+      "href": "",
+      "caseStudy": true,
+      "source": "Bonnell-Allott-02.jpg",
+      "sourceHash": "7467d8bad1b60023",
+      "type": "image",
+      "width": 9257,
+      "height": 6956,
+      "images": {
+        "sm": {
+          "src": "media/projects/bonnell/bonnell-allott-02-sm.webp",
+          "width": 480,
+          "height": 361,
+          "bytes": 2846
+        },
+        "md": {
+          "src": "media/projects/bonnell/bonnell-allott-02-md.webp",
+          "width": 1280,
+          "height": 962,
+          "bytes": 14938
+        },
+        "lg": {
+          "src": "media/projects/bonnell/bonnell-allott-02-lg.webp",
+          "width": 2048,
+          "height": 1539,
+          "bytes": 33964
+        }
+      },
+      "poster": {
+        "src": "media/projects/bonnell/bonnell-allott-02-sm.webp",
+        "width": 480,
+        "height": 361,
+        "bytes": 2846
+      },
+      "aspect": 1.3308
+    },
+    {
+      "id": "frame-227",
+      "label": "Frame",
+      "href": "",
+      "caseStudy": false,
+      "source": "Frame 227.webp",
+      "sourceHash": "cbaa9229e18e3068",
+      "type": "image",
+      "width": 990,
+      "height": 813,
+      "images": {
+        "sm": {
+          "src": "media/projects/bonnell/frame-227-sm.webp",
+          "width": 480,
+          "height": 394,
+          "bytes": 7634
+        },
+        "md": {
+          "src": "media/projects/bonnell/frame-227-md.webp",
+          "width": 990,
+          "height": 813,
+          "bytes": 23296
+        },
+        "lg": {
+          "src": "media/projects/bonnell/frame-227-lg.webp",
+          "width": 990,
+          "height": 813,
+          "bytes": 24602
+        }
+      },
+      "poster": {
+        "src": "media/projects/bonnell/frame-227-sm.webp",
+        "width": 480,
+        "height": 394,
+        "bytes": 7634
+      },
+      "aspect": 1.2177
+    },
+    {
+      "id": "lyrs-048",
+      "label": "LYRS",
+      "href": "",
+      "caseStudy": false,
+      "source": "LYRS_048.jpg",
+      "sourceHash": "ccd5caa8c4064779",
+      "type": "image",
+      "width": 4500,
+      "height": 3000,
+      "images": {
+        "sm": {
+          "src": "media/projects/bonnell/lyrs-048-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 20792
+        },
+        "md": {
+          "src": "media/projects/bonnell/lyrs-048-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 225990
+        },
+        "lg": {
+          "src": "media/projects/bonnell/lyrs-048-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 656612
+        }
+      },
+      "poster": {
+        "src": "media/projects/bonnell/lyrs-048-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 20792
+      },
+      "aspect": 1.5
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "generated": "2026-09-25T03:14:35.004Z",
+  "count": 4,
+  "images": 3,
+  "videos": 1,
+  "items": [
+    {
+      "id": "acte-macbook-mockup-005",
+      "label": "ACTE MACBOOK MOCKUP",
+      "href": "",
+      "caseStudy": false,
+      "source": "ACTE-MACBOOK-MOCKUP-005.jpg",
+      "sourceHash": "5564a0453af183c5",
+      "type": "image",
+      "width": 4000,
+      "height": 6000,
+      "images": {
+        "sm": {
+          "src": "media/projects/dialpad/acte-macbook-mockup-005-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 9898
+        },
+        "md": {
+          "src": "media/projects/dialpad/acte-macbook-mockup-005-md.webp",
+          "width": 853,
+          "height": 1280,
+          "bytes": 71542
+        },
+        "lg": {
+          "src": "media/projects/dialpad/acte-macbook-mockup-005-lg.webp",
+          "width": 1365,
+          "height": 2048,
+          "bytes": 185392
+        }
+      },
+      "poster": {
+        "src": "media/projects/dialpad/acte-macbook-mockup-005-sm.webp",
+        "width": 320,
+        "height": 480,
+        "bytes": 9898
+      },
+      "aspect": 0.6667
+    },
+    {
+      "id": "dialpad-allott-01",
+      "label": "Dialpad",
+      "href": "/projects/dialpad",
+      "caseStudy": true,
+      "source": "Dialpad-Allott-01.webp",
+      "sourceHash": "e8111d038396c762",
+      "type": "image",
+      "width": 2701,
+      "height": 1801,
+      "images": {
+        "sm": {
+          "src": "media/projects/dialpad/dialpad-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 21186
+        },
+        "md": {
+          "src": "media/projects/dialpad/dialpad-allott-01-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 128938
+        },
+        "lg": {
+          "src": "media/projects/dialpad/dialpad-allott-01-lg.webp",
+          "width": 2048,
+          "height": 1366,
+          "bytes": 261592
+        }
+      },
+      "poster": {
+        "src": "media/projects/dialpad/dialpad-allott-01-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 21186
+      },
+      "aspect": 1.4997
+    },
+    {
+      "id": "dialpad-allott-03",
+      "label": "Dialpad",
+      "href": "/projects/dialpad",
+      "caseStudy": true,
+      "source": "Dialpad-Allott-03.webp",
+      "sourceHash": "dac32924bdcfc5d3",
+      "type": "image",
+      "width": 2400,
+      "height": 1600,
+      "images": {
+        "sm": {
+          "src": "media/projects/dialpad/dialpad-allott-03-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 10020
+        },
+        "md": {
+          "src": "media/projects/dialpad/dialpad-allott-03-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 85126
+        },
+        "lg": {
+          "src": "media/projects/dialpad/dialpad-allott-03-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 170620
+        }
+      },
+      "poster": {
+        "src": "media/projects/dialpad/dialpad-allott-03-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 10020
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "in-situ-005",
+      "label": "IN SITU",
+      "href": "",
+      "caseStudy": false,
+      "source": "IN-SITU-005.mp4",
+      "sourceHash": "124b6bc6ab66ecc1",
+      "type": "video",
+      "width": 1080,
+      "height": 720,
+      "duration": 12,
+      "sourceDuration": 14.97,
+      "poster": {
+        "src": "media/projects/dialpad/in-situ-005-poster.webp",
+        "width": 1080,
+        "height": 720,
+        "bytes": 34676
+      },
+      "sources": [
+        {
+          "src": "media/projects/dialpad/in-situ-005.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 475656
+        },
+        {
+          "src": "media/projects/dialpad/in-situ-005.mp4",
+          "type": "video/mp4",
+          "bytes": 568193
+        }
+      ],
+      "aspect": 1.5
+    }
+  ]
+}

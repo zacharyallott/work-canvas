@@ -1,0 +1,160 @@
+{
+  "generated": "2026-09-25T03:14:43.243Z",
+  "count": 4,
+  "images": 4,
+  "videos": 0,
+  "items": [
+    {
+      "id": "nix-dork-retail",
+      "label": "NIX Dork Retail",
+      "href": "",
+      "caseStudy": false,
+      "source": "NIX_Dork_Retail.jpg",
+      "sourceHash": "08ccecb198e120f0",
+      "type": "image",
+      "width": 5670,
+      "height": 3780,
+      "images": {
+        "sm": {
+          "src": "media/projects/nixon-the-dork/nix-dork-retail-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 11704
+        },
+        "md": {
+          "src": "media/projects/nixon-the-dork/nix-dork-retail-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 73994
+        },
+        "lg": {
+          "src": "media/projects/nixon-the-dork/nix-dork-retail-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 240958
+        }
+      },
+      "poster": {
+        "src": "media/projects/nixon-the-dork/nix-dork-retail-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 11704
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "nixon-dork-allott-02",
+      "label": "Nixon: The Dork",
+      "href": "/projects/nixon-the-dork",
+      "caseStudy": true,
+      "source": "Nixon_Dork_Allott_02.jpg",
+      "sourceHash": "9f97de98a9c5dc0a",
+      "type": "image",
+      "width": 1800,
+      "height": 1800,
+      "images": {
+        "sm": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-02-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 19004
+        },
+        "md": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-02-md.webp",
+          "width": 1280,
+          "height": 1280,
+          "bytes": 136156
+        },
+        "lg": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-02-lg.webp",
+          "width": 1800,
+          "height": 1800,
+          "bytes": 274356
+        }
+      },
+      "poster": {
+        "src": "media/projects/nixon-the-dork/nixon-dork-allott-02-sm.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 19004
+      },
+      "aspect": 1
+    },
+    {
+      "id": "nixon-dork-allott-01",
+      "label": "Nixon: The Dork",
+      "href": "/projects/nixon-the-dork",
+      "caseStudy": true,
+      "source": "Nixon-Dork-Allott-01.jpg",
+      "sourceHash": "94492ddbcc7ff766",
+      "type": "image",
+      "width": 6000,
+      "height": 4000,
+      "images": {
+        "sm": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 27704
+        },
+        "md": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-01-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 156148
+        },
+        "lg": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-01-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 347824
+        }
+      },
+      "poster": {
+        "src": "media/projects/nixon-the-dork/nixon-dork-allott-01-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 27704
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "nixon-dork-allott-04",
+      "label": "Nixon: The Dork",
+      "href": "/projects/nixon-the-dork",
+      "caseStudy": true,
+      "source": "nixon-dork-allott-04.jpg",
+      "sourceHash": "8aaa53d2a7bf95e4",
+      "type": "image",
+      "width": 1800,
+      "height": 1079,
+      "images": {
+        "sm": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-04-sm.webp",
+          "width": 480,
+          "height": 288,
+          "bytes": 11964
+        },
+        "md": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-04-md.webp",
+          "width": 1280,
+          "height": 767,
+          "bytes": 57938
+        },
+        "lg": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-04-lg.webp",
+          "width": 1800,
+          "height": 1079,
+          "bytes": 100940
+        }
+      },
+      "poster": {
+        "src": "media/projects/nixon-the-dork/nixon-dork-allott-04-sm.webp",
+        "width": 480,
+        "height": 288,
+        "bytes": 11964
+      },
+      "aspect": 1.6682
+    }
+  ]
+}
