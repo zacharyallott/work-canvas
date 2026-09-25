@@ -7,6 +7,7 @@ import { MediaManager } from './media.js';
 import { Input } from './input.js';
 import { UI, hideLinkLists } from './ui.js';
 import { vertexShader, fragmentShader } from './shaders.js';
+import { projectNav, workListJsonLd, projectJsonLd } from './seo.js';
 
 /**
  * WorkCanvas — the shared core.
@@ -72,6 +73,9 @@ export class WorkCanvas {
     }
     await ensureAspects(this.items);
     hideLinkLists(this.items);
+    // A case study's own page (/work/<slug>, the CMS template) carries just that project.
+    this.projectPage = Boolean(this.pathSlug()) && new Set(this.items.map((i) => i.slug)).size === 1;
+    this._homeTitle = document.title;
 
     const keys = this.layoutDefs.map((l) => l.key);
     let initial = keys.includes(this.options.layout) ? this.options.layout : keys[0];
@@ -115,17 +119,89 @@ export class WorkCanvas {
     this.bindInput();
     this.bindObservers();
     this.bindKeyboard();
+    this.addSeo();
 
     this.resize();
     this.start();
+
+    if (this.projectPage) {
+      // The project opens straight away; closing it goes to the work on the homepage.
+      mount.classList.add('is-ready');
+      const item = this.mediaItems.find((i) => i.caseStudy);
+      if (!item) {
+        location.replace(this.options.homePath); // no project view for this piece: show the work instead
+        return this;
+      }
+      await this.openProject({ item }, { push: false, morph: false });
+      return this;
+    }
+
     await this.whenThumbsReady();
     mount.classList.add('is-ready');
     await this.setLayout(initial, { initial: true });
 
-    // Deep link: ?project=<slug> opens that project straight away.
-    const slug = new URLSearchParams(location.search).get('project');
-    if (slug) this.openProjectBySlug(slug, { push: false });
+    // Deep link to a project on the homepage (e.g. an old ?project=<slug> link).
+    const slug = this.slugFromLocation();
+    if (slug && this.openProjectBySlug(slug, { push: false })) this.replaceUrl(this.projectUrl(slug));
     return this;
+  }
+
+  // ─── Project addresses & SEO ───────────────────────────────────────────────
+  projectUrl(slug) {
+    return `${this.options.projectBase}${encodeURIComponent(slug)}`;
+  }
+
+  /** Slug from a /work/<slug> path. */
+  pathSlug() {
+    const base = this.options.projectBase;
+    const path = location.pathname;
+    return path.startsWith(base) ? decodeURIComponent(path.slice(base.length).replace(/\/$/, '')) || null : null;
+  }
+
+  /** The project the address points at: /work/<slug>, or a legacy ?project=<slug>. */
+  slugFromLocation() {
+    return new URLSearchParams(location.search).get('project') || this.pathSlug();
+  }
+
+  /**
+   * Links to every case study's page and JSON-LD for the projects, so search
+   * engines (and screen readers) can reach the work behind the canvas. Tabbing
+   * to a link shows that project's caption on the canvas; Enter opens it.
+   */
+  addSeo() {
+    const cases = [...new Map(this.mediaItems.filter((i) => i.caseStudy && i.slug).map((i) => [i.slug, i])).values()];
+    if (this.projectPage) {
+      const item = cases[0];
+      if (item) projectJsonLd(item.project, location.href, [item.poster, ...(item.project.gallery ?? []).map((g) => g.src)]);
+      return;
+    }
+    if (!cases.length) return;
+    const { nav, links } = projectNav(
+      cases.map((i) => i.project),
+      (slug) => this.projectUrl(slug),
+    );
+    links.forEach(({ a }, n) => {
+      const item = cases[n];
+      a.addEventListener('focus', () => {
+        this.focusedItem = item;
+        this.layout?.focusItem?.(item);
+      });
+      a.addEventListener('blur', () => (this.focusedItem = null));
+      a.addEventListener('click', (e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return; // new tab/window: let the link work
+        e.preventDefault();
+        const tile = this.layout?.tileForItem(item);
+        if (tile?.onScreen) this.openProject(tile);
+        else this.openProjectBySlug(item.slug, { push: true });
+      });
+    });
+    this.mount.appendChild(nav);
+    this.seoNav = nav;
+    workListJsonLd(
+      cases.map((i) => i.project),
+      (slug) => this.projectUrl(slug),
+      (p) => cases.find((i) => i.project === p)?.poster,
+    );
   }
 
   createRenderer() {
@@ -393,12 +469,13 @@ export class WorkCanvas {
     return true;
   }
 
-  /** Opens a project without a clicked tile (deep link / browser forward). */
+  /** Opens a project without a clicked tile (deep link / browser forward / link). */
   openProjectBySlug(slug, opts) {
-    const tile = this.layout?.tiles.find((t) => t.item.project?.slug === slug && t.item.caseStudy);
-    if (!tile) return false;
+    const item = this.mediaItems?.find((i) => i.project?.slug === slug && i.caseStudy);
+    if (!item) return false;
     // No morph from a tile the visitor didn't click: straight crossfade.
-    return this.openProject(tile, { ...opts, morph: false });
+    this.openProject({ item }, { ...opts, morph: false });
+    return true;
   }
 
   closeProject({ fromHistory = false } = {}) {
@@ -410,21 +487,28 @@ export class WorkCanvas {
     this.ui.project.hide();
     this.resetOpen();
     this.updateRunning();
-    if (!fromHistory && history.state?.wcProject) history.back();
-    else if (!fromHistory) this.replaceProjectParam(null);
+    if (this._homeTitle) document.title = this._homeTitle;
+    if (!fromHistory && history.state?.wcProject) history.back(); // opened here: Back returns to the work
+    else if (this.projectPage) location.assign(this.options.homePath); // landed on the project's page: go to the work
+    else if (!fromHistory) this.replaceUrl(this.options.homePath);
   }
 
+  /** In-page project opens get the project's own address (/work/<slug>) and title. */
   pushProjectState(slug) {
     if (!slug) return;
-    const url = new URL(location.href);
-    url.searchParams.set('project', slug);
+    const url = new URL(this.projectUrl(slug), location.href);
     history.pushState({ ...(history.state || {}), wcProject: slug }, '', url);
+    const project = this.mediaItems.find((i) => i.project?.slug === slug)?.project;
+    if (project) document.title = `${project.title} — ${this.options.siteName}`;
   }
 
-  replaceProjectParam(slug) {
-    const url = new URL(location.href);
-    slug ? url.searchParams.set('project', slug) : url.searchParams.delete('project');
-    history.replaceState({ ...(history.state || {}), wcProject: slug || undefined }, '', url);
+  /** Swaps the address without a new history entry (drops any ?project=). */
+  replaceUrl(path) {
+    const url = new URL(path, location.href);
+    const params = new URLSearchParams(location.search);
+    params.delete('project');
+    url.search = params.toString();
+    history.replaceState({ ...(history.state || {}), wcProject: undefined }, '', url);
   }
 
   resetOpen() {
@@ -455,7 +539,7 @@ export class WorkCanvas {
 
     // Browser Back/Forward between the work and a project.
     this._onPopState = (e) => {
-      const slug = e.state?.wcProject || new URLSearchParams(location.search).get('project');
+      const slug = e.state?.wcProject || this.slugFromLocation();
       if (slug && !this.projectOpen) this.openProjectBySlug(slug, { push: false });
       else if (!slug && this.projectOpen) this.closeProject({ fromHistory: true });
     };
@@ -526,6 +610,7 @@ export class WorkCanvas {
     clearTimeout(this._aboutTimer);
     window.removeEventListener('pageshow', this._onPageShow);
     window.removeEventListener('popstate', this._onPopState);
+    this.seoNav?.remove();
     clearTimeout(this._projectTimer);
     this._reducedQuery.removeEventListener?.('change', this._onReducedChange);
     this._focusHandlers?.forEach((off) => off());

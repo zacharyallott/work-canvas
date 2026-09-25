@@ -85,10 +85,12 @@ export default class Deck extends Layout {
     this.fillOrder = cfg.fillOrder.filter((k) => k < this.slotCount);
     this.slotTile = Array.from({ length: this.slotCount }, () => -1);
     this.slotStamp = Array.from({ length: this.slotCount }, () => 0);
-    this.slotTile[this.fillOrder[0]] = 0;
+    // The first card is always one with a project view (a case study), so there's something to open.
+    const first = Math.max(0, this.tiles.findIndex((t) => t.item.caseStudy));
+    this.slotTile[this.fillOrder[0]] = first;
     this.slotStamp[this.fillOrder[0]] = 1;
     this.stamp = 1;
-    this.next = 1 % n; // next tile to deal
+    this.next = (first + 1) % n; // next tile to deal
     this.fading = null; // { slot, from, fromStamp, to, p } while a new card fades in
 
     this.timer = 0; // s since the last card

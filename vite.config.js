@@ -8,12 +8,15 @@ import { defineConfig } from 'vite';
  * two media as Image 1 / Image 2, videos as Image N video + poster), generated
  * from public/media/media.json. Aspect ratios are left out on purpose so the
  * runtime measures them, like it has to for CMS items.
+ *
+ * /work/<slug> mimics the Projects template page: just that project's item,
+ * so the bundle runs in project-page mode.
  */
 function mockWebflowItems() {
   const manifestPath = path.resolve('public/media/media.json');
   const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
-  function render() {
+  function render(only) {
     if (!fs.existsSync(manifestPath)) return '<!-- run `npm run media` first -->';
     const { items } = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     const read = (f) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {});
@@ -42,6 +45,7 @@ function mockWebflowItems() {
       media[0].href ? media[0].href.split('/').pop() : title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
     return [...projects.entries()]
+      .filter(([title, media]) => !only || slugOf(media, title) === only)
       .map(([title, media]) => {
         const slug = slugOf(media, title);
         const c = copy[slug] ?? {};
@@ -63,7 +67,10 @@ function mockWebflowItems() {
 
   return {
     name: 'mock-webflow-items',
-    transformIndexHtml: (html) => html.replace('<!-- WORK_ITEMS -->', render()),
+    transformIndexHtml: (html, ctx) => {
+      const only = /^\/work\/([^/?#]+)/.exec(ctx.originalUrl || ctx.path || '')?.[1];
+      return html.replace('<!-- WORK_ITEMS -->', render(only && decodeURIComponent(only)));
+    },
     configureServer(server) {
       // Reload the page when the pipeline rewrites the manifest.
       const watched = [manifestPath, path.resolve('public/media/projects/index.json'), path.resolve('media/case-studies.json')];

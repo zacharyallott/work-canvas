@@ -36,7 +36,8 @@ src/
     input.js           cursor, touch drag, wheel, page scroll, tap
     ui.js              top bar (star = next version), hover caption, about section, fallback grid
     about.js           about copy: statement, client columns, links
-    project.js         project view (DOM page) + end-of-page runway
+    project.js         project view (DOM page) + end-of-page pull
+    seo.js             crawlable project links + JSON-LD
     motion.js          shared eases (every animation uses these)
     sizing.js          size scale shared by the filmstrip and deck
     data.js            reads .work-item elements (CMS list) from the DOM
@@ -127,21 +128,32 @@ Collection **Projects** (URL slug `work`):
 | --- | --- | --- |
 | Project title | Plain text (built-in Name) | hover caption |
 | Slug | built-in | – |
-| Short description | Plain text | read, not shown yet |
-| Services | Plain text | read, not shown yet |
-| Full case study | Switch | read, will gate click-through when clicks return |
+| Short description | Plain text | project view, meta description, JSON-LD |
+| Services | Plain text | project view, JSON-LD keywords |
+| Full case study | Switch | hover caption + ↓, click opens the project view, gets a project page |
 | Image 1 | Image | tile 1 (poster when Image 1 video is set) |
 | Image 1 video | Link | optional MP4 URL; plays in place of Image 1 |
 | Image 2 | Image | tile 2 (poster when Image 2 video is set) |
 | Image 2 video | Link | optional MP4 URL; plays in place of Image 2 |
-| Image 3–8 | Image | case study only |
+| Image 3–13 (+ video) | Image / Link | the project view's gallery (usually the project's folder) |
 
 Tiles are ordered by the list's sort: every project's Image 1 first, then every project's Image 2, so neighbours come from different projects. The CMS can't host MP4s, so video URLs point at a tagged release on jsDelivr (or any bucket). Run videos through `npm run media` first.
 
-### 2. Markup (already on the draft page **Home 2026**, `/home-2026`)
+### 2. Markup (on the **Home** page, `/`)
 
 ```html
 <section class="work-header">                       <!-- font: Cassette 500 -->
+  <!-- Code embed: crawlable text behind the canvas (class wc-seo = visually hidden). The about section is built from it. -->
+  <div class="wc-seo">
+    <h1>Zachary Allott — design &amp; art direction</h1>
+    <div data-work-about>
+      <p>{statement}</p>
+      <ul><li>{client}</li>…</ul> ×4           <!-- one list per column -->
+      <nav><a href="mailto:…">email</a> …</nav>
+      <p data-about-copyright>© 2026 Zachary Allott</p>
+    </div>
+  </div>
+
   <div id="work-canvas" class="work-canvas" data-layout="a"></div>
 
   <!-- Collection List bound to Projects. Wrapper: class work-list (display:none) + attribute data-work-list -->
@@ -156,6 +168,8 @@ Tiles are ordered by the list's sort: every project's Image 1 first, then every 
         <div class="work-video-1">{Image 1 video}</div>
         <img class="work-image-2" src="{Image 2}" srcset="…">
         <div class="work-video-2">{Image 2 video}</div>
+        <div class="work-slug">{Slug}</div>
+        <img class="work-image-3"> <div class="work-video-3"></div> … up to 13
       </div>
     </div></div>
   </div>
@@ -168,26 +182,56 @@ Tiles are ordered by the list's sort: every project's Image 1 first, then every 
 - For more than 100 projects, add more lists (each with offset/limit). The bundle collects every `.work-item` on the page in document order.
 - The older data-attribute formats (`data-image-1`, … or `data-src`, …) still work if you ever need a static list.
 
-Optional mount attributes: `data-layout="a|b|c"`, `data-switcher="false"` (the star only returns home instead of switching versions), `data-rotate="false"` (always open on `data-layout` instead of rotating), `data-max-videos="4"`, `data-per-project="2"`, `data-items=".my-selector"`, `data-tagline="…"`, `data-tagline-href="#work"`, `data-media-base="…"` (base for relative URLs).
+Optional mount attributes: `data-project-base="/work/"`, `data-home-path="/"`, `data-layout="a|b|c"`, `data-switcher="false"` (the star only returns home instead of switching versions), `data-rotate="false"` (always open on `data-layout` instead of rotating), `data-max-videos="4"`, `data-per-project="2"`, `data-items=".my-selector"`, `data-tagline="…"`, `data-tagline-href="#work"`, `data-media-base="…"` (base for relative URLs).
 
-### 3. Embed code
+### 3. Project pages (the Projects template, `/work/<slug>`)
 
-Page settings → Custom code → Before `</body>` tag (already on the draft page):
+Every case study also has its own page, so each project can be found and shared on its own. The template holds the same mount plus that project's data, bound to the current item:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.1.0/dist/work-canvas.js"></script>
+<section class="work-header">
+  <div id="work-canvas" class="work-canvas" data-project-page="true"></div>
+  <div class="wc-seo">                                   <!-- visually hidden, in the HTML for search engines -->
+    <div class="work-item">
+      <h1 class="work-title">{Project title}</h1>
+      <p class="work-description">{Short description}</p>
+      <p class="work-services">{Services}</p>
+      <div class="work-media">                           <!-- display:none: Slug, case-study marker, Image 1–13, videos -->
+        …
+      </div>
+    </div>
+  </div>
+</section>
 ```
 
-When you release, bump the version in this URL.
+On a project page the project view opens straight away; closing it (star, Esc, the pull at the end) goes to `/`. Clicking a project on the homepage opens it in place and changes the address to `/work/<slug>` with the project's title, so Back returns to the work and the address can be shared. Pieces without a case study have template pages too; those redirect to `/`.
+
+Set in the Designer (the API can't bind these): template **Page settings → SEO title** `{Project title} — zachary allott`, **Meta description** `{Short description}`, **Open Graph image** `{Image 1}`.
+
+### 4. SEO
+
+- Homepage HTML: the `wc-seo` embed (h1, about statement, clients, links). JSON-LD `Person` + `WebSite` in the Home page settings.
+- The bundle adds a visually hidden list of links to every case-study page (tabbing to one shows its caption on the canvas; Enter opens it) and JSON-LD: an `ItemList` of the case studies on the homepage, a `CreativeWork` on each project page.
+- Old `/projects/<slug>` pages are retired: add 301 redirects to `/work/<slug>` (case studies) or `/` (the rest) in Site settings → Publishing.
+
+### 5. Embed code
+
+Page settings → Custom code → Before `</body>` tag, on both Home and the Projects template:
+
+```html
+<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.0/dist/work-canvas.js"></script>
+```
+
+When you release, bump the version in both, and `data-media-base` on `#work-canvas`.
 
 ## Behaviour notes
 
-- **Loading:** a static poster grid shows immediately. WebGL fades in once most thumbnails are on the GPU. If WebGL isn't available, the grid stays. Aspect ratios are read from each image's header bytes, so layout doesn't wait for full downloads.
+- **Loading:** the header fades in once most thumbnails are on the GPU. If WebGL isn't available, a static poster grid shows instead. Aspect ratios are read from each image's header bytes, so layout doesn't wait for full downloads.
 - **Images:** the smallest variant loads first, then larger ones when a tile is drawn large or hovered. Anything bigger than `maxTextureEdge` (1280px, 1024px on mobile) is downscaled before it reaches the GPU, so large CMS uploads are safe. Big textures not used for 8 s are released.
 - **Video:** a poster first. The `<video>` loads only when its tile is on screen, and only the top-N by priority play (hovered, then nearest the centre). Off-screen videos pause. On touch devices and with `prefers-reduced-motion`, only the tile nearest the centre plays.
 - **Reduced motion:** no idle drift or stacking, no staggers, and transitions become fades. Cursor-driven motion still works.
 - **Pausing:** rendering stops when the header scrolls out of view or the tab is hidden. `destroy()` releases everything (GL context, textures, videos, listeners).
-- **Click:** off for now (`click: false` in `defaults.js`). The expand-and-navigate transition is still in `engine.open()` for when case studies are wired up.
+- **Click:** a case-study tile opens its project view (tile glides into place); other tiles do nothing.
 - **Performance:** DPR is capped at 2, textures upload at most two per frame, and one shared geometry is used. The bundle is about 186 KB gzipped (Three.js is most of it).
 
 ## Manual API

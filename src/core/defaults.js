@@ -29,6 +29,11 @@ export const DEFAULTS = {
   wheel: 'page', // 'page' = vertical wheel scrolls the page (header reacts to scroll); 'capture' = header consumes the wheel
   clickSlop: 6, // px of pointer travel before a press counts as a drag
 
+  // Project pages: each case study also has its own page at `${projectBase}<slug>` (the Webflow CMS template)
+  projectBase: '/work/',
+  homePath: '/',
+  siteName: 'zachary allott', // project titles become "<Project> — <siteName>"
+
   // Transition when opening a project (eases are registered in motion.js)
   openDuration: 0.75,
   openEase: 'wc-move', // quick to leave, slow to land

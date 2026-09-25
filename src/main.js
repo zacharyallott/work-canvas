@@ -13,6 +13,8 @@
  *   data-wheel="page|capture"  whether the header consumes vertical wheel
  *   data-max-videos="5"        concurrent video cap (overrides layouts)
  *   data-tagline="…"           top bar text (click opens the about section)
+ *   data-project-base="/work/" where each case study's own page lives (default /work/)
+ *   data-home-path="/"         the page with the work (closing a project page goes here)
  *
  * Manual use:  import { mount } from '…/work-canvas.js'; const wc = await mount(el, { layout: 'b' }); wc.destroy();
  */
@@ -54,6 +56,8 @@ export async function mount(el, options = {}) {
     switcher: options.switcher ?? d.switcher !== 'false',
     syncUrl: options.syncUrl ?? d.syncUrl === 'true',
     tagline: options.tagline ?? d.tagline ?? 'design &amp; direction made to move',
+    ...(d.projectBase ? { projectBase: d.projectBase } : {}),
+    ...(d.homePath ? { homePath: d.homePath } : {}),
     hint: options.hint ?? d.hint,
     ...options,
   });
