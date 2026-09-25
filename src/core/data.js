@@ -27,8 +27,10 @@
  * also works, and so does the older one-element-per-media format:
  *   <a class="work-item" href data-type data-src data-src-webm data-srcset data-poster data-title data-aspect>
  *
- * Tiles are ordered rank by rank — every project's first tile, then every
- * project's second — so the same project rarely sits next to itself.
+ * Tiles come out in a fresh random order on every load, with pieces from the
+ * same project kept apart where possible. `data-shuffle="false"` on the mount
+ * keeps the CMS order instead (rank by rank: every project's first tile, then
+ * every project's second).
  */
 import { parseEmbed } from './embed.js';
 
@@ -163,7 +165,25 @@ export function readItems(mount) {
     });
   });
 
-  return slots.flat().map((m, index) => ({ ...m, index, id: `item-${index}` }));
+  const ordered = slots.flat();
+  const list = mount.dataset.shuffle === 'false' ? ordered : shuffleApart(ordered);
+  return list.map((m, index) => ({ ...m, index, id: `item-${index}` }));
+}
+
+/** Random order (Fisher–Yates), then neighbours from the same project are split up where another piece can go between. */
+function shuffleApart(items) {
+  const a = [...items];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  const key = (m) => m.slug || m.title;
+  for (let i = 1; i < a.length; i++) {
+    if (key(a[i]) !== key(a[i - 1])) continue;
+    const j = a.findIndex((m, k) => k > i && key(m) !== key(a[i - 1]));
+    if (j > 0) [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
 function videoSources(mp4, webm) {

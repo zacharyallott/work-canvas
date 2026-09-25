@@ -187,7 +187,7 @@ Tiles are ordered by the list's sort: every project's Image 1 first, then every 
 - For more than 100 projects, add more lists (each with offset/limit). The bundle collects every `.work-item` on the page in document order.
 - The older data-attribute formats (`data-image-1`, … or `data-src`, …) still work if you ever need a static list.
 
-Optional mount attributes: `data-project-base="/work/"`, `data-home-path="/"`, `data-about-path="/about"`, `data-layout="a|b|c"`, `data-switcher="false"` (the star only returns home instead of switching versions), `data-rotate="false"` (always open on `data-layout` instead of rotating), `data-max-videos="4"`, `data-per-project="2"`, `data-items=".my-selector"`, `data-tagline="…"`, `data-tagline-href="#work"`, `data-media-base="…"` (base for relative URLs).
+Optional mount attributes: `data-project-base="/work/"`, `data-home-path="/"`, `data-about-path="/about"`, `data-layout="a|b|c"`, `data-switcher="false"` (the star only returns home instead of switching versions), `data-rotate="false"` (always open on `data-layout` instead of rotating), `data-shuffle="false"` (keep the CMS order instead of a fresh random order on every load), `data-max-videos="4"`, `data-per-project="2"`, `data-items=".my-selector"`, `data-tagline="…"`, `data-tagline-href="#work"`, `data-media-base="…"` (base for relative URLs).
 
 ### 3. Project pages (the Projects template, `/work/<slug>`)
 
@@ -228,7 +228,7 @@ A copy of Home (same header, same Collection List) with its own SEO title, descr
 Page settings → Custom code → Before `</body>` tag, on Home, About and the Projects template:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.19/dist/work-canvas.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.20/dist/work-canvas.js"></script>
 ```
 
 When you release, bump the version on all three, and `data-media-base` on each `#work-canvas`.
