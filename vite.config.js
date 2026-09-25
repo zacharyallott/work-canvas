@@ -31,10 +31,10 @@ function mockWebflowItems() {
       if (!m) return empty(`work-image-${n}`, 'img') + empty(`work-video-${n}`);
       const img =
         m.type === 'video'
-          ? `<img class="work-image-${n}" src="${esc(m.poster.src)}" alt="${esc(title)}" loading="lazy">`
+          ? `<img class="work-image-${n}" src="${esc(m.poster.src)}" alt="${esc(title)}" data-hash="${m.sourceHash}" loading="lazy">`
           : `<img class="work-image-${n}" src="${esc(m.images.lg.src)}" srcset="${['sm', 'md', 'lg']
               .map((k) => `${esc(m.images[k].src)} ${m.images[k].width}w`)
-              .join(', ')}" alt="${esc(title)}" loading="lazy">`;
+              .join(', ')}" alt="${esc(title)}" data-hash="${m.sourceHash}" loading="lazy">`;
       const mp4 = m.type === 'video' ? m.sources.find((s) => s.type === 'video/mp4')?.src : '';
       return img + text(`work-video-${n}`, mp4);
     };

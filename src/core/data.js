@@ -108,6 +108,7 @@ export function readItems(mount) {
           srcset: img?.getAttribute('srcset') || '',
           video,
           alt: img?.getAttribute('alt') || project.title,
+          hash: img?.dataset.hash || '', // content hash (local mock only; on Webflow the asset id does this job)
         });
       }
       const shared = project; // every tile from this project points at the same object
@@ -122,7 +123,7 @@ export function readItems(mount) {
         const media = video
           ? { type: 'video', poster: levels[0]?.src || image, images: [], sources: videoSources(video, resolve(attr(`video-${n}-webm`))) }
           : { type: 'image', poster: levels[0]?.src || image, images: levels.length ? levels : singleImageLevels(image), sources: [] };
-        (slots[n - 1] ||= []).push({ ...project, ...media, project: shared, slot: n, aspect: parseFloat(attr(`aspect-${n}`)) || 0 });
+        (slots[n - 1] ||= []).push({ ...project, ...media, project: shared, slot: n, hash: img?.dataset.hash || '', aspect: parseFloat(attr(`aspect-${n}`)) || 0 });
       }
       return;
     }

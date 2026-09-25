@@ -1458,6 +1458,44 @@
     "folder": "08_NixonPushForward",
     "items": [
       {
+        "id": "5f98c66fe4e815a82052ef8c-nix-retail-002",
+        "label": "5f98c66fe4e815a82052ef8c Nix Retail",
+        "href": "",
+        "caseStudy": false,
+        "source": "5f98c66fe4e815a82052ef8c_Nix_Retail_002.jpg",
+        "sourceHash": "01f6a49cbdf5abb1",
+        "type": "image",
+        "width": 1900,
+        "height": 1100,
+        "images": {
+          "sm": {
+            "src": "media/projects/nixon-push-forward/5f98c66fe4e815a82052ef8c-nix-retail-002-sm.webp",
+            "width": 480,
+            "height": 278,
+            "bytes": 18256
+          },
+          "md": {
+            "src": "media/projects/nixon-push-forward/5f98c66fe4e815a82052ef8c-nix-retail-002-md.webp",
+            "width": 1280,
+            "height": 741,
+            "bytes": 98664
+          },
+          "lg": {
+            "src": "media/projects/nixon-push-forward/5f98c66fe4e815a82052ef8c-nix-retail-002-lg.webp",
+            "width": 1900,
+            "height": 1100,
+            "bytes": 190084
+          }
+        },
+        "poster": {
+          "src": "media/projects/nixon-push-forward/5f98c66fe4e815a82052ef8c-nix-retail-002-sm.webp",
+          "width": 480,
+          "height": 278,
+          "bytes": 18256
+        },
+        "aspect": 1.7273
+      },
+      {
         "id": "nixon-push-allott-01",
         "label": "Nixon: Push Forward",
         "href": "/projects/nixon-push-forward",
@@ -1564,6 +1602,82 @@
           "bytes": 5936
         },
         "aspect": 1.6667
+      },
+      {
+        "id": "nixon-vc-image-002-h-100",
+        "label": "Nixon VC Image 002 H@100",
+        "href": "",
+        "caseStudy": false,
+        "source": "Nixon-VC-Image-002-H@100.jpg",
+        "sourceHash": "94e4871672005a0c",
+        "type": "image",
+        "width": 2500,
+        "height": 1500,
+        "images": {
+          "sm": {
+            "src": "media/projects/nixon-push-forward/nixon-vc-image-002-h-100-sm.webp",
+            "width": 480,
+            "height": 288,
+            "bytes": 12246
+          },
+          "md": {
+            "src": "media/projects/nixon-push-forward/nixon-vc-image-002-h-100-md.webp",
+            "width": 1280,
+            "height": 768,
+            "bytes": 53074
+          },
+          "lg": {
+            "src": "media/projects/nixon-push-forward/nixon-vc-image-002-h-100-lg.webp",
+            "width": 2048,
+            "height": 1229,
+            "bytes": 120192
+          }
+        },
+        "poster": {
+          "src": "media/projects/nixon-push-forward/nixon-vc-image-002-h-100-sm.webp",
+          "width": 480,
+          "height": 288,
+          "bytes": 12246
+        },
+        "aspect": 1.6667
+      },
+      {
+        "id": "nixon-vc-image-002-s-100",
+        "label": "Nixon VC Image 002 S@100",
+        "href": "",
+        "caseStudy": false,
+        "source": "Nixon-VC-Image-002-S@100.jpg",
+        "sourceHash": "a01ec742335c9e51",
+        "type": "image",
+        "width": 2500,
+        "height": 2500,
+        "images": {
+          "sm": {
+            "src": "media/projects/nixon-push-forward/nixon-vc-image-002-s-100-sm.webp",
+            "width": 480,
+            "height": 480,
+            "bytes": 8346
+          },
+          "md": {
+            "src": "media/projects/nixon-push-forward/nixon-vc-image-002-s-100-md.webp",
+            "width": 1280,
+            "height": 1280,
+            "bytes": 49776
+          },
+          "lg": {
+            "src": "media/projects/nixon-push-forward/nixon-vc-image-002-s-100-lg.webp",
+            "width": 2048,
+            "height": 2048,
+            "bytes": 118520
+          }
+        },
+        "poster": {
+          "src": "media/projects/nixon-push-forward/nixon-vc-image-002-s-100-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 8346
+        },
+        "aspect": 1
       }
     ]
   },

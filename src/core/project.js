@@ -71,6 +71,23 @@ const baseName = (url) =>
     .replace(/(-p-\d+)?\.[a-z0-9]+$/i, '') // responsive variant + extension
     .replace(/-(sm|md|lg|poster)$/, '');
 
+/**
+ * Everything that identifies a picture: its file names (minus size suffixes),
+ * its Webflow asset ids — Webflow gives identical uploads one asset even under
+ * different names — and a content hash where the page provides one. Two
+ * entries sharing any key are the same picture.
+ */
+const keysOf = (it) => {
+  const keys = it.hash ? [`h:${it.hash}`] : [];
+  for (const url of [it.src, it.poster, it.video]) {
+    if (!url) continue;
+    keys.push(`n:${baseName(url)}`);
+    const id = String(url).match(/\/([0-9a-f]{24})_/i);
+    if (id) keys.push(`a:${id[1]}`);
+  }
+  return keys;
+};
+
 export class ProjectView {
   constructor(uiRoot, { onEnd } = {}) {
     if (!injected) {
@@ -106,13 +123,14 @@ export class ProjectView {
     const heroSrc = hero ? hero.bestSrc : '';
     const items = [];
     if (hero) {
-      items.push({ type: hero.type, src: heroSrc, srcset: hero.srcset, video: hero.sources?.at(-1)?.src, aspect: hero.aspect, alt: project.title, hero: true });
+      items.push({ type: hero.type, src: heroSrc, srcset: hero.srcset, video: hero.sources?.at(-1)?.src, poster: hero.poster, hash: hero.hash, aspect: hero.aspect, alt: project.title, hero: true });
     }
-    const seen = new Set(items.map((i) => baseName(i.video || i.src)));
+    // No picture twice: skip gallery entries that match the hero or an earlier entry.
+    const seen = new Set(items.flatMap(keysOf));
     for (const g of project.gallery ?? []) {
-      const key = baseName(g.video || g.src);
-      if (seen.has(key)) continue;
-      seen.add(key);
+      const keys = keysOf(g);
+      if (keys.some((k) => seen.has(k))) continue;
+      keys.forEach((k) => seen.add(k));
       items.push(g);
     }
 
