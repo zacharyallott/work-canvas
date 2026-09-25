@@ -13294,7 +13294,7 @@ function Pm() {
 //#endregion
 //#region src/core/project.js
 var Fm = {
-	pullDistance: 1.2,
+	pullDistance: .95,
 	gatePause: .25,
 	fadeFrom: .15,
 	lift: 72,
