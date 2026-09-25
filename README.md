@@ -7,10 +7,10 @@ It has three interaction versions. Each visit opens on the next one (the last ve
 | Key | Version | Motion | Figma frame |
 | --- | --- | --- | --- |
 | `a` | Filmstrip: one infinite row, bottom-aligned skyline | Cursor steers the drift: left of centre drifts right, right drifts left, faster toward the edges | Frame 46 · `1542:5556` |
-| `b` | Deck: a pile of four cards that cycles through the whole collection | Pile trails the cursor with a little lag; a new card fades in on top every 2 s, and more as the cursor moves; hovering pauses and brings a card to the front | Frame 48 · `1542:5581` |
+| `b` | Deck: a pile of four cards that cycles through the whole collection | Pile trails the cursor with a little lag and fans out (parallax) the further the cursor gets from the centre; a new card fades in on top every 2 s, and more as the cursor moves; hovering pauses and brings a card to the front | Frame 48 · `1542:5581` |
 | `c` | Masonry: columns drifting in alternating directions | Columns drift on their own and slow on hover; the grid shifts left or right with the cursor | Frame 45 · `1542:5489` |
 
-Hovering a tile brings in its project title, plus ↓ when the project has a case study. Clicking a case-study tile opens its project view (Figma frame 50 · `1553:6590`): the tile glides to the top of the page, the title, description and services sit bottom-left, and the project's images follow on the right. The scroll stops on the last image; scrolling on (after a short pause) pulls against resistance and fades back to the work, and letting go early settles back. The tagline opens the about section (Figma frame 49 · `1542:5601`). On touch, tapping a tile shows the title briefly.
+Hovering a case-study tile brings in its project title and ↓; tiles without a project view show nothing on hover. Clicking a case-study tile opens its project view (Figma frame 50 · `1553:6590`): the tile glides to the top of the page, the title, description and services sit bottom-left, and the project's images follow on the right. The scroll stops on the last image; scrolling on (after a short pause) pulls against resistance and fades back to the work, and letting go early settles back. The tagline opens the about section (Figma frame 49 · `1542:5601`). On touch, tapping a case-study tile shows its title briefly.
 
 ## Quick start
 
@@ -60,7 +60,7 @@ Each version has an exported `config` at the top of its file. Shared values (cor
 The most useful settings:
 
 - **Filmstrip:** `maxSpeed` (px/s at the edges), `deadZone`, `curve` (how quickly speed builds toward the edges), `response` (lag), `idleSpeed` (drift with no cursor), `hoverSlowdown`.
-- **Deck:** `follow` (how far the pile leans toward the cursor), `followRates` (lag per layer, top → bottom), `interval` (seconds before a card comes in on its own), `moveStep` (cursor travel per extra card), `dealDuration`, `heights` (size scale), `slots` (pile shape), `pauseOnHover`, `hoverToFront`.
+- **Deck:** `follow` (how far the pile leans toward the cursor), `followRates` (lag per position), `depth` (parallax per position), `fan` (spread toward the edges), `interval` (seconds before a card comes in on its own), `moveStep` (cursor travel per extra card), `dealDuration`, `heights` (size scale), `slots` (pile shape), `pauseOnHover`, `hoverToFront`.
 - **Masonry:** `autoplaySpeed`, `hoverSlowdown`, `columnSpeeds`, `shift.max` (how far the grid moves with the cursor), `shift.response` (lag), `shift.mode` (`offset` leans, `drift` keeps travelling like the filmstrip).
 - **Project view:** `PROJECT_CONFIG` in `src/core/project.js`: `pullDistance` (how far you scroll past the end to go back to the work), `gatePause` (the pause needed before a pull starts, so a fling stops at the end), `lift`, `fadeFrom`, `settle`.
 - **All:** `maxVideos`, `captionInset`, `enterDuration` / `leaveDuration` / `stagger` (switching versions: tiles dissolve in, nothing slides). Tiles are never warped, distorted or zoomed on hover.

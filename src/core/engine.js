@@ -294,7 +294,8 @@ export class WorkCanvas {
     if (layout && this.ui) {
       const tile = this.openTile || this.aboutOpen || this.projectOpen ? null : layout.captionTile();
       const inset = (layout.config.captionInset ?? [20, 12]).map((v) => v * Math.min(1, this.scale));
-      this.ui.updateCaption(tile?.onScreen ? tile : null, inset, this.reducedMotion);
+      // Only pieces with a project view get a caption (title + ↓); the rest stay silent on hover.
+      this.ui.updateCaption(tile?.onScreen && tile.item.caseStudy ? tile : null, inset, this.reducedMotion);
     }
 
     this.renderer.render(this.scene, this.camera);
@@ -545,26 +546,38 @@ export class WorkCanvas {
 }
 
 const LAST_LAYOUT = 'work-canvas:last-version';
+const NAME_KEY = /(?:^|;)wc-last=([^;]*)/;
+
+/** The version this visitor saw last: from localStorage, else from window.name (see rememberLayout). */
+function lastLayout() {
+  try {
+    const stored = localStorage.getItem(LAST_LAYOUT);
+    if (stored) return stored;
+  } catch {
+    // storage blocked (private mode, sandboxed iframe, blocked site data)
+  }
+  return NAME_KEY.exec(window.name || '')?.[1] ?? null;
+}
 
 /**
  * The version after the one this visitor saw last (the one on screen when
  * they left, star switches included), so every load shows a different one.
- * null on a first visit. Storage can be unavailable (private mode, blocked
- * site data): then pick at random.
+ * null on a first visit.
  */
 function rotatedLayout(keys) {
-  try {
-    const i = keys.indexOf(localStorage.getItem(LAST_LAYOUT));
-    return i >= 0 ? keys[(i + 1) % keys.length] : null;
-  } catch {
-    return keys[Math.floor(Math.random() * keys.length)];
-  }
+  const i = keys.indexOf(lastLayout());
+  return i >= 0 ? keys[(i + 1) % keys.length] : null;
 }
 
 function rememberLayout(key) {
   try {
     localStorage.setItem(LAST_LAYOUT, key);
   } catch {
-    // storage unavailable: rotation falls back to random
+    // storage unavailable: window.name below still carries it across reloads of this tab
+  }
+  try {
+    window.name = `${(window.name || '').replace(new RegExp(NAME_KEY.source, 'g'), '')};wc-last=${key}`;
+  } catch {
+    // ignore
   }
 }

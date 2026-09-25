@@ -12,8 +12,11 @@ import { sizePattern, fitSize } from '../core/sizing.js';
  * follows the image's aspect ratio. The whole collection cycles through the
  * pile.
  *
- * Motion: the pile follows the cursor with a little lag — each of the four
- * positions lags a bit differently, so the pile trails. Cards never move
+ * Motion: the pile follows the cursor with a little lag. Each of the four
+ * positions follows by a different amount (parallax depth) and lags a bit
+ * differently, so the pile fans out the further the cursor gets from the
+ * centre and trails as it moves. Depth belongs to the position, not to the
+ * stacking order, so cards still don't shift when a new one comes in. Cards never move
  * between positions: a new card fades in on top, in the position of the
  * oldest card, which fades out underneath it; the other cards stay exactly as
  * they are. After `interval` s without a new card the next one comes in on
@@ -41,6 +44,8 @@ export const config = {
   // Follow
   follow: 0.38, // how far the pile moves toward the cursor (fraction of the cursor's offset from centre)
   followRates: [3.5, 2.6, 1.9, 1.4], // per position (1/s; lower = more lag), so the pile trails and the cursor can slip off a card
+  depth: [0.9, 1.25, 0.95, 0.65], // per position: how strongly it follows the cursor (parallax; the outer positions stay moderate so the pile stays on screen)
+  fan: 0.8, // how far the positions spread from the pile centre with the cursor at an edge (0.8 = offsets up to 1.8×)
 
   // New cards
   interval: 2, // s without a new card before the next one comes in on its own
@@ -111,12 +116,17 @@ export default class Deck extends Layout {
     const hovered = e.hovered && this.tiles.includes(e.hovered) ? e.hovered : null;
 
     // Pile follows the cursor; each position eases at its own rate so the pile trails.
-    const tx = inside && !this.reduced ? nx * (width / 2) * c.follow : 0;
-    const ty = inside && !this.reduced ? ny * (height / 2) * c.follow : 0;
+    // The positions also fan out from the pile centre the further the cursor is from the centre.
+    const active = inside && !this.reduced;
+    const tx = active ? nx * (width / 2) * c.follow : 0;
+    const ty = active ? ny * (height / 2) * c.follow : 0;
+    const fan = active ? c.fan * Math.min(1, Math.hypot(nx, ny)) : 0;
     this.anchors.forEach((a, k) => {
       const r = 1 - Math.exp(-dt * c.followRates[k % c.followRates.length]);
-      a.x += (tx - a.x) * r;
-      a.y += (ty - a.y) * r;
+      const depth = c.depth[k % c.depth.length];
+      const slot = c.slots[k];
+      a.x += (tx * depth + slot.x * this.k * fan - a.x) * r;
+      a.y += (ty * depth + slot.y * this.k * fan - a.y) * r;
     });
 
     // Hovering a card that isn't on top brings it to the front (it doesn't move).

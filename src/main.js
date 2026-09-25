@@ -5,7 +5,8 @@
  * DOM is ready. Options come from data attributes on the mount:
  *
  *   data-layout="a|b|c"        version for a first visit; later visits rotate to the next one
- *   data-rotate="false"        always open on data-layout instead of rotating (?v=b in the URL always wins)
+ *   data-rotate="false"        always open on data-layout instead of rotating
+ *                              (?v=b in the URL opens that version once; it's then dropped from the URL so a refresh rotates on)
  *   data-switcher="false"      the star doesn't cycle versions (it only returns home)
  *   data-items=".work-item"    selector for the item links
  *   data-media-base="https://…/"  base URL for relative media paths
@@ -32,7 +33,15 @@ export { WorkCanvas };
 export async function mount(el, options = {}) {
   if (el.__workCanvas) return el.__workCanvas;
   const d = el.dataset;
-  const urlLayout = new URLSearchParams(location.search).get('v');
+  const params = new URLSearchParams(location.search);
+  const urlLayout = params.get('v');
+  if (urlLayout && !(options.syncUrl ?? d.syncUrl === 'true')) {
+    // Honour ?v= for this load only, so refreshing still moves on to the next version.
+    params.delete('v');
+    const url = new URL(location.href);
+    url.search = params.toString();
+    history.replaceState(history.state, '', url);
+  }
   const maxVideos = parseInt(options.maxVideos ?? d.maxVideos, 10);
 
   const layouts = LAYOUTS.map((l) => ({ ...l, config: { ...l.config, ...(options.config?.[l.key] ?? {}) } }));

@@ -230,8 +230,8 @@ export class UI {
   }
 
   /**
-   * Caption for the hovered tile: the project title, plus "  ↓" only when the
-   * project has a full case study (CMS switch). Bottom-left inside the tile,
+   * Caption for the hovered tile: the project title and "  ↓". The engine only
+   * passes tiles whose project has a case study (CMS switch). Bottom-left inside the tile,
    * `inset` px from its edges. It slides up into view through a mask when a
    * tile is hovered and out when the pointer leaves; the position tracks the
    * tile every frame.
@@ -250,7 +250,7 @@ export class UI {
       tl.add(() => {
         s.shown = tile;
         if (tile) {
-          inner.textContent = tile.item.caseStudy ? `${tile.item.title}  ↓` : tile.item.title;
+          inner.textContent = `${tile.item.title}  ↓`;
           this.captionH = this.caption.offsetHeight; // measured once per text change, not per frame
         }
       });
