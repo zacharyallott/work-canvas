@@ -15,6 +15,7 @@ import { defineConfig } from 'vite';
 function mockWebflowItems() {
   const manifestPath = path.resolve('public/media/media.json');
   const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  const url = (src) => (/^(https?:)?\//.test(src) ? src : `/${src}`); // root-relative, so /work/<slug> resolves them too
 
   function render(only) {
     if (!fs.existsSync(manifestPath)) return '<!-- run `npm run media` first -->';
@@ -34,11 +35,11 @@ function mockWebflowItems() {
       if (!m) return empty(`work-image-${n}`, 'img') + empty(`work-video-${n}`);
       const img =
         m.type === 'video'
-          ? `<img class="work-image-${n}" src="${esc(m.poster.src)}" alt="${esc(title)}" data-hash="${m.sourceHash}" loading="lazy">`
-          : `<img class="work-image-${n}" src="${esc(m.images.lg.src)}" srcset="${['sm', 'md', 'lg']
-              .map((k) => `${esc(m.images[k].src)} ${m.images[k].width}w`)
+          ? `<img class="work-image-${n}" src="${esc(url(m.poster.src))}" alt="${esc(title)}" data-hash="${m.sourceHash}" loading="lazy">`
+          : `<img class="work-image-${n}" src="${esc(url(m.images.lg.src))}" srcset="${['sm', 'md', 'lg']
+              .map((k) => `${esc(url(m.images[k].src))} ${m.images[k].width}w`)
               .join(', ')}" alt="${esc(title)}" data-hash="${m.sourceHash}" loading="lazy">`;
-      const mp4 = m.type === 'video' ? m.sources.find((s) => s.type === 'video/mp4')?.src : '';
+      const mp4 = m.type === 'video' ? url(m.sources.find((s) => s.type === 'video/mp4')?.src) : '';
       return img + text(`work-video-${n}`, mp4);
     };
     const slugOf = (media, title) =>

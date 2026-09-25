@@ -41,7 +41,8 @@ export class WorkCanvas {
     reduced.addEventListener?.('change', this._onReducedChange);
     this._reducedQuery = reduced;
 
-    this.isMobile = matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
+    this.isMobile = matchMedia('(pointer: coarse)').matches || window.innerWidth < 768; // media budget: smaller textures, fewer videos
+    this.touch = !matchMedia('(hover: hover) and (pointer: fine)').matches; // no cursor: tap instead of hover, drag instead of steer
 
     this.viewport = { width: 1, height: 1 };
     this.scale = 1; // set by the active layout (tile sizes, caption inset)
@@ -429,7 +430,7 @@ export class WorkCanvas {
   get cursor() {
     const p = this.input?.pointer;
     const { width, height } = this.viewport;
-    if (!p?.inside || this.isMobile) return { nx: 0, ny: 0, inside: false };
+    if (!p?.inside || this.touch) return { nx: 0, ny: 0, inside: false };
     return {
       nx: Math.max(-1, Math.min(1, (p.x - width / 2) / (width / 2))),
       ny: Math.max(-1, Math.min(1, (p.y - height / 2) / (height / 2))),
@@ -442,7 +443,7 @@ export class WorkCanvas {
     let next = null;
     if (this.tapped && this.time < this.tapped.until && this.layout?.tiles.includes(this.tapped.tile)) {
       next = this.tapped.tile; // touch: a tapped tile keeps its caption for a moment
-    } else if (p?.inside && !this.input.pressed?.dragging && !this.openTile && !this.switching && !this.isMobile && !this.aboutOpen && !this.projectOpen) {
+    } else if (p?.inside && !this.input.pressed?.dragging && !this.openTile && !this.switching && !this.touch && !this.aboutOpen && !this.projectOpen) {
       const hit = this.pick(p.x, p.y);
       if (hit) next = hit.tile;
     }
@@ -562,7 +563,7 @@ export class WorkCanvas {
       .on('tap', ({ x, y, event }) => {
         if (busy()) return;
         const hit = this.pick(x, y);
-        if (this.isMobile && hit) this.tapped = { tile: hit.tile, until: this.time + this.options.tapCaptionFor };
+        if (this.touch && hit) this.tapped = { tile: hit.tile, until: this.time + this.options.tapCaptionFor };
         const handled = this.layout.onTap?.(hit?.tile ?? null, event);
         if (!handled && hit?.tile.item.caseStudy) this.openProject(hit.tile);
       });
@@ -628,6 +629,7 @@ export class WorkCanvas {
     Object.assign(this.camera, { left: 0, right: width, top: 0, bottom: -height });
     this.camera.updateProjectionMatrix();
     this.isMobile = matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
+    this.touch = !matchMedia('(hover: hover) and (pointer: fine)').matches;
     this.layout?.resize(this.viewport);
     if (this.projectOpen) this.ui?.project.layoutInfo();
   }

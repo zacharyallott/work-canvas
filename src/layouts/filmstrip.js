@@ -30,7 +30,7 @@ export const config = {
   startOffset: -162,
   minScale: 0.55,
   maxScale: 1.35,
-  mobileMaxWidth: 0.82, // max fraction of mount width a tile may take on narrow screens
+  mobileMaxWidth: 1, // max fraction of mount width a tile may take on narrow screens (phones: up to full width, you drag through them)
   seed: 7, // change to reshuffle the size pattern
 
   // Cursor drift
@@ -158,13 +158,13 @@ export default class Filmstrip extends Layout {
 
   // Touch swipe only — on desktop the cursor steers.
   onDrag({ dx }) {
-    if (!this.engine.isMobile) return;
+    if (!this.engine.touch) return;
     this.target += dx * this.config.dragMultiplier;
     this.velocity = 0;
   }
 
   onRelease({ vx }) {
-    if (!this.engine.isMobile) return;
+    if (!this.engine.touch) return;
     this.velocity = vx * this.config.dragMultiplier * this.config.throw;
   }
 

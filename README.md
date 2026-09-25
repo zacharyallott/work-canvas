@@ -223,7 +223,7 @@ A copy of Home (same header, same Collection List) with its own SEO title, descr
 Page settings → Custom code → Before `</body>` tag, on Home, About and the Projects template:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.5/dist/work-canvas.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.6/dist/work-canvas.js"></script>
 ```
 
 When you release, bump the version on all three, and `data-media-base` on each `#work-canvas`.
@@ -233,6 +233,7 @@ When you release, bump the version on all three, and `data-media-base` on each `
 - **Loading:** the header fades in once most thumbnails are on the GPU. If WebGL isn't available, a static poster grid shows instead. Aspect ratios are read from each image's header bytes, so layout doesn't wait for full downloads.
 - **Images:** the smallest variant loads first, then larger ones when a tile is drawn large or hovered. Anything bigger than `maxTextureEdge` (1280px, 1024px on mobile) is downscaled before it reaches the GPU, so large CMS uploads are safe. Big textures not used for 8 s are released.
 - **Video:** a poster first. The `<video>` loads only when its tile is on screen, and only the top-N by priority play (hovered, then nearest the centre). Off-screen videos pause. On touch devices and with `prefers-reduced-motion`, only the tile nearest the centre plays.
+- **Responsive:** the header fills the visible screen (`100svh`, so phone browser toolbars don't cover the bottom row). Touch devices (no hover) get tap/drag instead of cursor steering; a narrow desktop window keeps the cursor. Phones: filmstrip tiles up to full width, bigger deck cards, masonry ~2 columns, the about section stacks clients two per row and scrolls if a short (landscape) screen can't fit it, the project view is one column. The project view's info column and gap shrink between phone and desktop.
 - **Reduced motion:** no idle drift or stacking, no staggers, and transitions become fades. Cursor-driven motion still works.
 - **Pausing:** rendering stops when the header scrolls out of view or the tab is hidden. `destroy()` releases everything (GL context, textures, videos, listeners).
 - **Click:** a case-study tile opens its project view (tile glides into place); other tiles do nothing.

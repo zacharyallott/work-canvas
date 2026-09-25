@@ -19,7 +19,8 @@ export const ABOUT = {
   clients: [
     ['SRAM', 'Cannondale', 'GT Bikes', 'Aspen Snowmass', 'BOA'],
     ['The James Brand', 'Nixon', 'Smith Optics', 'Burton'],
-    ['Autodesk', 'Microsoft', 'Xbox', 'Dialpad', 'Electronic Arts', 'Gogoro', 'Surfline'],
+    ['Autodesk', 'Microsoft', 'Xbox', 'Dialpad'],
+    ['Electronic Arts', 'Gogoro', 'Surfline'],
     ['Under Armour', 'Adidas', 'Mattel', 'Dexcom'],
   ],
   // Same links as the current site's info page.

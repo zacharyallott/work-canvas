@@ -40,9 +40,9 @@ export const config = {
     { x: 155, y: -16 },
     { x: -32, y: 0 },
   ],
-  minScale: 0.5,
+  minScale: 0.6,
   maxScale: 1.3,
-  mobileMaxWidth: 0.72, // max fraction of mount width a card may take on narrow screens
+  mobileMaxWidth: 0.86, // max fraction of mount width a card may take on narrow screens
 
   // Follow
   follow: 0.38, // how far the pile moves toward the cursor (fraction of the cursor's offset from centre)
