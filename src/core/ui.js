@@ -165,11 +165,15 @@ export class UI {
   }
 }
 
-/** Visually hides the real link lists (CMS output) without removing them from the a11y tree. */
+/**
+ * Visually hides lists of real links without removing them from the a11y tree
+ * (keyboard users can tab through them). Lists without links (the CMS
+ * Projects list) should just be display:none in Webflow — that also stops the
+ * hidden <img>s from downloading — so they're left alone.
+ */
 export function hideLinkLists(items) {
-  // Prefer hiding the whole list (put data-work-list on the Collection List Wrapper);
-  // otherwise hide each link individually.
   for (const { el } of items) {
+    if (!el.matches('a[href]') && !el.querySelector('a[href]')) continue;
     const list = el.closest('[data-work-list]');
     (list ?? el).classList.add('wc-sr');
   }

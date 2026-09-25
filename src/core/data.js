@@ -4,20 +4,22 @@
  * index.html mimics the same markup.
  *
  * One element per project (CMS format). The first `perProject` media slots
- * (default 2) become tiles:
+ * (default 2) become tiles. Webflow can only bind CMS images to real <img>
+ * elements, so each field is a bound child element:
  *
- *   <div class="work-item"
- *        data-title="BOA Performfit Wrap"
- *        data-case-study="true"                  Full case study switch (unused until clicks return)
- *        data-href="/projects/boa"               optional
- *        data-image-1="…/boa-10.webp"            Image 1 (poster when Video 1 is set)
- *        data-video-1=""                         optional MP4 URL for slot 1
- *        data-image-2="…/boa-11-poster.webp"
- *        data-video-2="…/boa-11.mp4"
- *        data-aspect-1="1.5"                     optional; measured from the image if missing
- *   ></div>
+ *   <div class="work-item">
+ *     <div class="work-title">BOA Performfit Wrap</div>
+ *     <div class="work-description">…</div>
+ *     <div class="work-services">…</div>
+ *     <div class="work-case-study">Full case study</div>   visible only when the switch is on
+ *     <img class="work-image-1" src srcset>               Image 1 (poster when Video 1 is set)
+ *     <div class="work-video-1">https://…/boa-11.mp4</div> optional MP4 URL
+ *     <img class="work-image-2" src srcset>
+ *     <div class="work-video-2"></div>
+ *   </div>
  *
- * The older one-element-per-media format still works:
+ * The same thing as data attributes (data-title, data-image-1, data-video-1, …)
+ * also works, and so does the older one-element-per-media format:
  *   <a class="work-item" href data-type data-src data-src-webm data-srcset data-poster data-title data-aspect>
  *
  * Tiles are ordered slot by slot — every project's first piece, then every
@@ -35,6 +37,14 @@ function parseSrcset(value, resolve) {
     .filter(([url]) => url)
     .map(([url, descriptor = '']) => ({ src: resolve(url), width: parseInt(descriptor, 10) || 0 }))
     .sort((a, b) => a.width - b.width);
+}
+
+/** Picks ~500w / ~1080w / largest from a srcset as the sm / md / lg texture levels. */
+function srcsetLevels(list) {
+  if (list.length < 2) return [];
+  const near = (w) => list.reduce((a, b) => (Math.abs(b.width - w) < Math.abs(a.width - w) ? b : a));
+  const levels = [near(500), near(1080), list[list.length - 1]];
+  return levels.filter((l, i) => i === 0 || l.src !== levels[i - 1].src);
 }
 
 /** A single image URL becomes two texture levels: a fast small one, then the full one (both downscaled on the GPU side). */
@@ -55,27 +65,42 @@ export function readItems(mount) {
 
   document.querySelectorAll(selector).forEach((el, projectIndex) => {
     const d = el.dataset;
+    const child = (cls) => {
+      const c = el.querySelector(`.${cls}`);
+      // Webflow marks unbound/empty CMS bindings and conditionally hidden elements with these classes.
+      return c && !c.classList.contains('w-dyn-bind-empty') && !c.classList.contains('w-condition-invisible') ? c : null;
+    };
+    const text = (cls) => child(cls)?.textContent.trim() || '';
     const project = {
       projectIndex,
-      title: d.title || el.textContent.trim() || '',
-      caseStudy: bool(d.caseStudy),
-      description: d.description || '',
-      services: d.services || '',
+      title: d.title || text('work-title') || (el.querySelector('.work-title') ? '' : el.textContent.trim()),
+      caseStudy: el.querySelector('.work-case-study') ? Boolean(child('work-case-study')) : bool(d.caseStudy),
+      description: d.description || text('work-description'),
+      services: d.services || text('work-services'),
       href: d.href ? resolve(d.href) : el.getAttribute('href') && el.getAttribute('href') !== '#' ? el.href : '',
       el,
     };
 
     // Numbered attributes (data-image-1) aren't camel-cased by `dataset`, so read them directly.
     const attr = (name) => el.getAttribute(`data-${name}`) || '';
-    if (attr('image-1') || attr('video-1')) {
+    const imgOf = (n) => {
+      const img = child(`work-image-${n}`);
+      const src = img?.getAttribute('src') || '';
+      return img && src && !/placeholder\./.test(src) ? img : null;
+    };
+    const isCms = attr('image-1') || attr('video-1') || el.querySelector('[class*="work-image-"], [class*="work-video-"]');
+    if (isCms) {
       // CMS format: numbered slots.
       for (let n = 1; n <= perProject; n++) {
-        const image = resolve(attr(`image-${n}`));
-        const video = resolve(attr(`video-${n}`));
+        const img = imgOf(n);
+        const image = resolve(attr(`image-${n}`) || img?.getAttribute('src'));
+        const video = resolve(attr(`video-${n}`) || text(`work-video-${n}`));
         if (!image && !video) continue;
+        // Webflow's responsive variants (…-p-500, -p-1080, …) become the texture levels when present.
+        const levels = img ? srcsetLevels(parseSrcset(img.getAttribute('srcset'), resolve)) : [];
         const media = video
-          ? { type: 'video', poster: image, images: [], sources: videoSources(video, resolve(attr(`video-${n}-webm`))) }
-          : { type: 'image', poster: image, images: singleImageLevels(image), sources: [] };
+          ? { type: 'video', poster: levels[0]?.src || image, images: [], sources: videoSources(video, resolve(attr(`video-${n}-webm`))) }
+          : { type: 'image', poster: levels[0]?.src || image, images: levels.length ? levels : singleImageLevels(image), sources: [] };
         (slots[n - 1] ||= []).push({ ...project, ...media, slot: n, aspect: parseFloat(attr(`aspect-${n}`)) || 0 });
       }
       return;

@@ -12695,63 +12695,78 @@ function Fp(e, t) {
 		width: parseInt(n, 10) || 0
 	})).sort((e, t) => e.width - t.width) : [];
 }
-var Ip = (e) => [{
+function Ip(e) {
+	if (e.length < 2) return [];
+	let t = (t) => e.reduce((e, n) => Math.abs(n.width - t) < Math.abs(e.width - t) ? n : e), n = [
+		t(500),
+		t(1080),
+		e[e.length - 1]
+	];
+	return n.filter((e, t) => t === 0 || e.src !== n[t - 1].src);
+}
+var Lp = (e) => [{
 	src: e,
 	maxEdge: 512
 }, {
 	src: e,
 	maxEdge: 0
-}], Lp = (e) => /^(true|1|yes|on)$/i.test(String(e ?? "").trim());
-function Rp(e) {
+}], Rp = (e) => /^(true|1|yes|on)$/i.test(String(e ?? "").trim());
+function zp(e) {
 	let t = e.dataset.items || ".work-item", n = e.dataset.mediaBase || document.baseURI, r = parseInt(e.dataset.perProject, 10) || 2, i = (e) => e && e.trim() ? new URL(e.trim(), n).href : "", a = [];
 	return document.querySelectorAll(t).forEach((e, t) => {
-		let n = e.dataset, o = {
+		let n = e.dataset, o = (t) => {
+			let n = e.querySelector(`.${t}`);
+			return n && !n.classList.contains("w-dyn-bind-empty") && !n.classList.contains("w-condition-invisible") ? n : null;
+		}, s = (e) => o(e)?.textContent.trim() || "", c = {
 			projectIndex: t,
-			title: n.title || e.textContent.trim() || "",
-			caseStudy: Lp(n.caseStudy),
-			description: n.description || "",
-			services: n.services || "",
+			title: n.title || s("work-title") || (e.querySelector(".work-title") ? "" : e.textContent.trim()),
+			caseStudy: e.querySelector(".work-case-study") ? !!o("work-case-study") : Rp(n.caseStudy),
+			description: n.description || s("work-description"),
+			services: n.services || s("work-services"),
 			href: n.href ? i(n.href) : e.getAttribute("href") && e.getAttribute("href") !== "#" ? e.href : "",
 			el: e
-		}, s = (t) => e.getAttribute(`data-${t}`) || "";
-		if (s("image-1") || s("video-1")) {
+		}, l = (t) => e.getAttribute(`data-${t}`) || "", u = (e) => {
+			let t = o(`work-image-${e}`), n = t?.getAttribute("src") || "";
+			return t && n && !/placeholder\./.test(n) ? t : null;
+		};
+		if (l("image-1") || l("video-1") || e.querySelector("[class*=\"work-image-\"], [class*=\"work-video-\"]")) {
 			for (let e = 1; e <= r; e++) {
-				var c;
-				let t = i(s(`image-${e}`)), n = i(s(`video-${e}`));
-				if (!t && !n) continue;
-				let r = n ? {
+				var d;
+				let t = u(e), n = i(l(`image-${e}`) || t?.getAttribute("src")), r = i(l(`video-${e}`) || s(`work-video-${e}`));
+				if (!n && !r) continue;
+				let o = t ? Ip(Fp(t.getAttribute("srcset"), i)) : [], f = r ? {
 					type: "video",
-					poster: t,
+					poster: o[0]?.src || n,
 					images: [],
-					sources: zp(n, i(s(`video-${e}-webm`)))
+					sources: Bp(r, i(l(`video-${e}-webm`)))
 				} : {
 					type: "image",
-					poster: t,
-					images: Ip(t),
+					poster: o[0]?.src || n,
+					images: o.length ? o : Lp(n),
 					sources: []
 				};
-				(a[c = e - 1] || (a[c] = [])).push({
-					...o,
-					...r,
+				(a[d = e - 1] || (a[d] = [])).push({
+					...c,
+					...f,
 					slot: e,
-					aspect: parseFloat(s(`aspect-${e}`)) || 0
+					aspect: parseFloat(l(`aspect-${e}`)) || 0
 				});
 			}
 			return;
 		}
-		let l = i(n.src);
-		if (!l && !n.poster && !n.srcset) return;
-		let u = (n.type || "").trim().toLowerCase(), d = u === "video" || u === "image" ? u : Pp.test(l) ? "video" : "image", f = Fp(n.srcset, i), p = i(n.poster) || f[0]?.src || (d === "image" ? l : "");
-		d === "image" && !f.length && l && (f = Ip(l));
-		let m = parseFloat(n.aspect) || (parseFloat(n.width) && parseFloat(n.height) ? parseFloat(n.width) / parseFloat(n.height) : 0);
+		let f = i(n.src);
+		if (!f && !n.poster && !n.srcset) return;
+		let p = (n.type || "").trim().toLowerCase(), m = p === "video" || p === "image" ? p : Pp.test(f) ? "video" : "image", h = Fp(n.srcset, i), g = i(n.poster) || h[0]?.src || (m === "image" ? f : "");
+		m === "image" && !h.length && f && (h = Lp(f));
+		let _ = parseFloat(n.aspect) || (parseFloat(n.width) && parseFloat(n.height) ? parseFloat(n.width) / parseFloat(n.height) : 0);
 		(a[0] || (a[0] = [])).push({
-			...o,
-			type: d,
-			poster: p,
-			images: f,
-			sources: d === "video" ? zp(l, i(n.srcWebm)) : [],
+			...c,
+			type: m,
+			poster: g,
+			images: h,
+			sources: m === "video" ? Bp(f, i(n.srcWebm)) : [],
 			slot: 1,
-			aspect: m
+			aspect: _
 		});
 	}), a.flat().map((e, t) => ({
 		...e,
@@ -12759,7 +12774,7 @@ function Rp(e) {
 		id: `item-${t}`
 	}));
 }
-function zp(e, t) {
+function Bp(e, t) {
 	let n = [];
 	return t && n.push({
 		src: t,
@@ -12769,11 +12784,11 @@ function zp(e, t) {
 		type: "video/mp4"
 	}), n;
 }
-async function Bp(e, t = 8e3) {
+async function Vp(e, t = 8e3) {
 	let n = e.filter((e) => !e.aspect);
-	await Promise.all(n.map((e) => Vp(e, t).then((t) => e.aspect = t || 1.5)));
+	await Promise.all(n.map((e) => Hp(e, t).then((t) => e.aspect = t || 1.5)));
 }
-function Vp(e, t) {
+function Hp(e, t) {
 	return new Promise((n) => {
 		let r = (e) => {
 			clearInterval(a), clearTimeout(i), n(e);
@@ -12789,37 +12804,37 @@ function Vp(e, t) {
 }
 //#endregion
 //#region src/core/media.js
-var Hp = [
+var Up = [
 	"sm",
 	"md",
 	"lg"
-], Up = 4, Wp = 2;
-function Gp(e) {
+], Wp = 4, Gp = 2;
+function Kp(e) {
 	return new Promise((t, n) => {
 		let r = new Image();
 		r.crossOrigin = "anonymous", r.decoding = "async", r.onload = () => t(r), r.onerror = n, r.src = e;
 	});
 }
-function Kp(e, t) {
+function qp(e, t) {
 	let n = e.naturalWidth || e.width, r = e.naturalHeight || e.height;
 	if (!t || Math.max(n, r) <= t) return e;
 	let i = t / Math.max(n, r), a = Math.round(n * i), o = Math.round(r * i), s = e, c = n, l = r;
-	for (; c / 2 > a;) c = Math.round(c / 2), l = Math.round(l / 2), s = qp(s, c, l);
-	return qp(s, a, o);
+	for (; c / 2 > a;) c = Math.round(c / 2), l = Math.round(l / 2), s = Jp(s, c, l);
+	return Jp(s, a, o);
 }
-function qp(e, t, n) {
+function Jp(e, t, n) {
 	let r = document.createElement("canvas");
 	r.width = t, r.height = n;
 	let i = r.getContext("2d");
 	return i.imageSmoothingEnabled = !0, i.imageSmoothingQuality = "high", i.drawImage(e, 0, 0, t, n), r;
 }
-function Jp(e) {
+function Yp(e) {
 	return e.colorSpace = "", e.generateMipmaps = !0, e.minFilter = Pi, e.magFilter = Mi, e.wrapS = e.wrapT = Di, e;
 }
-function Yp(e) {
+function Xp(e) {
 	return document.createElement("video").canPlayType(e) !== "";
 }
-var Xp = class {
+var Zp = class {
 	constructor(e, t) {
 		Object.assign(this, e), this.manager = t, this.texture = null, this.texSize = new Y(this.aspect * 100, 100), this.ready = !1, this.textures = [], this.loading = /* @__PURE__ */ new Set(), this.failed = /* @__PURE__ */ new Set(), this.lastWanted = [
 			0,
@@ -12842,7 +12857,7 @@ var Xp = class {
 		return this.levelSpec(e).src;
 	}
 	get maxLevel() {
-		return this.type === "video" ? 0 : Math.max(0, Math.min(Hp.length, this.images.length) - 1);
+		return this.type === "video" ? 0 : Math.max(0, Math.min(Up.length, this.images.length) - 1);
 	}
 	setTexture(e, t, n) {
 		this.texture = e, this.texSize.set(t, n), this.ready = !0;
@@ -12850,12 +12865,12 @@ var Xp = class {
 	dispose() {
 		this.textures.forEach((e) => e?.dispose()), this.textures = [], this.videoTexture?.dispose(), this.video && (this.video.pause(), this.video.removeAttribute("src"), this.video.querySelectorAll("source").forEach((e) => e.remove()), this.video.load(), this.video = null);
 	}
-}, Zp = class {
+}, Qp = class {
 	constructor(e, { maxVideos: t = 5, videoPolicy: n = "all", downgradeAfter: r = 8, maxTextureEdge: i = 1280 } = {}) {
-		this.renderer = e, this.maxTextureEdge = i, this.maxVideos = t, this.videoPolicy = n, this.downgradeAfter = r, this.enabled = !0, this.items = [], this.inFlight = 0, this.queue = [], this.uploads = [], this.av1 = Yp("video/webm; codecs=\"av01.0.05M.08\"");
+		this.renderer = e, this.maxTextureEdge = i, this.maxVideos = t, this.videoPolicy = n, this.downgradeAfter = r, this.enabled = !0, this.items = [], this.inFlight = 0, this.queue = [], this.uploads = [], this.av1 = Xp("video/webm; codecs=\"av01.0.05M.08\"");
 	}
 	add(e) {
-		let t = new Xp(e, this);
+		let t = new Zp(e, this);
 		return this.items.push(t), t;
 	}
 	preload() {
@@ -12865,12 +12880,12 @@ var Xp = class {
 		e.textures[t] || e.loading.has(t) || e.failed.has(t) || !e.urlFor(t) || (e.loading.add(t), this.queue.push([e, t]), this.pump());
 	}
 	pump() {
-		for (; this.inFlight < Up && this.queue.length;) {
+		for (; this.inFlight < Wp && this.queue.length;) {
 			this.queue.sort((e, t) => t[0].priority - e[0].priority || e[1] - t[1]);
 			let [e, t] = this.queue.shift();
 			this.inFlight++;
 			let n = e.levelSpec(t);
-			Gp(n.src).then((r) => this.uploads.push([
+			Kp(n.src).then((r) => this.uploads.push([
 				e,
 				r,
 				t,
@@ -12886,8 +12901,8 @@ var Xp = class {
 		for (let e of this.items) e.wantLevel = -1, e.priority = 0;
 	}
 	endFrame(e) {
-		for (let e = 0; e < Wp && this.uploads.length; e++) {
-			let [e, t, n, r] = this.uploads.shift(), i = Jp(new Ro(Kp(t, r)));
+		for (let e = 0; e < Gp && this.uploads.length; e++) {
+			let [e, t, n, r] = this.uploads.shift(), i = Yp(new Ro(qp(t, r)));
 			i.needsUpdate = !0, this.renderer.initTexture(i), e.textures[n] = i, e.loading.delete(n), n >= e.textures.length - 1 && !e.playing && e.setTexture(i, i.image.width, i.image.height);
 		}
 		if (!this.enabled) return;
@@ -12933,7 +12948,7 @@ var Xp = class {
 	dispose() {
 		this.items.forEach((e) => e.dispose()), this.items = [], this.queue = [], this.uploads = [];
 	}
-}, Qp = class {
+}, $p = class {
 	constructor(e, { clickSlop: t = 6, wheel: n = "page" } = {}) {
 		this.el = e, this.clickSlop = t, this.wheelMode = n, this.handlers = {}, this.pointer = {
 			x: 0,
@@ -13041,18 +13056,18 @@ var Xp = class {
 	destroy() {
 		this._unbind?.forEach((e) => e()), this.handlers = {};
 	}
-}, $p = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Group'%3e%3cpath%20id='Vector'%20d='M1.77344%201.77486L10.2622%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_2'%20d='M10.2622%201.77486L1.77344%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_3'%20d='M6.01823%200V12'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_4'%20d='M12%206.01921H0'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3c/g%3e%3c/svg%3e", em = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='8'%20height='8'%20viewBox='0%200%208%208'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Ellipse%201'%20style='mix-blend-mode:difference'%3e%3ccircle%20cx='4'%20cy='4'%20r='4'%20fill='%23F2F2F2'/%3e%3c/g%3e%3c/svg%3e", tm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='8'%20height='8'%20viewBox='0%200%208%208'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Ellipse%202'%20style='mix-blend-mode:difference'%3e%3ccircle%20cx='4'%20cy='4'%20r='3.25'%20stroke='%23F2F2F2'%20stroke-width='1.5'/%3e%3c/g%3e%3c/svg%3e", nm = "\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);min-height:var(--wc-min-height,100svh);isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n.wc-root.is-hovering-tile{cursor:pointer}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .6s ease}\n.wc-root.is-ready .wc-canvas{opacity:1}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,500);color:#f2f2f2}\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference}\n.wc-icon{display:block;width:12px;height:12px}\n.wc-icon img{display:block;width:12px;height:12px}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap}\n.wc-tagline .wc-arrow{display:inline-block;transform:rotate(90deg);width:17px;text-align:center}\n.wc-dots{display:flex;gap:6px;align-items:center;pointer-events:auto}\n.wc-dot{appearance:none;border:0;padding:4px;margin:-4px;background:none;cursor:pointer;display:block;line-height:0}\n.wc-dot img{display:block;width:8px;height:8px}\n.wc-dot:focus-visible{outline:1px solid #f2f2f2;outline-offset:2px;border-radius:50%}\n.wc-caption{position:absolute;left:0;top:0;font-size:12px;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:18px;padding:48px 13px 13px;overflow:auto;transition:opacity .6s ease;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 18px;border-radius:8px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n.wc-root.is-ready .wc-fallback{opacity:0;pointer-events:none}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@media (max-width:600px){.wc-tagline{font-size:13px}}\n", rm = !1;
-function im() {
-	if (rm) return;
-	rm = !0;
+}, em = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Group'%3e%3cpath%20id='Vector'%20d='M1.77344%201.77486L10.2622%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_2'%20d='M10.2622%201.77486L1.77344%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_3'%20d='M6.01823%200V12'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_4'%20d='M12%206.01921H0'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3c/g%3e%3c/svg%3e", tm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='8'%20height='8'%20viewBox='0%200%208%208'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Ellipse%201'%20style='mix-blend-mode:difference'%3e%3ccircle%20cx='4'%20cy='4'%20r='4'%20fill='%23F2F2F2'/%3e%3c/g%3e%3c/svg%3e", nm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='8'%20height='8'%20viewBox='0%200%208%208'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Ellipse%202'%20style='mix-blend-mode:difference'%3e%3ccircle%20cx='4'%20cy='4'%20r='3.25'%20stroke='%23F2F2F2'%20stroke-width='1.5'/%3e%3c/g%3e%3c/svg%3e", rm = "\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);min-height:var(--wc-min-height,100svh);isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n.wc-root.is-hovering-tile{cursor:pointer}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .6s ease}\n.wc-root.is-ready .wc-canvas{opacity:1}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,500);color:#f2f2f2}\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference}\n.wc-icon{display:block;width:12px;height:12px}\n.wc-icon img{display:block;width:12px;height:12px}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap}\n.wc-tagline .wc-arrow{display:inline-block;transform:rotate(90deg);width:17px;text-align:center}\n.wc-dots{display:flex;gap:6px;align-items:center;pointer-events:auto}\n.wc-dot{appearance:none;border:0;padding:4px;margin:-4px;background:none;cursor:pointer;display:block;line-height:0}\n.wc-dot img{display:block;width:8px;height:8px}\n.wc-dot:focus-visible{outline:1px solid #f2f2f2;outline-offset:2px;border-radius:50%}\n.wc-caption{position:absolute;left:0;top:0;font-size:12px;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:18px;padding:48px 13px 13px;overflow:auto;transition:opacity .6s ease;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 18px;border-radius:8px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n.wc-root.is-ready .wc-fallback{opacity:0;pointer-events:none}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@media (max-width:600px){.wc-tagline{font-size:13px}}\n", im = !1;
+function am() {
+	if (im) return;
+	im = !0;
 	let e = document.createElement("style");
-	e.dataset.workCanvas = "", e.textContent = nm, document.head.appendChild(e);
+	e.dataset.workCanvas = "", e.textContent = rm, document.head.appendChild(e);
 }
-var am = class {
+var om = class {
 	constructor(e, { layouts: t, current: n, onSelect: r, tagline: i, taglineHref: a, showDots: o = !0, hint: s }) {
-		im(), this.mount = e, this.onSelect = r, this.root = document.createElement("div"), this.root.className = "wc-ui", this.root.innerHTML = `
+		am(), this.mount = e, this.onSelect = r, this.root = document.createElement("div"), this.root.className = "wc-ui", this.root.innerHTML = `
       <div class="wc-topbar">
-        <span class="wc-icon"><img src="${$p}" alt="" width="12" height="12"></span>
+        <span class="wc-icon"><img src="${em}" alt="" width="12" height="12"></span>
         <a class="wc-tagline" href="${a}">${i}<span class="wc-arrow" aria-hidden="true">→</span></a>
         <div class="wc-dots" role="tablist" aria-label="Header version"></div>
       </div>
@@ -13060,7 +13075,7 @@ var am = class {
       ${s ? `<div class="wc-hint" aria-hidden="true">${s}</div>` : ""}
     `, this.caption = this.root.querySelector(".wc-caption"), this.captionInner = this.root.querySelector(".wc-caption-inner"), this.dots = this.root.querySelector(".wc-dots"), o && (this.dotButtons = t.map(({ key: e, name: t }, n) => {
 			let r = document.createElement("button");
-			return r.type = "button", r.className = "wc-dot", r.setAttribute("role", "tab"), r.setAttribute("aria-label", `Version ${e.toUpperCase()}: ${t}`), r.innerHTML = `<img src="${tm}" alt="" width="8" height="8">`, r.addEventListener("click", (t) => {
+			return r.type = "button", r.className = "wc-dot", r.setAttribute("role", "tab"), r.setAttribute("aria-label", `Version ${e.toUpperCase()}: ${t}`), r.innerHTML = `<img src="${nm}" alt="" width="8" height="8">`, r.addEventListener("click", (t) => {
 				t.stopPropagation(), this.onSelect(e);
 			}), r.addEventListener("pointerdown", (e) => e.stopPropagation()), this.dots.appendChild(r), {
 				key: e,
@@ -13074,7 +13089,7 @@ var am = class {
 	setActive(e) {
 		this.dotButtons?.forEach(({ key: t, b: n }) => {
 			let r = t === e;
-			n.setAttribute("aria-selected", String(r)), n.querySelector("img").src = r ? em : tm;
+			n.setAttribute("aria-selected", String(r)), n.querySelector("img").src = r ? tm : nm;
 		});
 	}
 	renderFallback(e) {
@@ -13121,12 +13136,12 @@ var am = class {
 		this.root.remove(), this.fallback?.remove();
 	}
 };
-function om(e) {
-	for (let { el: t } of e) (t.closest("[data-work-list]") ?? t).classList.add("wc-sr");
+function sm(e) {
+	for (let { el: t } of e) (t.matches("a[href]") || t.querySelector("a[href]")) && (t.closest("[data-work-list]") ?? t).classList.add("wc-sr");
 }
 //#endregion
 //#region src/core/shaders.js
-var sm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uBend;    // px of vertical bend at the tile's centre\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    vec3 p = position;\n    p.y += sin(uv.x * 3.14159265) * uBend / max(uSize.y, 1.0);\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);\n  }\n", cm = "\n  uniform sampler2D uTex;\n  uniform float uTexReady;  // 0 → placeholder colour, 1 → texture (tweened for a fade-in)\n  uniform vec2 uTexSize;    // texture px (only the ratio matters)\n  uniform vec2 uSize;       // tile CSS px\n  uniform float uRadius;    // corner radius, CSS px\n  uniform float uDpr;\n  uniform vec3 uBase;       // placeholder colour\n\n  uniform float uHover;     // 0..1\n  uniform vec2 uMouse;      // pointer in tile uv space\n  uniform float uDistort;   // lens strength\n  uniform float uZoom;      // extra texture zoom (0 = cover)\n  uniform float uShift;     // RGB split, in uv units\n  uniform float uGray;      // 0..1 desaturation\n  uniform float uAlpha;\n  uniform float uReveal;    // 0..1 wipe from the bottom\n\n  varying vec2 vUv;\n\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n\n  void main() {\n    vec2 uv = vUv;\n\n    // object-fit: cover\n    float planeA = uSize.x / max(uSize.y, 1.0);\n    float texA = uTexSize.x / max(uTexSize.y, 1.0);\n    vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);\n    vec2 tuv = (uv - 0.5) * cover / (1.0 + uZoom) + 0.5;\n\n    // hover lens: texels near the pointer are pulled toward it (a soft magnifier)\n    vec2 fromMouse = uv - uMouse;\n    float falloff = smoothstep(0.6, 0.0, length(fromMouse * vec2(planeA, 1.0)));\n    tuv -= fromMouse * cover * falloff * uDistort * uHover;\n\n    vec2 shift = vec2(uShift, 0.0) * cover;\n    vec3 tex = vec3(\n      texture2D(uTex, tuv + shift).r,\n      texture2D(uTex, tuv).g,\n      texture2D(uTex, tuv - shift).b\n    );\n    vec3 col = mix(uBase, tex, uTexReady);\n    col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);\n\n    // rounded corners, ~1 device px of antialiasing\n    float d = sdRoundBox((uv - 0.5) * uSize, uSize * 0.5, uRadius);\n    float aa = 0.75 / uDpr;\n    float mask = 1.0 - smoothstep(-aa, aa, d);\n\n    // reveal wipe (uv.y = 0 at the bottom edge)\n    float reveal = uReveal >= 1.0 ? 1.0 : step(uv.y, uReveal);\n\n    gl_FragColor = vec4(col, uAlpha * mask * reveal);\n  }\n", lm = class {
+var cm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uBend;    // px of vertical bend at the tile's centre\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    vec3 p = position;\n    p.y += sin(uv.x * 3.14159265) * uBend / max(uSize.y, 1.0);\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);\n  }\n", lm = "\n  uniform sampler2D uTex;\n  uniform float uTexReady;  // 0 → placeholder colour, 1 → texture (tweened for a fade-in)\n  uniform vec2 uTexSize;    // texture px (only the ratio matters)\n  uniform vec2 uSize;       // tile CSS px\n  uniform float uRadius;    // corner radius, CSS px\n  uniform float uDpr;\n  uniform vec3 uBase;       // placeholder colour\n\n  uniform float uHover;     // 0..1\n  uniform vec2 uMouse;      // pointer in tile uv space\n  uniform float uDistort;   // lens strength\n  uniform float uZoom;      // extra texture zoom (0 = cover)\n  uniform float uShift;     // RGB split, in uv units\n  uniform float uGray;      // 0..1 desaturation\n  uniform float uAlpha;\n  uniform float uReveal;    // 0..1 wipe from the bottom\n\n  varying vec2 vUv;\n\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n\n  void main() {\n    vec2 uv = vUv;\n\n    // object-fit: cover\n    float planeA = uSize.x / max(uSize.y, 1.0);\n    float texA = uTexSize.x / max(uTexSize.y, 1.0);\n    vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);\n    vec2 tuv = (uv - 0.5) * cover / (1.0 + uZoom) + 0.5;\n\n    // hover lens: texels near the pointer are pulled toward it (a soft magnifier)\n    vec2 fromMouse = uv - uMouse;\n    float falloff = smoothstep(0.6, 0.0, length(fromMouse * vec2(planeA, 1.0)));\n    tuv -= fromMouse * cover * falloff * uDistort * uHover;\n\n    vec2 shift = vec2(uShift, 0.0) * cover;\n    vec3 tex = vec3(\n      texture2D(uTex, tuv + shift).r,\n      texture2D(uTex, tuv).g,\n      texture2D(uTex, tuv - shift).b\n    );\n    vec3 col = mix(uBase, tex, uTexReady);\n    col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);\n\n    // rounded corners, ~1 device px of antialiasing\n    float d = sdRoundBox((uv - 0.5) * uSize, uSize * 0.5, uRadius);\n    float aa = 0.75 / uDpr;\n    float mask = 1.0 - smoothstep(-aa, aa, d);\n\n    // reveal wipe (uv.y = 0 at the bottom edge)\n    float reveal = uReveal >= 1.0 ? 1.0 : step(uv.y, uReveal);\n\n    gl_FragColor = vec4(col, uAlpha * mask * reveal);\n  }\n", um = class {
 	constructor(e, t = {}) {
 		this.mount = e, this.options = {
 			...Mp,
@@ -13140,10 +13155,10 @@ var sm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uB
 	}
 	async init() {
 		let { mount: e } = this;
-		if (e.classList.add("wc-root"), this.items = Rp(e), !this.items.length) return console.warn("[work-canvas] no .work-item elements found — nothing to render."), this;
-		await Bp(this.items), om(this.items);
+		if (e.classList.add("wc-root"), this.items = zp(e), !this.items.length) return console.warn("[work-canvas] no .work-item elements found — nothing to render."), this;
+		await Vp(this.items), sm(this.items);
 		let t = this.options.layout && this.layoutDefs.some((e) => e.key === this.options.layout) ? this.options.layout : this.layoutDefs[0].key;
-		this.ui = new am(e, {
+		this.ui = new om(e, {
 			layouts: this.layoutDefs,
 			current: t,
 			onSelect: (e) => this.setLayout(e),
@@ -13157,7 +13172,7 @@ var sm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uB
 		} catch (t) {
 			return console.warn("[work-canvas] WebGL unavailable, keeping the static grid.", t), e.classList.add("is-fallback"), this;
 		}
-		return this.media = new Zp(this.renderer, {
+		return this.media = new Qp(this.renderer, {
 			maxVideos: this.options.maxVideos,
 			videoPolicy: this.isMobile && this.options.mobileVideo === "focused" || this.reducedMotion ? "focused" : "all",
 			downgradeAfter: this.options.downgradeAfter,
@@ -13178,8 +13193,8 @@ var sm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uB
 			226,
 			255
 		]), 1, 1), this.emptyTexture.needsUpdate = !0, this.baseMaterial = new ml({
-			vertexShader: sm,
-			fragmentShader: cm,
+			vertexShader: cm,
+			fragmentShader: lm,
 			transparent: !0,
 			depthTest: !1,
 			depthWrite: !1,
@@ -13322,7 +13337,7 @@ var sm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uB
 	}
 	bindInput() {
 		let e = this.mount.dataset.wheel || this.options.wheel;
-		this.input = new Qp(this.mount, {
+		this.input = new $p(this.mount, {
 			clickSlop: this.options.clickSlop,
 			wheel: e
 		});
@@ -13369,7 +13384,7 @@ var sm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uB
 	destroy() {
 		this.stop(), gi.killTweensOf(this), this.resizeObserver?.disconnect(), this.intersection?.disconnect(), document.removeEventListener("visibilitychange", this._onVisibility), window.removeEventListener("pageshow", this._onPageShow), this._reducedQuery.removeEventListener?.("change", this._onReducedChange), this._focusHandlers?.forEach((e) => e()), this.input?.destroy(), this.layout?.dispose(), this.media?.dispose(), this.geometry?.dispose(), this.baseMaterial?.dispose(), this.emptyTexture?.dispose(), this.renderer && (this.renderer.dispose(), this.renderer.forceContextLoss(), this.renderer.domElement.remove()), this.ui?.destroy(), this.mount.classList.remove("wc-root", "is-ready", "is-fallback", "is-hovering-tile", "is-dragging");
 	}
-}, um = class {
+}, dm = class {
 	constructor(e, t, n = 0) {
 		this.engine = e, this.item = t, this.index = n, this.x = 0, this.y = 0, this.w = 100, this.h = 100, this.z = 0, this.rotation = 0, this.alpha = 1, this.reveal = 1, this.gray = 0, this.bend = 0, this.shift = 0, this.zoom = 0, this.priority = 0, this.interactive = !0, this.hover = 0, this.mouse = new Y(.5, .5), this.texReady = 0, this.onScreen = !1, this.override = null, this.material = e.baseMaterial.clone(), this.uniforms = this.material.uniforms, this.uniforms.uSize.value = new Y(100, 100), this.uniforms.uTexSize.value = t.texSize, this.uniforms.uMouse.value = this.mouse, this.mesh = new Gc(e.geometry, this.material), this.mesh.frustumCulled = !1, this.mesh.userData.tile = this, e.scene.add(this.mesh);
 	}
@@ -13394,36 +13409,36 @@ var sm = "\n  uniform vec2 uSize;     // tile size in CSS px\n  uniform float uB
 };
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/typeof.js
-function dm(e) {
+function fm(e) {
 	"@babel/helpers - typeof";
-	return dm = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
+	return fm = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
 		return typeof e;
 	} : function(e) {
 		return e && typeof Symbol == "function" && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
-	}, dm(e);
+	}, fm(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/toPrimitive.js
-function fm(e, t) {
-	if (dm(e) != "object" || !e) return e;
+function pm(e, t) {
+	if (fm(e) != "object" || !e) return e;
 	var n = e[Symbol.toPrimitive];
 	if (n !== void 0) {
 		var r = n.call(e, t || "default");
-		if (dm(r) != "object") return r;
+		if (fm(r) != "object") return r;
 		throw TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return (t === "string" ? String : Number)(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/toPropertyKey.js
-function pm(e) {
-	var t = fm(e, "string");
-	return dm(t) == "symbol" ? t : t + "";
+function mm(e) {
+	var t = pm(e, "string");
+	return fm(t) == "symbol" ? t : t + "";
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/defineProperty.js
-function mm(e, t, n) {
-	return (t = pm(t)) in e ? Object.defineProperty(e, t, {
+function hm(e, t, n) {
+	return (t = mm(t)) in e ? Object.defineProperty(e, t, {
 		value: n,
 		enumerable: !0,
 		configurable: !0,
@@ -13432,7 +13447,7 @@ function mm(e, t, n) {
 }
 //#endregion
 //#region src/core/layout.js
-var hm = (e) => Math.min(1, Math.max(0, e)), gm = class {
+var gm = (e) => Math.min(1, Math.max(0, e)), _m = class {
 	constructor(e, t) {
 		this.engine = e, this.config = t, this.tiles = [], this.featured = null, this.progress = 0, this.introEase = gi.parseEase(t.easing ?? "power3.out");
 	}
@@ -13446,7 +13461,7 @@ var hm = (e) => Math.min(1, Math.max(0, e)), gm = class {
 		return this.engine.reducedMotion;
 	}
 	makeTiles(e) {
-		return this.tiles = e.map((e, t) => new um(this.engine, e, t)), this.tiles;
+		return this.tiles = e.map((e, t) => new dm(this.engine, e, t)), this.tiles;
 	}
 	repeatItems(e) {
 		let t = [];
@@ -13455,7 +13470,7 @@ var hm = (e) => Math.min(1, Math.max(0, e)), gm = class {
 	}
 	tileProgress(e) {
 		let t = this.config.stagger ?? .4;
-		return this.introEase(hm(this.progress * (1 + t) - e * t));
+		return this.introEase(gm(this.progress * (1 + t) - e * t));
 	}
 	applyTransition(e, t, n = {
 		x: 0,
@@ -13503,7 +13518,7 @@ var hm = (e) => Math.min(1, Math.max(0, e)), gm = class {
 	}
 	centerScore(e) {
 		let t = (e.x + e.w / 2 - this.vp.width / 2) / this.vp.width, n = (e.y + e.h / 2 - this.vp.height / 2) / this.vp.height;
-		return hm(1 - Math.hypot(t, n)) * .99 + .01;
+		return gm(1 - Math.hypot(t, n)) * .99 + .01;
 	}
 	resize() {}
 	update() {}
@@ -13511,10 +13526,10 @@ var hm = (e) => Math.min(1, Math.max(0, e)), gm = class {
 		gi.killTweensOf(this), this.tiles.forEach((e) => e.dispose()), this.tiles = [];
 	}
 };
-mm(gm, "defaults", {});
+hm(_m, "defaults", {});
 //#endregion
 //#region src/layouts/filmstrip.js
-var _m = {
+var vm = {
 	tileWidth: 400,
 	gap: 18,
 	minHeight: 250,
@@ -13547,7 +13562,7 @@ var _m = {
 	enterDuration: 1.5,
 	leaveDuration: .8,
 	captionInset: [20, 12]
-}, vm = class extends gm {
+}, ym = class extends _m {
 	constructor(e, t) {
 		super(e, t), this.offset = 0, this.target = 0, this.drift = -t.idleSpeed, this.velocity = 0, this.speed = 0;
 	}
@@ -13590,10 +13605,10 @@ var _m = {
 		t && (this.target += this.vp.width / 2 - (t.x + t.w / 2));
 	}
 };
-mm(vm, "defaults", _m), mm(vm, "label", "Filmstrip");
+hm(ym, "defaults", vm), hm(ym, "label", "Filmstrip");
 //#endregion
 //#region src/layouts/deck.js
-var ym = {
+var bm = {
 	tileWidth: 400,
 	minHeight: 250,
 	maxHeight: 516,
@@ -13645,7 +13660,7 @@ var ym = {
 	enterDuration: 1.3,
 	leaveDuration: .7,
 	captionInset: [16, 12]
-}, bm = (e, t, n) => e + (t - e) * n, xm = 4, Sm = class extends gm {
+}, xm = (e, t, n) => e + (t - e) * n, Sm = 4, Cm = class extends _m {
 	constructor(e, t) {
 		super(e, t), this.head = 0, this.headTarget = 0, this.timer = 0, this.anchors = t.slots.map(() => ({
 			x: 0,
@@ -13663,15 +13678,15 @@ var ym = {
 	slotAt(e) {
 		let t = this.config.slots, n = Math.max(0, Math.min(t.length - 1, Math.floor(e))), r = Math.min(t.length - 1, n + 1), i = Math.max(0, Math.min(1, e - n));
 		return {
-			x: bm(t[n].x, t[r].x, i),
-			y: bm(t[n].y, t[r].y, i)
+			x: xm(t[n].x, t[r].x, i),
+			y: xm(t[n].y, t[r].y, i)
 		};
 	}
 	anchorAt(e) {
 		let t = Math.max(0, Math.min(3, Math.floor(e))), n = Math.min(3, t + 1), r = Math.max(0, Math.min(1, e - t));
 		return {
-			x: bm(this.anchors[t].x, this.anchors[n].x, r),
-			y: bm(this.anchors[t].y, this.anchors[n].y, r)
+			x: xm(this.anchors[t].x, this.anchors[n].x, r),
+			y: xm(this.anchors[t].y, this.anchors[n].y, r)
 		};
 	}
 	update(e) {
@@ -13683,12 +13698,12 @@ var ym = {
 			let t = Math.hypot(o, s) || 1, n = 1 - Math.exp(-e * 4);
 			this.dir.x += (o / t - this.dir.x) * n, this.dir.y += (s / t - this.dir.y) * n;
 		}
-		let f = c ? Math.min(1, Math.hypot(o, s)) : 0, p = c ? bm(t.slowInterval, t.fastInterval, f ** +t.curve) : t.idleInterval;
+		let f = c ? Math.min(1, Math.hypot(o, s)) : 0, p = c ? xm(t.slowInterval, t.fastInterval, f ** +t.curve) : t.idleInterval;
 		t.pauseOnHover && l || this.reduced || this.progress < 1 || (this.timer += e / p, this.timer >= 1 && (this.timer = Math.min(this.timer - 1, .5), this.stack(p)));
 		let m = i / 2, h = a / 2, g = Math.hypot(this.dir.x, this.dir.y) || 1, _ = this.dir.x / g, v = this.dir.y / g, y = null;
 		this.tiles.forEach((e, n) => {
 			let o = ((n - this.head) % r + r) % r;
-			o > r - 1 && (o -= r), e.rotation = 0, e.alpha = 1, e.reveal = 1, e.gray = 0, e.zoom = 0, e.interactive = o > -.5 && o < xm, e.w = this.tileW, e.h = e.baseH;
+			o > r - 1 && (o -= r), e.rotation = 0, e.alpha = 1, e.reveal = 1, e.gray = 0, e.zoom = 0, e.interactive = o > -.5 && o < Sm, e.w = this.tileW, e.h = e.baseH;
 			let s, c;
 			if (o < 0) {
 				let n = -o, a = this.slotAt(0), l = this.anchorAt(0), u = t.incomingDistance * i;
@@ -13700,7 +13715,7 @@ var ym = {
 				let t = Math.min(1, o - 3), n = this.slotAt(3), i = this.anchorAt(3);
 				s = i.x + n.x * this.k, c = i.y + n.y * this.k + 18 * this.k * t, e.alpha = Math.max(0, 1 - t), e.z = r - o;
 			}
-			e.x = m + s - e.w / 2, e.y = h + c - e.h / 2, Math.abs(o) < .5 && (y = e), e.priority = o > -.5 && o < xm ? 1 - Math.max(0, o) * .2 : 0, this.applyTransition(e, Math.max(0, Math.min(1, (3 - o) / xm)), { y: a * .55 });
+			e.x = m + s - e.w / 2, e.y = h + c - e.h / 2, Math.abs(o) < .5 && (y = e), e.priority = o > -.5 && o < Sm ? 1 - Math.max(0, o) * .2 : 0, this.applyTransition(e, Math.max(0, Math.min(1, (3 - o) / Sm)), { y: a * .55 });
 		}), this.featured = y, y && (y.priority = 3);
 	}
 	stack(e = this.config.slowInterval) {
@@ -13721,10 +13736,10 @@ var ym = {
 		}));
 	}
 };
-mm(Sm, "defaults", ym), mm(Sm, "label", "Deck");
+hm(Cm, "defaults", bm), hm(Cm, "label", "Deck");
 //#endregion
 //#region src/layouts/masonry.js
-var Cm = {
+var wm = {
 	columnWidth: 168,
 	gutter: 20,
 	gap: 19,
@@ -13774,7 +13789,7 @@ var Cm = {
 	leaveDuration: .8,
 	captionInset: [14, 13]
 };
-function wm(e, t) {
+function Tm(e, t) {
 	let n = t * 2654435769, r = () => {
 		n = n + 1831565813 | 0;
 		let e = Math.imul(n ^ n >>> 15, 1 | n);
@@ -13786,7 +13801,7 @@ function wm(e, t) {
 	}
 	return i;
 }
-var Tm = class extends gm {
+var Em = class extends _m {
 	constructor(e, t) {
 		super(e, t), this.scroll = 0, this.slow = 1, this.shiftX = 0, this.shiftV = 0, this.columns = [];
 	}
@@ -13800,7 +13815,7 @@ var Tm = class extends gm {
 			length: 0
 		})), l = this.items.length, u = this.items;
 		for (let e = 0; c.some((e) => e.length < o) || e < l; e++) {
-			e > 0 && e % l === 0 && (u = wm(this.items, e / l));
+			e > 0 && e % l === 0 && (u = Tm(this.items, e / l));
 			let t = c.reduce((e, t) => t.length < e.length ? t : e), n = u[e % l];
 			if (t.tiles.push({
 				item: n,
@@ -13842,32 +13857,32 @@ var Tm = class extends gm {
 		this.featured = f, f && (f.priority = 2), a && (n.hovered.priority = 3);
 	}
 };
-mm(Tm, "defaults", Cm), mm(Tm, "label", "Masonry");
+hm(Em, "defaults", wm), hm(Em, "label", "Masonry");
 //#endregion
 //#region src/main.js
-var Em = [
+var Dm = [
 	{
 		key: "a",
 		name: "Filmstrip",
-		Layout: vm,
-		config: _m
+		Layout: ym,
+		config: vm
 	},
 	{
 		key: "b",
 		name: "Deck",
-		Layout: Sm,
-		config: ym
+		Layout: Cm,
+		config: bm
 	},
 	{
 		key: "c",
 		name: "Masonry",
-		Layout: Tm,
-		config: Cm
+		Layout: Em,
+		config: wm
 	}
 ];
-async function Dm(e, t = {}) {
+async function Om(e, t = {}) {
 	if (e.__workCanvas) return e.__workCanvas;
-	let n = e.dataset, r = new URLSearchParams(location.search).get("v"), i = parseInt(t.maxVideos ?? n.maxVideos, 10), a = Em.map((e) => ({
+	let n = e.dataset, r = new URLSearchParams(location.search).get("v"), i = parseInt(t.maxVideos ?? n.maxVideos, 10), a = Dm.map((e) => ({
 		...e,
 		config: {
 			...e.config,
@@ -13875,7 +13890,7 @@ async function Dm(e, t = {}) {
 		}
 	}));
 	i && a.forEach((e) => e.config.maxVideos = i);
-	let o = new lm(e, {
+	let o = new um(e, {
 		layouts: a,
 		layout: t.layout ?? r ?? n.layout ?? "a",
 		switcher: t.switcher ?? n.switcher !== "false",
@@ -13887,14 +13902,14 @@ async function Dm(e, t = {}) {
 	});
 	return e.__workCanvas = o, await o.init(), o;
 }
-function Om() {
-	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Dm(e));
+function km() {
+	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Om(e));
 }
 typeof window < "u" && (window.WorkCanvas = {
-	mount: Dm,
-	LAYOUTS: Em
-}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", Om, { once: !0 }) : Om());
+	mount: Om,
+	LAYOUTS: Dm
+}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", km, { once: !0 }) : km());
 //#endregion
-export { Em as LAYOUTS, lm as WorkCanvas, Dm as mount };
+export { Dm as LAYOUTS, um as WorkCanvas, Om as mount };
 
 //# sourceMappingURL=work-canvas.js.map

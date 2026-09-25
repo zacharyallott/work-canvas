@@ -41,7 +41,7 @@ sh('git add package.json dist');
 sh(`git commit -m "release v${version}"`);
 sh(`git tag v${version}`);
 
-const repo = out('git remote get-url origin 2>/dev/null || echo "github.com/zachallott/work-canvas"')
+const repo = out('git remote get-url origin 2>/dev/null || echo "github.com/zacharyallott/work-canvas"')
   .replace(/^.*github\.com[:/]/, '')
   .replace(/\.git$/, '');
 const base = `https://cdn.jsdelivr.net/gh/${repo}@v${version}`;

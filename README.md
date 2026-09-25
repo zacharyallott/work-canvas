@@ -1,14 +1,16 @@
 # work-canvas
 
-Immersive WebGL work header for zacharyallott.com. It's a standalone ES module (Three.js and GSAP bundled) that mounts into a `<div>` on a Webflow page and reads its content from links on that page, so Webflow (CMS or static links) stays the source of truth.
+Immersive WebGL work header for zacharyallott.com. It's a standalone ES module (Three.js and GSAP bundled) that mounts into a `<div>` on a Webflow page and reads its content from the page's **Projects** Collection List, so the Webflow CMS stays the source of truth. The first two images of each project become tiles.
 
-It has three interaction versions, switchable at runtime with the dots in the top bar:
+It has three interaction versions, navigated with the dots in the top bar:
 
-| Key | Version | Figma frame |
-| --- | --- | --- |
-| `a` | Filmstrip: one infinite row, bottom-aligned skyline | Frame 46 · `1542:5556` |
-| `b` | Deck: a pile of four cards that cycles through the whole collection | Frame 48 · `1542:5581` |
-| `c` | Masonry: seven infinite columns drifting in alternating directions | Frame 45 · `1542:5489` |
+| Key | Version | Motion | Figma frame |
+| --- | --- | --- | --- |
+| `a` | Filmstrip: one infinite row, bottom-aligned skyline | Cursor steers the drift: left of centre drifts right, right drifts left, faster toward the edges | Frame 46 · `1542:5556` |
+| `b` | Deck: a pile of four cards that cycles through the whole collection | Pile trails the cursor with a little lag; new cards land on top from the cursor's side, faster the further from centre; hovering pauses | Frame 48 · `1542:5581` |
+| `c` | Masonry: columns drifting in alternating directions | Columns drift on their own and slow on hover; the grid shifts left or right with the cursor | Frame 45 · `1542:5489` |
+
+There are no clicks yet. Hovering a tile brings in its project title and ↓. On touch, tapping a tile shows the title briefly.
 
 ## Quick start
 
@@ -18,7 +20,7 @@ npm run media      # process originals → public/media + media.json (first run 
 npm run dev        # http://localhost:5173  (?v=a|b|c picks a version)
 ```
 
-`index.html` is a local mock of the Webflow page. A small Vite plugin fills it with the same `.work-item` markup a Collection List would render, built from `public/media/media.json`.
+`index.html` is a local mock of the Webflow page. A small Vite plugin fills it with the same `.work-item` markup the Projects Collection List renders, built from `public/media/media.json`.
 
 ## Project layout
 
@@ -30,10 +32,10 @@ src/
     media.js           texture loading/upgrades, <video> pool + concurrency cap
     tile.js            one plane on screen (rect + look → mesh/uniforms, media requests)
     layout.js          base class for versions (enter/leave, caption, focus helpers)
-    shaders.js         cover-fit, rounded corners, hover lens, RGB split, bend, reveal
-    input.js           drag/inertia, wheel, page scroll, tap
-    ui.js              top bar, dots, caption, fallback grid, hidden link list
-    data.js            reads .work-item links from the DOM
+    shaders.js         cover-fit, rounded corners, hover lens, bend, reveal
+    input.js           cursor, touch drag, wheel, page scroll, tap
+    ui.js              top bar, dots, hover caption, fallback grid
+    data.js            reads .work-item elements (CMS list) from the DOM
     defaults.js        shared defaults (radius, colours, video cap, DPR cap…)
   layouts/
     filmstrip.js       version A   ← config object at the top of each file
@@ -49,17 +51,14 @@ dist/work-canvas.js    the bundle Webflow loads (committed on release)
 
 ## Tuning the feel
 
-Each version has an exported `config` at the top of its file (speed, inertia, spacing, hover distortion, easing, max videos, caption inset). Shared values (corner radius, DPR cap, image upgrade thresholds, `wheel` mode) live in `src/core/defaults.js`. Save and the dev server hot-reloads.
+Each version has an exported `config` at the top of its file. Shared values (corner radius, DPR cap, texture size cap, image upgrade thresholds) live in `src/core/defaults.js`. Save and the dev server hot-reloads.
 
 The most useful settings:
 
-- `autoplaySpeed`, `inertia`, `ease`, `dragMultiplier`, `scrollMultiplier`: the drift and glide.
-- `hover.distortion`, `hover.zoom`: strength of the lens on hover.
-- `bend`, `rgbShift` (filmstrip): velocity effects.
-- `autoplay`, `duration`, `flingDistance`, `slots` (deck): cycling rhythm and pile shape.
-- `columnSpeeds`, `featureInterval`, `dimOthers` (masonry).
-- `maxVideos`: how many videos may play at once.
-- `wheel` (`defaults.js` or `data-wheel` on the mount): `page` lets vertical wheel scroll the page (the header reacts to page scroll). `capture` makes the header consume the wheel.
+- **Filmstrip:** `maxSpeed` (px/s at the edges), `deadZone`, `curve` (how quickly speed builds toward the edges), `response` (lag), `idleSpeed` (drift with no cursor), `hoverSlowdown`, `bend`.
+- **Deck:** `follow` (how far the pile leans toward the cursor), `followRates` (lag per layer, top → bottom), `slowInterval` / `fastInterval` (seconds between cards at the centre / edge), `curve`, `idleInterval`, `dealDuration`, `incomingDistance`, `slots` (pile shape), `pauseOnHover`.
+- **Masonry:** `autoplaySpeed`, `hoverSlowdown`, `columnSpeeds`, `shift.max` (how far the grid moves with the cursor), `shift.response` (lag), `shift.mode` (`offset` leans, `drift` keeps travelling like the filmstrip).
+- **All:** `hover.distortion` / `hover.zoom` (filmstrip has both at 0), `maxVideos`, `captionInset`.
 
 ## Adding or updating media
 
@@ -68,7 +67,7 @@ The most useful settings:
    Name them `Client-Allott-NN.ext` so the label can be derived from the prefix.
 2. If it's a new client, add a line to `media/projects.json` (`match` regex → `label` + `href`).
 3. Run `npm run media`. It's incremental: unchanged files (same SHA-256) are skipped.
-4. Check `http://localhost:5173`, then release (below) and add or update the item in Webflow.
+4. Check `http://localhost:5173`, then release (below) and add or update the project in the Webflow CMS: upload the `-lg.webp` (or `-poster.webp` for a video) to Image 1/2, and paste the release's MP4 URL into "Image N video".
 
 The originals are only ever read. Output goes to `public/media/`.
 
@@ -103,89 +102,91 @@ Tags are immutable on jsDelivr, so every change ships as a new version number.
 ```
 https://cdn.jsdelivr.net/gh/<user>/<repo>@<tag>/<path>
 
-https://cdn.jsdelivr.net/gh/zachallott/work-canvas@v0.2.0/dist/work-canvas.js
-https://cdn.jsdelivr.net/gh/zachallott/work-canvas@v0.2.0/public/media/boa-allott-11.mp4
+https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.2.0/dist/work-canvas.js
+https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.2.0/public/media/boa-allott-11.mp4
 ```
 
-`@main` or `@latest` also work but are cached for up to 7 days (purge with `https://purge.jsdelivr.net/gh/zachallott/work-canvas@main/dist/work-canvas.js`). Pin a tag in production.
+`@main` or `@latest` also work but are cached for up to 7 days (purge with `https://purge.jsdelivr.net/gh/zacharyallott/work-canvas@main/dist/work-canvas.js`). Pin a tag in production.
 
 Hosting media from the repo on jsDelivr is fine for this set (about 22 MB). jsDelivr caps individual files and total package size for GitHub repos, so if the library grows a lot, move media to the Webflow CMS or a bucket (R2/S3). Only the `data-*` URLs change. The Webflow CDN and jsDelivr both send `Access-Control-Allow-Origin: *`, which WebGL textures need.
 
 ## Webflow setup
 
-### 1. Markup
+### 1. CMS: the Projects collection
 
-The draft page **Home 2026** (`/home-2026`) already has this structure:
+Collection **Projects** (URL slug `work`):
+
+| Field | Type | Used by the header |
+| --- | --- | --- |
+| Project title | Plain text (built-in Name) | hover caption |
+| Slug | built-in | – |
+| Short description | Plain text | read, not shown yet |
+| Services | Plain text | read, not shown yet |
+| Full case study | Switch | read, will gate click-through when clicks return |
+| Image 1 | Image | tile 1 (poster when Image 1 video is set) |
+| Image 1 video | Link | optional MP4 URL; plays in place of Image 1 |
+| Image 2 | Image | tile 2 (poster when Image 2 video is set) |
+| Image 2 video | Link | optional MP4 URL; plays in place of Image 2 |
+| Image 3–8 | Image | case study only |
+
+Tiles are ordered by the list's sort: every project's Image 1 first, then every project's Image 2, so neighbours come from different projects. The CMS can't host MP4s, so video URLs point at a tagged release on jsDelivr (or any bucket). Run videos through `npm run media` first.
+
+### 2. Markup (already on the draft page **Home 2026**, `/home-2026`)
 
 ```html
-<section class="work-header">
-  <div id="work-canvas" class="work-canvas"
-       data-layout="a"
-       data-media-base="https://cdn.jsdelivr.net/gh/zachallott/work-canvas@v0.1.0/public/"></div>
+<section class="work-header">                       <!-- font: Cassette 500 -->
+  <div id="work-canvas" class="work-canvas" data-layout="a"></div>
 
-  <!-- Collection List Wrapper (or a plain div): add the attribute data-work-list -->
-  <div class="work-list" data-work-list>
-    <a class="work-item" href="/projects/boa"
-       data-type="video"
-       data-src="media/boa-allott-11.mp4"
-       data-src-webm="media/boa-allott-11.webm"
-       data-poster="media/boa-allott-11-poster.webp"
-       data-title="BOA Performfit Wrap"
-       data-aspect="1.7763">BOA Performfit Wrap</a>
-    <!-- …one link per item; any number of items and lists -->
+  <!-- Collection List bound to Projects. Wrapper: class work-list (display:none) + attribute data-work-list -->
+  <div class="work-list w-dyn-list" data-work-list>
+    <div class="w-dyn-items"><div class="w-dyn-item">
+      <div class="work-item">
+        <div class="work-title">{Project title}</div>
+        <div class="work-description">{Short description}</div>
+        <div class="work-services">{Services}</div>
+        <div class="work-case-study">Full case study</div>   <!-- visibility bound to Full case study -->
+        <img class="work-image-1" src="{Image 1}" srcset="…">
+        <div class="work-video-1">{Image 1 video}</div>
+        <img class="work-image-2" src="{Image 2}" srcset="…">
+        <div class="work-video-2">{Image 2 video}</div>
+      </div>
+    </div></div>
   </div>
 </section>
 ```
 
 - `#work-canvas` needs a height. The class sets `100vh`. The bundle sizes itself to the element, not the window.
-- Relative `data-*` URLs resolve against `data-media-base`. Absolute URLs (CMS/Webflow assets) are used as-is.
-- The bundle visually hides `[data-work-list]` but keeps the links in the DOM for SEO, keyboard and screen-reader users. Tabbing through them moves the canvas to the focused piece.
-- Items with `href="#"` (Burton, SRAM, Tinkercad for now) render but don't navigate.
+- Keep `.work-list` at `display: none`, which also stops the hidden `<img>`s from downloading. The bundle only reads their `src`/`srcset` and uses Webflow's responsive variants as texture levels.
+- Empty bindings (Webflow adds `w-dyn-bind-empty`) are skipped. A project with only Image 1 gives one tile.
+- For more than 100 projects, add more lists (each with offset/limit). The bundle collects every `.work-item` on the page in document order.
+- The older data-attribute formats (`data-image-1`, … or `data-src`, …) still work if you ever need a static list.
 
-Optional mount attributes: `data-layout="a|b|c"`, `data-switcher="false"` (hides the dots), `data-wheel="capture"`, `data-max-videos="4"`, `data-items=".my-selector"`, `data-tagline="…"`, `data-tagline-href="#work"`.
+Optional mount attributes: `data-layout="a|b|c"`, `data-switcher="false"` (hides the dots), `data-max-videos="4"`, `data-per-project="2"`, `data-items=".my-selector"`, `data-tagline="…"`, `data-tagline-href="#work"`, `data-media-base="…"` (base for relative URLs).
 
-### 2. Embed code
+### 3. Embed code
 
-Add this to Page settings → Custom code → Before `</body>` tag. It's already on the draft page.
+Page settings → Custom code → Before `</body>` tag (already on the draft page):
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/zachallott/work-canvas@v0.1.0/dist/work-canvas.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.1.0/dist/work-canvas.js"></script>
 ```
 
-When you release, bump the version in both this URL and `data-media-base`.
-
-### 3. CMS fields (when you move items into a Collection)
-
-The site has no CMS collections yet, so the draft page uses static links. To make the CMS the source of truth, create a **Work** collection with these fields:
-
-| Field | Type | Binds to |
-| --- | --- | --- |
-| Name | Plain text (built-in) | `data-title` and link text |
-| Slug | built-in | n/a |
-| Project URL | Link | link `href` |
-| Media type | Option: `Image`, `Video` | `data-type` (case doesn't matter) |
-| Image | Image | `data-src` for images (upload the pipeline's `-lg.webp`) |
-| Poster / thumbnail | Image | `data-poster`. Required for video, recommended for images (upload `-sm.webp` or the `-poster.webp`) |
-| Video MP4 URL | Link (or Plain text) | `data-src` for videos. The CMS can't hold MP4s, so point at jsDelivr or a bucket |
-| Video WebM URL | Link, optional | `data-src-webm` |
-| Aspect ratio | Number, optional | `data-aspect` (width ÷ height). If missing, the poster is loaded first to measure it |
-
-Then add a Collection List, add `data-work-list` to its wrapper, put a Link Block with class `work-item` inside the item, and bind the custom attributes above. For more than 100 items, add more lists (each with offset/limit). The bundle collects every `.work-item` on the page in document order.
+When you release, bump the version in this URL.
 
 ## Behaviour notes
 
-- **Loading:** a static poster grid shows immediately. WebGL fades in once most thumbnails are on the GPU. If WebGL isn't available, the grid stays and is fully clickable.
-- **Images:** the thumbnail loads first, then `md`/`lg` when a tile is drawn large or focused. Big textures not used for 8 s are released.
-- **Video:** a poster first. The `<video>` loads only when its tile is on screen, and only the top-N by priority play (hovered, then featured, then nearest centre). Off-screen videos pause. On touch devices and with `prefers-reduced-motion`, only the featured tile plays.
-- **Reduced motion:** no drift, no auto-advance, no distortion or bend, and transitions become fades.
+- **Loading:** a static poster grid shows immediately. WebGL fades in once most thumbnails are on the GPU. If WebGL isn't available, the grid stays. Aspect ratios are read from each image's header bytes, so layout doesn't wait for full downloads.
+- **Images:** the smallest variant loads first, then larger ones when a tile is drawn large or hovered. Anything bigger than `maxTextureEdge` (1280px, 1024px on mobile) is downscaled before it reaches the GPU, so large CMS uploads are safe. Big textures not used for 8 s are released.
+- **Video:** a poster first. The `<video>` loads only when its tile is on screen, and only the top-N by priority play (hovered, then nearest the centre). Off-screen videos pause. On touch devices and with `prefers-reduced-motion`, only the tile nearest the centre plays.
+- **Reduced motion:** no idle drift or stacking, no distortion or bend, and transitions become fades. Cursor-driven motion still works.
 - **Pausing:** rendering stops when the header scrolls out of view or the tab is hidden. `destroy()` releases everything (GL context, textures, videos, listeners).
-- **Click:** the tile expands to fill the header, then navigates. ⌘/Ctrl-click opens a new tab. The back/forward cache restores cleanly.
+- **Click:** off for now (`click: false` in `defaults.js`). The expand-and-navigate transition is still in `engine.open()` for when case studies are wired up.
 - **Performance:** DPR is capped at 2, textures upload at most two per frame, and one shared geometry is used. The bundle is about 186 KB gzipped (Three.js is most of it).
 
 ## Manual API
 
 ```js
-const { mount } = await import('https://cdn.jsdelivr.net/gh/zachallott/work-canvas@v0.1.0/dist/work-canvas.js');
+const { mount } = await import('https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.1.0/dist/work-canvas.js');
 const wc = await mount(document.querySelector('#work-canvas'), { layout: 'b', config: { b: { autoplay: 5 } } });
 wc.setLayout('c');
 wc.destroy();
