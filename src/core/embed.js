@@ -4,11 +4,15 @@
  * YouTube's own thumbnail) stands in until the visitor presses play, so no
  * third-party player loads until it's wanted.
  *
+ * Add `#autoplay` to the link (e.g. https://vimeo.com/123#autoplay) to have it
+ * play muted and looping with no controls instead, like the MP4 loops
+ * (`loopSrc`). It plays while on screen and pauses when scrolled away.
+ *
  * MP4/WebM links keep working as before (muted loops); anything that isn't a
  * recognised YouTube/Vimeo link is treated as a video file.
  */
 
-/** Returns { provider, id, src, thumb } for a YouTube/Vimeo URL, else null. */
+/** Returns { provider, id, src, loopSrc, thumb, autoplay } for a YouTube/Vimeo URL, else null. */
 export function parseEmbed(url) {
   if (!url) return null;
   let u;
@@ -18,6 +22,7 @@ export function parseEmbed(url) {
     return null;
   }
   const host = u.hostname.replace(/^www\.|^m\./, '');
+  const autoplay = /(^#|&)autoplay\b/i.test(u.hash) || ['1', 'true'].includes(u.searchParams.get('autoplay'));
 
   let yt = null;
   if (host === 'youtu.be') yt = u.pathname.slice(1).split('/')[0];
@@ -27,11 +32,15 @@ export function parseEmbed(url) {
   if (yt && /^[\w-]{6,}$/.test(yt)) {
     const start = parseInt(u.searchParams.get('t') || u.searchParams.get('start'), 10);
     const params = new URLSearchParams({ rel: '0', playsinline: '1', ...(start ? { start: String(start) } : {}) });
+    // Muted loop: no controls, loops itself (playlist = the video), JS API on so it can pause off screen.
+    const loop = new URLSearchParams({ autoplay: '1', mute: '1', loop: '1', playlist: yt, controls: '0', disablekb: '1', iv_load_policy: '3', rel: '0', playsinline: '1', enablejsapi: '1' });
     return {
       provider: 'youtube',
       id: yt,
       src: `https://www.youtube-nocookie.com/embed/${yt}?${params}`,
+      loopSrc: `https://www.youtube-nocookie.com/embed/${yt}?${loop}`,
       thumb: `https://i.ytimg.com/vi/${yt}/hqdefault.jpg`,
+      autoplay,
     };
   }
 
@@ -43,7 +52,9 @@ export function parseEmbed(url) {
       const id = parts[i];
       const hash = u.searchParams.get('h') || (parts[i + 1] && /^[\da-f]+$/i.test(parts[i + 1]) ? parts[i + 1] : '');
       const params = new URLSearchParams({ ...(hash ? { h: hash } : {}), title: '0', byline: '0', portrait: '0', dnt: '1' });
-      return { provider: 'vimeo', id, src: `https://player.vimeo.com/video/${id}?${params}`, thumb: '' };
+      // background=1 = muted, looping, no controls (Vimeo ignores it on free accounts; the rest still apply).
+      const loop = new URLSearchParams({ ...(hash ? { h: hash } : {}), background: '1', autoplay: '1', muted: '1', loop: '1', autopause: '0', dnt: '1' });
+      return { provider: 'vimeo', id, src: `https://player.vimeo.com/video/${id}?${params}`, loopSrc: `https://player.vimeo.com/video/${id}?${loop}`, thumb: '', autoplay };
     }
   }
   return null;
@@ -54,4 +65,40 @@ export function autoplaySrc(embed) {
   const url = new URL(embed.src);
   url.searchParams.set('autoplay', '1');
   return url.href;
+}
+
+/** Plays or pauses a looping player (YouTube / Vimeo postMessage APIs). */
+export function commandLoop(frame, play) {
+  const win = frame.contentWindow;
+  if (!win) return;
+  if (frame.dataset.provider === 'youtube') win.postMessage(JSON.stringify({ event: 'command', func: play ? 'playVideo' : 'pauseVideo', args: [] }), '*');
+  else win.postMessage(JSON.stringify({ method: play ? 'play' : 'pause' }), '*');
+}
+
+/** Asks a looping player to report playback, so it can stay hidden behind the thumbnail until it's actually playing. */
+export function listenLoop(frame) {
+  const win = frame.contentWindow;
+  if (!win) return;
+  if (frame.dataset.provider === 'youtube') win.postMessage(JSON.stringify({ event: 'listening', id: 1, channel: 'widget' }), '*');
+  else win.postMessage(JSON.stringify({ method: 'addEventListener', value: 'play' }), '*');
+}
+
+/** True for a player message that means "playing". */
+export function isPlayingMessage(e) {
+  let host = '';
+  try {
+    host = new URL(e.origin).hostname; // origin can be "null"
+  } catch {
+    return false;
+  }
+  if (!/(^|\.)(youtube-nocookie|youtube|vimeo)\.com$/.test(host)) return false;
+  let d = e.data;
+  if (typeof d === 'string') {
+    try {
+      d = JSON.parse(d);
+    } catch {
+      return false;
+    }
+  }
+  return (d?.event === 'onStateChange' && d.info === 1) || (d?.event === 'infoDelivery' && d.info?.playerState === 1) || d?.event === 'play';
 }

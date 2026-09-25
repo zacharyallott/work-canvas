@@ -1,6 +1,6 @@
 import gsap from 'gsap';
 import { EASE } from './motion.js';
-import { autoplaySrc } from './embed.js';
+import { autoplaySrc, commandLoop, listenLoop, isPlayingMessage } from './embed.js';
 
 /**
  * Project view (Figma frame 50, node 1553:6590).
@@ -26,11 +26,11 @@ import { autoplaySrc } from './embed.js';
  */
 
 export const PROJECT_CONFIG = {
-  pullDistance: 0.95, // × view height of scrolling past the end to go back to the work
-  gatePause: 0.25, // s without scroll input before a pull can start, so a fling stops at the end
+  pullDistance: 0.7, // × view height of scrolling past the end to go back to the work
+  gatePause: 0.15, // s without scroll input before a pull can start, so a fling stops at the end
   fadeFrom: 0.15, // pull progress where the fade starts
   lift: 72, // px the images rise over a full pull (they resist rather than follow)
-  settle: 0.3, // s without input before an unfinished pull eases back
+  settle: 0.5, // s without input before an unfinished pull eases back
   smoothing: 10, // 1/s: how quickly what's drawn follows the input
 };
 
@@ -57,6 +57,12 @@ const CSS = `
 .wc-embed-play{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:#f2f2f2}
 .wc-embed-play::after{content:"";position:absolute;left:22px;top:19px;border-style:solid;border-width:9px 0 9px 14px;border-color:transparent transparent transparent #111}
 .wc-embed:focus-visible{outline:2px solid #111;outline-offset:2px}
+/* #autoplay embeds: a muted loop like the MP4s. Scaled to cover the slot (assumes 16:9), no pointer input,
+   faded in over the thumbnail once the player has loaded. */
+.wc-project-item.is-loop{container-type:size;background:#111}
+.wc-project-item.is-loop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.wc-project-item.is-loop iframe{left:50%;top:50%;inset:auto;width:max(100cqw,calc(100cqh * 16 / 9));height:max(100cqh,calc(100cqw * 9 / 16));translate:-50% -50%;pointer-events:none;opacity:0;transition:opacity .4s linear}
+.wc-project-item.is-loop iframe.is-on{opacity:1}
 .wc-project-media{will-change:opacity,translate}
 .wc-project-info{will-change:opacity}
 @media (max-width:700px){
@@ -117,12 +123,20 @@ function playerFrame(src, title) {
 /**
  * A YouTube/Vimeo slot: the CMS image (or YouTube's thumbnail) with a play
  * button, sized to the image (16:9 without one). No image and no thumbnail
- * (Vimeo): the player itself.
+ * (Vimeo): the player itself. With #autoplay: a muted, looping player over
+ * the thumbnail, started and paused as it scrolls in and out.
  */
 function embedItem(it, projectTitle) {
   const own = it.src && it.src !== it.embed.thumb; // the slot's own image, not YouTube's
   const ratio = own && it.aspect ? it.aspect.toFixed(4) : '16 / 9';
   const title = `${projectTitle} — video`;
+  if (it.embed.autoplay) {
+    const poster = it.src
+      ? `<img src="${esc(it.src)}"${own && it.srcset ? ` srcset="${esc(it.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ''} alt="" ${it.hero ? 'decoding="sync"' : 'loading="lazy" decoding="async"'}${own ? '' : ' data-no-fit'}>`
+      : '';
+    const frame = `<iframe data-src="${esc(it.embed.loopSrc)}" data-provider="${it.embed.provider}" title="${esc(title)}" tabindex="-1" allow="autoplay; encrypted-media; picture-in-picture"></iframe>`;
+    return `<li class="wc-project-item is-embed is-loop${it.hero ? ' is-hero' : ''}" style="aspect-ratio:${ratio}">${poster}${frame}</li>`;
+  }
   const inner = it.src
     ? `<button type="button" class="wc-embed" data-src="${esc(autoplaySrc(it.embed))}" data-title="${esc(title)}" aria-label="Play video: ${esc(projectTitle)}">` +
       `<img src="${esc(it.src)}"${own && it.srcset ? ` srcset="${esc(it.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ''} alt="" ${it.hero ? 'decoding="sync"' : 'loading="lazy" decoding="async"'}${own ? '' : ' data-no-fit'}>` +
@@ -160,6 +174,30 @@ export class ProjectView {
       (entries) => entries.forEach((e) => (e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause())),
       { root: this.scroll, threshold: 0.25 },
     );
+    // #autoplay embeds: load the player when it's about to scroll in; play while on screen, pause when away.
+    this.loopIO = new IntersectionObserver(
+      (entries) =>
+        entries.forEach(({ target: frame, isIntersecting }) => {
+          if (isIntersecting && !frame.src) {
+            // Shown once the player says it's playing (fallback: 3 s after it loads), so no black flash over the thumbnail.
+            frame.addEventListener(
+              'load',
+              () => {
+                listenLoop(frame);
+                setTimeout(() => frame.classList.add('is-on'), 3000);
+              },
+              { once: true },
+            );
+            frame.src = frame.dataset.src; // autoplay=1 in the URL starts it
+          } else if (frame.src) commandLoop(frame, isIntersecting);
+        }),
+      { root: this.scroll, rootMargin: '200px 0px', threshold: 0 },
+    );
+    this._onMessage = (e) => {
+      if (!isPlayingMessage(e)) return;
+      this.el.querySelectorAll('.is-loop iframe:not(.is-on)').forEach((f) => f.contentWindow === e.source && f.classList.add('is-on'));
+    };
+    window.addEventListener('message', this._onMessage);
   }
 
   /**
@@ -221,6 +259,7 @@ export class ProjectView {
       v.muted = true;
       this.io.observe(v);
     });
+    this.el.querySelectorAll('.is-loop iframe').forEach((f) => this.loopIO.observe(f));
     this.layoutInfo();
   }
 
@@ -343,6 +382,7 @@ export class ProjectView {
   hide() {
     this.el.setAttribute('aria-hidden', 'true');
     this.el.querySelectorAll('video').forEach((v) => v.pause());
+    this.el.querySelectorAll('.is-loop iframe[src]').forEach((f) => commandLoop(f, false));
     clearTimeout(this.clearTimer);
     this.clearTimer = setTimeout(() => this.clear(), 500); // after the fade-out
   }
@@ -355,12 +395,15 @@ export class ProjectView {
       v.removeAttribute('src');
       v.load();
     });
+    this.el.querySelectorAll('.is-loop iframe').forEach((f) => this.loopIO.unobserve(f)); // removing them stops the players
     this.scroll.innerHTML = '';
   }
 
   destroy() {
     this.clear();
     this.io.disconnect();
+    this.loopIO.disconnect();
+    window.removeEventListener('message', this._onMessage);
     this.el.remove();
   }
 }
