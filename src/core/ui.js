@@ -23,12 +23,12 @@ const CSS = `
 .wc-root.is-ready .wc-canvas{opacity:1}
 .wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}
 /* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */
-.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,500);color:#f2f2f2}
+.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,400);color:#f2f2f2}
 .wc-topbar{position:absolute;left:13px;right:13px;top:13px;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference}
 .wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px);padding:0;border:0;background:none;pointer-events:auto;cursor:pointer}
 .wc-icon:focus-visible{outline:1px solid #f2f2f2;outline-offset:3px}
 .wc-icon img{display:block;width:100%;height:100%}
-.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}
+.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:400;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}
 .wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}
 /* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */
 .wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden}
@@ -41,12 +41,12 @@ const CSS = `
 .wc-about{position:absolute;left:0;right:0;bottom:0;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}
 .wc-root.is-about .wc-about{opacity:1;visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}
 .wc-about .wc-w{display:inline-block;will-change:opacity}
-.wc-about-statement{margin:0 0 64px;max-width:22.84em;font-size:clamp(26px,3.75vw,48px);line-height:1.25;letter-spacing:.02em;font-weight:500}
+.wc-about-statement{margin:0 0 64px;max-width:22.84em;font-size:clamp(26px,3.75vw,48px);line-height:1.25;letter-spacing:.02em;font-weight:400}
 .wc-about-statement img{display:inline-block;width:.75em;height:.75em;margin-left:.3em;vertical-align:-.06em}
-.wc-about-clients{display:flex;justify-content:space-between;gap:16px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:500;font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}
+.wc-about-clients{display:flex;justify-content:space-between;gap:16px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:400;font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}
 .wc-about-clients ul{list-style:none;margin:0;padding:0;width:155px}
-.wc-about-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;line-height:1;font-weight:500}
-.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:500;letter-spacing:.02em}
+.wc-about-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;line-height:1;font-weight:400}
+.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:400;letter-spacing:.02em}
 .wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}
 /* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */
 .wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}
