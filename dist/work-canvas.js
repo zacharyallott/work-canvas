@@ -12848,20 +12848,23 @@ function lm(e) {
 	} catch {
 		return null;
 	}
-	let n = t.hostname.replace(/^www\.|^m\./, ""), r = /(^#|&)autoplay\b/i.test(t.hash) || ["1", "true"].includes(t.searchParams.get("autoplay")), i = null;
+	let n = t.hostname.replace(/^www\.|^m\./, ""), r = /(^#|&)autoplay\b/i.test(t.hash) || ["1", "true"].includes(t.searchParams.get("autoplay")), i = null, a = /^\/shorts\//.test(t.pathname);
 	if (n === "youtu.be" ? i = t.pathname.slice(1).split("/")[0] : /(^|\.)youtube(-nocookie)?\.com$/.test(n) && (i = t.searchParams.get("v") || (/^\/(embed|shorts|live|v)\/([^/?#]+)/.exec(t.pathname) || [])[2]), i && /^[\w-]{6,}$/.test(i)) {
 		let e = parseInt(t.searchParams.get("t") || t.searchParams.get("start"), 10), n = new URLSearchParams({
 			rel: "0",
 			playsinline: "1",
 			...e ? { start: String(e) } : {}
-		}), a = new URLSearchParams({
+		}), o = new URLSearchParams({
 			autoplay: "1",
 			mute: "1",
 			loop: "1",
 			playlist: i,
 			controls: "0",
 			disablekb: "1",
+			fs: "0",
 			iv_load_policy: "3",
+			cc_load_policy: "0",
+			modestbranding: "1",
 			rel: "0",
 			playsinline: "1",
 			enablejsapi: "1"
@@ -12870,9 +12873,10 @@ function lm(e) {
 			provider: "youtube",
 			id: i,
 			src: `https://www.youtube-nocookie.com/embed/${i}?${n}`,
-			loopSrc: `https://www.youtube-nocookie.com/embed/${i}?${a}`,
+			loopSrc: `https://www.youtube-nocookie.com/embed/${i}?${o}`,
 			thumb: `https://i.ytimg.com/vi/${i}/hqdefault.jpg`,
-			autoplay: r
+			autoplay: r,
+			aspect: a ? 9 / 16 : 16 / 9
 		};
 	}
 	if (n === "vimeo.com" || n === "player.vimeo.com") {
@@ -12891,6 +12895,13 @@ function lm(e) {
 				muted: "1",
 				loop: "1",
 				autopause: "0",
+				controls: "0",
+				title: "0",
+				byline: "0",
+				portrait: "0",
+				badge: "0",
+				pip: "0",
+				keyboard: "0",
 				dnt: "1"
 			});
 			return {
@@ -12899,7 +12910,8 @@ function lm(e) {
 				src: `https://player.vimeo.com/video/${i}?${o}`,
 				loopSrc: `https://player.vimeo.com/video/${i}?${s}`,
 				thumb: "",
-				autoplay: r
+				autoplay: r,
+				aspect: 16 / 9
 			};
 		}
 	}
@@ -13419,13 +13431,14 @@ function Vm() {
 //#endregion
 //#region src/core/project.js
 var Hm = {
-	pullDistance: .7,
+	pullDistance: .45,
 	gatePause: .15,
+	holdAtEnd: .3,
 	fadeFrom: .15,
 	lift: 72,
-	settle: .5,
+	settle: .7,
 	smoothing: 10
-}, Um = "\n.wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s linear,visibility 0s linear .35s}\n.wc-root.is-project .wc-project{opacity:1;visibility:visible;pointer-events:auto;transition:opacity 0s,visibility 0s}\n.wc-project-scroll{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:clamp(200px,26vw,285px) minmax(0,1fr);column-gap:clamp(24px,4.2vw,53px);padding:52px 15px 12px 19px;box-sizing:border-box;-webkit-user-select:text;user-select:text;outline:none}\n.wc-project-info{grid-column:1;grid-row:1;align-self:start;position:sticky;top:var(--wc-info-top,60vh);display:flex;flex-direction:column;gap:7px;color:#000}\n.wc-project-title{margin:0;font-size:16px;line-height:1;font-weight:500}\n.wc-project-desc{margin:0;max-width:271px;font-size:16px;line-height:1.1;font-weight:400;letter-spacing:.02em;color:#5f5f5f}\n.wc-project-services{display:flex;flex-wrap:wrap;column-gap:12px;row-gap:2px;margin:0;padding:0;list-style:none;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase;font-weight:400}\n.wc-project-desc+.wc-project-services{margin-top:41px}\n.wc-project-media{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-end;gap:12px;margin:0;padding:0;list-style:none}\n.wc-project-item{position:relative;width:73.5%;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-project-item.is-loaded{background:none} /* the placeholder grey would otherwise show as a hairline at antialiased edges */\n.wc-project-item:nth-child(4n+2){width:100%}\n.wc-project-item:nth-child(4n+3){width:51.8%}\n.wc-project-item img{display:block;width:100%;height:auto}\n.wc-project-item video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n/* External video (YouTube / Vimeo): thumbnail + play button until pressed, then the player. */\n.wc-project-item iframe{position:absolute;inset:0;width:100%;height:100%;border:0}\n.wc-embed{appearance:none;position:absolute;inset:0;display:block;width:100%;height:100%;margin:0;padding:0;border:0;background:#111;cursor:pointer}\n.wc-embed img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-embed-play{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:#f2f2f2}\n.wc-embed-play::after{content:\"\";position:absolute;left:22px;top:19px;border-style:solid;border-width:9px 0 9px 14px;border-color:transparent transparent transparent #111}\n.wc-embed:focus-visible{outline:2px solid #111;outline-offset:2px}\n/* #autoplay embeds: a muted loop like the MP4s. Scaled to cover the slot (assumes 16:9), no pointer input,\n   faded in over the thumbnail once the player has loaded. */\n.wc-project-item.is-loop{container-type:size;background:#111}\n.wc-project-item.is-loop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-project-item.is-loop iframe{inset:auto;left:50%;top:50%;width:max(100cqw,calc(100cqh * 16 / 9));height:max(100cqh,calc(100cqw * 9 / 16));translate:-50% -50%;pointer-events:none;opacity:0;transition:opacity .4s linear}\n.wc-project-item.is-loop iframe.is-on{opacity:1}\n.wc-project-media{will-change:opacity,translate}\n.wc-project-info{will-change:opacity}\n@media (max-width:700px){\n  .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}\n  .wc-project-info{position:static;grid-row:1;margin-bottom:24px}\n  .wc-project-media{grid-column:1;grid-row:2}\n  .wc-project-item,.wc-project-item:nth-child(n){width:100%}\n}\n", Wm = 12, Gm = !1, Km = (e) => String(e ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"), qm = (e) => decodeURIComponent(String(e).split(/[?#]/)[0].split("/").pop() || "").replace(/^[0-9a-f]{24}_/, "").replace(/(-p-\d+)?\.[a-z0-9]+$/i, "").replace(/-(sm|md|lg|poster)$/, ""), Jm = (e) => {
+}, Um = "\n.wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s linear,visibility 0s linear .35s}\n.wc-root.is-project .wc-project{opacity:1;visibility:visible;pointer-events:auto;transition:opacity 0s,visibility 0s}\n.wc-project-scroll{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:clamp(200px,26vw,285px) minmax(0,1fr);column-gap:clamp(24px,4.2vw,53px);padding:52px 15px 12px 19px;box-sizing:border-box;-webkit-user-select:text;user-select:text;outline:none}\n.wc-project-info{grid-column:1;grid-row:1;align-self:start;position:sticky;top:var(--wc-info-top,60vh);display:flex;flex-direction:column;gap:7px;color:#000}\n.wc-project-title{margin:0;font-size:16px;line-height:1;font-weight:500}\n.wc-project-desc{margin:0;max-width:271px;font-size:16px;line-height:1.1;font-weight:400;letter-spacing:.02em;color:#5f5f5f}\n.wc-project-services{display:flex;flex-wrap:wrap;column-gap:12px;row-gap:2px;margin:0;padding:0;list-style:none;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase;font-weight:400}\n.wc-project-desc+.wc-project-services{margin-top:41px}\n.wc-project-media{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-end;gap:12px;margin:0;padding:0;list-style:none}\n.wc-project-item{position:relative;width:73.5%;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-project-item.is-loaded{background:none} /* the placeholder grey would otherwise show as a hairline at antialiased edges */\n.wc-project-item:nth-child(4n+2){width:100%}\n.wc-project-item:nth-child(4n+3){width:51.8%}\n.wc-project-item img{display:block;width:100%;height:auto}\n.wc-project-item video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n/* External video (YouTube / Vimeo): thumbnail + play button until pressed, then the player. */\n.wc-project-item iframe{position:absolute;inset:0;width:100%;height:100%;border:0}\n.wc-embed{appearance:none;position:absolute;inset:0;display:block;width:100%;height:100%;margin:0;padding:0;border:0;background:#111;cursor:pointer}\n.wc-embed img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-embed-play{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:#f2f2f2}\n.wc-embed-play::after{content:\"\";position:absolute;left:22px;top:19px;border-style:solid;border-width:9px 0 9px 14px;border-color:transparent transparent transparent #111}\n.wc-embed:focus-visible{outline:2px solid #111;outline-offset:2px}\n/* #autoplay embeds: a muted loop like the MP4s. Scaled to cover the slot (--ar = the video's aspect), no pointer input,\n   faded in over the thumbnail once the player has loaded. */\n.wc-project-item.is-loop{container-type:size;background:#111}\n.wc-project-item.is-loop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-project-item.is-loop iframe{inset:auto;left:50%;top:50%;width:max(100cqw,calc(100cqh * var(--ar,1.7778)));height:calc(max(100cqh,calc(100cqw / var(--ar,1.7778))) + 2 * var(--wc-loop-crop));translate:-50% -50%;pointer-events:none;opacity:0;transition:opacity .4s linear}\n/* The player is taller than the video by a band top and bottom, so the video sits letterboxed in the middle and the\n   player's own title bar / logo land in those bands, outside the slot (clipped). */\n.wc-project-item.is-loop{--wc-loop-crop:calc(64px + 3cqw)}\n.wc-project-item.is-loop iframe.is-on{opacity:1}\n.wc-project-media{will-change:opacity,translate}\n.wc-project-info{will-change:opacity}\n@media (max-width:700px){\n  .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}\n  .wc-project-info{position:static;grid-row:1;margin-bottom:24px}\n  .wc-project-media{grid-column:1;grid-row:2}\n  .wc-project-item,.wc-project-item:nth-child(n){width:100%}\n}\n", Wm = 12, Gm = !1, Km = (e) => String(e ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"), qm = (e) => decodeURIComponent(String(e).split(/[?#]/)[0].split("/").pop() || "").replace(/^[0-9a-f]{24}_/, "").replace(/(-p-\d+)?\.[a-z0-9]+$/i, "").replace(/-(sm|md|lg|poster)$/, ""), Jm = (e) => {
 	let t = e.hash ? [`h:${e.hash}`] : [];
 	e.embed && t.push(`e:${e.embed.provider}:${e.embed.id}`);
 	let n = [];
@@ -13449,13 +13462,13 @@ function Xm(e, t) {
 	return n.src = e, n.title = t, n.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media", n.allowFullscreen = !0, n.referrerPolicy = "strict-origin-when-cross-origin", n;
 }
 function Zm(e, t) {
-	let n = e.src && e.src !== e.embed.thumb, r = n && e.aspect ? e.aspect.toFixed(4) : "16 / 9", i = `${t} — video`;
+	let n = e.src && e.src !== e.embed.thumb, r = e.embed.aspect || 16 / 9, i = n && e.aspect ? e.aspect.toFixed(4) : r.toFixed(4), a = `${t} — video`;
 	if (e.embed.autoplay) {
-		let t = e.src ? `<img src="${Km(e.src)}"${n && e.srcset ? ` srcset="${Km(e.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="" ${e.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}${n ? "" : " data-no-fit"}>` : "", a = `<iframe data-src="${Km(e.embed.loopSrc)}" data-provider="${e.embed.provider}" title="${Km(i)}" tabindex="-1" allow="autoplay; encrypted-media; picture-in-picture"></iframe>`;
-		return `<li class="wc-project-item is-embed is-loop${e.hero ? " is-hero" : ""}" style="aspect-ratio:${r}">${t}${a}</li>`;
+		let t = e.src ? `<img src="${Km(e.src)}"${n && e.srcset ? ` srcset="${Km(e.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="" ${e.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}${n ? "" : " data-no-fit"}>` : "", o = `<iframe data-src="${Km(e.embed.loopSrc)}" data-provider="${e.embed.provider}" title="${Km(a)}" tabindex="-1" allow="autoplay; encrypted-media; picture-in-picture"></iframe>`;
+		return `<li class="wc-project-item is-embed is-loop${e.hero ? " is-hero" : ""}" style="aspect-ratio:${i};--ar:${r.toFixed(4)}">${t}${o}</li>`;
 	}
-	let a = e.src ? `<button type="button" class="wc-embed" data-src="${Km(um(e.embed))}" data-title="${Km(i)}" aria-label="Play video: ${Km(t)}"><img src="${Km(e.src)}"${n && e.srcset ? ` srcset="${Km(e.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="" ${e.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}${n ? "" : " data-no-fit"}><span class="wc-embed-play" aria-hidden="true"></span></button>` : Xm(e.embed.src, i).outerHTML.replace("<iframe", "<iframe loading=\"lazy\"");
-	return `<li class="wc-project-item is-embed${e.hero ? " is-hero" : ""}" style="aspect-ratio:${r}">${a}</li>`;
+	let o = e.src ? `<button type="button" class="wc-embed" data-src="${Km(um(e.embed))}" data-title="${Km(a)}" aria-label="Play video: ${Km(t)}"><img src="${Km(e.src)}"${n && e.srcset ? ` srcset="${Km(e.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="" ${e.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}${n ? "" : " data-no-fit"}><span class="wc-embed-play" aria-hidden="true"></span></button>` : Xm(e.embed.src, a).outerHTML.replace("<iframe", "<iframe loading=\"lazy\"");
+	return `<li class="wc-project-item is-embed${e.hero ? " is-hero" : ""}" style="aspect-ratio:${i}">${o}</li>`;
 }
 var Qm = class {
 	constructor(e, { onEnd: t } = {}) {
@@ -13536,8 +13549,10 @@ var Qm = class {
 	}
 	onWheel(e) {
 		if (this.ended || !this.scroll.firstElementChild) return;
-		let t = performance.now(), n = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? this.scroll.clientHeight : 1);
-		t - this.lastInput > Hm.gatePause * 1e3 && (this.gestureAtEnd = this.atEnd()), this.lastInput = t, n < 0 ? this.pull = 0 : this.gestureAtEnd && this.atEnd() && this.addPull(n), this.kick();
+		let t = performance.now(), n = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? this.scroll.clientHeight : 1), r = this.atEnd();
+		t - this.lastInput > Hm.gatePause * 1e3 && (this.gestureAtEnd = r), this.endSince = r ? this.endSince || t : 0, this.lastInput = t;
+		let i = t - this.endSince >= Hm.holdAtEnd * 1e3;
+		n < 0 ? this.pull = 0 : r && (this.gestureAtEnd || i) && this.addPull(n), this.kick();
 	}
 	onTouchStart(e) {
 		this.touchY = e.touches[0].clientY, this.gestureAtEnd = this.atEnd(), this.lastInput = performance.now();
@@ -13563,7 +13578,7 @@ var Qm = class {
 		n && (n.style.opacity = i, n.style.translate = t > 0 ? `0 ${(-e.lift * (1 - (1 - t) ** 2)).toFixed(2)}px` : ""), r && (r.style.opacity = i);
 	}
 	resetPull() {
-		cancelAnimationFrame(this.raf), this.raf = 0, this.lastFrame = 0, this.pull = 0, this.shown = 0, this.lastInput = 0, this.gestureAtEnd = !1, this.ended = !1;
+		cancelAnimationFrame(this.raf), this.raf = 0, this.lastFrame = 0, this.pull = 0, this.shown = 0, this.lastInput = 0, this.gestureAtEnd = !1, this.endSince = 0, this.ended = !1;
 	}
 	heroRect() {
 		let e = this.el.querySelector(".wc-project-item.is-hero");
@@ -14692,8 +14707,17 @@ var Ph = {
 	hoverSlowdown: .12,
 	hoverEase: 3,
 	scroll: {
-		multiplier: .5,
-		omega: 4
+		multiplier: .35,
+		omega: 3,
+		speeds: [
+			1,
+			.55,
+			1.35,
+			.75,
+			1.15,
+			.45,
+			.9
+		]
 	},
 	shift: {
 		mode: "offset",
@@ -14728,7 +14752,7 @@ function Fh(e, t) {
 }
 var Ih = class extends Eh {
 	constructor(e, t) {
-		super(e, t), this.scroll = 0, this.scrolled = new kh(t.scroll.omega), this.slow = 1, this.shiftX = 0, this.shiftV = 0, this.columns = [];
+		super(e, t), this.scroll = 0, this.scrollSprings = t.scroll.speeds.map((e) => new kh(t.scroll.omega * Math.sqrt(e))), this.slow = 1, this.shiftX = 0, this.shiftV = 0, this.columns = [];
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.width / Np.width));
@@ -14760,11 +14784,13 @@ var Ih = class extends Eh {
 			let i = 0, a = e.tiles.map((e) => {
 				let t = this.tiles[h++];
 				return t.w = this.colW, t.h = e.h, t.offsetInCol = i, i += e.h + this.gapPx, t;
-			}), o = t.columnOffsets.length, s = ((r - 1) % o + o) % o;
+			}), o = t.columnOffsets.length, s = ((r - 1) % o + o) % o, c = t.columnSpeeds[s % t.columnSpeeds.length], l = s % this.scrollSprings.length, u = Math.sign(c) * t.scroll.speeds[l];
 			return {
 				baseX: m + r * this.pitch,
 				start: t.columnOffsets[s] * n,
-				speed: t.columnSpeeds[s % t.columnSpeeds.length],
+				speed: c,
+				scrollSpeed: u,
+				spring: this.scrollSprings[l],
 				length: i,
 				tiles: a
 			};
@@ -14774,25 +14800,28 @@ var Ih = class extends Eh {
 		let t = this.config, n = this.engine, { width: r, height: i } = this.vp, a = n.hovered && this.tiles.includes(n.hovered);
 		this.slow += ((a ? t.hoverSlowdown : 1) - this.slow) * (1 - Math.exp(-e * t.hoverEase)), this.reduced || (this.scroll += t.autoplaySpeed * this.s * this.slow * e);
 		let { nx: o, inside: s } = n.cursor, c = s ? -Math.sign(o) * Math.abs(o) ** +t.shift.curve : 0, l = 1 - Math.exp(-e * t.shift.response);
-		t.shift.mode === "drift" ? (this.shiftV += (c * t.shift.speed * this.s - this.shiftV) * l, this.shiftX += this.shiftV * e) : this.shiftX += (c * t.shift.max * this.s - this.shiftX) * l;
-		let u = this.scroll + this.scrolled.update(e), d = this.colW / t.minAspect + this.gapPx, f = this.totalW, p = null, m = 0;
+		t.shift.mode === "drift" ? (this.shiftV += (c * t.shift.speed * this.s - this.shiftV) * l, this.shiftX += this.shiftV * e) : this.shiftX += (c * t.shift.max * this.s - this.shiftX) * l, this.scrollSprings.forEach((t) => t.update(e));
+		let u = this.colW / t.minAspect + this.gapPx, d = this.totalW, f = null, p = 0;
 		for (let e of this.columns) {
-			let o = ((e.baseX + this.shiftX - this.origin) % f + f) % f + this.origin, s = e.start + u * e.speed;
+			let o = ((e.baseX + this.shiftX - this.origin) % d + d) % d + this.origin, s = e.start + this.scroll * e.speed + e.spring.x * e.scrollSpeed;
 			for (let c of e.tiles) {
 				let l = e.length;
-				c.x = o, c.y = ((s + c.offsetInCol + d) % l + l) % l - d, c.w = this.colW, c.z = 0, c.alpha = 1, c.reveal = 1, c.gray = a && c !== n.hovered ? t.dimOthers * (1 - this.slow) : 0, c.priority = c.y + c.h > 0 && c.y < i && c.x + c.w > 0 && c.x < r ? this.centerScore(c) : 0, c.priority > m && (m = c.priority, p = c), this.applyTransition(c, Math.min(1, Math.max(0, o / r)));
+				c.x = o, c.y = ((s + c.offsetInCol + u) % l + l) % l - u, c.w = this.colW, c.z = 0, c.alpha = 1, c.reveal = 1, c.gray = a && c !== n.hovered ? t.dimOthers * (1 - this.slow) : 0, c.priority = c.y + c.h > 0 && c.y < i && c.x + c.w > 0 && c.x < r ? this.centerScore(c) : 0, c.priority > p && (p = c.priority, f = c), this.applyTransition(c, Math.min(1, Math.max(0, o / r)));
 			}
 		}
-		this.featured = p, p && (p.priority = 2), a && (n.hovered.priority = 3);
+		this.featured = f, f && (f.priority = 2), a && (n.hovered.priority = 3);
 	}
 	onWheel({ dy: e }) {
-		this.scrolled.push(-e * this.config.scroll.multiplier);
+		this.pushScroll(-e);
 	}
 	onDrag({ dy: e }) {
-		this.engine.touch && this.scrolled.push(e * this.config.scroll.multiplier);
+		this.engine.touch && this.pushScroll(e);
 	}
 	onRelease({ vy: e }) {
-		this.engine.touch && this.scrolled.push(e * .25 * this.config.scroll.multiplier);
+		this.engine.touch && this.pushScroll(e * .25);
+	}
+	pushScroll(e) {
+		for (let t of this.scrollSprings) t.push(e * this.config.scroll.multiplier);
 	}
 };
 wh(Ih, "defaults", Ph), wh(Ih, "label", "Masonry");
