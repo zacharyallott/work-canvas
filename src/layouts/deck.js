@@ -16,11 +16,10 @@ import { sizePattern, fitSize } from '../core/sizing.js';
  * positions lags a bit differently, so the pile trails. Cards never move
  * between positions: a new card fades in on top, in the position of the
  * oldest card, which fades out underneath it; the other cards stay exactly as
- * they are. Moving the cursor brings in new cards — one per `moveStep` px of
- * travel, so faster movement stacks faster and a still cursor adds none.
- * Hovering a card pauses the stacking and brings that card to the front (in
- * place). Without a cursor (touch / pointer elsewhere) it stacks slowly on
- * its own.
+ * they are. After `interval` s without a new card the next one comes in on
+ * its own; moving the cursor brings in more — one per `moveStep` px of
+ * travel, so faster movement stacks faster. Hovering a card pauses the
+ * stacking and brings that card to the front (in place).
  */
 export const config = {
   // Size scale (design px): each card picks one of these heights; width = height × aspect.
@@ -43,22 +42,22 @@ export const config = {
   follow: 0.38, // how far the pile moves toward the cursor (fraction of the cursor's offset from centre)
   followRates: [5.5, 4, 3, 2.2], // per position (1/s; lower = more lag), so the pile trails
 
-  // New cards: driven by cursor movement
+  // New cards
+  interval: 2, // s without a new card before the next one comes in on its own
   moveStep: 90, // design px of cursor travel per new card (lower = more cards)
   maxPerFrame: 1, // cap on cards added in a single frame during very fast moves
-  idleInterval: 3.2, // s between cards when there's no cursor (touch / pointer off the header)
   dealDuration: 0.12, // s for a new card to fade in (0 = instant cut)
-  dealEase: 'power2.out',
+  dealEase: 'none',
   pauseOnHover: true,
   hoverToFront: true, // hovering a card brings it to the top of the pile
 
-  hover: { zoom: 0.035, speed: 7 }, // subtle zoom inside the card, no distortion
+  hover: { zoom: 0, speed: 7 }, // hover only brings in the title (the image doesn't move)
   maxVideos: 4,
 
-  easing: 'power4.out',
-  stagger: 0.6,
-  enterDuration: 1.3,
-  leaveDuration: 0.7,
+  easing: 'none',
+  stagger: 0.45,
+  enterDuration: 0.7,
+  leaveDuration: 0.25,
   captionInset: [16, 12],
 };
 
@@ -81,7 +80,7 @@ export default class Deck extends Layout {
     this.next = this.slotCount % n; // next tile to deal
     this.fading = null; // { slot, from, fromStamp, to, p } while a new card fades in
 
-    this.timer = 0; // 0..1 progress toward the next card (idle, no cursor)
+    this.timer = 0; // s since the last card
     this.travel = 0; // cursor travel (px) since the last card
     this.lastPointer = null;
     this.anchors = cfg.slots.map(() => ({ x: 0, y: 0 })); // per-position lagged pile offset, screen px
@@ -126,30 +125,30 @@ export default class Deck extends Layout {
       if (k >= 0 && this.slotStamp[k] !== this.stamp) this.slotStamp[k] = ++this.stamp;
     }
 
-    // New cards: one for every `moveStep` px the cursor travels; none while it's still
-    // or hovering a card. With no cursor (touch / elsewhere) a card every `idleInterval` s.
+    // New cards: one for every `moveStep` px the cursor travels, and one after
+    // `interval` s without any. Hovering a card (or the entrance) holds both.
     const paused = (c.pauseOnHover && hovered) || this.reduced || this.progress < 1;
     const p = e.input?.pointer;
+    const step = c.moveStep * this.s;
     if (inside && p) {
       if (this.lastPointer && !paused) this.travel += Math.hypot(p.x - this.lastPointer.x, p.y - this.lastPointer.y);
       this.lastPointer = { x: p.x, y: p.y };
-      const step = c.moveStep * this.s;
-      for (let n = 0; this.travel >= step && n < c.maxPerFrame; n++) {
-        this.travel -= step;
-        this.deal();
-      }
-      this.travel = Math.min(this.travel, step * 2); // don't bank a backlog from one big swipe
-      this.timer = 0;
     } else {
       this.lastPointer = null;
       this.travel = 0;
-      if (!paused) {
-        this.timer += dt / c.idleInterval;
-        if (this.timer >= 1) {
-          this.timer = 0;
-          this.deal();
-        }
-      }
+    }
+    let dealt = false;
+    for (let n = 0; this.travel >= step && n < c.maxPerFrame; n++) {
+      this.travel -= step;
+      this.deal();
+      dealt = true;
+    }
+    this.travel = Math.min(this.travel, step * 2); // don't bank a backlog from one big swipe
+    if (!paused) this.timer += dt;
+    if (dealt) this.timer = 0;
+    else if (this.timer >= c.interval) {
+      this.timer = 0;
+      this.deal();
     }
 
     // Only the cards in the four positions (plus one fading out) are drawn.
@@ -184,8 +183,8 @@ export default class Deck extends Layout {
       const rank = order.indexOf(this.slotStamp[k]); // 0 = top
       t.priority = 1 - rank * 0.2;
       if (rank === 0) top = t;
-      // Entering the deck (dots): cards just fade in, bottom first.
-      this.applyTransition(t, Math.max(0, Math.min(1, (this.slotCount - 1 - rank) / this.slotCount)), undefined, { fade: true });
+      // Entering the deck: cards fade in, bottom first.
+      this.applyTransition(t, Math.max(0, Math.min(1, (this.slotCount - 1 - rank) / this.slotCount)));
     });
 
     // The replaced card fades out underneath, in place.

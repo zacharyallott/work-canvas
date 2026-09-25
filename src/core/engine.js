@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { DEFAULTS } from './defaults.js';
+import { EASE } from './motion.js';
 import { readItems, ensureAspects } from './data.js';
 import { MediaManager } from './media.js';
 import { Input } from './input.js';
@@ -72,15 +73,16 @@ export class WorkCanvas {
     await ensureAspects(this.items);
     hideLinkLists(this.items);
 
-    const initial = this.options.layout && this.layoutDefs.some((l) => l.key === this.options.layout) ? this.options.layout : this.layoutDefs[0].key;
+    const keys = this.layoutDefs.map((l) => l.key);
+    let initial = keys.includes(this.options.layout) ? this.options.layout : keys[0];
+    if (this.options.rotate) initial = rotatedLayout(keys) ?? initial; // a different version on every visit
     this.ui = new UI(mount, {
       layouts: this.layoutDefs,
       current: initial,
-      onSelect: (key) => this.setLayout(key),
       onAbout: () => this.toggleAbout(),
-      onHome: () => (this.projectOpen ? this.closeProject() : this.toggleAbout(false)),
+      // The star cycles the homepage versions (closing the about / project view if open).
+      onHome: () => (this.canCycle ? this.nextLayout() : this.projectOpen ? this.closeProject() : this.toggleAbout(false)),
       tagline: this.options.tagline,
-      showDots: this.options.switcher && this.layoutDefs.length > 1,
       hint: this.options.hint,
     });
     this.ui.renderFallback(this.items);
@@ -229,13 +231,14 @@ export class WorkCanvas {
 
   // ─── Layouts ───────────────────────────────────────────────────────────────
   async setLayout(key, { initial = false } = {}) {
-    if (this.aboutOpen) this.toggleAbout(false); // dots always bring the images back
+    if (this.aboutOpen) this.toggleAbout(false); // switching always brings the images back
     if (this.projectOpen) this.closeProject();
     if (this.switching || key === this.layoutKey || !this.renderer) return;
     const def = this.layoutDefs.find((l) => l.key === key);
     if (!def) return;
     this.switching = true;
     this.ui?.setActive(key);
+    rememberLayout(key);
     if (this.options.syncUrl) {
       const url = new URL(location.href);
       url.searchParams.set('v', key);
@@ -253,6 +256,22 @@ export class WorkCanvas {
     this.layout.resize(this.viewport);
     await this.layout.enter({ initial });
     this.switching = false;
+  }
+
+  get canCycle() {
+    return this.options.switcher && this.layoutDefs.length > 1;
+  }
+
+  /** Star click: on to the next version, wrapping around. */
+  nextLayout() {
+    const keys = this.layoutDefs.map((l) => l.key);
+    const next = keys[(keys.indexOf(this.layoutKey) + 1) % keys.length];
+    if (next === this.layoutKey) {
+      if (this.projectOpen) this.closeProject();
+      if (this.aboutOpen) this.toggleAbout(false);
+      return;
+    }
+    this.setLayout(next);
   }
 
   // ─── Frame loop ────────────────────────────────────────────────────────────
@@ -368,7 +387,7 @@ export class WorkCanvas {
     const duration = this.options.openDuration;
     gsap
       .timeline({ defaults: { duration, ease: this.options.openEase }, onComplete: finish })
-      .to(this, { openProgress: 1, duration: duration * 0.6 }, 0)
+      .to(this, { openProgress: 1, duration: 0.3, ease: EASE.fade }, 0) // the other tiles dissolve
       .to(from, { ...target, radius: this.radius }, 0);
     return true;
   }
@@ -522,5 +541,30 @@ export class WorkCanvas {
     }
     this.ui?.destroy();
     this.mount.classList.remove('wc-root', 'is-ready', 'is-fallback', 'is-hovering-tile', 'is-dragging');
+  }
+}
+
+const LAST_LAYOUT = 'work-canvas:last-version';
+
+/**
+ * The version after the one this visitor saw last (the one on screen when
+ * they left, star switches included), so every load shows a different one.
+ * null on a first visit. Storage can be unavailable (private mode, blocked
+ * site data): then pick at random.
+ */
+function rotatedLayout(keys) {
+  try {
+    const i = keys.indexOf(localStorage.getItem(LAST_LAYOUT));
+    return i >= 0 ? keys[(i + 1) % keys.length] : null;
+  } catch {
+    return keys[Math.floor(Math.random() * keys.length)];
+  }
+}
+
+function rememberLayout(key) {
+  try {
+    localStorage.setItem(LAST_LAYOUT, key);
+  } catch {
+    // storage unavailable: rotation falls back to random
   }
 }

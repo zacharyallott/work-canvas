@@ -2,15 +2,15 @@
 
 Immersive WebGL work header for zacharyallott.com. It's a standalone ES module (Three.js and GSAP bundled) that mounts into a `<div>` on a Webflow page and reads its content from the page's **Projects** Collection List, so the Webflow CMS stays the source of truth. The first two images of each project become tiles.
 
-It has three interaction versions, navigated with the dots in the top bar:
+It has three interaction versions. Each visit opens on the next one (the last version seen is remembered per browser), and clicking the star in the top-left moves on to the next:
 
 | Key | Version | Motion | Figma frame |
 | --- | --- | --- | --- |
 | `a` | Filmstrip: one infinite row, bottom-aligned skyline | Cursor steers the drift: left of centre drifts right, right drifts left, faster toward the edges | Frame 46 · `1542:5556` |
-| `b` | Deck: a pile of four cards that cycles through the whole collection | Pile trails the cursor with a little lag; new cards land on top from the cursor's side, faster the further from centre; hovering pauses | Frame 48 · `1542:5581` |
+| `b` | Deck: a pile of four cards that cycles through the whole collection | Pile trails the cursor with a little lag; a new card fades in on top every 2 s, and more as the cursor moves; hovering pauses and brings a card to the front | Frame 48 · `1542:5581` |
 | `c` | Masonry: columns drifting in alternating directions | Columns drift on their own and slow on hover; the grid shifts left or right with the cursor | Frame 45 · `1542:5489` |
 
-There are no clicks yet. Hovering a tile brings in its project title and ↓. On touch, tapping a tile shows the title briefly.
+Hovering a tile brings in its project title, plus ↓ when the project has a case study. Clicking a case-study tile opens its project view (Figma frame 50 · `1553:6590`): the tile glides to the top of the page, the title, description and services sit bottom-left, and the project's images follow on the right. Scrolling past the last image holds for a moment, then fades back to the work. The tagline opens the about section (Figma frame 49 · `1542:5601`). On touch, tapping a tile shows the title briefly.
 
 ## Quick start
 
@@ -32,9 +32,13 @@ src/
     media.js           texture loading/upgrades, <video> pool + concurrency cap
     tile.js            one plane on screen (rect + look → mesh/uniforms, media requests)
     layout.js          base class for versions (enter/leave, caption, focus helpers)
-    shaders.js         cover-fit, rounded corners, hover zoom, reveal (no warp/distortion)
+    shaders.js         cover-fit, rounded corners (no warp/distortion)
     input.js           cursor, touch drag, wheel, page scroll, tap
-    ui.js              top bar, dots, hover caption, fallback grid
+    ui.js              top bar (star = next version), hover caption, about section, fallback grid
+    about.js           about copy: statement, client columns, links
+    project.js         project view (DOM page) + end-of-page runway
+    motion.js          shared eases (every animation uses these)
+    sizing.js          size scale shared by the filmstrip and deck
     data.js            reads .work-item elements (CMS list) from the DOM
     defaults.js        shared defaults (radius, colours, video cap, DPR cap…)
   layouts/
@@ -56,9 +60,12 @@ Each version has an exported `config` at the top of its file. Shared values (cor
 The most useful settings:
 
 - **Filmstrip:** `maxSpeed` (px/s at the edges), `deadZone`, `curve` (how quickly speed builds toward the edges), `response` (lag), `idleSpeed` (drift with no cursor), `hoverSlowdown`.
-- **Deck:** `follow` (how far the pile leans toward the cursor), `followRates` (lag per layer, top → bottom), `slowInterval` / `fastInterval` (seconds between cards at the centre / edge), `curve`, `idleInterval`, `dealDuration`, `incomingDistance`, `slots` (pile shape), `pauseOnHover`.
+- **Deck:** `follow` (how far the pile leans toward the cursor), `followRates` (lag per layer, top → bottom), `interval` (seconds before a card comes in on its own), `moveStep` (cursor travel per extra card), `dealDuration`, `heights` (size scale), `slots` (pile shape), `pauseOnHover`, `hoverToFront`.
 - **Masonry:** `autoplaySpeed`, `hoverSlowdown`, `columnSpeeds`, `shift.max` (how far the grid moves with the cursor), `shift.response` (lag), `shift.mode` (`offset` leans, `drift` keeps travelling like the filmstrip).
-- **All:** `hover.zoom` (a subtle zoom inside the tile on hover; 0 on the filmstrip), `maxVideos`, `captionInset`. Tiles are never warped or distorted.
+- **Project view:** `PROJECT_CONFIG` in `src/core/project.js`: `runway` (space after the last image), `hold` (how long the last image stays pinned before the fade), `friction`, `closeAt`.
+- **All:** `maxVideos`, `captionInset`, `enterDuration` / `leaveDuration` / `stagger` (switching versions: tiles dissolve in, nothing slides). Tiles are never warped, distorted or zoomed on hover.
+
+Motion follows one vocabulary (`src/core/motion.js`): things that travel accelerate hard and settle slowly (`wc-move`), things that answer the cursor start fast (`wc-out`), and opacity changes are short plain dissolves with no drift attached.
 
 ## Adding or updating media
 
@@ -161,7 +168,7 @@ Tiles are ordered by the list's sort: every project's Image 1 first, then every 
 - For more than 100 projects, add more lists (each with offset/limit). The bundle collects every `.work-item` on the page in document order.
 - The older data-attribute formats (`data-image-1`, … or `data-src`, …) still work if you ever need a static list.
 
-Optional mount attributes: `data-layout="a|b|c"`, `data-switcher="false"` (hides the dots), `data-max-videos="4"`, `data-per-project="2"`, `data-items=".my-selector"`, `data-tagline="…"`, `data-tagline-href="#work"`, `data-media-base="…"` (base for relative URLs).
+Optional mount attributes: `data-layout="a|b|c"`, `data-switcher="false"` (the star only returns home instead of switching versions), `data-rotate="false"` (always open on `data-layout` instead of rotating), `data-max-videos="4"`, `data-per-project="2"`, `data-items=".my-selector"`, `data-tagline="…"`, `data-tagline-href="#work"`, `data-media-base="…"` (base for relative URLs).
 
 ### 3. Embed code
 
@@ -178,7 +185,7 @@ When you release, bump the version in this URL.
 - **Loading:** a static poster grid shows immediately. WebGL fades in once most thumbnails are on the GPU. If WebGL isn't available, the grid stays. Aspect ratios are read from each image's header bytes, so layout doesn't wait for full downloads.
 - **Images:** the smallest variant loads first, then larger ones when a tile is drawn large or hovered. Anything bigger than `maxTextureEdge` (1280px, 1024px on mobile) is downscaled before it reaches the GPU, so large CMS uploads are safe. Big textures not used for 8 s are released.
 - **Video:** a poster first. The `<video>` loads only when its tile is on screen, and only the top-N by priority play (hovered, then nearest the centre). Off-screen videos pause. On touch devices and with `prefers-reduced-motion`, only the tile nearest the centre plays.
-- **Reduced motion:** no idle drift or stacking, no hover zoom, and transitions become fades. Cursor-driven motion still works.
+- **Reduced motion:** no idle drift or stacking, no staggers, and transitions become fades. Cursor-driven motion still works.
 - **Pausing:** rendering stops when the header scrolls out of view or the tab is hidden. `destroy()` releases everything (GL context, textures, videos, listeners).
 - **Click:** off for now (`click: false` in `defaults.js`). The expand-and-navigate transition is still in `engine.open()` for when case studies are wired up.
 - **Performance:** DPR is capped at 2, textures upload at most two per frame, and one shared geometry is used. The bundle is about 186 KB gzipped (Three.js is most of it).

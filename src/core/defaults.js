@@ -29,9 +29,9 @@ export const DEFAULTS = {
   wheel: 'page', // 'page' = vertical wheel scrolls the page (header reacts to scroll); 'capture' = header consumes the wheel
   clickSlop: 6, // px of pointer travel before a press counts as a drag
 
-  // Transition when opening a project
-  openDuration: 0.9,
-  openEase: 'power3.inOut',
+  // Transition when opening a project (eases are registered in motion.js)
+  openDuration: 0.75,
+  openEase: 'wc-move', // quick to leave, slow to land
 };
 
 /** Size of the Figma artboard all design px values are relative to. */

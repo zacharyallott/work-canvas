@@ -381,44 +381,6 @@
     "folder": "04_Bonnell",
     "items": [
       {
-        "id": "26-bonnell",
-        "label": "26 Bonnell",
-        "href": "",
-        "caseStudy": false,
-        "source": "26-Bonnell.webp",
-        "sourceHash": "8e42f4eea4d12116",
-        "type": "image",
-        "width": 2880,
-        "height": 1620,
-        "images": {
-          "sm": {
-            "src": "media/projects/bonnell/26-bonnell-sm.webp",
-            "width": 480,
-            "height": 270,
-            "bytes": 8242
-          },
-          "md": {
-            "src": "media/projects/bonnell/26-bonnell-md.webp",
-            "width": 1280,
-            "height": 720,
-            "bytes": 41264
-          },
-          "lg": {
-            "src": "media/projects/bonnell/26-bonnell-lg.webp",
-            "width": 2048,
-            "height": 1152,
-            "bytes": 88356
-          }
-        },
-        "poster": {
-          "src": "media/projects/bonnell/26-bonnell-sm.webp",
-          "width": 480,
-          "height": 270,
-          "bytes": 8242
-        },
-        "aspect": 1.7778
-      },
-      {
         "id": "bonnell-allott-01",
         "label": "Bonnell",
         "href": "",

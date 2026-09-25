@@ -12,7 +12,8 @@ export const ABOUT = {
   statement:
     'An interdisciplinary design practice for deepening and expanding brand connections with conceptually driven solutions that are at once simple, functional & emotional.',
   clients: [
-    ['SRAM', 'Cannondale', 'GT Bikes', 'Aspen Snowmass', 'BOA', 'The James Brand', 'Nixon', 'Smith Optics', 'Burton'],
+    ['SRAM', 'Cannondale', 'GT Bikes', 'Aspen Snowmass', 'BOA'],
+    ['The James Brand', 'Nixon', 'Smith Optics', 'Burton'],
     ['Autodesk', 'Microsoft', 'Xbox', 'Dialpad', 'Electronic Arts', 'Gogoro', 'Surfline'],
     ['Under Armour', 'Adidas', 'Mattel', 'Dexcom'],
   ],

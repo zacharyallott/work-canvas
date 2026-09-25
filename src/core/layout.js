@@ -9,7 +9,8 @@ const clamp01 = (v) => Math.min(1, Math.max(0, v));
  *
  * Enter/leave use one `progress` value (0 hidden → 1 shown) that each tile
  * reads with its own stagger offset, so transitions keep working while the
- * layout is still moving.
+ * layout is still moving. Tiles only dissolve in and out — they don't slide
+ * or wipe — and they leave all at once, quicker than they arrive.
  */
 export class Layout {
   static defaults = {};
@@ -20,7 +21,7 @@ export class Layout {
     this.tiles = [];
     this.featured = null;
     this.progress = 0;
-    this.introEase = gsap.parseEase(config.easing ?? 'power3.out');
+    this.introEase = gsap.parseEase(config.easing ?? 'none');
   }
 
   get items() {
@@ -46,36 +47,26 @@ export class Layout {
   }
 
   // ─── Transitions ───────────────────────────────────────────────────────────
-  /** Per-tile progress with stagger. `order` is 0..1 (e.g. screen x / width). */
+  /** Per-tile progress with stagger on the way in. `order` is 0..1 (e.g. screen x / width). */
   tileProgress(order) {
-    const s = this.config.stagger ?? 0.4;
+    const s = this.leaving || this.reduced ? 0 : this.config.stagger ?? 0.3;
     return this.introEase(clamp01(this.progress * (1 + s) - order * s));
   }
 
-  /**
-   * Applies the shared enter/leave look to a tile whose rect is already set.
-   * `fade: true` = opacity only, no movement or wipe.
-   */
-  applyTransition(tile, order, from = { x: 0, y: 80 }, { fade = false } = {}) {
+  /** Fades a tile (whose rect is already set) with the shared enter/leave progress. */
+  applyTransition(tile, order) {
     const p = this.tileProgress(order);
-    if (p >= 1) return;
-    if (this.reduced || fade) {
-      tile.alpha *= p;
-      return;
-    }
-    tile.x += (from.x ?? 0) * (1 - p);
-    tile.y += (from.y ?? 0) * (1 - p);
-    tile.reveal = Math.min(tile.reveal, p);
-    tile.alpha *= Math.min(1, p * 4);
+    if (p < 1) tile.alpha *= p;
   }
 
   enter() {
-    const duration = this.reduced ? 0.4 : this.config.enterDuration ?? 1.4;
+    const duration = this.reduced ? 0.3 : this.config.enterDuration ?? 0.8;
     return new Promise((resolve) => gsap.fromTo(this, { progress: 0 }, { progress: 1, duration, ease: 'none', onComplete: resolve }));
   }
 
   leave() {
-    const duration = this.reduced ? 0.3 : this.config.leaveDuration ?? 0.7;
+    this.leaving = true;
+    const duration = this.reduced ? 0.2 : this.config.leaveDuration ?? 0.25;
     return new Promise((resolve) => gsap.to(this, { progress: 0, duration, ease: 'none', onComplete: resolve }));
   }
 

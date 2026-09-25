@@ -4,17 +4,19 @@ import { ARTBOARD } from '../core/defaults.js';
 /**
  * Version C — Masonry columns (Figma frame 45, node 1542:5489)
  *
- * Seven 168px columns with 12px gutters and 12px vertical gaps, staggered starts
- * (offsets from the frame), bleeding off the top and bottom. Tile heights
+ * Columns 15% wider than the frame's 168px (193px), 12px gutters and 12px
+ * vertical gaps, staggered starts (offsets from the frame), bleeding off the
+ * top and bottom. Tile heights
  * come from real aspect ratios. Items repeat as needed to fill each column.
  *
  * Motion: columns drift vertically on their own, alternating direction at
  * slightly different speeds, and slow down while a tile is hovered. The whole
  * grid shifts left/right with the cursor (cursor left → grid moves right), with
- * a little lag. No scroll or drag input. Hover reveals the title.
+ * a little lag. No scroll or drag input. Hover reveals the title. Switching
+ * to it, the columns fade in where they are (left to right); nothing slides.
  */
 export const config = {
-  columnWidth: 168,
+  columnWidth: 193, // Figma 168 × 1.15
   gutter: 12, // CSS px between columns (fixed, not scaled with the viewport)
   gap: 12, // CSS px between tiles in a column (fixed)
   firstColumnX: -8,
@@ -42,13 +44,13 @@ export const config = {
   },
   dimOthers: 0, // 0..1 desaturate non-hovered tiles while hovering
 
-  hover: { zoom: 0.06, speed: 8 }, // subtle zoom inside the tile, no distortion
+  hover: { zoom: 0, speed: 8 }, // hover only brings in the title (the image doesn't move)
   maxVideos: 6,
 
-  easing: 'expo.out',
-  stagger: 0.5,
-  enterDuration: 1.6,
-  leaveDuration: 0.8,
+  easing: 'none',
+  stagger: 0.3,
+  enterDuration: 0.8,
+  leaveDuration: 0.25,
   captionInset: [14, 13],
 };
 
@@ -186,8 +188,7 @@ export default class Masonry extends Layout {
           bestScore = t.priority;
           featured = t;
         }
-        // Enter from alternating directions (matches the drift direction).
-        this.applyTransition(t, Math.min(1, Math.max(0, x / width)), { y: Math.sign(col.speed) * -height * 0.5 });
+        this.applyTransition(t, Math.min(1, Math.max(0, x / width))); // fade in place, column by column
       }
     }
 

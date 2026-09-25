@@ -4,8 +4,9 @@
  * Auto-mounts on <div id="work-canvas"> (or any [data-work-canvas]) once the
  * DOM is ready. Options come from data attributes on the mount:
  *
- *   data-layout="a|b|c"        initial version (default a; ?v=b in the URL wins)
- *   data-switcher="false"      hide the version dots
+ *   data-layout="a|b|c"        version for a first visit; later visits rotate to the next one
+ *   data-rotate="false"        always open on data-layout instead of rotating (?v=b in the URL always wins)
+ *   data-switcher="false"      the star doesn't cycle versions (it only returns home)
  *   data-items=".work-item"    selector for the item links
  *   data-media-base="https://…/"  base URL for relative media paths
  *   data-wheel="page|capture"  whether the header consumes vertical wheel
@@ -40,6 +41,7 @@ export async function mount(el, options = {}) {
   const wc = new WorkCanvas(el, {
     layouts,
     layout: options.layout ?? urlLayout ?? d.layout ?? 'a',
+    rotate: options.rotate ?? (!(options.layout ?? urlLayout) && d.rotate !== 'false'),
     switcher: options.switcher ?? d.switcher !== 'false',
     syncUrl: options.syncUrl ?? d.syncUrl === 'true',
     tagline: options.tagline ?? d.tagline ?? 'design &amp; direction made to move',

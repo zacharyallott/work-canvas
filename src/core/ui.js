@@ -1,24 +1,25 @@
 import gsap from 'gsap';
 import zaIcon from '../ui/za-icon.svg';
-import dotFilled from '../ui/dot-filled.svg';
-import dotEmpty from '../ui/dot-empty.svg';
 import { aboutMarkup } from './about.js';
+import { EASE } from './motion.js';
 import { ProjectView } from './project.js';
 
 /**
- * DOM layer on top of the canvas: top bar (ZA icon, tagline, version dots),
+ * DOM layer on top of the canvas: top bar (ZA icon — also the version switch — and tagline),
  * the floating caption, the about section (opened from the tagline), the
  * static fallback grid, and a visually-hidden wrapper for real links.
  * Styles are injected once and scoped to .wc-*.
- * Values from Figma: 13px inset, 16px tagline, 8px dots / 6px gap (icon enlarged from 12px to 16px),
- * 12px caption, text #F2F2F2 with mix-blend-mode: difference.
+ * Values from Figma: 13px inset, 16px tagline, icon enlarged from 12px to
+ * 16px, 12px caption, text #F2F2F2 with mix-blend-mode: difference. The
+ * tagline sits at the right edge (the version dots/lines it was centred
+ * between are gone; the star switches versions now).
  */
 
 const CSS = `
 .wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);min-height:var(--wc-min-height,100svh);isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}
 .wc-root.is-dragging{cursor:grabbing}
 .wc-root.is-hovering-tile{cursor:pointer}
-.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .6s ease}
+.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear}
 .wc-root.is-ready .wc-canvas{opacity:1}
 .wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}
 /* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */
@@ -27,7 +28,7 @@ const CSS = `
 .wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px);padding:0;border:0;background:none;pointer-events:auto;cursor:pointer}
 .wc-icon:focus-visible{outline:1px solid #f2f2f2;outline-offset:3px}
 .wc-icon img{display:block;width:100%;height:100%}
-.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}
+.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}
 .wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}
 /* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */
 .wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden}
@@ -37,15 +38,15 @@ const CSS = `
 .wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}
 .wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}
 /* About (Figma frame 49): bottom-anchored statement + client columns. */
-.wc-about{position:absolute;left:0;right:0;bottom:0;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .5s ease,visibility 0s linear .5s}
+.wc-about{position:absolute;left:0;right:0;bottom:0;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}
 .wc-root.is-about .wc-about{opacity:1;visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}
-.wc-about .wc-w{display:inline-block;will-change:transform,opacity}
-.wc-about-statement{margin:0;max-width:22.84em;font-size:clamp(26px,3.75vw,48px);line-height:1.25;letter-spacing:.02em;font-weight:500}
+.wc-about .wc-w{display:inline-block;will-change:opacity}
+.wc-about-statement{margin:0 0 32px;max-width:22.84em;font-size:clamp(26px,3.75vw,48px);line-height:1.25;letter-spacing:.02em;font-weight:500}
 .wc-about-statement img{display:inline-block;width:.75em;height:.75em;margin-left:.3em;vertical-align:-.06em}
 .wc-about-clients{display:flex;justify-content:space-between;gap:16px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:500;font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}
 .wc-about-clients ul{list-style:none;margin:0;padding:0;width:155px}
 .wc-about-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;line-height:1;font-weight:500}
-.wc-about-links{display:flex;gap:16px;font-size:16px}
+.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:500;letter-spacing:.02em}
 .wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}
 /* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */
 .wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}
@@ -54,10 +55,6 @@ const CSS = `
 .wc-link-track>span.is-next{left:-1em}
 .wc-about-links a:focus-visible{outline:1px solid currentColor;outline-offset:3px}
 .wc-about-copy{margin:0;font-size:16px}
-.wc-dots{display:flex;gap:6px;align-items:center;pointer-events:auto}
-.wc-dot{appearance:none;border:0;padding:4px;margin:-4px;background:none;cursor:pointer;display:block;line-height:0}
-.wc-dot img{display:block;width:8px;height:8px}
-.wc-dot:focus-visible{outline:1px solid #f2f2f2;outline-offset:2px;border-radius:50%}
 .wc-caption{position:absolute;left:0;top:0;font-size:12px;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}
 .wc-caption-inner{display:block;transform:translateY(110%)}
 .wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}
@@ -66,7 +63,7 @@ const CSS = `
 .wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}
 .wc-root.is-ready .wc-fallback{opacity:0;pointer-events:none}
 .wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}
-@media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-clients ul{width:auto}.wc-about-footer{margin-top:4px}}
+@media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-clients{flex-wrap:wrap;row-gap:14px}.wc-about-clients ul{width:calc(50% - 8px)}.wc-about-footer{margin-top:4px}}
 `;
 
 let styleInjected = false;
@@ -80,22 +77,21 @@ function injectStyles() {
 }
 
 export class UI {
-  constructor(mount, { layouts, current, onSelect, onAbout, onHome, tagline, showDots = true, hint }) {
+  constructor(mount, { layouts, current, onAbout, onHome, tagline, hint }) {
     injectStyles();
     this.mount = mount;
-    this.onSelect = onSelect;
+    this.layouts = layouts;
     const aboutId = `wc-about-${Math.random().toString(36).slice(2, 8)}`;
 
     this.root = document.createElement('div');
     this.root.className = 'wc-ui';
     this.root.innerHTML = `
       <div class="wc-topbar">
-        <button type="button" class="wc-icon" aria-label="Back to the work"><img src="${zaIcon}" alt="" width="16" height="16"></button>
+        <button type="button" class="wc-icon"><img src="${zaIcon}" alt="" width="16" height="16"></button>
         <a class="wc-tagline" href="#${aboutId}" role="button" aria-expanded="false" aria-controls="${aboutId}">
           <span>${tagline}</span>
           <span class="wc-arrow" aria-hidden="true"><span class="wc-arrow-track"><span class="wc-arrow-glyph">→</span><span class="wc-arrow-glyph is-next">→</span></span></span>
         </a>
-        <div class="wc-dots" role="tablist" aria-label="Header version"></div>
       </div>
       <div class="wc-caption" aria-hidden="true"><span class="wc-caption-inner"></span></div>
       <section class="wc-about" id="${aboutId}" aria-label="About" data-wc-no-input>${aboutMarkup()}</section>
@@ -103,7 +99,7 @@ export class UI {
     `;
     this.caption = this.root.querySelector('.wc-caption');
     this.captionInner = this.root.querySelector('.wc-caption-inner');
-    this.dots = this.root.querySelector('.wc-dots');
+    this.icon = this.root.querySelector('.wc-icon');
     this.tagline = this.root.querySelector('.wc-tagline');
     this.about = this.root.querySelector('.wc-about');
     splitWords(this.about.querySelector('.wc-about-statement'));
@@ -113,7 +109,7 @@ export class UI {
       let tween;
       const loop = () => {
         if (tween?.isActive() || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        tween = gsap.fromTo(track, { x: 0 }, { x: () => track.offsetWidth, duration: 0.5, ease: 'power3.inOut', onComplete: () => gsap.set(track, { x: 0 }) });
+        tween = gsap.fromTo(track, { x: 0 }, { x: () => track.offsetWidth, duration: 0.4, ease: EASE.move, onComplete: () => gsap.set(track, { x: 0 }) });
       };
       a.addEventListener('pointerenter', loop);
       a.addEventListener('focus', loop);
@@ -126,33 +122,15 @@ export class UI {
       onAbout?.();
     });
     this.tagline.addEventListener('pointerdown', (e) => e.stopPropagation());
-    const icon = this.root.querySelector('.wc-icon');
-    icon.addEventListener('click', (e) => {
+    this.icon.addEventListener('click', (e) => {
       e.preventDefault();
       onHome?.();
     });
-    icon.addEventListener('pointerdown', (e) => e.stopPropagation());
+    this.icon.addEventListener('pointerdown', (e) => e.stopPropagation());
     this.tagline.addEventListener('pointerenter', () => this.loopArrow());
     this.tagline.addEventListener('focus', () => this.loopArrow());
 
-    if (showDots) {
-      this.dotButtons = layouts.map(({ key, name }, i) => {
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'wc-dot';
-        b.setAttribute('role', 'tab');
-        b.setAttribute('aria-label', `Version ${key.toUpperCase()}: ${name}`);
-        b.innerHTML = `<img src="${dotEmpty}" alt="" width="8" height="8">`;
-        b.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.onSelect(key);
-        });
-        b.addEventListener('pointerdown', (e) => e.stopPropagation());
-        this.dots.appendChild(b);
-        return { key, b };
-      });
-      this.setActive(current);
-    }
+    this.setActive(current);
     mount.appendChild(this.root);
     this.project = new ProjectView(this.root, {});
 
@@ -170,15 +148,16 @@ export class UI {
     this.arrowTween = gsap.fromTo(
       this.arrowTrack,
       { y: 0 },
-      { y: 17 * dir, duration: 0.55, ease: 'power3.inOut', onComplete: () => gsap.set(this.arrowTrack, { y: 0 }) },
+      { y: 17 * dir, duration: 0.45, ease: EASE.move, onComplete: () => gsap.set(this.arrowTrack, { y: 0 }) },
     );
   }
 
   /**
-   * About open: arrow turns to ↑ (Figma frame 49). Once the images have faded,
-   * the statement comes in line by line, then the client list column by column.
-   * Lines are whatever the browser wrapped, measured when the section opens.
-   * Closing fades the whole section out (CSS).
+   * About open: arrow turns to ↑ (Figma frame 49). As the images fade, the
+   * statement dissolves in line by line, then the client list column by
+   * column, then the footer — opacity only, nothing slides. Lines are whatever
+   * the browser wrapped, measured when the section opens. Closing fades the
+   * whole section out (CSS).
    */
   setAbout(open) {
     this.flipArrow(open);
@@ -191,7 +170,7 @@ export class UI {
     this.aboutTl?.kill();
     if (!open) return;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    gsap.set([...words, ...columns, footer].filter(Boolean), { opacity: 0, y: reduced ? 0 : 10 });
+    gsap.set([...words, ...columns, footer].filter(Boolean), { opacity: 0 });
 
     // Group words into rendered lines by their vertical centre (so the inline star
     // joins the last line even though its box is shorter than the text's).
@@ -204,13 +183,11 @@ export class UI {
       lastMid = mid;
     });
 
-    this.aboutTl = gsap.timeline({ delay: 0.35 }); // let the images fade first
-    lines.forEach((line, i) =>
-      this.aboutTl.to(line, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, reduced ? 0 : i * 0.12),
-    );
+    this.aboutTl = gsap.timeline({ delay: 0.2, defaults: { ease: EASE.fade } }); // images are fading out meanwhile
+    lines.forEach((line, i) => this.aboutTl.to(line, { opacity: 1, duration: 0.45 }, reduced ? 0 : i * 0.07));
     this.aboutTl
-      .to(columns, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: reduced ? 0 : 0.15 }, reduced ? 0 : '-=0.25')
-      .to(footer, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, reduced ? 0 : '-=0.3');
+      .to(columns, { opacity: 1, duration: 0.3, stagger: reduced ? 0 : 0.07 }, reduced ? 0 : '-=0.2')
+      .to(footer, { opacity: 1, duration: 0.3 }, reduced ? 0 : '-=0.1');
   }
 
   /** Swap the arrow's direction by fading it out, flipping it while hidden, and fading back in. */
@@ -220,20 +197,20 @@ export class UI {
     this.arrowFlip?.kill();
     this.arrowFlip = gsap
       .timeline()
-      .to(arrow, { opacity: 0, duration: 0.15, ease: 'power1.in' })
+      .to(arrow, { opacity: 0, duration: 0.1, ease: EASE.fade })
       .add(() => {
         this.arrowTween?.progress(1); // finish any hover loop so the track is reset
         this.tagline.classList.toggle('is-up', up);
       })
-      .to(arrow, { opacity: 1, duration: 0.25, ease: 'power1.out' });
+      .to(arrow, { opacity: 1, duration: 0.2, ease: EASE.fade });
   }
 
   setActive(key) {
-    this.dotButtons?.forEach(({ key: k, b }) => {
-      const on = k === key;
-      b.setAttribute('aria-selected', String(on));
-      b.querySelector('img').src = on ? dotFilled : dotEmpty;
-    });
+    // The star moves on to the next version; its label says which one is showing.
+    const i = this.layouts.findIndex((l) => l.key === key);
+    const now = this.layouts[i];
+    const next = this.layouts[(i + 1) % this.layouts.length];
+    this.icon.setAttribute('aria-label', this.layouts.length > 1 ? `Showing ${now.name}. Switch to ${next.name}` : 'Back to the work');
   }
 
   /** Static grid shown before WebGL is ready, and permanently if it's unavailable. */
@@ -266,7 +243,7 @@ export class UI {
       this.captionTl?.kill();
       const tl = gsap.timeline();
       if (s.shown) {
-        tl.to(inner, reducedMotion ? { opacity: 0, duration: 0.15 } : { yPercent: -110, duration: 0.18, ease: 'power2.in' });
+        tl.to(inner, reducedMotion ? { opacity: 0, duration: 0.15 } : { yPercent: -110, duration: 0.12, ease: EASE.in });
       }
       tl.add(() => {
         s.shown = tile;
@@ -279,7 +256,7 @@ export class UI {
         tl.fromTo(
           inner,
           reducedMotion ? { yPercent: 0, opacity: 0 } : { yPercent: 110, opacity: 1 },
-          { yPercent: 0, opacity: 1, duration: reducedMotion ? 0.2 : 0.5, ease: 'power3.out' },
+          { yPercent: 0, opacity: 1, duration: reducedMotion ? 0.2 : 0.3, ease: EASE.out },
         );
       }
       this.captionTl = tl;

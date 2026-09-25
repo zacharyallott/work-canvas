@@ -1,4 +1,5 @@
 import gsap from 'gsap';
+import { EASE } from './motion.js';
 
 /**
  * Project view (Figma frame 50, node 1553:6590).
@@ -11,25 +12,31 @@ import gsap from 'gsap';
  * Plain DOM (not WebGL) so the images are real <img>/<video> elements —
  * selectable, accessible and lazy-loaded.
  *
- * Scrolling past the last image enters a runway: the page slows to half speed
- * (a bit of friction) and fades out, and reaching the end takes you back to
- * the work.
+ * Scrolling past the last image enters a runway: the images hold at the bottom
+ * of the view for a moment, then drift on with friction and fade out (the info
+ * block stays put and only fades); reaching the end takes you back to the work.
+ * At the end of the hold the scroll stops dead — momentum from a fling can't
+ * carry through — and only a fresh scroll, after a short pause, continues into
+ * the fade.
  */
 
 export const PROJECT_CONFIG = {
-  runway: 0.6, // runway length after the last image, × view height
-  friction: 0.5, // 0 = content keeps pace with the scroll, 1 = content stops dead in the runway
+  runway: 2, // runway length after the last image, × view height
+  hold: 0.45, // runway progress the last image stays pinned to the bottom of the view before the fade starts
+  gatePause: 0.35, // s without scroll input at the end of the hold before scrolling on is allowed
+  friction: 0.88, // after the hold: 0 = images keep pace with the scroll, 1 = they stay put
   closeAt: 0.98, // runway progress that returns to the work
 };
 
 const CSS = `
-.wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .45s ease,visibility 0s linear .45s}
+.wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s linear,visibility 0s linear .35s}
 .wc-root.is-project .wc-project{opacity:1;visibility:visible;pointer-events:auto;transition:opacity 0s,visibility 0s}
 .wc-project-scroll{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:285px minmax(0,1fr);column-gap:53px;padding:52px 15px 12px 19px;box-sizing:border-box;-webkit-user-select:text;user-select:text}
-.wc-project-info{grid-column:1;grid-row:1;align-self:start;position:sticky;top:var(--wc-info-top,60vh);display:flex;flex-direction:column;gap:7px;color:#000}
+.wc-project-info{grid-column:1;grid-row:1/3;align-self:start;position:sticky;top:var(--wc-info-top,60vh);display:flex;flex-direction:column;gap:7px;color:#000}
 .wc-project-title{margin:0;font-size:16px;line-height:1;font-weight:500}
 .wc-project-desc{margin:0;max-width:271px;font-size:16px;line-height:1.1;font-weight:400;color:#5f5f5f}
 .wc-project-services{display:flex;flex-wrap:wrap;column-gap:12px;row-gap:2px;margin:0;padding:0;list-style:none;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase;font-weight:500}
+.wc-project-desc+.wc-project-services{margin-top:41px}
 .wc-project-media{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-end;gap:12px;margin:0;padding:0;list-style:none}
 .wc-project-item{position:relative;width:73.5%;border-radius:4px;overflow:hidden;background:#e2e2e2}
 .wc-project-item:nth-child(4n+2){width:100%}
@@ -37,7 +44,8 @@ const CSS = `
 .wc-project-item img{display:block;width:100%;height:auto}
 .wc-project-item video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .wc-project-end{grid-column:1/-1;grid-row:2;pointer-events:none}
-.wc-project-media,.wc-project-info{will-change:opacity,transform}
+.wc-project-media{will-change:opacity,translate}
+.wc-project-info{will-change:opacity}
 @media (max-width:700px){
   .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}
   .wc-project-info{position:static;grid-row:1;margin-bottom:24px}
@@ -46,6 +54,8 @@ const CSS = `
   .wc-project-item,.wc-project-item:nth-child(n){width:100%}
 }
 `;
+
+const INFO_BOTTOM = 12; // info block's distance from the bottom of the view, px
 
 let injected = false;
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
@@ -74,6 +84,9 @@ export class ProjectView {
     uiRoot.prepend(this.el); // before the top bar, so the top bar draws on top
     this.onEnd = onEnd; // called when the visitor scrolls through the end runway
     this.scroll.addEventListener('scroll', () => this.onScroll(), { passive: true });
+    // Any scroll input (including trackpad momentum) keeps the gate at the end of the hold closed.
+    this.scroll.addEventListener('wheel', () => this.gateWait(), { passive: true });
+    this.scroll.addEventListener('touchend', () => this.gateWait(), { passive: true });
     this.io = new IntersectionObserver(
       (entries) => entries.forEach((e) => (e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause())),
       { root: this.scroll, threshold: 0.25 },
@@ -123,6 +136,7 @@ export class ProjectView {
       </ul>
       <div class="wc-project-end" aria-hidden="true" style="height:${Math.round(PROJECT_CONFIG.runway * 100)}vh"></div>`;
     this.ended = false;
+    this.resetGate();
     this.scroll.scrollTop = 0;
     this.el.querySelectorAll('.wc-project-item img').forEach((img) => {
       const fit = () => img.naturalWidth && (img.parentElement.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`);
@@ -136,20 +150,22 @@ export class ProjectView {
     this.layoutInfo();
   }
 
-  /** Pins the info block bottom-left of the view (Figma: 41px above the bottom). */
+  /** Pins the info block bottom-left of the view, level with the 12px bottom margin the images rest on. */
   layoutInfo() {
     const info = this.el.querySelector('.wc-project-info');
     if (!info) return;
     // Sticky offsets are measured inside the scroll container's padding, so remove it.
     const padTop = parseFloat(getComputedStyle(this.scroll).paddingTop) || 0;
-    const top = this.el.clientHeight - 41 - info.offsetHeight - padTop;
+    const top = this.el.clientHeight - INFO_BOTTOM - info.offsetHeight - padTop;
     this.el.style.setProperty('--wc-info-top', `${Math.max(0, top)}px`);
   }
 
   /**
    * Runway: progress p (0 → 1) through the space after the last image. The
-   * content counter-moves by `friction` of the scroll (so it slows down) and
-   * fades out; at `closeAt` we hand back to the work.
+   * images counter-move so they stay pinned at the bottom until `hold`, then
+   * drift on at (1 − friction) of the scroll while everything fades; at
+   * `closeAt` we hand back to the work. The info block spans the runway row,
+   * so it stays pinned by `position: sticky` and only fades.
    */
   onScroll() {
     const end = this.scroll.querySelector('.wc-project-end');
@@ -157,18 +173,50 @@ export class ProjectView {
     const runway = end.offsetHeight;
     const max = this.scroll.scrollHeight - this.scroll.clientHeight;
     const start = max - runway;
-    const p = runway > 0 ? Math.min(1, Math.max(0, (this.scroll.scrollTop - start) / runway)) : 0;
-    const content = this.scroll.querySelectorAll('.wc-project-media, .wc-project-info');
-    const shift = p * runway * PROJECT_CONFIG.friction;
-    const fade = 1 - Math.min(1, p / PROJECT_CONFIG.closeAt);
-    content.forEach((el) => {
-      el.style.opacity = p > 0 ? String(fade) : '';
-      el.style.translate = p > 0 ? `0 ${shift}px` : '';
-    });
-    if (p >= PROJECT_CONFIG.closeAt) {
+    let p = runway > 0 ? Math.min(1, Math.max(0, (this.scroll.scrollTop - start) / runway)) : 0;
+    const { hold, friction, closeAt } = PROJECT_CONFIG;
+    if ((this.gate === 'armed' || this.gate === 'holding') && p > hold) {
+      // End of the hold: stop the scroll here (overflow:hidden also kills momentum)
+      // until the current gesture is over.
+      if (this.gate === 'armed') {
+        this.gate = 'holding';
+        this.scroll.style.overflowY = 'hidden';
+        this.gateWait();
+      }
+      this.scroll.scrollTop = start + hold * runway;
+      p = hold;
+    } else if (this.gate === 'passed' && p < hold * 0.5) {
+      this.gate = 'armed'; // scrolled back up: the gate applies again
+    }
+    const shift = (Math.min(p, hold) + Math.max(0, p - hold) * friction) * runway;
+    const fade = 1 - Math.min(1, Math.max(0, (p - hold) / (closeAt - hold)));
+    const media = this.scroll.querySelector('.wc-project-media');
+    const info = this.scroll.querySelector('.wc-project-info');
+    if (media) {
+      media.style.opacity = p > 0 ? String(fade) : '';
+      media.style.translate = p > 0 ? `0 ${shift}px` : '';
+    }
+    if (info) info.style.opacity = p > 0 ? String(fade) : '';
+    if (p >= closeAt) {
       this.ended = true;
       this.onEnd?.();
     }
+  }
+
+  /** Opens the gate once there has been no scroll input for `gatePause` s. */
+  gateWait() {
+    if (this.gate !== 'holding') return;
+    clearTimeout(this.gateTimer);
+    this.gateTimer = setTimeout(() => {
+      this.gate = 'passed';
+      this.scroll.style.overflowY = '';
+    }, PROJECT_CONFIG.gatePause * 1000);
+  }
+
+  resetGate() {
+    clearTimeout(this.gateTimer);
+    this.gate = 'armed';
+    this.scroll.style.overflowY = '';
   }
 
   /** Where the hero will sit, in mount coordinates (for the tile → page morph). */
@@ -180,15 +228,11 @@ export class ProjectView {
     return { x: a.left - b.left, y: a.top - b.top, w: a.width, h: a.height };
   }
 
-  /** Called once the view is visible: everything after the hero fades up in sequence. */
+  /** Called once the view is visible: the info and the rest of the images dissolve in around the hero. */
   reveal({ reduced = false } = {}) {
     this.el.setAttribute('aria-hidden', 'false');
     const rest = this.el.querySelectorAll('.wc-project-info, .wc-project-item:not(.is-hero)');
-    gsap.fromTo(
-      rest,
-      { opacity: 0, y: reduced ? 0 : 16 },
-      { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: reduced ? 0 : 0.08, clearProps: 'transform' },
-    );
+    gsap.fromTo(rest, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: EASE.fade, stagger: reduced ? 0 : 0.05, clearProps: 'opacity' });
     this.scroll.focus({ preventScroll: true });
   }
 
@@ -200,6 +244,7 @@ export class ProjectView {
   }
 
   clear() {
+    this.resetGate();
     this.el.querySelectorAll('video').forEach((v) => {
       this.io.unobserve(v);
       v.pause();

@@ -34,7 +34,7 @@ export const config = {
   seed: 7, // change to reshuffle the size pattern
 
   // Cursor drift
-  maxSpeed: 480, // px/s with the cursor at either edge
+  maxSpeed: 340, // px/s with the cursor at either edge
   deadZone: 0.06, // fraction of the half-width around the centre with no drift
   curve: 1.7, // >1 = gentle near the centre, quick toward the edges
   response: 2.2, // how fast the speed follows the cursor (higher = less lag)
@@ -53,11 +53,11 @@ export const config = {
   // Media
   maxVideos: 4,
 
-  // Transitions
-  easing: 'expo.out',
-  stagger: 0.55,
-  enterDuration: 1.5,
-  leaveDuration: 0.8,
+  // Transitions (tiles dissolve in left to right, and out all at once)
+  easing: 'none',
+  stagger: 0.3,
+  enterDuration: 0.8,
+  leaveDuration: 0.25,
   captionInset: [20, 12],
 };
 
@@ -147,7 +147,7 @@ export default class Filmstrip extends Layout {
         featured = t;
       }
       t.priority = visible ? this.centerScore(t) : 0;
-      this.applyTransition(t, Math.min(1, Math.max(0, t.x / this.vp.width)), { y: t.h * 0.35 });
+      this.applyTransition(t, Math.min(1, Math.max(0, t.x / this.vp.width)));
     });
 
     // "featured" only steers video priority now (no caption without hover).
