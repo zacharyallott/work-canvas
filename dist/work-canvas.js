@@ -14536,8 +14536,8 @@ var Mh = {
 	fan: .8,
 	interval: 2,
 	moveStep: 100,
-	scrollStep: 120,
-	scrollGap: .14,
+	scrollStep: 250,
+	scrollGap: .35,
 	maxPerFrame: 1,
 	dealDuration: .12,
 	dealEase: "none",
@@ -14595,7 +14595,7 @@ var Mh = {
 		}) : (this.lastPointer = null, this.travel = 0);
 		let g = !1;
 		for (let e = 0; this.travel >= h && e < t.maxPerFrame; e++) this.travel -= h, this.deal(), g = !0;
-		this.travel = Math.min(this.travel, h * 2), this.sinceScrollDeal += e, this.progress >= 1 && this.scrollTravel >= t.scrollStep && this.sinceScrollDeal >= t.scrollGap && (this.scrollTravel -= t.scrollStep, this.sinceScrollDeal = 0, this.deal(), g = !0), this.scrollTravel = Math.min(this.scrollTravel, t.scrollStep * 3), p || (this.timer += e), g ? this.timer = 0 : this.timer >= t.interval && (this.timer = 0, this.deal());
+		this.travel = Math.min(this.travel, h * 2), this.sinceScrollDeal += e, this.progress >= 1 && this.scrollTravel >= t.scrollStep && this.sinceScrollDeal >= t.scrollGap && (this.scrollTravel -= t.scrollStep, this.sinceScrollDeal = 0, this.deal(), g = !0), this.scrollTravel = Math.min(this.scrollTravel, t.scrollStep * 2), p || (this.timer += e), g ? this.timer = 0 : this.timer >= t.interval && (this.timer = 0, this.deal());
 		let _ = r / 2, v = i / 2, y = (e, n) => {
 			let r = t.slots[n], i = this.anchors[n];
 			e.w = e.baseW, e.h = e.baseH, e.x = _ + i.x + r.x * this.k - e.w / 2, e.y = v + i.y + r.y * this.k - e.h / 2;
