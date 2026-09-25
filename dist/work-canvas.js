@@ -14412,8 +14412,8 @@ var kh = class {
 	idleSpeed: 24,
 	hoverSlowdown: 1,
 	scroll: {
-		multiplier: 1.2,
-		omega: 6
+		multiplier: .6,
+		omega: 4
 	},
 	dragMultiplier: 1.15,
 	throw: .9,
@@ -14542,7 +14542,7 @@ var Mh = {
 	dealDuration: .12,
 	dealEase: "none",
 	pauseOnHover: !0,
-	hoverToFront: !0,
+	hoverToFront: !1,
 	hover: {
 		zoom: 0,
 		speed: 7
@@ -14692,8 +14692,8 @@ var Ph = {
 	hoverSlowdown: .12,
 	hoverEase: 3,
 	scroll: {
-		multiplier: 1,
-		omega: 6
+		multiplier: .5,
+		omega: 4
 	},
 	shift: {
 		mode: "offset",
