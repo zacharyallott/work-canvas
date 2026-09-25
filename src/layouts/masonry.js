@@ -39,7 +39,7 @@ export const config = {
   hoverEase: 3, // how quickly it slows / recovers (1/s)
 
   // Scroll: wheel / trackpad / vertical swipe moves the columns; eased by a spring
-  scroll: { multiplier: 1, omega: 6 },
+  scroll: { multiplier: 0.5, omega: 4 }, // px of travel per px scrolled (swipes too); spring pace (higher = snappier)
 
   // Horizontal shift from the cursor
   shift: {

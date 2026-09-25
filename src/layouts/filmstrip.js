@@ -46,7 +46,7 @@ export const config = {
   hoverSlowdown: 1, // speed multiplier while a tile is hovered (1 = no slowdown)
 
   // Scroll: wheel / trackpad (either axis) moves the strip; eased by a spring
-  scroll: { multiplier: 1.2, omega: 6 }, // px of strip per px scrolled; spring pace (higher = snappier)
+  scroll: { multiplier: 0.6, omega: 4 }, // px of strip per px scrolled; spring pace (higher = snappier, ~4/omega s to settle)
 
   // Touch swipe (no cursor on touch devices)
   dragMultiplier: 1.15,

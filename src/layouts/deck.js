@@ -23,7 +23,7 @@ import { sizePattern, fitSize } from '../core/sizing.js';
  * stay exactly as they are. After `interval` s without a new card the next one comes in on
  * its own; moving the cursor brings in more — one per `moveStep` px of
  * travel, so faster movement stacks faster. Hovering a card pauses the
- * stacking and brings that card to the front (in place). Scrolling (wheel /
+ * stacking; the pile's order stays as dealt. Scrolling (wheel /
  * trackpad, or a swipe on touch) deals cards too: one per `scrollStep` px,
  * at most one every `scrollGap` s so a fast scroll deals at a steady pace.
  */
@@ -61,7 +61,7 @@ export const config = {
   dealDuration: 0.12, // s for a new card to fade in (0 = instant cut)
   dealEase: 'none',
   pauseOnHover: true,
-  hoverToFront: true, // hovering a card brings it to the top of the pile
+  hoverToFront: false, // true = hovering a card brings it to the top of the pile
 
   hover: { zoom: 0, speed: 7 }, // hover only brings in the title (the image doesn't move)
   maxVideos: 4,

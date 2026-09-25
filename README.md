@@ -7,7 +7,7 @@ It has three interaction versions. Each visit opens on the next one (the last ve
 | Key | Version | Motion | Figma frame |
 | --- | --- | --- | --- |
 | `a` | Filmstrip: one infinite row, bottom-aligned skyline | Cursor steers the drift: left of centre drifts right, right drifts left, faster toward the edges. Scrolling moves the strip along (down = forward), eased | Frame 46 · `1542:5556` |
-| `b` | Deck: a pile of four cards that cycles through the whole collection | Pile trails the cursor with a little lag and fans out (parallax) the further the cursor gets from the centre; a new card fades in on top every 2 s, and more as the cursor moves; hovering pauses and brings a card to the front | Frame 48 · `1542:5581` |
+| `b` | Deck: a pile of four cards that cycles through the whole collection | Pile trails the cursor with a little lag and fans out (parallax) the further the cursor gets from the centre; a new card fades in on top every 2 s, and more as the cursor moves; hovering pauses the dealing | Frame 48 · `1542:5581` |
 | `c` | Masonry: columns drifting in alternating directions | Columns drift on their own and slow on hover; the grid shifts left or right with the cursor; scrolling moves the columns, eased | Frame 45 · `1542:5489` |
 
 Hovering a case-study tile brings in its project title and ↓; tiles without a project view show nothing on hover. Clicking a case-study tile opens its project view (Figma frame 50 · `1553:6590`): the tile glides to the top of the page, the title, description and services sit bottom-left, and the project's images follow on the right. The scroll stops on the last image; scrolling on (after a short pause) pulls against resistance and fades back to the work, and letting go early settles back. The tagline opens the about section (Figma frame 49 · `1542:5601`) at its own address, `/about`. On touch, tapping a case-study tile shows its title briefly.
@@ -227,7 +227,7 @@ A copy of Home (same header, same Collection List) with its own SEO title, descr
 Page settings → Custom code → Before `</body>` tag, on Home, About and the Projects template:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.13/dist/work-canvas.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.14/dist/work-canvas.js"></script>
 ```
 
 When you release, bump the version on all three, and `data-media-base` on each `#work-canvas`.
