@@ -224,6 +224,82 @@
     "folder": "03_Burton",
     "items": [
       {
+        "id": "092426-nycstorezebcloset-dawson-0201",
+        "label": "092426 NYCStoreZebCloset Dawson",
+        "href": "",
+        "caseStudy": false,
+        "source": "092426_NYCStoreZebCloset_Dawson_0201.jpg",
+        "sourceHash": "e27ba29e425d9369",
+        "type": "image",
+        "width": 1800,
+        "height": 1200,
+        "images": {
+          "sm": {
+            "src": "media/projects/burton-zebs/092426-nycstorezebcloset-dawson-0201-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 32098
+          },
+          "md": {
+            "src": "media/projects/burton-zebs/092426-nycstorezebcloset-dawson-0201-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 250750
+          },
+          "lg": {
+            "src": "media/projects/burton-zebs/092426-nycstorezebcloset-dawson-0201-lg.webp",
+            "width": 1800,
+            "height": 1200,
+            "bytes": 468662
+          }
+        },
+        "poster": {
+          "src": "media/projects/burton-zebs/092426-nycstorezebcloset-dawson-0201-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 32098
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "092426-nycstorezebcloset-dawson-0317",
+        "label": "092426 NYCStoreZebCloset Dawson",
+        "href": "",
+        "caseStudy": false,
+        "source": "092426_NYCStoreZebCloset_Dawson_0317.jpg",
+        "sourceHash": "7d6ba64a14882302",
+        "type": "image",
+        "width": 1800,
+        "height": 1200,
+        "images": {
+          "sm": {
+            "src": "media/projects/burton-zebs/092426-nycstorezebcloset-dawson-0317-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 13732
+          },
+          "md": {
+            "src": "media/projects/burton-zebs/092426-nycstorezebcloset-dawson-0317-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 96288
+          },
+          "lg": {
+            "src": "media/projects/burton-zebs/092426-nycstorezebcloset-dawson-0317-lg.webp",
+            "width": 1800,
+            "height": 1200,
+            "bytes": 204748
+          }
+        },
+        "poster": {
+          "src": "media/projects/burton-zebs/092426-nycstorezebcloset-dawson-0317-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 13732
+        },
+        "aspect": 1.5
+      },
+      {
         "id": "burton-zebs-allott-01",
         "label": "Burton Zebs",
         "href": "",
