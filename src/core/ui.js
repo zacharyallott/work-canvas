@@ -58,10 +58,9 @@ const CSS = `
 .wc-caption{position:absolute;left:0;top:0;font-size:12px;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}
 .wc-caption-inner{display:block;transform:translateY(110%)}
 .wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}
-.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .6s ease;cursor:auto}
+.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .4s linear;cursor:auto}
 .wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 12px;border-radius:4px;overflow:hidden;background:#e2e2e2}
 .wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}
-.wc-root.is-ready .wc-fallback{opacity:0;pointer-events:none}
 .wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}
 @media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-clients{flex-wrap:wrap;row-gap:14px}.wc-about-clients ul{width:calc(50% - 8px)}.wc-about-footer{margin-top:4px}}
 `;
@@ -213,7 +212,7 @@ export class UI {
     this.icon.setAttribute('aria-label', this.layouts.length > 1 ? `Showing ${now.name}. Switch to ${next.name}` : 'Back to the work');
   }
 
-  /** Static grid shown before WebGL is ready, and permanently if it's unavailable. */
+  /** Static grid, shown only when WebGL is unavailable. */
   renderFallback(items) {
     this.fallback = document.createElement('div');
     this.fallback.className = 'wc-fallback';

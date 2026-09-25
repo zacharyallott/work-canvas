@@ -85,9 +85,8 @@ export class WorkCanvas {
       tagline: this.options.tagline,
       hint: this.options.hint,
     });
-    this.ui.renderFallback(this.items);
     this.ui.setAbout(false);
-    this.ui.project.onEnd = () => this.closeProject(); // scrolled through the end runway
+    this.ui.project.onEnd = () => this.closeProject(); // pulled past the end of the page
     this._onKey = (e) => {
       if (e.key !== 'Escape') return;
       if (this.projectOpen) this.closeProject();
@@ -98,7 +97,8 @@ export class WorkCanvas {
     try {
       this.createRenderer();
     } catch (err) {
-      console.warn('[work-canvas] WebGL unavailable, keeping the static grid.', err);
+      console.warn('[work-canvas] WebGL unavailable, showing the static grid.', err);
+      this.ui.renderFallback(this.items); // only without WebGL, so it never flashes up before the canvas
       mount.classList.add('is-fallback');
       return this;
     }

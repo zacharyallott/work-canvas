@@ -4,10 +4,11 @@ import { ARTBOARD } from '../core/defaults.js';
 /**
  * Version C — Masonry columns (Figma frame 45, node 1542:5489)
  *
- * Columns 15% wider than the frame's 168px (193px), 12px gutters and 12px
+ * Columns wider than the frame's 168px (212px), 12px gutters and 12px
  * vertical gaps, staggered starts (offsets from the frame), bleeding off the
- * top and bottom. Tile heights
- * come from real aspect ratios. Items repeat as needed to fill each column.
+ * top and bottom. Tile heights come from real aspect ratios. There are more
+ * tile slots than images, so images repeat — but never within a column, and
+ * where possible not within two columns either side, so copies land far apart.
  *
  * Motion: columns drift vertically on their own, alternating direction at
  * slightly different speeds, and slow down while a tile is hovered. The whole
@@ -16,7 +17,7 @@ import { ARTBOARD } from '../core/defaults.js';
  * to it, the columns fade in where they are (left to right); nothing slides.
  */
 export const config = {
-  columnWidth: 193, // Figma 168 × 1.15
+  columnWidth: 212, // Figma 168, scaled up so fewer, larger tiles fill the view
   gutter: 12, // CSS px between columns (fixed, not scaled with the viewport)
   gap: 12, // CSS px between tiles in a column (fixed)
   firstColumnX: -8,
@@ -102,14 +103,28 @@ export default class Masonry extends Layout {
     const minColLength = vp.height + 2 * (maxH + this.gapPx);
     const heightOf = (item) => this.colW / Math.min(c.maxAspect, Math.max(c.minAspect, item.aspect));
 
-    // Fill the shortest column first; repeat passes are shuffled so copies don't cluster.
-    const cols = Array.from({ length: colCount }, () => ({ tiles: [], length: 0 }));
+    // Fill the shortest column first. Each pick is the least-used image that
+    // isn't already in this column or the two either side (columns wrap, so the
+    // ends are neighbours); failing that, one column either side; failing that,
+    // just not this column. Ties go by a seeded shuffle, so it's stable.
+    const cols = Array.from({ length: colCount }, () => ({ tiles: [], length: 0, has: new Set() }));
     const n = this.items.length;
-    let order = this.items;
+    const rank = new Map(shuffled(this.items, 1).map((item, r) => [item, r]));
+    const uses = new Map(this.items.map((item) => [item, 0]));
+    const near = (ci, d) => {
+      const set = new Set();
+      for (let k = -d; k <= d; k++) cols[(ci + k + colCount) % colCount].has.forEach((it) => set.add(it));
+      return set;
+    };
     for (let k = 0; cols.some((col) => col.length < minColLength) || k < n; k++) {
-      if (k > 0 && k % n === 0) order = shuffled(this.items, k / n);
-      const col = cols.reduce((a, b) => (b.length < a.length ? b : a));
-      const item = order[k % n];
+      const ci = cols.reduce((a, col, i) => (col.length < cols[a].length ? i : a), 0);
+      const col = cols[ci];
+      const byUse = [...this.items].sort((a, b) => uses.get(a) - uses.get(b) || rank.get(a) - rank.get(b));
+      const far = near(ci, 2);
+      const close = near(ci, 1);
+      const item = byUse.find((it) => !far.has(it)) ?? byUse.find((it) => !close.has(it)) ?? byUse.find((it) => !col.has.has(it)) ?? byUse[0];
+      uses.set(item, uses.get(item) + 1);
+      col.has.add(item);
       col.tiles.push({ item, h: heightOf(item) });
       col.length += heightOf(item) + this.gapPx;
       if (k > 4000) break; // safety

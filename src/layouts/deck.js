@@ -40,7 +40,7 @@ export const config = {
 
   // Follow
   follow: 0.38, // how far the pile moves toward the cursor (fraction of the cursor's offset from centre)
-  followRates: [5.5, 4, 3, 2.2], // per position (1/s; lower = more lag), so the pile trails
+  followRates: [3.5, 2.6, 1.9, 1.4], // per position (1/s; lower = more lag), so the pile trails and the cursor can slip off a card
 
   // New cards
   interval: 2, // s without a new card before the next one comes in on its own

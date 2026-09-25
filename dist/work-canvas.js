@@ -13292,19 +13292,20 @@ function Pm() {
 //#endregion
 //#region src/core/project.js
 var Fm = {
-	runway: 2,
-	hold: .45,
-	gatePause: .35,
-	friction: .88,
-	closeAt: .98
-}, Im = "\n.wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s linear,visibility 0s linear .35s}\n.wc-root.is-project .wc-project{opacity:1;visibility:visible;pointer-events:auto;transition:opacity 0s,visibility 0s}\n.wc-project-scroll{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:285px minmax(0,1fr);column-gap:53px;padding:52px 15px 12px 19px;box-sizing:border-box;-webkit-user-select:text;user-select:text}\n.wc-project-info{grid-column:1;grid-row:1/3;align-self:start;position:sticky;top:var(--wc-info-top,60vh);display:flex;flex-direction:column;gap:7px;color:#000}\n.wc-project-title{margin:0;font-size:16px;line-height:1;font-weight:500}\n.wc-project-desc{margin:0;max-width:271px;font-size:16px;line-height:1.1;font-weight:400;color:#5f5f5f}\n.wc-project-services{display:flex;flex-wrap:wrap;column-gap:12px;row-gap:2px;margin:0;padding:0;list-style:none;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase;font-weight:500}\n.wc-project-desc+.wc-project-services{margin-top:41px}\n.wc-project-media{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-end;gap:12px;margin:0;padding:0;list-style:none}\n.wc-project-item{position:relative;width:73.5%;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-project-item:nth-child(4n+2){width:100%}\n.wc-project-item:nth-child(4n+3){width:51.8%}\n.wc-project-item img{display:block;width:100%;height:auto}\n.wc-project-item video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-project-end{grid-column:1/-1;grid-row:2;pointer-events:none}\n.wc-project-media{will-change:opacity,translate}\n.wc-project-info{will-change:opacity}\n@media (max-width:700px){\n  .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}\n  .wc-project-info{position:static;grid-row:1;margin-bottom:24px}\n  .wc-project-media{grid-column:1;grid-row:2}\n  .wc-project-end{grid-row:3}\n  .wc-project-item,.wc-project-item:nth-child(n){width:100%}\n}\n", Lm = 12, Rm = !1, zm = (e) => String(e ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"), Bm = (e) => decodeURIComponent(String(e).split(/[?#]/)[0].split("/").pop() || "").replace(/^[0-9a-f]{24}_/, "").replace(/(-p-\d+)?\.[a-z0-9]+$/i, "").replace(/-(sm|md|lg|poster)$/, ""), Vm = class {
+	pullDistance: 1.2,
+	gatePause: .25,
+	fadeFrom: .15,
+	lift: 72,
+	settle: .3,
+	smoothing: 10
+}, Im = "\n.wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s linear,visibility 0s linear .35s}\n.wc-root.is-project .wc-project{opacity:1;visibility:visible;pointer-events:auto;transition:opacity 0s,visibility 0s}\n.wc-project-scroll{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:285px minmax(0,1fr);column-gap:53px;padding:52px 15px 12px 19px;box-sizing:border-box;-webkit-user-select:text;user-select:text;outline:none}\n.wc-project-info{grid-column:1;grid-row:1;align-self:start;position:sticky;top:var(--wc-info-top,60vh);display:flex;flex-direction:column;gap:7px;color:#000}\n.wc-project-title{margin:0;font-size:16px;line-height:1;font-weight:500}\n.wc-project-desc{margin:0;max-width:271px;font-size:16px;line-height:1.1;font-weight:400;letter-spacing:.02em;color:#5f5f5f}\n.wc-project-services{display:flex;flex-wrap:wrap;column-gap:12px;row-gap:2px;margin:0;padding:0;list-style:none;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase;font-weight:500}\n.wc-project-desc+.wc-project-services{margin-top:41px}\n.wc-project-media{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-end;gap:12px;margin:0;padding:0;list-style:none}\n.wc-project-item{position:relative;width:73.5%;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-project-item.is-loaded{background:none} /* the placeholder grey would otherwise show as a hairline at antialiased edges */\n.wc-project-item:nth-child(4n+2){width:100%}\n.wc-project-item:nth-child(4n+3){width:51.8%}\n.wc-project-item img{display:block;width:100%;height:auto}\n.wc-project-item video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-project-media{will-change:opacity,translate}\n.wc-project-info{will-change:opacity}\n@media (max-width:700px){\n  .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}\n  .wc-project-info{position:static;grid-row:1;margin-bottom:24px}\n  .wc-project-media{grid-column:1;grid-row:2}\n  .wc-project-item,.wc-project-item:nth-child(n){width:100%}\n}\n", Lm = 12, Rm = !1, zm = (e) => String(e ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"), Bm = (e) => decodeURIComponent(String(e).split(/[?#]/)[0].split("/").pop() || "").replace(/^[0-9a-f]{24}_/, "").replace(/(-p-\d+)?\.[a-z0-9]+$/i, "").replace(/-(sm|md|lg|poster)$/, ""), Vm = class {
 	constructor(e, { onEnd: t } = {}) {
 		if (!Rm) {
 			Rm = !0;
 			let e = document.createElement("style");
 			e.textContent = Im, document.head.appendChild(e);
 		}
-		this.el = document.createElement("div"), this.el.className = "wc-project", this.el.dataset.wcNoInput = "", this.el.setAttribute("aria-hidden", "true"), this.el.innerHTML = "<div class=\"wc-project-scroll\" tabindex=\"-1\"></div>", this.scroll = this.el.firstElementChild, e.prepend(this.el), this.onEnd = t, this.scroll.addEventListener("scroll", () => this.onScroll(), { passive: !0 }), this.scroll.addEventListener("wheel", () => this.gateWait(), { passive: !0 }), this.scroll.addEventListener("touchend", () => this.gateWait(), { passive: !0 }), this.io = new IntersectionObserver((e) => e.forEach((e) => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), {
+		this.el = document.createElement("div"), this.el.className = "wc-project", this.el.dataset.wcNoInput = "", this.el.setAttribute("aria-hidden", "true"), this.el.innerHTML = "<div class=\"wc-project-scroll\" tabindex=\"-1\"></div>", this.scroll = this.el.firstElementChild, e.prepend(this.el), this.onEnd = t, this.resetPull(), this.scroll.addEventListener("wheel", (e) => this.onWheel(e), { passive: !0 }), this.scroll.addEventListener("touchstart", (e) => this.onTouchStart(e), { passive: !0 }), this.scroll.addEventListener("touchmove", (e) => this.onTouchMove(e), { passive: !0 }), this.io = new IntersectionObserver((e) => e.forEach((e) => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), {
 			root: this.scroll,
 			threshold: .25
 		});
@@ -13338,10 +13339,11 @@ var Fm = {
 			let t = ` style="aspect-ratio:${e.aspect ? e.aspect.toFixed(4) : "1.5"}"`, n = `<img crossorigin="anonymous" src="${zm(e.src)}"${e.srcset ? ` srcset="${zm(e.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="${zm(e.alt)}" ${e.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}>`, r = e.type === "video" && e.video ? `<video src="${zm(e.video)}" crossorigin="anonymous" muted loop playsinline preload="metadata"></video>` : "";
 			return `<li class="wc-project-item${e.hero ? " is-hero" : ""}"${t}>${n}${r}</li>`;
 		}).join("")}
-      </ul>
-      <div class="wc-project-end" aria-hidden="true" style="height:${Math.round(Fm.runway * 100)}vh"></div>`, this.ended = !1, this.resetGate(), this.scroll.scrollTop = 0, this.el.querySelectorAll(".wc-project-item img").forEach((e) => {
-			let t = () => e.naturalWidth && (e.parentElement.style.aspectRatio = `${e.naturalWidth} / ${e.naturalHeight}`);
-			e.complete ? t() : e.addEventListener("load", t, { once: !0 });
+      </ul>`, this.resetPull(), this.scroll.scrollTop = 0, this.el.querySelectorAll(".wc-project-item img").forEach((e) => {
+			let t = () => {
+				e.naturalWidth && (e.parentElement.style.aspectRatio = `${e.naturalWidth} / ${e.naturalHeight}`, e.parentElement.classList.add("is-loaded"));
+			};
+			e.complete && t(), e.addEventListener("load", t);
 		}), this.el.querySelectorAll("video").forEach((e) => {
 			e.muted = !0, this.io.observe(e);
 		}), this.layoutInfo();
@@ -13352,21 +13354,40 @@ var Fm = {
 		let t = parseFloat(getComputedStyle(this.scroll).paddingTop) || 0, n = this.el.clientHeight - Lm - e.offsetHeight - t;
 		this.el.style.setProperty("--wc-info-top", `${Math.max(0, n)}px`);
 	}
-	onScroll() {
-		let e = this.scroll.querySelector(".wc-project-end");
-		if (!e || this.ended) return;
-		let t = e.offsetHeight, n = this.scroll.scrollHeight - this.scroll.clientHeight - t, r = t > 0 ? Math.min(1, Math.max(0, (this.scroll.scrollTop - n) / t)) : 0, { hold: i, friction: a, closeAt: o } = Fm;
-		(this.gate === "armed" || this.gate === "holding") && r > i ? (this.gate === "armed" && (this.gate = "holding", this.scroll.style.overflowY = "hidden", this.gateWait()), this.scroll.scrollTop = n + i * t, r = i) : this.gate === "passed" && r < i * .5 && (this.gate = "armed");
-		let s = (Math.min(r, i) + Math.max(0, r - i) * a) * t, c = 1 - Math.min(1, Math.max(0, (r - i) / (o - i))), l = this.scroll.querySelector(".wc-project-media"), u = this.scroll.querySelector(".wc-project-info");
-		l && (l.style.opacity = r > 0 ? String(c) : "", l.style.translate = r > 0 ? `0 ${s}px` : ""), u && (u.style.opacity = r > 0 ? String(c) : ""), r >= o && (this.ended = !0, this.onEnd?.());
+	atEnd() {
+		let e = this.scroll;
+		return e.scrollTop >= e.scrollHeight - e.clientHeight - 1;
 	}
-	gateWait() {
-		this.gate === "holding" && (clearTimeout(this.gateTimer), this.gateTimer = setTimeout(() => {
-			this.gate = "passed", this.scroll.style.overflowY = "";
-		}, Fm.gatePause * 1e3));
+	onWheel(e) {
+		if (this.ended || !this.scroll.firstElementChild) return;
+		let t = performance.now(), n = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? this.scroll.clientHeight : 1);
+		t - this.lastInput > Fm.gatePause * 1e3 && (this.gestureAtEnd = this.atEnd()), this.lastInput = t, n < 0 ? this.pull = 0 : this.gestureAtEnd && this.atEnd() && this.addPull(n), this.kick();
 	}
-	resetGate() {
-		clearTimeout(this.gateTimer), this.gate = "armed", this.scroll.style.overflowY = "";
+	onTouchStart(e) {
+		this.touchY = e.touches[0].clientY, this.gestureAtEnd = this.atEnd(), this.lastInput = performance.now();
+	}
+	onTouchMove(e) {
+		if (this.ended) return;
+		let t = e.touches[0].clientY, n = this.touchY - t;
+		this.touchY = t, this.lastInput = performance.now(), n < 0 ? this.pull = 0 : this.gestureAtEnd && this.atEnd() && this.addPull(n * 1.5), this.kick();
+	}
+	addPull(e) {
+		this.pull = Math.min(1, this.pull + e / (Fm.pullDistance * this.scroll.clientHeight)), this.pull >= 1 && !this.ended && (this.ended = !0, this.onEnd?.());
+	}
+	kick() {
+		this.raf || (this.raf = requestAnimationFrame((e) => this.frame(e)));
+	}
+	frame(e) {
+		this.raf = 0;
+		let t = Fm, n = this.lastFrame ? Math.min(.05, (e - this.lastFrame) / 1e3) : 1 / 60;
+		this.lastFrame = e, !this.ended && performance.now() - this.lastInput > t.settle * 1e3 && (this.pull = 0), this.shown += (this.pull - this.shown) * (1 - Math.exp(-n * t.smoothing)), Math.abs(this.pull - this.shown) < .002 && (this.shown = this.pull), this.drawPull(), this.shown !== this.pull || this.pull > 0 && !this.ended ? this.kick() : this.lastFrame = 0;
+	}
+	drawPull() {
+		let e = Fm, t = this.shown, n = this.scroll.querySelector(".wc-project-media"), r = this.scroll.querySelector(".wc-project-info"), i = t > 0 ? String(1 - Math.min(1, Math.max(0, (t - e.fadeFrom) / (1 - e.fadeFrom)))) : "";
+		n && (n.style.opacity = i, n.style.translate = t > 0 ? `0 ${(-e.lift * (1 - (1 - t) ** 2)).toFixed(2)}px` : ""), r && (r.style.opacity = i);
+	}
+	resetPull() {
+		cancelAnimationFrame(this.raf), this.raf = 0, this.lastFrame = 0, this.pull = 0, this.shown = 0, this.lastInput = 0, this.gestureAtEnd = !1, this.ended = !1;
 	}
 	heroRect() {
 		let e = this.el.querySelector(".wc-project-item.is-hero");
@@ -13394,14 +13415,14 @@ var Fm = {
 		this.el.setAttribute("aria-hidden", "true"), this.el.querySelectorAll("video").forEach((e) => e.pause()), clearTimeout(this.clearTimer), this.clearTimer = setTimeout(() => this.clear(), 500);
 	}
 	clear() {
-		this.resetGate(), this.el.querySelectorAll("video").forEach((e) => {
+		this.resetPull(), this.el.querySelectorAll("video").forEach((e) => {
 			this.io.unobserve(e), e.pause(), e.removeAttribute("src"), e.load();
 		}), this.scroll.innerHTML = "";
 	}
 	destroy() {
 		this.clear(), this.io.disconnect(), this.el.remove();
 	}
-}, Hm = "\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);min-height:var(--wc-min-height,100svh);isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n.wc-root.is-hovering-tile{cursor:pointer}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear}\n.wc-root.is-ready .wc-canvas{opacity:1}\n.wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,500);color:#f2f2f2}\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference}\n.wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px);padding:0;border:0;background:none;pointer-events:auto;cursor:pointer}\n.wc-icon:focus-visible{outline:1px solid #f2f2f2;outline-offset:3px}\n.wc-icon img{display:block;width:100%;height:100%}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}\n.wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}\n/* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */\n.wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden}\n.wc-arrow-track{position:absolute;left:0;top:0;width:17px;height:17px}\n.wc-arrow-glyph{position:absolute;left:0;top:0;width:17px;height:17px;line-height:17px;text-align:center;transform:rotate(90deg)}\n.wc-arrow-glyph.is-next{top:-17px}\n.wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}\n.wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}\n/* About (Figma frame 49): bottom-anchored statement + client columns. */\n.wc-about{position:absolute;left:0;right:0;bottom:0;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}\n.wc-root.is-about .wc-about{opacity:1;visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}\n.wc-about .wc-w{display:inline-block;will-change:opacity}\n.wc-about-statement{margin:0 0 32px;max-width:22.84em;font-size:clamp(26px,3.75vw,48px);line-height:1.25;letter-spacing:.02em;font-weight:500}\n.wc-about-statement img{display:inline-block;width:.75em;height:.75em;margin-left:.3em;vertical-align:-.06em}\n.wc-about-clients{display:flex;justify-content:space-between;gap:16px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:500;font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}\n.wc-about-clients ul{list-style:none;margin:0;padding:0;width:155px}\n.wc-about-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;line-height:1;font-weight:500}\n.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:500;letter-spacing:.02em}\n.wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}\n/* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */\n.wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}\n.wc-link-track{position:absolute;inset:0}\n.wc-link-track>span{position:absolute;left:0;top:0;width:1em;line-height:1em;text-align:center}\n.wc-link-track>span.is-next{left:-1em}\n.wc-about-links a:focus-visible{outline:1px solid currentColor;outline-offset:3px}\n.wc-about-copy{margin:0;font-size:16px}\n.wc-caption{position:absolute;left:0;top:0;font-size:12px;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .6s ease;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 12px;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n.wc-root.is-ready .wc-fallback{opacity:0;pointer-events:none}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-clients{flex-wrap:wrap;row-gap:14px}.wc-about-clients ul{width:calc(50% - 8px)}.wc-about-footer{margin-top:4px}}\n", Um = !1;
+}, Hm = "\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);min-height:var(--wc-min-height,100svh);isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n.wc-root.is-hovering-tile{cursor:pointer}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear}\n.wc-root.is-ready .wc-canvas{opacity:1}\n.wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,500);color:#f2f2f2}\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference}\n.wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px);padding:0;border:0;background:none;pointer-events:auto;cursor:pointer}\n.wc-icon:focus-visible{outline:1px solid #f2f2f2;outline-offset:3px}\n.wc-icon img{display:block;width:100%;height:100%}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}\n.wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}\n/* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */\n.wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden}\n.wc-arrow-track{position:absolute;left:0;top:0;width:17px;height:17px}\n.wc-arrow-glyph{position:absolute;left:0;top:0;width:17px;height:17px;line-height:17px;text-align:center;transform:rotate(90deg)}\n.wc-arrow-glyph.is-next{top:-17px}\n.wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}\n.wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}\n/* About (Figma frame 49): bottom-anchored statement + client columns. */\n.wc-about{position:absolute;left:0;right:0;bottom:0;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}\n.wc-root.is-about .wc-about{opacity:1;visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}\n.wc-about .wc-w{display:inline-block;will-change:opacity}\n.wc-about-statement{margin:0 0 32px;max-width:22.84em;font-size:clamp(26px,3.75vw,48px);line-height:1.25;letter-spacing:.02em;font-weight:500}\n.wc-about-statement img{display:inline-block;width:.75em;height:.75em;margin-left:.3em;vertical-align:-.06em}\n.wc-about-clients{display:flex;justify-content:space-between;gap:16px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:500;font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}\n.wc-about-clients ul{list-style:none;margin:0;padding:0;width:155px}\n.wc-about-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;line-height:1;font-weight:500}\n.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:500;letter-spacing:.02em}\n.wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}\n/* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */\n.wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}\n.wc-link-track{position:absolute;inset:0}\n.wc-link-track>span{position:absolute;left:0;top:0;width:1em;line-height:1em;text-align:center}\n.wc-link-track>span.is-next{left:-1em}\n.wc-about-links a:focus-visible{outline:1px solid currentColor;outline-offset:3px}\n.wc-about-copy{margin:0;font-size:16px}\n.wc-caption{position:absolute;left:0;top:0;font-size:12px;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .4s linear;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 12px;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-clients{flex-wrap:wrap;row-gap:14px}.wc-about-clients ul{width:calc(50% - 8px)}.wc-about-footer{margin-top:4px}}\n", Um = !1;
 function Wm() {
 	if (Um) return;
 	Um = !0;
@@ -13603,13 +13624,13 @@ var Zm = class {
 			onHome: () => this.canCycle ? this.nextLayout() : this.projectOpen ? this.closeProject() : this.toggleAbout(!1),
 			tagline: this.options.tagline,
 			hint: this.options.hint
-		}), this.ui.renderFallback(this.items), this.ui.setAbout(!1), this.ui.project.onEnd = () => this.closeProject(), this._onKey = (e) => {
+		}), this.ui.setAbout(!1), this.ui.project.onEnd = () => this.closeProject(), this._onKey = (e) => {
 			e.key === "Escape" && (this.projectOpen ? this.closeProject() : this.aboutOpen && this.toggleAbout(!1));
 		}, document.addEventListener("keydown", this._onKey);
 		try {
 			this.createRenderer();
 		} catch (t) {
-			return console.warn("[work-canvas] WebGL unavailable, keeping the static grid.", t), e.classList.add("is-fallback"), this;
+			return console.warn("[work-canvas] WebGL unavailable, showing the static grid.", t), this.ui.renderFallback(this.items), e.classList.add("is-fallback"), this;
 		}
 		this.media = new Om(this.renderer, {
 			maxVideos: this.options.maxVideos,
@@ -14170,10 +14191,10 @@ var fh = {
 	mobileMaxWidth: .72,
 	follow: .38,
 	followRates: [
-		5.5,
-		4,
-		3,
-		2.2
+		3.5,
+		2.6,
+		1.9,
+		1.4
 	],
 	interval: 2,
 	moveStep: 90,
@@ -14292,7 +14313,7 @@ ah(ph, "defaults", fh), ah(ph, "label", "Deck");
 //#endregion
 //#region src/layouts/masonry.js
 var mh = {
-	columnWidth: 193,
+	columnWidth: 212,
 	gutter: 12,
 	gap: 12,
 	firstColumnX: -8,
@@ -14363,28 +14384,32 @@ var gh = class extends sh {
 		this.totalW = i * this.pitch;
 		let a = this.colW / t.minAspect, o = e.height + 2 * (a + this.gapPx), s = (e) => this.colW / Math.min(t.maxAspect, Math.max(t.minAspect, e.aspect)), c = Array.from({ length: i }, () => ({
 			tiles: [],
-			length: 0
-		})), l = this.items.length, u = this.items;
+			length: 0,
+			has: /* @__PURE__ */ new Set()
+		})), l = this.items.length, u = new Map(hh(this.items, 1).map((e, t) => [e, t])), d = new Map(this.items.map((e) => [e, 0])), f = (e, t) => {
+			let n = /* @__PURE__ */ new Set();
+			for (let r = -t; r <= t; r++) c[(e + r + i) % i].has.forEach((e) => n.add(e));
+			return n;
+		};
 		for (let e = 0; c.some((e) => e.length < o) || e < l; e++) {
-			e > 0 && e % l === 0 && (u = hh(this.items, e / l));
-			let t = c.reduce((e, t) => t.length < e.length ? t : e), n = u[e % l];
-			if (t.tiles.push({
-				item: n,
-				h: s(n)
-			}), t.length += s(n) + this.gapPx, e > 4e3) break;
+			let t = c.reduce((e, t, n) => t.length < c[e].length ? n : e, 0), n = c[t], r = [...this.items].sort((e, t) => d.get(e) - d.get(t) || u.get(e) - u.get(t)), i = f(t, 2), a = f(t, 1), o = r.find((e) => !i.has(e)) ?? r.find((e) => !a.has(e)) ?? r.find((e) => !n.has.has(e)) ?? r[0];
+			if (d.set(o, d.get(o) + 1), n.has.add(o), n.tiles.push({
+				item: o,
+				h: s(o)
+			}), n.length += s(o) + this.gapPx, e > 4e3) break;
 		}
-		let d = c.map((e) => e.tiles.map((e) => e.item.index).join(".")).join("|");
-		d !== this.signature && (this.signature = d, this.tiles.forEach((e) => e.dispose()), this.makeTiles(c.flatMap((e) => e.tiles.map((e) => e.item))));
-		let f = t.firstColumnX * n - this.pitch;
-		this.origin = f - this.pitch;
-		let p = 0;
+		let p = c.map((e) => e.tiles.map((e) => e.item.index).join(".")).join("|");
+		p !== this.signature && (this.signature = p, this.tiles.forEach((e) => e.dispose()), this.makeTiles(c.flatMap((e) => e.tiles.map((e) => e.item))));
+		let m = t.firstColumnX * n - this.pitch;
+		this.origin = m - this.pitch;
+		let h = 0;
 		this.columns = c.map((e, r) => {
 			let i = 0, a = e.tiles.map((e) => {
-				let t = this.tiles[p++];
+				let t = this.tiles[h++];
 				return t.w = this.colW, t.h = e.h, t.offsetInCol = i, i += e.h + this.gapPx, t;
 			}), o = t.columnOffsets.length, s = ((r - 1) % o + o) % o;
 			return {
-				baseX: f + r * this.pitch,
+				baseX: m + r * this.pitch,
 				start: t.columnOffsets[s] * n,
 				speed: t.columnSpeeds[s % t.columnSpeeds.length],
 				length: i,
