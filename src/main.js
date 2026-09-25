@@ -1,0 +1,64 @@
+/**
+ * work-canvas — entry point.
+ *
+ * Auto-mounts on <div id="work-canvas"> (or any [data-work-canvas]) once the
+ * DOM is ready. Options come from data attributes on the mount:
+ *
+ *   data-layout="a|b|c"        initial version (default a; ?v=b in the URL wins)
+ *   data-switcher="false"      hide the version dots
+ *   data-items=".work-item"    selector for the item links
+ *   data-media-base="https://…/"  base URL for relative media paths
+ *   data-wheel="page|capture"  whether the header consumes vertical wheel
+ *   data-max-videos="5"        concurrent video cap (overrides layouts)
+ *   data-tagline="…"           top bar text
+ *
+ * Manual use:  import { mount } from '…/work-canvas.js'; const wc = await mount(el, { layout: 'b' }); wc.destroy();
+ */
+import gsap from 'gsap';
+import { WorkCanvas } from './core/engine.js';
+import Filmstrip, { config as filmstripConfig } from './layouts/filmstrip.js';
+import Deck, { config as deckConfig } from './layouts/deck.js';
+import Masonry, { config as masonryConfig } from './layouts/masonry.js';
+
+export const LAYOUTS = [
+  { key: 'a', name: 'Filmstrip', Layout: Filmstrip, config: filmstripConfig },
+  { key: 'b', name: 'Deck', Layout: Deck, config: deckConfig },
+  { key: 'c', name: 'Masonry', Layout: Masonry, config: masonryConfig },
+];
+
+export { WorkCanvas };
+
+export async function mount(el, options = {}) {
+  if (el.__workCanvas) return el.__workCanvas;
+  const d = el.dataset;
+  const urlLayout = new URLSearchParams(location.search).get('v');
+  const maxVideos = parseInt(options.maxVideos ?? d.maxVideos, 10);
+
+  const layouts = LAYOUTS.map((l) => ({ ...l, config: { ...l.config, ...(options.config?.[l.key] ?? {}) } }));
+  if (maxVideos) layouts.forEach((l) => (l.config.maxVideos = maxVideos));
+
+  const wc = new WorkCanvas(el, {
+    layouts,
+    layout: options.layout ?? urlLayout ?? d.layout ?? 'a',
+    switcher: options.switcher ?? d.switcher !== 'false',
+    syncUrl: options.syncUrl ?? d.syncUrl === 'true',
+    tagline: options.tagline ?? d.tagline ?? 'design &amp; direction made to move',
+    taglineHref: options.taglineHref ?? d.taglineHref ?? '#work',
+    hint: options.hint ?? d.hint,
+    ...options,
+  });
+  el.__workCanvas = wc;
+  await wc.init();
+  return wc;
+}
+
+function autoMount() {
+  document.querySelectorAll('#work-canvas, [data-work-canvas]').forEach((el) => mount(el));
+}
+
+if (typeof window !== 'undefined') {
+  window.WorkCanvas = { mount, LAYOUTS };
+  if (import.meta.env?.DEV) window.WorkCanvas.gsap = gsap; // dev-only: lets tests step frames
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', autoMount, { once: true });
+  else autoMount();
+}

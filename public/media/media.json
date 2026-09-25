@@ -1,0 +1,1255 @@
+{
+  "generated": "2026-09-24T23:35:14.817Z",
+  "count": 35,
+  "images": 27,
+  "videos": 8,
+  "items": [
+    {
+      "id": "20-tosdal-identity-cover",
+      "label": "Tosdal APC",
+      "href": "/projects/tosdal-law",
+      "source": "20_Tosdal_Identity_Cover.jpg",
+      "sourceHash": "ea08dc30805c0883",
+      "type": "image",
+      "width": 2000,
+      "height": 1333,
+      "images": {
+        "sm": {
+          "src": "media/20-tosdal-identity-cover-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 2792
+        },
+        "md": {
+          "src": "media/20-tosdal-identity-cover-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 12810
+        },
+        "lg": {
+          "src": "media/20-tosdal-identity-cover-lg.webp",
+          "width": 2000,
+          "height": 1333,
+          "bytes": 31880
+        }
+      },
+      "poster": {
+        "src": "media/20-tosdal-identity-cover-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 2792
+      },
+      "aspect": 1.5004
+    },
+    {
+      "id": "boa-allott-10",
+      "label": "BOA Performfit Wrap",
+      "href": "/projects/boa",
+      "source": "BOA-Allott-10.webp",
+      "sourceHash": "7276b58dfaf55e5a",
+      "type": "image",
+      "width": 1707,
+      "height": 1137,
+      "images": {
+        "sm": {
+          "src": "media/boa-allott-10-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 6090
+        },
+        "md": {
+          "src": "media/boa-allott-10-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 28210
+        },
+        "lg": {
+          "src": "media/boa-allott-10-lg.webp",
+          "width": 1707,
+          "height": 1137,
+          "bytes": 49170
+        }
+      },
+      "poster": {
+        "src": "media/boa-allott-10-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 6090
+      },
+      "aspect": 1.5013
+    },
+    {
+      "id": "boa-allott-11",
+      "label": "BOA Performfit Wrap",
+      "href": "/projects/boa",
+      "source": "BOA-Allott-11.mp4",
+      "sourceHash": "bee5f6d0d62b7680",
+      "type": "video",
+      "width": 1080,
+      "height": 608,
+      "duration": 12,
+      "sourceDuration": 26,
+      "poster": {
+        "src": "media/boa-allott-11-poster.webp",
+        "width": 1080,
+        "height": 608,
+        "bytes": 9762
+      },
+      "sources": [
+        {
+          "src": "media/boa-allott-11.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 502811
+        },
+        {
+          "src": "media/boa-allott-11.mp4",
+          "type": "video/mp4",
+          "bytes": 882493
+        }
+      ],
+      "aspect": 1.7763
+    },
+    {
+      "id": "burton-zebs-allott-01",
+      "label": "Burton Zebs",
+      "href": "",
+      "source": "Burton-Zebs-Allott-01.jpg",
+      "sourceHash": "71a8a99cd618ff65",
+      "type": "image",
+      "width": 4000,
+      "height": 6000,
+      "images": {
+        "sm": {
+          "src": "media/burton-zebs-allott-01-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 12900
+        },
+        "md": {
+          "src": "media/burton-zebs-allott-01-md.webp",
+          "width": 853,
+          "height": 1280,
+          "bytes": 76836
+        },
+        "lg": {
+          "src": "media/burton-zebs-allott-01-lg.webp",
+          "width": 1365,
+          "height": 2048,
+          "bytes": 176354
+        }
+      },
+      "poster": {
+        "src": "media/burton-zebs-allott-01-sm.webp",
+        "width": 320,
+        "height": 480,
+        "bytes": 12900
+      },
+      "aspect": 0.6667
+    },
+    {
+      "id": "burton-zebs-allott-02",
+      "label": "Burton Zebs",
+      "href": "",
+      "source": "Burton-Zebs-Allott-02.jpg",
+      "sourceHash": "852d4e8ba0452a9e",
+      "type": "image",
+      "width": 6000,
+      "height": 4000,
+      "images": {
+        "sm": {
+          "src": "media/burton-zebs-allott-02-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 10874
+        },
+        "md": {
+          "src": "media/burton-zebs-allott-02-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 55162
+        },
+        "lg": {
+          "src": "media/burton-zebs-allott-02-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 122498
+        }
+      },
+      "poster": {
+        "src": "media/burton-zebs-allott-02-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 10874
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "cinco-brand-site-allott-10",
+      "label": "Cinco Design",
+      "href": "/projects/cinco-design",
+      "source": "Cinco-Brand-Site-Allott-10.webp",
+      "sourceHash": "a5070ab68106ee8e",
+      "type": "image",
+      "width": 1200,
+      "height": 1200,
+      "images": {
+        "sm": {
+          "src": "media/cinco-brand-site-allott-10-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 7464
+        },
+        "md": {
+          "src": "media/cinco-brand-site-allott-10-md.webp",
+          "width": 1200,
+          "height": 1200,
+          "bytes": 28844
+        },
+        "lg": {
+          "src": "media/cinco-brand-site-allott-10-lg.webp",
+          "width": 1200,
+          "height": 1200,
+          "bytes": 30328
+        }
+      },
+      "poster": {
+        "src": "media/cinco-brand-site-allott-10-sm.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 7464
+      },
+      "aspect": 1
+    },
+    {
+      "id": "cinco-screencomp-2",
+      "label": "Cinco Design",
+      "href": "/projects/cinco-design",
+      "source": "Cinco-ScreenComp_2.mp4",
+      "sourceHash": "447d78eeb3af5282",
+      "type": "video",
+      "width": 1080,
+      "height": 720,
+      "duration": 4.76,
+      "sourceDuration": 4.76,
+      "poster": {
+        "src": "media/cinco-screencomp-2-poster.webp",
+        "width": 1080,
+        "height": 720,
+        "bytes": 44844
+      },
+      "sources": [
+        {
+          "src": "media/cinco-screencomp-2.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 469266
+        },
+        {
+          "src": "media/cinco-screencomp-2.mp4",
+          "type": "video/mp4",
+          "bytes": 496395
+        }
+      ],
+      "aspect": 1.5
+    },
+    {
+      "id": "dialpad-allott-01",
+      "label": "Dialpad",
+      "href": "/projects/dialpad",
+      "source": "Dialpad-Allott-01.webp",
+      "sourceHash": "e8111d038396c762",
+      "type": "image",
+      "width": 2701,
+      "height": 1801,
+      "images": {
+        "sm": {
+          "src": "media/dialpad-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 21186
+        },
+        "md": {
+          "src": "media/dialpad-allott-01-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 128938
+        },
+        "lg": {
+          "src": "media/dialpad-allott-01-lg.webp",
+          "width": 2048,
+          "height": 1366,
+          "bytes": 261592
+        }
+      },
+      "poster": {
+        "src": "media/dialpad-allott-01-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 21186
+      },
+      "aspect": 1.4997
+    },
+    {
+      "id": "dialpad-allott-03",
+      "label": "Dialpad",
+      "href": "/projects/dialpad",
+      "source": "Dialpad-Allott-03.webp",
+      "sourceHash": "dac32924bdcfc5d3",
+      "type": "image",
+      "width": 2400,
+      "height": 1600,
+      "images": {
+        "sm": {
+          "src": "media/dialpad-allott-03-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 10020
+        },
+        "md": {
+          "src": "media/dialpad-allott-03-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 85126
+        },
+        "lg": {
+          "src": "media/dialpad-allott-03-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 170620
+        }
+      },
+      "poster": {
+        "src": "media/dialpad-allott-03-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 10020
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "gt-dealerbook",
+      "label": "GT Bikes",
+      "href": "/projects/gt-bikes",
+      "source": "GT-DealerBook.jpg",
+      "sourceHash": "e8980693276507a4",
+      "type": "image",
+      "width": 9000,
+      "height": 6000,
+      "images": {
+        "sm": {
+          "src": "media/gt-dealerbook-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 5512
+        },
+        "md": {
+          "src": "media/gt-dealerbook-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 30170
+        },
+        "lg": {
+          "src": "media/gt-dealerbook-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 63894
+        }
+      },
+      "poster": {
+        "src": "media/gt-dealerbook-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 5512
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "gt-mobile-1",
+      "label": "GT Bikes",
+      "href": "/projects/gt-bikes",
+      "source": "GT-Mobile_1.mp4",
+      "sourceHash": "2eb170a2cd3900ba",
+      "type": "video",
+      "width": 1080,
+      "height": 720,
+      "duration": 12,
+      "sourceDuration": 14,
+      "poster": {
+        "src": "media/gt-mobile-1-poster.webp",
+        "width": 1080,
+        "height": 720,
+        "bytes": 112024
+      },
+      "sources": [
+        {
+          "src": "media/gt-mobile-1.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 1635320
+        },
+        {
+          "src": "media/gt-mobile-1.mp4",
+          "type": "video/mp4",
+          "bytes": 1629315
+        }
+      ],
+      "aspect": 1.5
+    },
+    {
+      "id": "koya-allott-01",
+      "label": "Koya",
+      "href": "/projects/koya",
+      "source": "Koya-Allott-01.mp4",
+      "sourceHash": "fef377d22b1e614d",
+      "type": "video",
+      "width": 1080,
+      "height": 608,
+      "duration": 12,
+      "sourceDuration": 18.95,
+      "poster": {
+        "src": "media/koya-allott-01-poster.webp",
+        "width": 1080,
+        "height": 608,
+        "bytes": 6348
+      },
+      "sources": [
+        {
+          "src": "media/koya-allott-01.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 229607
+        },
+        {
+          "src": "media/koya-allott-01.mp4",
+          "type": "video/mp4",
+          "bytes": 740794
+        }
+      ],
+      "aspect": 1.7763
+    },
+    {
+      "id": "koya-allott-02",
+      "label": "Koya",
+      "href": "/projects/koya",
+      "source": "Koya-Allott-02.jpg",
+      "sourceHash": "5f4d6fcd39e6ec78",
+      "type": "image",
+      "width": 2001,
+      "height": 1334,
+      "images": {
+        "sm": {
+          "src": "media/koya-allott-02-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 8776
+        },
+        "md": {
+          "src": "media/koya-allott-02-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 39218
+        },
+        "lg": {
+          "src": "media/koya-allott-02-lg.webp",
+          "width": 2001,
+          "height": 1334,
+          "bytes": 86438
+        }
+      },
+      "poster": {
+        "src": "media/koya-allott-02-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 8776
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "microsoft-teams-bus",
+      "label": "Microsoft Teams",
+      "href": "/projects/microsoft-teams",
+      "source": "Microsoft-Teams-Bus.jpg",
+      "sourceHash": "5d61b353ce5ce44f",
+      "type": "image",
+      "width": 2400,
+      "height": 1600,
+      "images": {
+        "sm": {
+          "src": "media/microsoft-teams-bus-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 30450
+        },
+        "md": {
+          "src": "media/microsoft-teams-bus-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 216012
+        },
+        "lg": {
+          "src": "media/microsoft-teams-bus-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 477322
+        }
+      },
+      "poster": {
+        "src": "media/microsoft-teams-bus-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 30450
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "microsoft-teams-busad-allott",
+      "label": "Microsoft Teams",
+      "href": "/projects/microsoft-teams",
+      "source": "Microsoft-Teams-BusAd-Allott.jpg",
+      "sourceHash": "36324f605ec0d0dd",
+      "type": "image",
+      "width": 2400,
+      "height": 1600,
+      "images": {
+        "sm": {
+          "src": "media/microsoft-teams-busad-allott-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 14100
+        },
+        "md": {
+          "src": "media/microsoft-teams-busad-allott-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 81392
+        },
+        "lg": {
+          "src": "media/microsoft-teams-busad-allott-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 172140
+        }
+      },
+      "poster": {
+        "src": "media/microsoft-teams-busad-allott-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 14100
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "mih-allott-01",
+      "label": "Microsoft Innovation Hub",
+      "href": "/projects/microsoft-innovation-hub",
+      "source": "MIH-Allott-01.webp",
+      "sourceHash": "1818ca70e06d09f3",
+      "type": "image",
+      "width": 1956,
+      "height": 1304,
+      "images": {
+        "sm": {
+          "src": "media/mih-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 7062
+        },
+        "md": {
+          "src": "media/mih-allott-01-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 36026
+        },
+        "lg": {
+          "src": "media/mih-allott-01-lg.webp",
+          "width": 1956,
+          "height": 1304,
+          "bytes": 82658
+        }
+      },
+      "poster": {
+        "src": "media/mih-allott-01-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 7062
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "mih-allott-02",
+      "label": "Microsoft Innovation Hub",
+      "href": "/projects/microsoft-innovation-hub",
+      "source": "MIH-Allott-02.mp4",
+      "sourceHash": "872766149dd0dfef",
+      "type": "video",
+      "width": 1080,
+      "height": 720,
+      "duration": 12,
+      "sourceDuration": 45.05,
+      "poster": {
+        "src": "media/mih-allott-02-poster.webp",
+        "width": 1080,
+        "height": 720,
+        "bytes": 19734
+      },
+      "sources": [
+        {
+          "src": "media/mih-allott-02.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 596351
+        },
+        {
+          "src": "media/mih-allott-02.mp4",
+          "type": "video/mp4",
+          "bytes": 780489
+        }
+      ],
+      "aspect": 1.5
+    },
+    {
+      "id": "mni-allott-01",
+      "label": "Music: Not Impossible",
+      "href": "/projects/mni",
+      "source": "MNI-Allott-01.mp4",
+      "sourceHash": "c73250b60e9bf55b",
+      "type": "video",
+      "width": 1080,
+      "height": 742,
+      "duration": 12,
+      "sourceDuration": 59.99,
+      "poster": {
+        "src": "media/mni-allott-01-poster.webp",
+        "width": 1080,
+        "height": 742,
+        "bytes": 39090
+      },
+      "sources": [
+        {
+          "src": "media/mni-allott-01.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 1125421
+        },
+        {
+          "src": "media/mni-allott-01.mp4",
+          "type": "video/mp4",
+          "bytes": 1503452
+        }
+      ],
+      "aspect": 1.4555
+    },
+    {
+      "id": "mni-allott-02",
+      "label": "Music: Not Impossible",
+      "href": "/projects/mni",
+      "source": "MNI-Allott-02.jpg",
+      "sourceHash": "fbade3e07b82782d",
+      "type": "image",
+      "width": 5918,
+      "height": 3859,
+      "images": {
+        "sm": {
+          "src": "media/mni-allott-02-sm.webp",
+          "width": 480,
+          "height": 313,
+          "bytes": 30560
+        },
+        "md": {
+          "src": "media/mni-allott-02-md.webp",
+          "width": 1280,
+          "height": 835,
+          "bytes": 191390
+        },
+        "lg": {
+          "src": "media/mni-allott-02-lg.webp",
+          "width": 2048,
+          "height": 1335,
+          "bytes": 412618
+        }
+      },
+      "poster": {
+        "src": "media/mni-allott-02-sm.webp",
+        "width": 480,
+        "height": 313,
+        "bytes": 30560
+      },
+      "aspect": 1.5336
+    },
+    {
+      "id": "nixon-dork-allott-02",
+      "label": "Nixon: The Dork",
+      "href": "/projects/nixon-the-dork",
+      "source": "Nixon_Dork_Allott_02.jpg",
+      "sourceHash": "9f97de98a9c5dc0a",
+      "type": "image",
+      "width": 1800,
+      "height": 1800,
+      "images": {
+        "sm": {
+          "src": "media/nixon-dork-allott-02-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 19004
+        },
+        "md": {
+          "src": "media/nixon-dork-allott-02-md.webp",
+          "width": 1280,
+          "height": 1280,
+          "bytes": 136156
+        },
+        "lg": {
+          "src": "media/nixon-dork-allott-02-lg.webp",
+          "width": 1800,
+          "height": 1800,
+          "bytes": 274356
+        }
+      },
+      "poster": {
+        "src": "media/nixon-dork-allott-02-sm.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 19004
+      },
+      "aspect": 1
+    },
+    {
+      "id": "nixon-dork-allott-01",
+      "label": "Nixon: The Dork",
+      "href": "/projects/nixon-the-dork",
+      "source": "Nixon-Dork-Allott-01.jpg",
+      "sourceHash": "94492ddbcc7ff766",
+      "type": "image",
+      "width": 6000,
+      "height": 4000,
+      "images": {
+        "sm": {
+          "src": "media/nixon-dork-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 27704
+        },
+        "md": {
+          "src": "media/nixon-dork-allott-01-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 156148
+        },
+        "lg": {
+          "src": "media/nixon-dork-allott-01-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 347824
+        }
+      },
+      "poster": {
+        "src": "media/nixon-dork-allott-01-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 27704
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "nixon-push-allott-01",
+      "label": "Nixon: Push Forward",
+      "href": "/projects/nixon-push-forward",
+      "source": "Nixon-Push-Allott-01.mp4",
+      "sourceHash": "b55c4c3546bc09f8",
+      "type": "video",
+      "width": 1080,
+      "height": 462,
+      "duration": 12,
+      "sourceDuration": 43.22,
+      "poster": {
+        "src": "media/nixon-push-allott-01-poster.webp",
+        "width": 1080,
+        "height": 462,
+        "bytes": 31240
+      },
+      "sources": [
+        {
+          "src": "media/nixon-push-allott-01.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 1087051
+        },
+        {
+          "src": "media/nixon-push-allott-01.mp4",
+          "type": "video/mp4",
+          "bytes": 2086591
+        }
+      ],
+      "aspect": 2.3377
+    },
+    {
+      "id": "nixon-push-allott-02",
+      "label": "Nixon: Push Forward",
+      "href": "/projects/nixon-push-forward",
+      "source": "Nixon-Push-Allott-02.jpg",
+      "sourceHash": "883827ab5ffc9721",
+      "type": "image",
+      "width": 2500,
+      "height": 1500,
+      "images": {
+        "sm": {
+          "src": "media/nixon-push-allott-02-sm.webp",
+          "width": 480,
+          "height": 288,
+          "bytes": 7136
+        },
+        "md": {
+          "src": "media/nixon-push-allott-02-md.webp",
+          "width": 1280,
+          "height": 768,
+          "bytes": 48572
+        },
+        "lg": {
+          "src": "media/nixon-push-allott-02-lg.webp",
+          "width": 2048,
+          "height": 1229,
+          "bytes": 133430
+        }
+      },
+      "poster": {
+        "src": "media/nixon-push-allott-02-sm.webp",
+        "width": 480,
+        "height": 288,
+        "bytes": 7136
+      },
+      "aspect": 1.6667
+    },
+    {
+      "id": "otis-allott-01",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "source": "Otis-Allott-01.jpg",
+      "sourceHash": "93e3b47fc3610253",
+      "type": "image",
+      "width": 3600,
+      "height": 2401,
+      "images": {
+        "sm": {
+          "src": "media/otis-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 19864
+        },
+        "md": {
+          "src": "media/otis-allott-01-md.webp",
+          "width": 1280,
+          "height": 854,
+          "bytes": 149866
+        },
+        "lg": {
+          "src": "media/otis-allott-01-lg.webp",
+          "width": 2048,
+          "height": 1366,
+          "bytes": 400454
+        }
+      },
+      "poster": {
+        "src": "media/otis-allott-01-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 19864
+      },
+      "aspect": 1.4994
+    },
+    {
+      "id": "otis-allott-02",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "source": "Otis-Allott-02.webp",
+      "sourceHash": "e2a2009138900192",
+      "type": "image",
+      "width": 2880,
+      "height": 2880,
+      "images": {
+        "sm": {
+          "src": "media/otis-allott-02-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 14480
+        },
+        "md": {
+          "src": "media/otis-allott-02-md.webp",
+          "width": 1280,
+          "height": 1280,
+          "bytes": 82430
+        },
+        "lg": {
+          "src": "media/otis-allott-02-lg.webp",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 219976
+        }
+      },
+      "poster": {
+        "src": "media/otis-allott-02-sm.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 14480
+      },
+      "aspect": 1
+    },
+    {
+      "id": "smi-kor-comp-magspread-v1-r4",
+      "label": "Smith",
+      "href": "/projects/smith-mag",
+      "source": "SMI_KOR_Comp_MagSpread_V1_R4.jpg",
+      "sourceHash": "b4995cbc9d8991c0",
+      "type": "image",
+      "width": 3201,
+      "height": 2000,
+      "images": {
+        "sm": {
+          "src": "media/smi-kor-comp-magspread-v1-r4-sm.webp",
+          "width": 480,
+          "height": 300,
+          "bytes": 2318
+        },
+        "md": {
+          "src": "media/smi-kor-comp-magspread-v1-r4-md.webp",
+          "width": 1280,
+          "height": 800,
+          "bytes": 15080
+        },
+        "lg": {
+          "src": "media/smi-kor-comp-magspread-v1-r4-lg.webp",
+          "width": 2048,
+          "height": 1280,
+          "bytes": 33000
+        }
+      },
+      "poster": {
+        "src": "media/smi-kor-comp-magspread-v1-r4-sm.webp",
+        "width": 480,
+        "height": 300,
+        "bytes": 2318
+      },
+      "aspect": 1.6005
+    },
+    {
+      "id": "smi-kor-comp-retail-display-v1-r4",
+      "label": "Smith",
+      "href": "/projects/smith-mag",
+      "source": "SMI_KOR_Comp_Retail_Display_V1_R4.jpg",
+      "sourceHash": "4767f13f4b849986",
+      "type": "image",
+      "width": 3600,
+      "height": 1962,
+      "images": {
+        "sm": {
+          "src": "media/smi-kor-comp-retail-display-v1-r4-sm.webp",
+          "width": 480,
+          "height": 262,
+          "bytes": 4620
+        },
+        "md": {
+          "src": "media/smi-kor-comp-retail-display-v1-r4-md.webp",
+          "width": 1280,
+          "height": 698,
+          "bytes": 25416
+        },
+        "lg": {
+          "src": "media/smi-kor-comp-retail-display-v1-r4-lg.webp",
+          "width": 2048,
+          "height": 1116,
+          "bytes": 61664
+        }
+      },
+      "poster": {
+        "src": "media/smi-kor-comp-retail-display-v1-r4-sm.webp",
+        "width": 480,
+        "height": 262,
+        "bytes": 4620
+      },
+      "aspect": 1.8349
+    },
+    {
+      "id": "solace-identity-allott-bikecards-01",
+      "label": "Solace Cycles",
+      "href": "/projects/solace-cycles",
+      "source": "solace-identity-allott-BikeCards-01.jpg",
+      "sourceHash": "e4f1ec49f39d25f0",
+      "type": "image",
+      "width": 3600,
+      "height": 2159,
+      "images": {
+        "sm": {
+          "src": "media/solace-identity-allott-bikecards-01-sm.webp",
+          "width": 480,
+          "height": 288,
+          "bytes": 20146
+        },
+        "md": {
+          "src": "media/solace-identity-allott-bikecards-01-md.webp",
+          "width": 1280,
+          "height": 768,
+          "bytes": 123828
+        },
+        "lg": {
+          "src": "media/solace-identity-allott-bikecards-01-lg.webp",
+          "width": 2048,
+          "height": 1228,
+          "bytes": 258150
+        }
+      },
+      "poster": {
+        "src": "media/solace-identity-allott-bikecards-01-sm.webp",
+        "width": 480,
+        "height": 288,
+        "bytes": 20146
+      },
+      "aspect": 1.6674
+    },
+    {
+      "id": "solace-identity-allott-downtube-01",
+      "label": "Solace Cycles",
+      "href": "/projects/solace-cycles",
+      "source": "solace-identity-allott-Downtube-01.jpg",
+      "sourceHash": "80269223521beaed",
+      "type": "image",
+      "width": 3601,
+      "height": 2158,
+      "images": {
+        "sm": {
+          "src": "media/solace-identity-allott-downtube-01-sm.webp",
+          "width": 480,
+          "height": 288,
+          "bytes": 10004
+        },
+        "md": {
+          "src": "media/solace-identity-allott-downtube-01-md.webp",
+          "width": 1280,
+          "height": 767,
+          "bytes": 37246
+        },
+        "lg": {
+          "src": "media/solace-identity-allott-downtube-01-lg.webp",
+          "width": 2048,
+          "height": 1227,
+          "bytes": 87262
+        }
+      },
+      "poster": {
+        "src": "media/solace-identity-allott-downtube-01-sm.webp",
+        "width": 480,
+        "height": 288,
+        "bytes": 10004
+      },
+      "aspect": 1.6687
+    },
+    {
+      "id": "sram-xplr-allott-101",
+      "label": "SRAM XPLR",
+      "href": "",
+      "source": "SRAM-XPLR-Allott-101.jpeg",
+      "sourceHash": "39eadb0499b11a49",
+      "type": "image",
+      "width": 1440,
+      "height": 955,
+      "images": {
+        "sm": {
+          "src": "media/sram-xplr-allott-101-sm.webp",
+          "width": 480,
+          "height": 318,
+          "bytes": 38200
+        },
+        "md": {
+          "src": "media/sram-xplr-allott-101-md.webp",
+          "width": 1280,
+          "height": 849,
+          "bytes": 365248
+        },
+        "lg": {
+          "src": "media/sram-xplr-allott-101-lg.webp",
+          "width": 1440,
+          "height": 955,
+          "bytes": 508194
+        }
+      },
+      "poster": {
+        "src": "media/sram-xplr-allott-101-sm.webp",
+        "width": 480,
+        "height": 318,
+        "bytes": 38200
+      },
+      "aspect": 1.5079
+    },
+    {
+      "id": "stelo-allott-01",
+      "label": "Stelo",
+      "href": "/projects/stelo",
+      "source": "Stelo-Allott-01.webp",
+      "sourceHash": "11818abd0265038b",
+      "type": "image",
+      "width": 2276,
+      "height": 1516,
+      "images": {
+        "sm": {
+          "src": "media/stelo-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 4772
+        },
+        "md": {
+          "src": "media/stelo-allott-01-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 23074
+        },
+        "lg": {
+          "src": "media/stelo-allott-01-lg.webp",
+          "width": 2048,
+          "height": 1364,
+          "bytes": 52190
+        }
+      },
+      "poster": {
+        "src": "media/stelo-allott-01-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 4772
+      },
+      "aspect": 1.5013
+    },
+    {
+      "id": "stelo-allott-02",
+      "label": "Stelo",
+      "href": "/projects/stelo",
+      "source": "Stelo-Allott-02.webp",
+      "sourceHash": "d6381e9095e76910",
+      "type": "image",
+      "width": 2800,
+      "height": 2240,
+      "images": {
+        "sm": {
+          "src": "media/stelo-allott-02-sm.webp",
+          "width": 480,
+          "height": 384,
+          "bytes": 11446
+        },
+        "md": {
+          "src": "media/stelo-allott-02-md.webp",
+          "width": 1280,
+          "height": 1024,
+          "bytes": 52128
+        },
+        "lg": {
+          "src": "media/stelo-allott-02-lg.webp",
+          "width": 2048,
+          "height": 1638,
+          "bytes": 123798
+        }
+      },
+      "poster": {
+        "src": "media/stelo-allott-02-sm.webp",
+        "width": 480,
+        "height": 384,
+        "bytes": 11446
+      },
+      "aspect": 1.25
+    },
+    {
+      "id": "tinkercad-allott-01",
+      "label": "Tinkercad",
+      "href": "",
+      "source": "Tinkercad-Allott-01.mp4",
+      "sourceHash": "828a24cb01ba1c33",
+      "type": "video",
+      "width": 1080,
+      "height": 720,
+      "duration": 4.3,
+      "sourceDuration": 4.3,
+      "poster": {
+        "src": "media/tinkercad-allott-01-poster.webp",
+        "width": 1080,
+        "height": 720,
+        "bytes": 26358
+      },
+      "sources": [
+        {
+          "src": "media/tinkercad-allott-01.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 331180
+        },
+        {
+          "src": "media/tinkercad-allott-01.mp4",
+          "type": "video/mp4",
+          "bytes": 411119
+        }
+      ],
+      "aspect": 1.5
+    },
+    {
+      "id": "tjb-allott-01",
+      "label": "The James Brand",
+      "href": "/projects/the-james-brand",
+      "source": "TJB-Allott-01.jpg",
+      "sourceHash": "b194ef5704447527",
+      "type": "image",
+      "width": 2000,
+      "height": 1333,
+      "images": {
+        "sm": {
+          "src": "media/tjb-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 7592
+        },
+        "md": {
+          "src": "media/tjb-allott-01-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 37158
+        },
+        "lg": {
+          "src": "media/tjb-allott-01-lg.webp",
+          "width": 2000,
+          "height": 1333,
+          "bytes": 80420
+        }
+      },
+      "poster": {
+        "src": "media/tjb-allott-01-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 7592
+      },
+      "aspect": 1.5004
+    },
+    {
+      "id": "tjb-allott-02",
+      "label": "The James Brand",
+      "href": "/projects/the-james-brand",
+      "source": "TJB-Allott-02.webp",
+      "sourceHash": "1121851fdebddd9f",
+      "type": "image",
+      "width": 1581,
+      "height": 1020,
+      "images": {
+        "sm": {
+          "src": "media/tjb-allott-02-sm.webp",
+          "width": 480,
+          "height": 310,
+          "bytes": 29788
+        },
+        "md": {
+          "src": "media/tjb-allott-02-md.webp",
+          "width": 1280,
+          "height": 826,
+          "bytes": 190264
+        },
+        "lg": {
+          "src": "media/tjb-allott-02-lg.webp",
+          "width": 1581,
+          "height": 1020,
+          "bytes": 370154
+        }
+      },
+      "poster": {
+        "src": "media/tjb-allott-02-sm.webp",
+        "width": 480,
+        "height": 310,
+        "bytes": 29788
+      },
+      "aspect": 1.55
+    }
+  ]
+}

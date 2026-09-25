@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>work-canvas — local mock of the Webflow homepage</title>
+    <style>
+      /* Stand-in for the Webflow site styles. Cassette is loaded from the site's own CDN. */
+      @font-face { font-family: 'Cassette'; font-weight: 400; font-display: swap; src: url('https://cdn.prod.website-files.com/5f738f70b7bec044ebe9f93f/6ab5adf1f42a91ebd2322c6a_Cassette-Regular.otf') format('opentype'); }
+      @font-face { font-family: 'Cassette'; font-weight: 500; font-display: swap; src: url('https://cdn.prod.website-files.com/5f738f70b7bec044ebe9f93f/6ab5adf0b27fb0c9d190c5cd_Cassette-Medium.otf') format('opentype'); }
+      html { background: #f2f2f2; }
+      body { margin: 0; font-family: 'Cassette', 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #111; background: #f2f2f2; }
+      .work-header { font-family: 'Cassette', sans-serif; font-weight: 500; }
+      #work-canvas { height: 100svh; }
+      .page-content { padding: 96px 13px 160px; display: grid; grid-template-columns: 1fr 1fr; gap: 13px; font-size: 44px; line-height: 1; letter-spacing: -0.02em; }
+      .page-content p:nth-child(2) { text-align: right; }
+      .note { grid-column: 1 / -1; font-size: 14px; line-height: 1.5; max-width: 620px; letter-spacing: 0; opacity: .6; }
+    </style>
+  </head>
+  <body>
+    <!-- ── Webflow page ─────────────────────────────────────────────── -->
+    <section class="work-header">
+      <!-- Mount point: the bundle sizes itself to this element. -->
+      <div id="work-canvas" data-layout="a" data-sync-url="true"></div>
+
+      <!-- Hidden Collection List bound to the "Projects" CMS collection. The bundle visually
+           hides it; the first two media of each project become tiles. -->
+      <div class="w-dyn-list" data-work-list>
+        <div role="list" class="w-dyn-items">
+<!-- WORK_ITEMS -->
+        </div>
+      </div>
+    </section>
+
+    <main id="work" class="page-content">
+      <p>design &amp; direction</p>
+      <p>made to move —</p>
+      <p class="note">Mock page. Everything above is the bundle mounted into <code>#work-canvas</code>, fed by markup identical to the Webflow Projects Collection List. This block stands in for the rest of the homepage.</p>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

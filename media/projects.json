@@ -1,0 +1,30 @@
+{
+  "_readme": "Maps a filename prefix (everything before '-Allott' / '_Allott', or a custom match) to a display label and project URL. Edit freely; re-run `npm run media` to regenerate media.json. 'match' is a case-insensitive regex tested against the source filename. First match wins. 'video' can set trim start/duration in seconds.",
+  "projects": [
+    { "match": "^BOA-",                 "label": "BOA Performfit Wrap",       "href": "/projects/boa" },
+    { "match": "^Burton-Zebs",          "label": "Burton Zebs",               "href": "" },
+    { "match": "^Cinco-",               "label": "Cinco Design",              "href": "/projects/cinco-design" },
+    { "match": "^Dialpad-",             "label": "Dialpad",                   "href": "/projects/dialpad" },
+    { "match": "^GT-",                  "label": "GT Bikes",                  "href": "/projects/gt-bikes" },
+    { "match": "^Koya-",                "label": "Koya",                      "href": "/projects/koya" },
+    { "match": "^MIH-",                 "label": "Microsoft Innovation Hub",  "href": "/projects/microsoft-innovation-hub" },
+    { "match": "^MNI-",                 "label": "Music: Not Impossible",     "href": "/projects/mni" },
+    { "match": "^Microsoft-Teams",      "label": "Microsoft Teams",           "href": "/projects/microsoft-teams" },
+    { "match": "^Nixon[-_]Dork",        "label": "Nixon: The Dork",           "href": "/projects/nixon-the-dork" },
+    { "match": "^Nixon-Push",           "label": "Nixon: Push Forward",       "href": "/projects/nixon-push-forward" },
+    { "match": "^Otis-",                "label": "Otis Mountain Get Down",    "href": "/projects/otis-mountain-get-down" },
+    { "match": "^SMI_KOR",              "label": "Smith",                     "href": "/projects/smith-mag" },
+    { "match": "^SRAM-XPLR",            "label": "SRAM XPLR",                 "href": "" },
+    { "match": "^Stelo-",               "label": "Stelo",                     "href": "/projects/stelo" },
+    { "match": "^TJB-",                 "label": "The James Brand",           "href": "/projects/the-james-brand" },
+    { "match": "^Tinkercad-",           "label": "Tinkercad",                 "href": "" },
+    { "match": "^solace-",              "label": "Solace Cycles",             "href": "/projects/solace-cycles" },
+    { "match": "Tosdal",                "label": "Tosdal APC",                "href": "/projects/tosdal-law" }
+  ],
+  "video": {
+    "_readme": "Per-file overrides, keyed by source filename. start/duration trim the loop (default: first `maxSeconds` s). crop = 'w:h:x:y' in source px (find with: ffmpeg -i file -vf cropdetect -f null -).",
+    "MNI-Allott-01.mp4":       { "start": 0, "duration": 12 },
+    "MIH-Allott-02.mp4":       { "start": 0, "duration": 12 },
+    "Nixon-Push-Allott-01.mp4": { "start": 0, "duration": 12, "crop": "1920:820:0:130" }
+  }
+}
