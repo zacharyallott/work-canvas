@@ -227,7 +227,7 @@ A copy of Home (same header, same Collection List) with its own SEO title, descr
 Page settings → Custom code → Before `</body>` tag, on Home, About and the Projects template:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.14/dist/work-canvas.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.15/dist/work-canvas.js"></script>
 ```
 
 When you release, bump the version on all three, and `data-media-base` on each `#work-canvas`.

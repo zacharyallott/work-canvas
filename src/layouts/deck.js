@@ -55,8 +55,8 @@ export const config = {
   // New cards
   interval: 2, // s without a new card before the next one comes in on its own
   moveStep: 100, // CSS px of cursor travel per new card, at any screen size (lower = more cards)
-  scrollStep: 120, // px scrolled (wheel / trackpad / swipe) per new card
-  scrollGap: 0.14, // s: fastest pace scrolling deals at
+  scrollStep: 250, // px scrolled (wheel / trackpad / swipe) per new card
+  scrollGap: 0.35, // s: fastest pace scrolling deals at
   maxPerFrame: 1, // cap on cards added in a single frame during very fast moves
   dealDuration: 0.12, // s for a new card to fade in (0 = instant cut)
   dealEase: 'none',
@@ -176,7 +176,7 @@ export default class Deck extends Layout {
       this.deal();
       dealt = true;
     }
-    this.scrollTravel = Math.min(this.scrollTravel, c.scrollStep * 3);
+    this.scrollTravel = Math.min(this.scrollTravel, c.scrollStep * 2);
     if (!paused) this.timer += dt;
     if (dealt) this.timer = 0;
     else if (this.timer >= c.interval) {
