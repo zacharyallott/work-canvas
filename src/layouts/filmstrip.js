@@ -1,6 +1,7 @@
 import { Layout } from '../core/layout.js';
 import { ARTBOARD } from '../core/defaults.js';
 import { sizePattern, fitSize } from '../core/sizing.js';
+import { Spring } from '../core/spring.js';
 
 /**
  * Version A — Horizontal filmstrip (Figma frame 46, node 1542:5556)
@@ -16,6 +17,9 @@ import { sizePattern, fitSize } from '../core/sizing.js';
  * the centre (small dead zone in the middle). The speed eases toward its
  * target, so there's a little lag. Without a cursor (touch, or pointer
  * outside the header) it drifts slowly left; on touch you can also swipe.
+ * Scrolling (wheel / trackpad, or a vertical swipe on touch) moves the strip
+ * along too — scroll down to go forward — through a spring, so each scroll
+ * eases in and out.
  * Tiles stay flat (no warp or distortion). Hover reveals the title.
  */
 export const config = {
@@ -40,6 +44,9 @@ export const config = {
   response: 2.2, // how fast the speed follows the cursor (higher = less lag)
   idleSpeed: 24, // px/s leftward drift with no cursor over the header (0 = still)
   hoverSlowdown: 1, // speed multiplier while a tile is hovered (1 = no slowdown)
+
+  // Scroll: wheel / trackpad (either axis) moves the strip; eased by a spring
+  scroll: { multiplier: 1.2, omega: 6 }, // px of strip per px scrolled; spring pace (higher = snappier)
 
   // Touch swipe (no cursor on touch devices)
   dragMultiplier: 1.15,
@@ -71,6 +78,7 @@ export default class Filmstrip extends Layout {
     this.target = 0;
     this.drift = -cfg.idleSpeed; // px/s, eased toward the cursor-derived speed
     this.velocity = 0; // px/s from touch throws
+    this.scrolled = new Spring(cfg.scroll.omega); // strip offset from scrolling, eased
   }
 
   resize(vp) {
@@ -125,6 +133,7 @@ export default class Filmstrip extends Layout {
     this.target += (this.drift + this.velocity) * dt;
     this.velocity *= Math.pow(c.inertia, dt * 60);
     this.offset += (this.target - this.offset) * (1 - Math.pow(1 - c.ease, dt * 60));
+    const scrolled = this.scrolled.update(dt);
 
     let featured = null;
     let bestD = Infinity;
@@ -132,7 +141,7 @@ export default class Filmstrip extends Layout {
     const L = this.length;
 
     this.tiles.forEach((t, i) => {
-      const raw = c.startOffset * this.s + t.baseX + this.offset;
+      const raw = c.startOffset * this.s + t.baseX + this.offset + scrolled;
       const m = this.margin;
       t.x = ((((raw + m) % L) + L) % L) - m; // wrap into [-margin, L - margin)
       t.y = this.bottom - t.h;
@@ -156,16 +165,21 @@ export default class Filmstrip extends Layout {
     if (this.engine.hovered && this.tiles.includes(this.engine.hovered)) this.engine.hovered.priority = 3;
   }
 
-  // Touch swipe only — on desktop the cursor steers.
-  onDrag({ dx }) {
+  /** Scroll down (or right) = forward: the strip moves left. */
+  onWheel({ dx, dy }) {
+    this.scrolled.push(-(dy + dx) * this.config.scroll.multiplier);
+  }
+
+  // Touch swipe only — on desktop the cursor steers. A vertical swipe works like scrolling (up = forward).
+  onDrag({ dx, dy }) {
     if (!this.engine.touch) return;
-    this.target += dx * this.config.dragMultiplier;
+    this.target += (dx + dy) * this.config.dragMultiplier;
     this.velocity = 0;
   }
 
-  onRelease({ vx }) {
+  onRelease({ vx, vy }) {
     if (!this.engine.touch) return;
-    this.velocity = vx * this.config.dragMultiplier * this.config.throw;
+    this.velocity = (vx + vy) * this.config.dragMultiplier * this.config.throw;
   }
 
   /** Keyboard focus: glide the nearest copy of the item to the centre. */

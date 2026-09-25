@@ -10,7 +10,7 @@
  *   data-switcher="false"      the star doesn't cycle versions (it only returns home)
  *   data-items=".work-item"    selector for the item links
  *   data-media-base="https://…/"  base URL for relative media paths
- *   data-wheel="page|capture"  whether the header consumes vertical wheel
+ *   data-wheel="capture|page"  capture (default): scrolling drives the layouts; page: vertical wheel scrolls the page
  *   data-max-videos="5"        concurrent video cap (overrides layouts)
  *   data-tagline="…"           top bar text (click opens the about section)
  *   data-project-base="/work/" where each case study's own page lives (default /work/)

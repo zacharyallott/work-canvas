@@ -12681,7 +12681,7 @@ var jp = class {
 	downgradeAfter: 8,
 	click: !1,
 	tapCaptionFor: 2.5,
-	wheel: "page",
+	wheel: "capture",
 	clickSlop: 6,
 	projectBase: "/work/",
 	homePath: "/",
@@ -13234,7 +13234,7 @@ var Mm = class {
 		this.items.forEach((e) => e.dispose()), this.items = [], this.queue = [], this.uploads = [];
 	}
 }, Pm = class {
-	constructor(e, { clickSlop: t = 6, wheel: n = "page" } = {}) {
+	constructor(e, { clickSlop: t = 6, wheel: n = "capture" } = {}) {
 		this.el = e, this.clickSlop = t, this.wheelMode = n, this.handlers = {}, this.pointer = {
 			x: 0,
 			y: 0,
@@ -13286,14 +13286,7 @@ var Mm = class {
 		let n = this.pressed;
 		if (!n || e.pointerId !== n.id) return;
 		let r = t.x - n.lastX, i = t.y - n.lastY;
-		if (!n.dragging && Math.hypot(t.x - n.x, t.y - n.y) > this.clickSlop) {
-			if (n.type === "touch" && Math.abs(t.y - n.y) > Math.abs(t.x - n.x)) {
-				this.pressed = null;
-				return;
-			}
-			n.dragging = !0, this.el.setPointerCapture?.(e.pointerId), this.el.classList.add("is-dragging");
-		}
-		if (n.dragging) {
+		if (!n.dragging && Math.hypot(t.x - n.x, t.y - n.y) > this.clickSlop && (n.dragging = !0, this.el.setPointerCapture?.(e.pointerId), this.el.classList.add("is-dragging")), n.dragging) {
 			let e = performance.now(), a = Math.max(1, e - n.t);
 			n.vx = n.vx * .6 + r / a * 1e3 * .4, n.vy = n.vy * .6 + i / a * 1e3 * .4, n.t = e, this.emit("drag", {
 				dx: r,
@@ -13326,7 +13319,7 @@ var Mm = class {
 		}, this.emit("move", this.pointer));
 	}
 	onWheel(e) {
-		if (e.target.closest?.("[data-wc-no-input]")) return;
+		if (e.ctrlKey || e.target.closest?.("[data-wc-no-input]")) return;
 		let t = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? this.el.clientHeight : 1, n = e.deltaX * t, r = e.deltaY * t, i = Math.abs(n) > Math.abs(r);
 		(this.wheelMode === "capture" || i) && (e.preventDefault(), this.emit("wheel", {
 			dx: n,
@@ -13605,7 +13598,7 @@ var Qm = class {
 	destroy() {
 		this.clear(), this.io.disconnect(), this.loopIO.disconnect(), window.removeEventListener("message", this._onMessage), this.el.remove();
 	}
-}, $m = "\n/* Full visible screen: svh leaves out the mobile browser toolbars (100vh would slide under them). */\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);height:100vh;isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n.wc-root.is-hovering-tile{cursor:pointer}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear}\n.wc-root.is-ready .wc-canvas{opacity:1}\n.wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,400);color:#f2f2f2}\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference}\n.wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px);padding:0;border:0;background:none;pointer-events:auto;cursor:pointer}\n.wc-icon:focus-visible{outline:1px solid #f2f2f2;outline-offset:3px}\n.wc-icon img{display:block;width:100%;height:100%}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}\n.wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}\n/* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */\n.wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden}\n.wc-arrow-track{position:absolute;left:0;top:0;width:17px;height:17px}\n.wc-arrow-glyph{position:absolute;left:0;top:0;width:17px;height:17px;line-height:17px;text-align:center;transform:rotate(90deg)}\n.wc-arrow-glyph.is-next{top:-17px}\n.wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}\n.wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}\n/* About (Figma frame 49): bottom-anchored statement + client columns. */\n.wc-about{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;max-height:calc(100% - 44px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}\n.wc-root.is-about .wc-about{opacity:1;visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}\n.wc-about .wc-w{display:inline-block;will-change:opacity}\n.wc-about-statement{margin:0 0 clamp(24px,8vh,64px);max-width:22.84em;font-size:clamp(22px,min(3.75vw,6.2vh),48px);line-height:1.25;letter-spacing:.02em;font-weight:500}\n.wc-about-statement img{display:inline-block;width:.72em;height:.72em;margin-left:.3em;vertical-align:baseline} /* Cassette cap height: sits on the baseline, tops out with the capitals */\n.wc-about-clients{display:flex;justify-content:space-between;gap:16px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:400;font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}\n.wc-about-clients ul{list-style:none;margin:0;padding:0;flex:0 1 155px;min-width:0}\n.wc-about-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;line-height:1;font-weight:400}\n.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:400;letter-spacing:.02em}\n.wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}\n/* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */\n.wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}\n.wc-link-track{position:absolute;inset:0}\n.wc-link-track>span{position:absolute;left:0;top:0;width:1em;line-height:1em;text-align:center}\n.wc-link-track>span.is-next{left:-1em}\n.wc-about-links a:focus-visible{outline:1px solid currentColor;outline-offset:3px}\n.wc-about-copy{margin:0;font-size:16px}\n.wc-caption{position:absolute;left:0;top:0;font-size:12px;font-weight:400;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .4s linear;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 12px;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n/* Paragraphs avoid orphans and ragged endings; headings get evenly balanced lines. */\n.wc-ui p{text-wrap:pretty}\n.wc-ui h1,.wc-ui h2,.wc-ui h3{text-wrap:balance}\n.wc-seo{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@supports (height:100svh){.wc-root{height:100svh}}\n.wc-about::-webkit-scrollbar{display:none}\n@media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:32px}.wc-about-clients{flex-wrap:wrap;justify-content:flex-start;row-gap:14px}.wc-about-clients ul{flex:0 0 calc(50% - 8px)}.wc-about-footer{margin-top:4px}}\n", eh = !1;
+}, $m = "\n/* Full visible screen: svh leaves out the mobile browser toolbars (100vh would slide under them). */\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);height:100vh;isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n.wc-root.is-hovering-tile{cursor:pointer}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear;touch-action:none} /* swipes in any direction drive the layouts */\n.wc-root.is-ready .wc-canvas{opacity:1}\n.wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,400);color:#f2f2f2}\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference}\n.wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px);padding:0;border:0;background:none;pointer-events:auto;cursor:pointer}\n.wc-icon:focus-visible{outline:1px solid #f2f2f2;outline-offset:3px}\n.wc-icon img{display:block;width:100%;height:100%}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}\n.wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}\n/* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */\n.wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden}\n.wc-arrow-track{position:absolute;left:0;top:0;width:17px;height:17px}\n.wc-arrow-glyph{position:absolute;left:0;top:0;width:17px;height:17px;line-height:17px;text-align:center;transform:rotate(90deg)}\n.wc-arrow-glyph.is-next{top:-17px}\n.wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}\n.wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}\n/* About (Figma frame 49): bottom-anchored statement + client columns. */\n.wc-about{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;max-height:calc(100% - 44px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}\n.wc-root.is-about .wc-about{opacity:1;visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}\n.wc-about .wc-w{display:inline-block;will-change:opacity}\n.wc-about-statement{margin:0 0 clamp(24px,8vh,64px);max-width:22.84em;font-size:clamp(22px,min(3.75vw,6.2vh),48px);line-height:1.25;letter-spacing:.02em;font-weight:500}\n.wc-about-statement img{display:inline-block;width:.72em;height:.72em;margin-left:.3em;vertical-align:baseline} /* Cassette cap height: sits on the baseline, tops out with the capitals */\n.wc-about-clients{display:flex;justify-content:space-between;gap:16px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:400;font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}\n.wc-about-clients ul{list-style:none;margin:0;padding:0;flex:0 1 155px;min-width:0}\n.wc-about-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;line-height:1;font-weight:400}\n.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:400;letter-spacing:.02em}\n.wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}\n/* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */\n.wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}\n.wc-link-track{position:absolute;inset:0}\n.wc-link-track>span{position:absolute;left:0;top:0;width:1em;line-height:1em;text-align:center}\n.wc-link-track>span.is-next{left:-1em}\n.wc-about-links a:focus-visible{outline:1px solid currentColor;outline-offset:3px}\n.wc-about-copy{margin:0;font-size:16px}\n.wc-caption{position:absolute;left:0;top:0;font-size:12px;font-weight:400;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .4s linear;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 12px;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n/* Paragraphs avoid orphans and ragged endings; headings get evenly balanced lines. */\n.wc-ui p{text-wrap:pretty}\n.wc-ui h1,.wc-ui h2,.wc-ui h3{text-wrap:balance}\n.wc-seo{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@supports (height:100svh){.wc-root{height:100svh}}\n.wc-about::-webkit-scrollbar{display:none}\n@media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:32px}.wc-about-clients{flex-wrap:wrap;justify-content:flex-start;row-gap:14px}.wc-about-clients ul{flex:0 0 calc(50% - 8px)}.wc-about-footer{margin-top:4px}}\n", eh = !1;
 function th() {
 	if (eh) return;
 	eh = !0;
@@ -14373,8 +14366,20 @@ function Oh(e, t, { minW: n, maxW: r, maxH: i }) {
 	};
 }
 //#endregion
-//#region src/layouts/filmstrip.js
-var kh = {
+//#region src/core/spring.js
+var kh = class {
+	constructor(e = 6) {
+		this.omega = e, this.x = 0, this.v = 0, this.target = 0;
+	}
+	push(e) {
+		this.target += e;
+	}
+	update(e) {
+		let t = this.omega, n = Math.max(1, Math.ceil(e / (1 / 120))), r = e / n;
+		for (let e = 0; e < n; e++) this.v += (t * t * (this.target - this.x) - 2 * t * this.v) * r, this.x += this.v * r;
+		return this.x;
+	}
+}, Ah = {
 	heights: [
 		210,
 		280,
@@ -14397,6 +14402,10 @@ var kh = {
 	response: 2.2,
 	idleSpeed: 24,
 	hoverSlowdown: 1,
+	scroll: {
+		multiplier: 1.2,
+		omega: 6
+	},
 	dragMultiplier: 1.15,
 	throw: .9,
 	inertia: .94,
@@ -14411,9 +14420,9 @@ var kh = {
 	enterDuration: .8,
 	leaveDuration: .25,
 	captionInset: [20, 12]
-}, Ah = class extends Eh {
+}, jh = class extends Eh {
 	constructor(e, t) {
-		super(e, t), this.offset = 0, this.target = 0, this.drift = -t.idleSpeed, this.velocity = 0;
+		super(e, t), this.offset = 0, this.target = 0, this.drift = -t.idleSpeed, this.velocity = 0, this.scrolled = new kh(t.scroll.omega);
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.height / Np.height));
@@ -14439,29 +14448,32 @@ var kh = {
 	update(e) {
 		let t = this.config;
 		this.drift += (this.targetDrift() - this.drift) * (1 - Math.exp(-e * t.response)), this.target += (this.drift + this.velocity) * e, this.velocity *= t.inertia ** (e * 60), this.offset += (this.target - this.offset) * (1 - (1 - t.ease) ** (e * 60));
-		let n = null, r = Infinity, i = this.vp.width / 2, a = this.length;
-		this.tiles.forEach((e, o) => {
-			let s = t.startOffset * this.s + e.baseX + this.offset, c = this.margin;
-			e.x = ((s + c) % a + a) % a - c, e.y = this.bottom - e.h, e.z = 0, e.alpha = 1, e.reveal = 1;
-			let l = e.x + e.w > 0 && e.x < this.vp.width, u = Math.abs(e.x + e.w / 2 - i);
-			l && u < r && (r = u, n = e), e.priority = l ? this.centerScore(e) : 0, this.applyTransition(e, Math.min(1, Math.max(0, e.x / this.vp.width)));
-		}), this.featured = n, n && (n.priority = 2), this.engine.hovered && this.tiles.includes(this.engine.hovered) && (this.engine.hovered.priority = 3);
+		let n = this.scrolled.update(e), r = null, i = Infinity, a = this.vp.width / 2, o = this.length;
+		this.tiles.forEach((e, s) => {
+			let c = t.startOffset * this.s + e.baseX + this.offset + n, l = this.margin;
+			e.x = ((c + l) % o + o) % o - l, e.y = this.bottom - e.h, e.z = 0, e.alpha = 1, e.reveal = 1;
+			let u = e.x + e.w > 0 && e.x < this.vp.width, d = Math.abs(e.x + e.w / 2 - a);
+			u && d < i && (i = d, r = e), e.priority = u ? this.centerScore(e) : 0, this.applyTransition(e, Math.min(1, Math.max(0, e.x / this.vp.width)));
+		}), this.featured = r, r && (r.priority = 2), this.engine.hovered && this.tiles.includes(this.engine.hovered) && (this.engine.hovered.priority = 3);
 	}
-	onDrag({ dx: e }) {
-		this.engine.touch && (this.target += e * this.config.dragMultiplier, this.velocity = 0);
+	onWheel({ dx: e, dy: t }) {
+		this.scrolled.push(-(t + e) * this.config.scroll.multiplier);
 	}
-	onRelease({ vx: e }) {
-		this.engine.touch && (this.velocity = e * this.config.dragMultiplier * this.config.throw);
+	onDrag({ dx: e, dy: t }) {
+		this.engine.touch && (this.target += (e + t) * this.config.dragMultiplier, this.velocity = 0);
+	}
+	onRelease({ vx: e, vy: t }) {
+		this.engine.touch && (this.velocity = (e + t) * this.config.dragMultiplier * this.config.throw);
 	}
 	focusItem(e) {
 		let t = this.tileForItem(e) ?? this.tiles.find((t) => t.item === e);
 		t && (this.target += this.vp.width / 2 - (t.x + t.w / 2));
 	}
 };
-wh(Ah, "defaults", kh), wh(Ah, "label", "Filmstrip");
+wh(jh, "defaults", Ah), wh(jh, "label", "Filmstrip");
 //#endregion
 //#region src/layouts/deck.js
-var jh = {
+var Mh = {
 	heights: [
 		220,
 		300,
@@ -14515,6 +14527,8 @@ var jh = {
 	fan: .8,
 	interval: 2,
 	moveStep: 100,
+	scrollStep: 120,
+	scrollGap: .14,
 	maxPerFrame: 1,
 	dealDuration: .12,
 	dealEase: "none",
@@ -14530,13 +14544,13 @@ var jh = {
 	enterDuration: .7,
 	leaveDuration: .25,
 	captionInset: [16, 12]
-}, Mh = class extends Eh {
+}, Nh = class extends Eh {
 	constructor(e, t) {
 		super(e, t), this.makeTiles(this.items);
 		let n = this.tiles.length;
 		this.slotCount = Math.min(t.slots.length, n), this.fillOrder = t.fillOrder.filter((e) => e < this.slotCount), this.slotTile = Array.from({ length: this.slotCount }, () => -1), this.slotStamp = Array.from({ length: this.slotCount }, () => 0);
 		let r = Math.max(0, this.tiles.findIndex((e) => e.item.caseStudy));
-		this.slotTile[this.fillOrder[0]] = r, this.slotStamp[this.fillOrder[0]] = 1, this.stamp = 1, this.next = (r + 1) % n, this.fading = null, this.timer = 0, this.travel = 0, this.lastPointer = null, this.anchors = t.slots.map(() => ({
+		this.slotTile[this.fillOrder[0]] = r, this.slotStamp[this.fillOrder[0]] = 1, this.stamp = 1, this.next = (r + 1) % n, this.fading = null, this.timer = 0, this.scrollTravel = 0, this.sinceScrollDeal = 1, this.travel = 0, this.lastPointer = null, this.anchors = t.slots.map(() => ({
 			x: 0,
 			y: 0
 		}));
@@ -14572,7 +14586,7 @@ var jh = {
 		}) : (this.lastPointer = null, this.travel = 0);
 		let g = !1;
 		for (let e = 0; this.travel >= h && e < t.maxPerFrame; e++) this.travel -= h, this.deal(), g = !0;
-		this.travel = Math.min(this.travel, h * 2), p || (this.timer += e), g ? this.timer = 0 : this.timer >= t.interval && (this.timer = 0, this.deal());
+		this.travel = Math.min(this.travel, h * 2), this.sinceScrollDeal += e, this.progress >= 1 && this.scrollTravel >= t.scrollStep && this.sinceScrollDeal >= t.scrollGap && (this.scrollTravel -= t.scrollStep, this.sinceScrollDeal = 0, this.deal(), g = !0), this.scrollTravel = Math.min(this.scrollTravel, t.scrollStep * 3), p || (this.timer += e), g ? this.timer = 0 : this.timer >= t.interval && (this.timer = 0, this.deal());
 		let _ = r / 2, v = i / 2, y = (e, n) => {
 			let r = t.slots[n], i = this.anchors[n];
 			e.w = e.baseW, e.h = e.baseH, e.x = _ + i.x + r.x * this.k - e.w / 2, e.y = v + i.y + r.y * this.k - e.h / 2;
@@ -14616,6 +14630,12 @@ var jh = {
 			onComplete: () => this.finishFade()
 		});
 	}
+	onWheel({ dx: e, dy: t }) {
+		this.scrollTravel += Math.abs(t) + Math.abs(e);
+	}
+	onDrag({ dx: e, dy: t }) {
+		this.engine.touch && (this.scrollTravel += Math.hypot(e, t));
+	}
 	finishFade() {
 		this.fadeTween?.kill(), this.fadeTween = null, this.fading = null;
 	}
@@ -14629,10 +14649,10 @@ var jh = {
 		this.finishFade(), super.dispose();
 	}
 };
-wh(Mh, "defaults", jh), wh(Mh, "label", "Deck");
+wh(Nh, "defaults", Mh), wh(Nh, "label", "Deck");
 //#endregion
 //#region src/layouts/masonry.js
-var Nh = {
+var Ph = {
 	columnWidth: 212,
 	gutter: 12,
 	gap: 12,
@@ -14662,6 +14682,10 @@ var Nh = {
 	autoplaySpeed: 22,
 	hoverSlowdown: .12,
 	hoverEase: 3,
+	scroll: {
+		multiplier: 1,
+		omega: 6
+	},
 	shift: {
 		mode: "offset",
 		max: 190,
@@ -14681,7 +14705,7 @@ var Nh = {
 	leaveDuration: .25,
 	captionInset: [14, 13]
 };
-function Ph(e, t) {
+function Fh(e, t) {
 	let n = t * 2654435769, r = () => {
 		n = n + 1831565813 | 0;
 		let e = Math.imul(n ^ n >>> 15, 1 | n);
@@ -14693,9 +14717,9 @@ function Ph(e, t) {
 	}
 	return i;
 }
-var Fh = class extends Eh {
+var Ih = class extends Eh {
 	constructor(e, t) {
-		super(e, t), this.scroll = 0, this.slow = 1, this.shiftX = 0, this.shiftV = 0, this.columns = [];
+		super(e, t), this.scroll = 0, this.scrolled = new kh(t.scroll.omega), this.slow = 1, this.shiftX = 0, this.shiftV = 0, this.columns = [];
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.width / Np.width));
@@ -14706,7 +14730,7 @@ var Fh = class extends Eh {
 			tiles: [],
 			length: 0,
 			has: /* @__PURE__ */ new Set()
-		})), l = this.items.length, u = new Map(Ph(this.items, 1).map((e, t) => [e, t])), d = new Map(this.items.map((e) => [e, 0])), f = (e, t) => {
+		})), l = this.items.length, u = new Map(Fh(this.items, 1).map((e, t) => [e, t])), d = new Map(this.items.map((e) => [e, 0])), f = (e, t) => {
 			let n = /* @__PURE__ */ new Set();
 			for (let r = -t; r <= t; r++) c[(e + r + i) % i].has.forEach((e) => n.add(e));
 			return n;
@@ -14742,41 +14766,50 @@ var Fh = class extends Eh {
 		this.slow += ((a ? t.hoverSlowdown : 1) - this.slow) * (1 - Math.exp(-e * t.hoverEase)), this.reduced || (this.scroll += t.autoplaySpeed * this.s * this.slow * e);
 		let { nx: o, inside: s } = n.cursor, c = s ? -Math.sign(o) * Math.abs(o) ** +t.shift.curve : 0, l = 1 - Math.exp(-e * t.shift.response);
 		t.shift.mode === "drift" ? (this.shiftV += (c * t.shift.speed * this.s - this.shiftV) * l, this.shiftX += this.shiftV * e) : this.shiftX += (c * t.shift.max * this.s - this.shiftX) * l;
-		let u = this.colW / t.minAspect + this.gapPx, d = this.totalW, f = null, p = 0;
+		let u = this.scroll + this.scrolled.update(e), d = this.colW / t.minAspect + this.gapPx, f = this.totalW, p = null, m = 0;
 		for (let e of this.columns) {
-			let o = ((e.baseX + this.shiftX - this.origin) % d + d) % d + this.origin, s = e.start + this.scroll * e.speed;
+			let o = ((e.baseX + this.shiftX - this.origin) % f + f) % f + this.origin, s = e.start + u * e.speed;
 			for (let c of e.tiles) {
 				let l = e.length;
-				c.x = o, c.y = ((s + c.offsetInCol + u) % l + l) % l - u, c.w = this.colW, c.z = 0, c.alpha = 1, c.reveal = 1, c.gray = a && c !== n.hovered ? t.dimOthers * (1 - this.slow) : 0, c.priority = c.y + c.h > 0 && c.y < i && c.x + c.w > 0 && c.x < r ? this.centerScore(c) : 0, c.priority > p && (p = c.priority, f = c), this.applyTransition(c, Math.min(1, Math.max(0, o / r)));
+				c.x = o, c.y = ((s + c.offsetInCol + d) % l + l) % l - d, c.w = this.colW, c.z = 0, c.alpha = 1, c.reveal = 1, c.gray = a && c !== n.hovered ? t.dimOthers * (1 - this.slow) : 0, c.priority = c.y + c.h > 0 && c.y < i && c.x + c.w > 0 && c.x < r ? this.centerScore(c) : 0, c.priority > m && (m = c.priority, p = c), this.applyTransition(c, Math.min(1, Math.max(0, o / r)));
 			}
 		}
-		this.featured = f, f && (f.priority = 2), a && (n.hovered.priority = 3);
+		this.featured = p, p && (p.priority = 2), a && (n.hovered.priority = 3);
+	}
+	onWheel({ dy: e }) {
+		this.scrolled.push(-e * this.config.scroll.multiplier);
+	}
+	onDrag({ dy: e }) {
+		this.engine.touch && this.scrolled.push(e * this.config.scroll.multiplier);
+	}
+	onRelease({ vy: e }) {
+		this.engine.touch && this.scrolled.push(e * .25 * this.config.scroll.multiplier);
 	}
 };
-wh(Fh, "defaults", Nh), wh(Fh, "label", "Masonry");
+wh(Ih, "defaults", Ph), wh(Ih, "label", "Masonry");
 //#endregion
 //#region src/main.js
-var Ih = [
+var Lh = [
 	{
 		key: "a",
 		name: "Filmstrip",
-		Layout: Ah,
-		config: kh
+		Layout: jh,
+		config: Ah
 	},
 	{
 		key: "b",
 		name: "Deck",
-		Layout: Mh,
-		config: jh
+		Layout: Nh,
+		config: Mh
 	},
 	{
 		key: "c",
 		name: "Masonry",
-		Layout: Fh,
-		config: Nh
+		Layout: Ih,
+		config: Ph
 	}
 ];
-async function Lh(e, t = {}) {
+async function Rh(e, t = {}) {
 	if (e.__workCanvas) return e.__workCanvas;
 	let n = e.dataset, r = new URLSearchParams(location.search), i = r.get("v");
 	if (i && !(t.syncUrl ?? n.syncUrl === "true")) {
@@ -14784,7 +14817,7 @@ async function Lh(e, t = {}) {
 		let e = new URL(location.href);
 		e.search = r.toString(), history.replaceState(history.state, "", e);
 	}
-	let a = parseInt(t.maxVideos ?? n.maxVideos, 10), o = Ih.map((e) => ({
+	let a = parseInt(t.maxVideos ?? n.maxVideos, 10), o = Lh.map((e) => ({
 		...e,
 		config: {
 			...e.config,
@@ -14807,14 +14840,14 @@ async function Lh(e, t = {}) {
 	});
 	return e.__workCanvas = s, await s.init(), s;
 }
-function Rh() {
-	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Lh(e));
+function zh() {
+	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Rh(e));
 }
 typeof window < "u" && (window.WorkCanvas = {
-	mount: Lh,
-	LAYOUTS: Ih
-}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", Rh, { once: !0 }) : Rh());
+	mount: Rh,
+	LAYOUTS: Lh
+}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", zh, { once: !0 }) : zh());
 //#endregion
-export { Ih as LAYOUTS, mh as WorkCanvas, Lh as mount };
+export { Lh as LAYOUTS, mh as WorkCanvas, Rh as mount };
 
 //# sourceMappingURL=work-canvas.js.map

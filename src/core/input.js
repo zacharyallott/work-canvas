@@ -9,12 +9,15 @@
  *   wheel  { dx, dy, event }           px, deltaMode-normalised
  *   scroll { dy }                      page scroll delta while the header is visible
  *
- * Vertical wheel is left to the page by default (config.wheel = 'page'); the
- * header reacts to page scroll instead. Horizontal wheel (trackpads) is always
- * consumed. With wheel = 'capture' the header takes all wheel input.
+ * The header takes all wheel input by default (config.wheel = 'capture': the
+ * page is just the header, and scrolling drives the layouts). With wheel =
+ * 'page' vertical wheel is left to the page. Pinch-zoom (ctrl + wheel) is
+ * always left to the browser. On touch, drags in either direction belong to
+ * the header (the canvas has touch-action: none; the about section and
+ * project view keep native scrolling).
  */
 export class Input {
-  constructor(el, { clickSlop = 6, wheel = 'page' } = {}) {
+  constructor(el, { clickSlop = 6, wheel = 'capture' } = {}) {
     this.el = el;
     this.clickSlop = clickSlop;
     this.wheelMode = wheel;
@@ -73,11 +76,6 @@ export class Input {
     const dx = p.x - s.lastX;
     const dy = p.y - s.lastY;
     if (!s.dragging && Math.hypot(p.x - s.x, p.y - s.y) > this.clickSlop) {
-      // On touch, only horizontal drags belong to the header; vertical ones scroll the page.
-      if (s.type === 'touch' && Math.abs(p.y - s.y) > Math.abs(p.x - s.x)) {
-        this.pressed = null;
-        return;
-      }
       s.dragging = true;
       this.el.setPointerCapture?.(e.pointerId);
       this.el.classList.add('is-dragging');
@@ -116,7 +114,7 @@ export class Input {
   }
 
   onWheel(e) {
-    if (e.target.closest?.('[data-wc-no-input]')) return;
+    if (e.ctrlKey || e.target.closest?.('[data-wc-no-input]')) return; // pinch-zoom / project view / about
     const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? this.el.clientHeight : 1;
     const dx = e.deltaX * unit;
     const dy = e.deltaY * unit;

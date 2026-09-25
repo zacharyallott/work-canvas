@@ -20,7 +20,7 @@ const CSS = `
 .wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);height:100vh;isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}
 .wc-root.is-dragging{cursor:grabbing}
 .wc-root.is-hovering-tile{cursor:pointer}
-.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear}
+.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear;touch-action:none} /* swipes in any direction drive the layouts */
 .wc-root.is-ready .wc-canvas{opacity:1}
 .wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}
 /* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */

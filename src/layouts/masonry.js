@@ -1,5 +1,6 @@
 import { Layout } from '../core/layout.js';
 import { ARTBOARD } from '../core/defaults.js';
+import { Spring } from '../core/spring.js';
 
 /**
  * Version C — Masonry columns (Figma frame 45, node 1542:5489)
@@ -13,7 +14,9 @@ import { ARTBOARD } from '../core/defaults.js';
  * Motion: columns drift vertically on their own, alternating direction at
  * slightly different speeds, and slow down while a tile is hovered. The whole
  * grid shifts left/right with the cursor (cursor left → grid moves right), with
- * a little lag. No scroll or drag input. Hover reveals the title. Switching
+ * a little lag. Scrolling (wheel / trackpad, or a vertical swipe on touch)
+ * moves the columns too — each in its own direction, like the drift — through
+ * a spring, so each scroll eases in and out. Hover reveals the title. Switching
  * to it, the columns fade in where they are (left to right); nothing slides.
  */
 export const config = {
@@ -34,6 +37,9 @@ export const config = {
   autoplaySpeed: 22, // px/s
   hoverSlowdown: 0.12, // speed multiplier while a tile is hovered
   hoverEase: 3, // how quickly it slows / recovers (1/s)
+
+  // Scroll: wheel / trackpad / vertical swipe moves the columns; eased by a spring
+  scroll: { multiplier: 1, omega: 6 },
 
   // Horizontal shift from the cursor
   shift: {
@@ -78,7 +84,8 @@ export default class Masonry extends Layout {
 
   constructor(engine, cfg) {
     super(engine, cfg);
-    this.scroll = 0; // vertical travel
+    this.scroll = 0; // vertical travel from the drift
+    this.scrolled = new Spring(cfg.scroll.omega); // vertical travel from scrolling, eased
     this.slow = 1; // eased hover slowdown multiplier
     this.shiftX = 0; // horizontal offset (px)
     this.shiftV = 0; // horizontal speed for 'drift' mode (px/s)
@@ -180,6 +187,7 @@ export default class Masonry extends Layout {
       this.shiftX += (pull * c.shift.max * this.s - this.shiftX) * r;
     }
 
+    const travel = this.scroll + this.scrolled.update(dt);
     const pad = this.colW / c.minAspect + this.gapPx; // vertical wrap margin
     const W = this.totalW;
     let featured = null;
@@ -187,7 +195,7 @@ export default class Masonry extends Layout {
 
     for (const col of this.columns) {
       const x = ((((col.baseX + this.shiftX - this.origin) % W) + W) % W) + this.origin; // wrap horizontally
-      const pos = col.start + this.scroll * col.speed;
+      const pos = col.start + travel * col.speed;
       for (const t of col.tiles) {
         const L = col.length;
         t.x = x;
@@ -211,5 +219,19 @@ export default class Masonry extends Layout {
     this.featured = featured;
     if (featured) featured.priority = 2;
     if (hovering) e.hovered.priority = 3;
+  }
+
+  /** Scroll down = the leading columns move up (the others, going the other way, move down). */
+  onWheel({ dy }) {
+    this.scrolled.push(-dy * this.config.scroll.multiplier);
+  }
+
+  // Touch: a vertical swipe moves the columns with the finger, then carries on a little.
+  onDrag({ dy }) {
+    if (this.engine.touch) this.scrolled.push(dy * this.config.scroll.multiplier);
+  }
+
+  onRelease({ vy }) {
+    if (this.engine.touch) this.scrolled.push(vy * 0.25 * this.config.scroll.multiplier);
   }
 }

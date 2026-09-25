@@ -23,7 +23,9 @@ import { sizePattern, fitSize } from '../core/sizing.js';
  * stay exactly as they are. After `interval` s without a new card the next one comes in on
  * its own; moving the cursor brings in more — one per `moveStep` px of
  * travel, so faster movement stacks faster. Hovering a card pauses the
- * stacking and brings that card to the front (in place).
+ * stacking and brings that card to the front (in place). Scrolling (wheel /
+ * trackpad, or a swipe on touch) deals cards too: one per `scrollStep` px,
+ * at most one every `scrollGap` s so a fast scroll deals at a steady pace.
  */
 export const config = {
   // Size scale (design px): each card picks one of these heights; width = height × aspect.
@@ -53,6 +55,8 @@ export const config = {
   // New cards
   interval: 2, // s without a new card before the next one comes in on its own
   moveStep: 100, // CSS px of cursor travel per new card, at any screen size (lower = more cards)
+  scrollStep: 120, // px scrolled (wheel / trackpad / swipe) per new card
+  scrollGap: 0.14, // s: fastest pace scrolling deals at
   maxPerFrame: 1, // cap on cards added in a single frame during very fast moves
   dealDuration: 0.12, // s for a new card to fade in (0 = instant cut)
   dealEase: 'none',
@@ -94,6 +98,8 @@ export default class Deck extends Layout {
     this.fading = null; // { slot, from, fromStamp, to, p } while a new card fades in
 
     this.timer = 0; // s since the last card
+    this.scrollTravel = 0; // px scrolled toward the next card
+    this.sinceScrollDeal = 1;
     this.travel = 0; // cursor travel (px) since the last card
     this.lastPointer = null;
     this.anchors = cfg.slots.map(() => ({ x: 0, y: 0 })); // per-position lagged pile offset, screen px
@@ -162,6 +168,15 @@ export default class Deck extends Layout {
       dealt = true;
     }
     this.travel = Math.min(this.travel, step * 2); // don't bank a backlog from one big swipe
+    // Scrolling deals too (hover doesn't hold it — it's deliberate), at a steady pace.
+    this.sinceScrollDeal += dt;
+    if (this.progress >= 1 && this.scrollTravel >= c.scrollStep && this.sinceScrollDeal >= c.scrollGap) {
+      this.scrollTravel -= c.scrollStep;
+      this.sinceScrollDeal = 0;
+      this.deal();
+      dealt = true;
+    }
+    this.scrollTravel = Math.min(this.scrollTravel, c.scrollStep * 3);
     if (!paused) this.timer += dt;
     if (dealt) this.timer = 0;
     else if (this.timer >= c.interval) {
@@ -241,6 +256,15 @@ export default class Deck extends Layout {
 
     const duration = this.config.dealDuration;
     this.fadeTween = gsap.to(this.fading, { p: 1, duration, ease: this.config.dealEase, onComplete: () => this.finishFade() });
+  }
+
+  onWheel({ dx, dy }) {
+    this.scrollTravel += Math.abs(dy) + Math.abs(dx);
+  }
+
+  // Touch: any swipe on the canvas counts like scrolling.
+  onDrag({ dx, dy }) {
+    if (this.engine.touch) this.scrollTravel += Math.hypot(dx, dy);
   }
 
   finishFade() {

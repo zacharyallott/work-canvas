@@ -26,7 +26,7 @@ export const DEFAULTS = {
   // Input
   click: false, // tiles don't navigate yet — hover (or tap on touch) reveals the title
   tapCaptionFor: 2.5, // s a tapped tile keeps its caption on touch devices
-  wheel: 'page', // 'page' = vertical wheel scrolls the page (header reacts to scroll); 'capture' = header consumes the wheel
+  wheel: 'capture', // 'capture' = scrolling over the header drives the layouts; 'page' = vertical wheel scrolls the page instead
   clickSlop: 6, // px of pointer travel before a press counts as a drag
 
   // Project pages: each case study also has its own page at `${projectBase}<slug>` (the Webflow CMS template)
