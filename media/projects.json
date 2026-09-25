@@ -21,6 +21,8 @@
     { "match": "^Tinkercad-",           "label": "Tinkercad",                 "href": "", "caseStudy": false },
     { "match": "^vilafilm",             "label": "Vilafilm",                  "href": "", "caseStudy": false },
     { "match": "^solace-",              "label": "Solace Cycles",             "href": "/projects/solace-cycles", "caseStudy": false },
+    { "match": "CAHA", "label": "Caha", "href": "", "caseStudy": false },
+    { "match": "(^|_)UA_", "label": "Under Armour", "href": "", "caseStudy": false },
     { "match": "Tosdal",                "label": "Tosdal APC",                "href": "/projects/tosdal-law", "caseStudy": false }
   ],
   "caseStudies": {

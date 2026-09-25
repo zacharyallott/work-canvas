@@ -1,9 +1,47 @@
 {
-  "generated": "2026-09-25T03:14:19.607Z",
-  "count": 6,
-  "images": 4,
+  "generated": "2026-09-25T20:52:12.833Z",
+  "count": 7,
+  "images": 5,
   "videos": 2,
   "items": [
+    {
+      "id": "boa-allott-01",
+      "label": "BOA Performfit Wrap",
+      "href": "/projects/boa",
+      "caseStudy": true,
+      "source": "BOA-Allott-01.webp",
+      "sourceHash": "95f3e7e79670e390",
+      "type": "image",
+      "width": 1707,
+      "height": 1137,
+      "images": {
+        "sm": {
+          "src": "media/projects/boa/boa-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 3608
+        },
+        "md": {
+          "src": "media/projects/boa/boa-allott-01-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 15648
+        },
+        "lg": {
+          "src": "media/projects/boa/boa-allott-01-lg.webp",
+          "width": 1707,
+          "height": 1137,
+          "bytes": 24670
+        }
+      },
+      "poster": {
+        "src": "media/projects/boa/boa-allott-01-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 3608
+      },
+      "aspect": 1.5013
+    },
     {
       "id": "boa-allott-02",
       "label": "BOA Performfit Wrap",

@@ -1,9 +1,47 @@
 {
-  "generated": "2026-09-25T04:54:27.323Z",
-  "count": 39,
-  "images": 30,
+  "generated": "2026-09-25T20:52:05.115Z",
+  "count": 41,
+  "images": 32,
   "videos": 9,
   "items": [
+    {
+      "id": "19-caha-brandstory",
+      "label": "Caha",
+      "href": "",
+      "caseStudy": false,
+      "source": "19_CAHA_BrandStory.jpg",
+      "sourceHash": "60c85da9ab3a6ce1",
+      "type": "image",
+      "width": 2000,
+      "height": 1500,
+      "images": {
+        "sm": {
+          "src": "media/19-caha-brandstory-sm.webp",
+          "width": 480,
+          "height": 360,
+          "bytes": 21398
+        },
+        "md": {
+          "src": "media/19-caha-brandstory-md.webp",
+          "width": 1280,
+          "height": 960,
+          "bytes": 100842
+        },
+        "lg": {
+          "src": "media/19-caha-brandstory-lg.webp",
+          "width": 2000,
+          "height": 1500,
+          "bytes": 219734
+        }
+      },
+      "poster": {
+        "src": "media/19-caha-brandstory-sm.webp",
+        "width": 480,
+        "height": 360,
+        "bytes": 21398
+      },
+      "aspect": 1.3333
+    },
     {
       "id": "20-tosdal-identity-cover",
       "label": "Tosdal APC",
@@ -1431,6 +1469,44 @@
         "bytes": 3110
       },
       "aspect": 1.6679
+    },
+    {
+      "id": "wi20-ua-huaihai-store-02",
+      "label": "Under Armour",
+      "href": "",
+      "caseStudy": false,
+      "source": "WI20_UA_HuaiHai_Store_02.png",
+      "sourceHash": "5828d507a0b9ba00",
+      "type": "image",
+      "width": 2560,
+      "height": 1440,
+      "images": {
+        "sm": {
+          "src": "media/wi20-ua-huaihai-store-02-sm.webp",
+          "width": 480,
+          "height": 270,
+          "bytes": 14158
+        },
+        "md": {
+          "src": "media/wi20-ua-huaihai-store-02-md.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 106910
+        },
+        "lg": {
+          "src": "media/wi20-ua-huaihai-store-02-lg.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 267922
+        }
+      },
+      "poster": {
+        "src": "media/wi20-ua-huaihai-store-02-sm.webp",
+        "width": 480,
+        "height": 270,
+        "bytes": 14158
+      },
+      "aspect": 1.7778
     }
   ]
 }

@@ -3,6 +3,44 @@
     "folder": "02_BOA",
     "items": [
       {
+        "id": "boa-allott-01",
+        "label": "BOA Performfit Wrap",
+        "href": "/projects/boa",
+        "caseStudy": true,
+        "source": "BOA-Allott-01.webp",
+        "sourceHash": "95f3e7e79670e390",
+        "type": "image",
+        "width": 1707,
+        "height": 1137,
+        "images": {
+          "sm": {
+            "src": "media/projects/boa/boa-allott-01-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 3608
+          },
+          "md": {
+            "src": "media/projects/boa/boa-allott-01-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 15648
+          },
+          "lg": {
+            "src": "media/projects/boa/boa-allott-01-lg.webp",
+            "width": 1707,
+            "height": 1137,
+            "bytes": 24670
+          }
+        },
+        "poster": {
+          "src": "media/projects/boa/boa-allott-01-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 3608
+        },
+        "aspect": 1.5013
+      },
+      {
         "id": "boa-allott-02",
         "label": "BOA Performfit Wrap",
         "href": "/projects/boa",
@@ -803,6 +841,44 @@
         "aspect": 1.5006
       },
       {
+        "id": "1-large",
+        "label": "1 Large",
+        "href": "",
+        "caseStudy": false,
+        "source": "1-Large.webp",
+        "sourceHash": "6ac950a26b45cdb1",
+        "type": "image",
+        "width": 2608,
+        "height": 1738,
+        "images": {
+          "sm": {
+            "src": "media/projects/stelo/1-large-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 9600
+          },
+          "md": {
+            "src": "media/projects/stelo/1-large-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 46898
+          },
+          "lg": {
+            "src": "media/projects/stelo/1-large-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 91264
+          }
+        },
+        "poster": {
+          "src": "media/projects/stelo/1-large-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 9600
+        },
+        "aspect": 1.5006
+      },
+      {
         "id": "3img-stagger-right-tall-01-copy",
         "label": "3IMG Stagger Right Tall 01 copy",
         "href": "",
@@ -915,6 +991,38 @@
           "bytes": 4772
         },
         "aspect": 1.5013
+      },
+      {
+        "id": "240913-dex-cs-vid-2-v8-02",
+        "label": "240913 DEX CS Vid 2 v8",
+        "href": "",
+        "caseStudy": false,
+        "source": "240913_DEX_CS_Vid 2_v8-02.mp4",
+        "sourceHash": "f610711654cc9584",
+        "type": "video",
+        "width": 1080,
+        "height": 720,
+        "duration": 9.53,
+        "sourceDuration": 9.53,
+        "poster": {
+          "src": "media/projects/stelo/240913-dex-cs-vid-2-v8-02-poster.webp",
+          "width": 1080,
+          "height": 720,
+          "bytes": 10240
+        },
+        "sources": [
+          {
+            "src": "media/projects/stelo/240913-dex-cs-vid-2-v8-02.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 553654
+          },
+          {
+            "src": "media/projects/stelo/240913-dex-cs-vid-2-v8-02.mp4",
+            "type": "video/mp4",
+            "bytes": 625315
+          }
+        ],
+        "aspect": 1.5
       },
       {
         "id": "fullbleed-tall",
@@ -1753,6 +1861,44 @@
           }
         ],
         "aspect": 1.5
+      },
+      {
+        "id": "cinco-brand-site-allott-05",
+        "label": "Cinco Design",
+        "href": "/projects/cinco-design",
+        "caseStudy": true,
+        "source": "Cinco-Brand-Site-Allott-05.webp",
+        "sourceHash": "6a4c3adf9a9d1ff1",
+        "type": "image",
+        "width": 1400,
+        "height": 933,
+        "images": {
+          "sm": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-05-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 15396
+          },
+          "md": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-05-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 64072
+          },
+          "lg": {
+            "src": "media/projects/cinco-design/cinco-brand-site-allott-05-lg.webp",
+            "width": 1400,
+            "height": 933,
+            "bytes": 85044
+          }
+        },
+        "poster": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-05-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 15396
+        },
+        "aspect": 1.5005
       },
       {
         "id": "cinco-brand-site-allott-06",

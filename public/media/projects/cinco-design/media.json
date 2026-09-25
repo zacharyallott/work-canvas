@@ -1,7 +1,7 @@
 {
-  "generated": "2026-09-25T03:14:51.314Z",
-  "count": 7,
-  "images": 4,
+  "generated": "2026-09-25T20:52:15.952Z",
+  "count": 8,
+  "images": 5,
   "videos": 3,
   "items": [
     {
@@ -35,6 +35,44 @@
         }
       ],
       "aspect": 1.5
+    },
+    {
+      "id": "cinco-brand-site-allott-05",
+      "label": "Cinco Design",
+      "href": "/projects/cinco-design",
+      "caseStudy": true,
+      "source": "Cinco-Brand-Site-Allott-05.webp",
+      "sourceHash": "6a4c3adf9a9d1ff1",
+      "type": "image",
+      "width": 1400,
+      "height": 933,
+      "images": {
+        "sm": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-05-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 15396
+        },
+        "md": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-05-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 64072
+        },
+        "lg": {
+          "src": "media/projects/cinco-design/cinco-brand-site-allott-05-lg.webp",
+          "width": 1400,
+          "height": 933,
+          "bytes": 85044
+        }
+      },
+      "poster": {
+        "src": "media/projects/cinco-design/cinco-brand-site-allott-05-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 15396
+      },
+      "aspect": 1.5005
     },
     {
       "id": "cinco-brand-site-allott-06",
