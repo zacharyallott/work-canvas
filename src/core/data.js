@@ -3,9 +3,10 @@
  * hidden) Webflow Collection List bound to the "Projects" collection; locally,
  * index.html mimics the same markup.
  *
- * One element per project (CMS format). The first `perProject` media slots
- * (default 2) become tiles. Webflow can only bind CMS images to real <img>
- * elements, so each field is a bound child element:
+ * One element per project (CMS format). The Image slots listed in the
+ * project's "Homepage tiles" field (e.g. "1, 2, 5, 14") become tiles; when
+ * it's empty, the first `perProject` slots (default 2). Webflow can only bind
+ * CMS images to real <img> elements, so each field is a bound child element:
  *
  *   <div class="work-item">
  *     <div class="work-title">BOA Performfit Wrap</div>
@@ -17,7 +18,8 @@
  *     <img class="work-image-2" src srcset>
  *     <div class="work-video-2"></div>
  *     <div class="work-slug">boa</div>                     for ?project= links
- *     <img class="work-image-3"> … <img class="work-image-13">  project view gallery
+ *     <div class="work-tiles">1, 2, 5</div>                optional: which slots are homepage tiles
+ *     <img class="work-image-3"> … <img class="work-image-20">  project view gallery
  *     <div class="work-video-3"> … (optional MP4 per gallery slot)
  *   </div>
  *
@@ -25,7 +27,7 @@
  * also works, and so does the older one-element-per-media format:
  *   <a class="work-item" href data-type data-src data-src-webm data-srcset data-poster data-title data-aspect>
  *
- * Tiles are ordered slot by slot — every project's first piece, then every
+ * Tiles are ordered rank by rank — every project's first tile, then every
  * project's second — so the same project rarely sits next to itself.
  */
 import { parseEmbed } from './embed.js';
@@ -58,6 +60,8 @@ const singleImageLevels = (src) => [
 ];
 
 const bool = (v) => /^(true|1|yes|on)$/i.test(String(v ?? '').trim());
+/** "1, 2, 14" → [1, 2, 14] (valid, unique slot numbers in order); [] when empty. */
+const slotList = (v) => [...new Set(String(v ?? '').match(/\d+/g)?.map(Number) ?? [])].filter((n) => n >= 1 && n <= 20);
 const GALLERY_MAX = 20; // highest Image N slot read for the project view
 
 export function readItems(mount) {
@@ -116,8 +120,11 @@ export function readItems(mount) {
         });
       }
       const shared = project; // every tile from this project points at the same object
-      // CMS format: numbered slots.
-      for (let n = 1; n <= perProject; n++) {
+      // CMS format: numbered slots — the ones listed in "Homepage tiles", else the first `perProject`.
+      const listed = slotList(attr('tiles') || text('work-tiles'));
+      const tileSlots = listed.length ? listed : Array.from({ length: perProject }, (_, i) => i + 1);
+      let rank = 0;
+      for (const n of tileSlots) {
         const img = imgOf(n);
         const image = resolve(attr(`image-${n}`) || img?.getAttribute('src'));
         const link = resolve(attr(`video-${n}`) || text(`work-video-${n}`));
@@ -130,7 +137,7 @@ export function readItems(mount) {
         const media = video
           ? { type: 'video', poster: levels[0]?.src || image, images: [], sources: videoSources(video, resolve(attr(`video-${n}-webm`))) }
           : { type: 'image', poster: levels[0]?.src || image, images: levels.length ? levels : singleImageLevels(image), sources: [] };
-        (slots[n - 1] ||= []).push({ ...project, ...media, project: shared, slot: n, embed, hash: img?.dataset.hash || '', aspect: parseFloat(attr(`aspect-${n}`)) || 0 });
+        (slots[rank++] ||= []).push({ ...project, ...media, project: shared, slot: n, embed, hash: img?.dataset.hash || '', aspect: parseFloat(attr(`aspect-${n}`)) || 0 });
       }
       return;
     }

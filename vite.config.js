@@ -51,6 +51,10 @@ function mockWebflowItems() {
         const slug = slugOf(media, title);
         const c = copy[slug] ?? {};
         const gallery = media[0].caseStudy ? (galleries[slug]?.items ?? []) : [];
+        // Showcase pieces beyond two go in the slots after the gallery and are listed in "Homepage tiles".
+        const extras = media.slice(2);
+        const firstExtra = 3 + gallery.length;
+        const tiles = extras.length ? [1, 2, ...extras.map((_, i) => firstExtra + i)].join(', ') : '';
         const html = [
           text('work-title', title),
           text('work-slug', slug),
@@ -60,6 +64,8 @@ function mockWebflowItems() {
           slot(1, media[0], title),
           slot(2, media[1], title),
           ...gallery.map((m, i) => slot(i + 3, m, title)), // Image 3 onward: project view
+          ...extras.map((m, i) => slot(firstExtra + i, m, title)),
+          text('work-tiles', tiles),
         ].join('');
         return `      <div role="listitem" class="w-dyn-item"><div class="work-item">${html}</div></div>`;
       })

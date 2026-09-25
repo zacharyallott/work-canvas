@@ -1,8 +1,8 @@
 {
-  "generated": "2026-09-25T20:52:15.952Z",
-  "count": 8,
+  "generated": "2026-09-25T21:54:06.655Z",
+  "count": 9,
   "images": 5,
-  "videos": 3,
+  "videos": 4,
   "items": [
     {
       "id": "artd-c02-device-019",
@@ -35,6 +35,38 @@
         }
       ],
       "aspect": 1.5
+    },
+    {
+      "id": "cinco-brand-allott",
+      "label": "Cinco Design",
+      "href": "/projects/cinco-design",
+      "caseStudy": true,
+      "source": "Cinco-Brand-Allott.mp4",
+      "sourceHash": "a87fc07ccc9f6d36",
+      "type": "video",
+      "width": 1080,
+      "height": 842,
+      "duration": 12,
+      "sourceDuration": 40,
+      "poster": {
+        "src": "media/projects/cinco-design/cinco-brand-allott-poster.webp",
+        "width": 1080,
+        "height": 842,
+        "bytes": 8012
+      },
+      "sources": [
+        {
+          "src": "media/projects/cinco-design/cinco-brand-allott.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 434832
+        },
+        {
+          "src": "media/projects/cinco-design/cinco-brand-allott.mp4",
+          "type": "video/mp4",
+          "bytes": 625925
+        }
+      ],
+      "aspect": 1.2827
     },
     {
       "id": "cinco-brand-site-allott-05",

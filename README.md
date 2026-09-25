@@ -137,7 +137,8 @@ Collection **Projects** (URL slug `work`):
 | Image 1 video | Link | optional MP4 URL; plays in place of Image 1 |
 | Image 2 | Image | tile 2 (poster when Image 2 video is set) |
 | Image 2 video | Link | optional MP4 URL; plays in place of Image 2 |
-| Image 3–13 (+ video) | Image / Link | the project view's gallery (usually the project's folder) |
+| Image 3–20 (+ video) | Image / Link | the project view's gallery (usually the project's folder) |
+| Homepage tiles | Plain text | which Image slots are homepage tiles, e.g. `1, 2, 5, 14` (empty = Image 1 and 2). A gallery piece that should also be a tile is just listed; a tile that isn't in the project's folder goes in a free slot and is listed |
 
 **Video links:** an "Image N video" field takes either an MP4 URL (a muted loop in place of the image) or a **YouTube / Vimeo link** (an embedded player with sound in the project view). For a YouTube/Vimeo link the slot's image is the thumbnail shown with a play button until pressed (optional: without one, YouTube's own thumbnail is used, and Vimeo shows its player straight away). The player only loads when someone presses play. In Image 1/2 the homepage tile shows the image; the player appears in the project view. Add `#autoplay` to the end of the link (e.g. `https://vimeo.com/123456#autoplay`) to have it play **muted and looping with no controls or title** instead, like the MP4 loops: it loads as it scrolls into view, fades in over the thumbnail once it's actually playing, and pauses when scrolled away. YouTube can't hide its title bar through settings any more, so the player is made taller than the video and the title bar and logo fall outside the slot, clipped by its edges. YouTube Shorts links (`youtube.com/shorts/…`) get a vertical 9:16 slot.
 
@@ -200,7 +201,7 @@ Every case study also has its own page, so each project can be found and shared 
       <h1 class="work-title">{Project title}</h1>
       <p class="work-description">{Short description}</p>
       <p class="work-services">{Services}</p>
-      <div class="work-media">                           <!-- display:none: Slug, case-study marker, Image 1–13, videos -->
+      <div class="work-media">                           <!-- display:none: Slug, case-study marker, Image 1–20, videos -->
         …
       </div>
     </div>
@@ -227,7 +228,7 @@ A copy of Home (same header, same Collection List) with its own SEO title, descr
 Page settings → Custom code → Before `</body>` tag, on Home, About and the Projects template:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.18/dist/work-canvas.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.19/dist/work-canvas.js"></script>
 ```
 
 When you release, bump the version on all three, and `data-media-base` on each `#work-canvas`.

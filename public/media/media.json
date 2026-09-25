@@ -1,9 +1,47 @@
 {
-  "generated": "2026-09-25T20:52:05.115Z",
-  "count": 41,
-  "images": 32,
-  "videos": 9,
+  "generated": "2026-09-25T21:54:04.401Z",
+  "count": 50,
+  "images": 36,
+  "videos": 14,
   "items": [
+    {
+      "id": "1-medium",
+      "label": "Microsoft Innovation Hub",
+      "href": "/projects/microsoft-innovation-hub",
+      "caseStudy": true,
+      "source": "1-Medium.webp",
+      "sourceHash": "6cb5ad6d12cdeb0a",
+      "type": "image",
+      "width": 2276,
+      "height": 1516,
+      "images": {
+        "sm": {
+          "src": "media/1-medium-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 6570
+        },
+        "md": {
+          "src": "media/1-medium-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 40382
+        },
+        "lg": {
+          "src": "media/1-medium-lg.webp",
+          "width": 2048,
+          "height": 1364,
+          "bytes": 95118
+        }
+      },
+      "poster": {
+        "src": "media/1-medium-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 6570
+      },
+      "aspect": 1.5013
+    },
     {
       "id": "19-caha-brandstory",
       "label": "Caha",
@@ -303,6 +341,38 @@
       "caseStudy": true
     },
     {
+      "id": "cinco-brand-allott",
+      "label": "Cinco Design",
+      "href": "/projects/cinco-design",
+      "caseStudy": true,
+      "source": "Cinco-Brand-Allott.mp4",
+      "sourceHash": "a87fc07ccc9f6d36",
+      "type": "video",
+      "width": 1080,
+      "height": 842,
+      "duration": 12,
+      "sourceDuration": 40,
+      "poster": {
+        "src": "media/cinco-brand-allott-poster.webp",
+        "width": 1080,
+        "height": 842,
+        "bytes": 8012
+      },
+      "sources": [
+        {
+          "src": "media/cinco-brand-allott.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 434832
+        },
+        {
+          "src": "media/cinco-brand-allott.mp4",
+          "type": "video/mp4",
+          "bytes": 625925
+        }
+      ],
+      "aspect": 1.2827
+    },
+    {
       "id": "cinco-brand-site-allott-10",
       "label": "Cinco Design",
       "href": "/projects/cinco-design",
@@ -371,6 +441,38 @@
       ],
       "aspect": 1.5,
       "caseStudy": true
+    },
+    {
+      "id": "ctrl-alt-delete-can",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "caseStudy": true,
+      "source": "ctrl-alt-delete-can.mp4",
+      "sourceHash": "cdc9ee31f931f788",
+      "type": "video",
+      "width": 1080,
+      "height": 842,
+      "duration": 12,
+      "sourceDuration": 30,
+      "poster": {
+        "src": "media/ctrl-alt-delete-can-poster.webp",
+        "width": 1080,
+        "height": 842,
+        "bytes": 11540
+      },
+      "sources": [
+        {
+          "src": "media/ctrl-alt-delete-can.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 212597
+        },
+        {
+          "src": "media/ctrl-alt-delete-can.mp4",
+          "type": "video/mp4",
+          "bytes": 302838
+        }
+      ],
+      "aspect": 1.2827
     },
     {
       "id": "dialpad-allott-01",
@@ -449,6 +551,44 @@
       "caseStudy": true
     },
     {
+      "id": "fivestars-36",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "caseStudy": true,
+      "source": "FiveStars_36.jpg",
+      "sourceHash": "32f9c79dc0569f7e",
+      "type": "image",
+      "width": 3600,
+      "height": 2401,
+      "images": {
+        "sm": {
+          "src": "media/fivestars-36-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 13100
+        },
+        "md": {
+          "src": "media/fivestars-36-md.webp",
+          "width": 1280,
+          "height": 854,
+          "bytes": 115480
+        },
+        "lg": {
+          "src": "media/fivestars-36-lg.webp",
+          "width": 2048,
+          "height": 1366,
+          "bytes": 498160
+        }
+      },
+      "poster": {
+        "src": "media/fivestars-36-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 13100
+      },
+      "aspect": 1.4994
+    },
+    {
       "id": "gt-dealerbook",
       "label": "GT Bikes",
       "href": "/projects/gt-bikes",
@@ -517,6 +657,38 @@
       ],
       "aspect": 1.5,
       "caseStudy": true
+    },
+    {
+      "id": "inside-job",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "caseStudy": true,
+      "source": "inside-job.mp4",
+      "sourceHash": "0191a420cae2b63d",
+      "type": "video",
+      "width": 1080,
+      "height": 880,
+      "duration": 12,
+      "sourceDuration": 24,
+      "poster": {
+        "src": "media/inside-job-poster.webp",
+        "width": 1080,
+        "height": 880,
+        "bytes": 13598
+      },
+      "sources": [
+        {
+          "src": "media/inside-job.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 449606
+        },
+        {
+          "src": "media/inside-job.mp4",
+          "type": "video/mp4",
+          "bytes": 569027
+        }
+      ],
+      "aspect": 1.2273
     },
     {
       "id": "koya-allott-01",
@@ -1027,6 +1199,44 @@
       "caseStudy": true
     },
     {
+      "id": "otis-identity-allott-13",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "caseStudy": true,
+      "source": "Otis-Identity-Allott-13.jpg",
+      "sourceHash": "d196dccd88c7813f",
+      "type": "image",
+      "width": 3840,
+      "height": 2160,
+      "images": {
+        "sm": {
+          "src": "media/otis-identity-allott-13-sm.webp",
+          "width": 480,
+          "height": 270,
+          "bytes": 12886
+        },
+        "md": {
+          "src": "media/otis-identity-allott-13-md.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 82684
+        },
+        "lg": {
+          "src": "media/otis-identity-allott-13-lg.webp",
+          "width": 2048,
+          "height": 1152,
+          "bytes": 277920
+        }
+      },
+      "poster": {
+        "src": "media/otis-identity-allott-13-sm.webp",
+        "width": 480,
+        "height": 270,
+        "bytes": 12886
+      },
+      "aspect": 1.7778
+    },
+    {
       "id": "smi-kor-comp-magspread-v1-r4",
       "label": "Smith",
       "href": "/projects/smith-mag",
@@ -1401,6 +1611,70 @@
       "caseStudy": true
     },
     {
+      "id": "untitled",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "caseStudy": true,
+      "source": "untitled.mp4",
+      "sourceHash": "b8aa4e906e2d2201",
+      "type": "video",
+      "width": 1080,
+      "height": 842,
+      "duration": 12,
+      "sourceDuration": 20,
+      "poster": {
+        "src": "media/untitled-poster.webp",
+        "width": 1080,
+        "height": 842,
+        "bytes": 15086
+      },
+      "sources": [
+        {
+          "src": "media/untitled.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 285243
+        },
+        {
+          "src": "media/untitled.mp4",
+          "type": "video/mp4",
+          "bytes": 485853
+        }
+      ],
+      "aspect": 1.2827
+    },
+    {
+      "id": "upward-spiral",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "caseStudy": true,
+      "source": "upward-spiral.mp4",
+      "sourceHash": "0ac2ebbdfc2db2d7",
+      "type": "video",
+      "width": 1080,
+      "height": 842,
+      "duration": 12,
+      "sourceDuration": 24,
+      "poster": {
+        "src": "media/upward-spiral-poster.webp",
+        "width": 1080,
+        "height": 842,
+        "bytes": 21744
+      },
+      "sources": [
+        {
+          "src": "media/upward-spiral.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 304840
+        },
+        {
+          "src": "media/upward-spiral.mp4",
+          "type": "video/mp4",
+          "bytes": 431982
+        }
+      ],
+      "aspect": 1.2827
+    },
+    {
       "id": "vilafilm-animation-test-v1",
       "label": "Vilafilm",
       "href": "",
@@ -1469,6 +1743,44 @@
         "bytes": 3110
       },
       "aspect": 1.6679
+    },
+    {
+      "id": "wall-sign-standard-mockup-01",
+      "label": "Music: Not Impossible",
+      "href": "/projects/mni",
+      "caseStudy": true,
+      "source": "Wall-Sign-Standard-Mockup-01.jpg",
+      "sourceHash": "5e81090cbe1854a5",
+      "type": "image",
+      "width": 6400,
+      "height": 4400,
+      "images": {
+        "sm": {
+          "src": "media/wall-sign-standard-mockup-01-sm.webp",
+          "width": 480,
+          "height": 330,
+          "bytes": 10616
+        },
+        "md": {
+          "src": "media/wall-sign-standard-mockup-01-md.webp",
+          "width": 1280,
+          "height": 880,
+          "bytes": 47098
+        },
+        "lg": {
+          "src": "media/wall-sign-standard-mockup-01-lg.webp",
+          "width": 2048,
+          "height": 1408,
+          "bytes": 98150
+        }
+      },
+      "poster": {
+        "src": "media/wall-sign-standard-mockup-01-sm.webp",
+        "width": 480,
+        "height": 330,
+        "bytes": 10616
+      },
+      "aspect": 1.4545
     },
     {
       "id": "wi20-ua-huaihai-store-02",
