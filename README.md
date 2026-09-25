@@ -2,7 +2,7 @@
 
 Immersive WebGL work header for zacharyallott.com. It's a standalone ES module (Three.js and GSAP bundled) that mounts into a `<div>` on a Webflow page and reads its content from the page's **Projects** Collection List, so the Webflow CMS stays the source of truth. The first two images of each project become tiles.
 
-It has three interaction versions. Each visit opens on the next one (the last version seen is remembered per browser), leaving a project view comes back to the next one, and clicking the star in the top-left moves on to the next:
+It has three interaction versions. Each visit opens on the next one (the last version seen is remembered per browser), leaving a project view comes back to the next one, and clicking the star in the top-left moves on to the next (hovering it turns it 60°):
 
 | Key | Version | Motion | Figma frame |
 | --- | --- | --- | --- |
@@ -227,7 +227,7 @@ A copy of Home (same header, same Collection List) with its own SEO title, descr
 Page settings → Custom code → Before `</body>` tag, on Home, About and the Projects template:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.11/dist/work-canvas.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.12/dist/work-canvas.js"></script>
 ```
 
 When you release, bump the version on all three, and `data-media-base` on each `#work-canvas`.

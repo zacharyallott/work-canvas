@@ -25,10 +25,12 @@ const CSS = `
 .wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}
 /* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */
 .wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,400);color:#f2f2f2}
-.wc-topbar{position:absolute;left:13px;right:13px;top:13px;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference}
+/* Above everything else (about, project view, caption) so it always blends with what's behind it and stays
+   tappable when project images scroll under it; its own layer keeps Safari blending it against the page. */
+.wc-topbar{position:absolute;left:13px;right:13px;top:13px;z-index:2;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference;will-change:transform}
 .wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px);padding:0;border:0;background:none;pointer-events:auto;cursor:pointer}
 .wc-icon:focus-visible{outline:1px solid #f2f2f2;outline-offset:3px}
-.wc-icon img{display:block;width:100%;height:100%}
+.wc-icon img{display:block;width:100%;height:100%;pointer-events:none}
 .wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}
 .wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}
 /* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */
@@ -41,7 +43,7 @@ const CSS = `
 /* About (Figma frame 49): bottom-anchored statement + client columns. */
 .wc-about{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;max-height:calc(100% - 44px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}
 .wc-root.is-about .wc-about{opacity:1;visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}
-.wc-about .wc-w{display:inline-block;will-change:opacity}
+.wc-about .wc-w{display:inline-block}
 .wc-about-statement{margin:0 0 clamp(24px,8vh,64px);max-width:22.84em;font-size:clamp(22px,min(3.75vw,6.2vh),48px);line-height:1.25;letter-spacing:.02em;font-weight:500}
 .wc-about-statement img{display:inline-block;width:.72em;height:.72em;margin-left:.3em;vertical-align:baseline} /* Cassette cap height: sits on the baseline, tops out with the capitals */
 .wc-about-clients{display:flex;justify-content:space-between;gap:16px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:400;font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}
@@ -134,6 +136,15 @@ export class UI {
       onHome?.();
     });
     this.icon.addEventListener('pointerdown', (e) => e.stopPropagation());
+    // Star: each hover turns it another 60° (one point on), easing in and out.
+    this.starAngle = 0;
+    const turnStar = () => {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      this.starAngle += 60;
+      gsap.to(this.icon.querySelector('img'), { rotation: this.starAngle, duration: 0.6, ease: EASE.move, overwrite: true });
+    };
+    this.icon.addEventListener('pointerenter', turnStar);
+    this.icon.addEventListener('focus', turnStar);
     this.tagline.addEventListener('pointerenter', () => this.loopArrow());
     this.tagline.addEventListener('focus', () => this.loopArrow());
 
