@@ -5,14 +5,15 @@
  * third-party player loads until it's wanted.
  *
  * Add `#autoplay` to the link (e.g. https://vimeo.com/123#autoplay) to have it
- * play muted and looping with no controls instead, like the MP4 loops
+ * play muted and looping with no controls or title instead, like the MP4 loops
  * (`loopSrc`). It plays while on screen and pauses when scrolled away.
+ * YouTube Shorts are vertical (`aspect` 9:16); everything else is 16:9.
  *
  * MP4/WebM links keep working as before (muted loops); anything that isn't a
  * recognised YouTube/Vimeo link is treated as a video file.
  */
 
-/** Returns { provider, id, src, loopSrc, thumb, autoplay } for a YouTube/Vimeo URL, else null. */
+/** Returns { provider, id, src, loopSrc, thumb, autoplay, aspect } for a YouTube/Vimeo URL, else null. */
 export function parseEmbed(url) {
   if (!url) return null;
   let u;
@@ -25,6 +26,7 @@ export function parseEmbed(url) {
   const autoplay = /(^#|&)autoplay\b/i.test(u.hash) || ['1', 'true'].includes(u.searchParams.get('autoplay'));
 
   let yt = null;
+  const short = /^\/shorts\//.test(u.pathname);
   if (host === 'youtu.be') yt = u.pathname.slice(1).split('/')[0];
   else if (/(^|\.)youtube(-nocookie)?\.com$/.test(host)) {
     yt = u.searchParams.get('v') || (/^\/(embed|shorts|live|v)\/([^/?#]+)/.exec(u.pathname) || [])[2];
@@ -33,7 +35,8 @@ export function parseEmbed(url) {
     const start = parseInt(u.searchParams.get('t') || u.searchParams.get('start'), 10);
     const params = new URLSearchParams({ rel: '0', playsinline: '1', ...(start ? { start: String(start) } : {}) });
     // Muted loop: no controls, loops itself (playlist = the video), JS API on so it can pause off screen.
-    const loop = new URLSearchParams({ autoplay: '1', mute: '1', loop: '1', playlist: yt, controls: '0', disablekb: '1', iv_load_policy: '3', rel: '0', playsinline: '1', enablejsapi: '1' });
+    // YouTube no longer lets embeds hide the title bar; the project view crops it off (see project.js).
+    const loop = new URLSearchParams({ autoplay: '1', mute: '1', loop: '1', playlist: yt, controls: '0', disablekb: '1', fs: '0', iv_load_policy: '3', cc_load_policy: '0', modestbranding: '1', rel: '0', playsinline: '1', enablejsapi: '1' });
     return {
       provider: 'youtube',
       id: yt,
@@ -41,6 +44,7 @@ export function parseEmbed(url) {
       loopSrc: `https://www.youtube-nocookie.com/embed/${yt}?${loop}`,
       thumb: `https://i.ytimg.com/vi/${yt}/hqdefault.jpg`,
       autoplay,
+      aspect: short ? 9 / 16 : 16 / 9,
     };
   }
 
@@ -52,9 +56,9 @@ export function parseEmbed(url) {
       const id = parts[i];
       const hash = u.searchParams.get('h') || (parts[i + 1] && /^[\da-f]+$/i.test(parts[i + 1]) ? parts[i + 1] : '');
       const params = new URLSearchParams({ ...(hash ? { h: hash } : {}), title: '0', byline: '0', portrait: '0', dnt: '1' });
-      // background=1 = muted, looping, no controls (Vimeo ignores it on free accounts; the rest still apply).
-      const loop = new URLSearchParams({ ...(hash ? { h: hash } : {}), background: '1', autoplay: '1', muted: '1', loop: '1', autopause: '0', dnt: '1' });
-      return { provider: 'vimeo', id, src: `https://player.vimeo.com/video/${id}?${params}`, loopSrc: `https://player.vimeo.com/video/${id}?${loop}`, thumb: '', autoplay };
+      // background=1 = muted, looping, no controls or title (Vimeo ignores it on free accounts; the rest still apply).
+      const loop = new URLSearchParams({ ...(hash ? { h: hash } : {}), background: '1', autoplay: '1', muted: '1', loop: '1', autopause: '0', controls: '0', title: '0', byline: '0', portrait: '0', badge: '0', pip: '0', keyboard: '0', dnt: '1' });
+      return { provider: 'vimeo', id, src: `https://player.vimeo.com/video/${id}?${params}`, loopSrc: `https://player.vimeo.com/video/${id}?${loop}`, thumb: '', autoplay, aspect: 16 / 9 };
     }
   }
   return null;

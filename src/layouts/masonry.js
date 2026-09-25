@@ -15,8 +15,9 @@ import { Spring } from '../core/spring.js';
  * slightly different speeds, and slow down while a tile is hovered. The whole
  * grid shifts left/right with the cursor (cursor left → grid moves right), with
  * a little lag. Scrolling (wheel / trackpad, or a vertical swipe on touch)
- * moves the columns too — each in its own direction, like the drift — through
- * a spring, so each scroll eases in and out. Hover reveals the title. Switching
+ * moves the columns too — each in its own direction, like the drift, at its
+ * own speed and through its own spring, so each scroll eases in and out and
+ * the columns pull apart and settle one after another. Hover reveals the title. Switching
  * to it, the columns fade in where they are (left to right); nothing slides.
  */
 export const config = {
@@ -39,7 +40,13 @@ export const config = {
   hoverEase: 3, // how quickly it slows / recovers (1/s)
 
   // Scroll: wheel / trackpad / vertical swipe moves the columns; eased by a spring
-  scroll: { multiplier: 0.5, omega: 4 }, // px of travel per px scrolled (swipes too); spring pace (higher = snappier)
+  scroll: {
+    multiplier: 0.35, // px of travel per px scrolled (swipes too), for a speed-1 column
+    omega: 3, // spring pace (1/s, higher = snappier; ~4/omega s to settle)
+    // Relative speed per column (direction comes from columnSpeeds); repeats like columnOffsets.
+    // Faster columns also settle a little sooner, slower ones lag behind.
+    speeds: [1, 0.55, 1.35, 0.75, 1.15, 0.45, 0.9],
+  },
 
   // Horizontal shift from the cursor
   shift: {
@@ -85,7 +92,8 @@ export default class Masonry extends Layout {
   constructor(engine, cfg) {
     super(engine, cfg);
     this.scroll = 0; // vertical travel from the drift
-    this.scrolled = new Spring(cfg.scroll.omega); // vertical travel from scrolling, eased
+    // Scroll travel per column pattern slot, each eased by its own spring (kept across resizes).
+    this.scrollSprings = cfg.scroll.speeds.map((v) => new Spring(cfg.scroll.omega * Math.sqrt(v)));
     this.slow = 1; // eased hover slowdown multiplier
     this.shiftX = 0; // horizontal offset (px)
     this.shiftV = 0; // horizontal speed for 'drift' mode (px/s)
@@ -162,7 +170,10 @@ export default class Masonry extends Layout {
       // i - 1 so the Figma stagger pattern still starts at the first visible column.
       const len = c.columnOffsets.length;
       const p = (((i - 1) % len) + len) % len;
-      return { baseX: firstX + i * this.pitch, start: c.columnOffsets[p] * s, speed: c.columnSpeeds[p % c.columnSpeeds.length], length: cum, tiles };
+      const speed = c.columnSpeeds[p % c.columnSpeeds.length];
+      const k = p % this.scrollSprings.length;
+      const scrollSpeed = Math.sign(speed) * c.scroll.speeds[k];
+      return { baseX: firstX + i * this.pitch, start: c.columnOffsets[p] * s, speed, scrollSpeed, spring: this.scrollSprings[k], length: cum, tiles };
     });
   }
 
@@ -187,7 +198,7 @@ export default class Masonry extends Layout {
       this.shiftX += (pull * c.shift.max * this.s - this.shiftX) * r;
     }
 
-    const travel = this.scroll + this.scrolled.update(dt);
+    this.scrollSprings.forEach((sp) => sp.update(dt));
     const pad = this.colW / c.minAspect + this.gapPx; // vertical wrap margin
     const W = this.totalW;
     let featured = null;
@@ -195,7 +206,7 @@ export default class Masonry extends Layout {
 
     for (const col of this.columns) {
       const x = ((((col.baseX + this.shiftX - this.origin) % W) + W) % W) + this.origin; // wrap horizontally
-      const pos = col.start + travel * col.speed;
+      const pos = col.start + this.scroll * col.speed + col.spring.x * col.scrollSpeed;
       for (const t of col.tiles) {
         const L = col.length;
         t.x = x;
@@ -223,15 +234,19 @@ export default class Masonry extends Layout {
 
   /** Scroll down = the leading columns move up (the others, going the other way, move down). */
   onWheel({ dy }) {
-    this.scrolled.push(-dy * this.config.scroll.multiplier);
+    this.pushScroll(-dy);
   }
 
   // Touch: a vertical swipe moves the columns with the finger, then carries on a little.
   onDrag({ dy }) {
-    if (this.engine.touch) this.scrolled.push(dy * this.config.scroll.multiplier);
+    if (this.engine.touch) this.pushScroll(dy);
   }
 
   onRelease({ vy }) {
-    if (this.engine.touch) this.scrolled.push(vy * 0.25 * this.config.scroll.multiplier);
+    if (this.engine.touch) this.pushScroll(vy * 0.25);
+  }
+
+  pushScroll(d) {
+    for (const sp of this.scrollSprings) sp.push(d * this.config.scroll.multiplier);
   }
 }

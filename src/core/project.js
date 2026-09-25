@@ -13,11 +13,12 @@ import { autoplaySrc, commandLoop, listenLoop, isPlayingMessage } from './embed.
  * Plain DOM (not WebGL) so the images are real <img>/<video> elements —
  * selectable, accessible and lazy-loaded.
  *
- * The end of the page leads back to the work. The scroll simply stops on the
- * last image (a fling ends there too). Scrolling on — a fresh gesture, after a
- * short pause — pulls against resistance: the images rise a little and
- * everything fades (the info block only fades). Pull far enough and the page
- * hands back to the work; let go early and it settles back.
+ * The end of the page leads back to the work. The scroll stops on the last
+ * image and holds there briefly (a fling ends there). Scrolling on — a fresh
+ * gesture, or the same one once it has been at the end for `holdAtEnd` s —
+ * pulls against resistance: the images rise a little and everything fades
+ * (the info block only fades). Pull far enough and the page hands back to the
+ * work; let go early and it settles back.
  *
  * The pull is driven by wheel/touch input and eased every frame rather than
  * tied to the scroll position, so it never fights the browser's own
@@ -26,11 +27,12 @@ import { autoplaySrc, commandLoop, listenLoop, isPlayingMessage } from './embed.
  */
 
 export const PROJECT_CONFIG = {
-  pullDistance: 0.7, // × view height of scrolling past the end to go back to the work
-  gatePause: 0.15, // s without scroll input before a pull can start, so a fling stops at the end
+  pullDistance: 0.45, // × view height of scrolling past the end to go back to the work
+  gatePause: 0.15, // s without scroll input that makes the next scroll a new gesture (which can pull straight away)
+  holdAtEnd: 0.3, // s a continuing gesture holds at the end before it starts pulling, so a fling still stops there
   fadeFrom: 0.15, // pull progress where the fade starts
   lift: 72, // px the images rise over a full pull (they resist rather than follow)
-  settle: 0.5, // s without input before an unfinished pull eases back
+  settle: 0.7, // s without input before an unfinished pull eases back
   smoothing: 10, // 1/s: how quickly what's drawn follows the input
 };
 
@@ -57,11 +59,14 @@ const CSS = `
 .wc-embed-play{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:#f2f2f2}
 .wc-embed-play::after{content:"";position:absolute;left:22px;top:19px;border-style:solid;border-width:9px 0 9px 14px;border-color:transparent transparent transparent #111}
 .wc-embed:focus-visible{outline:2px solid #111;outline-offset:2px}
-/* #autoplay embeds: a muted loop like the MP4s. Scaled to cover the slot (assumes 16:9), no pointer input,
+/* #autoplay embeds: a muted loop like the MP4s. Scaled to cover the slot (--ar = the video's aspect), no pointer input,
    faded in over the thumbnail once the player has loaded. */
 .wc-project-item.is-loop{container-type:size;background:#111}
 .wc-project-item.is-loop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.wc-project-item.is-loop iframe{inset:auto;left:50%;top:50%;width:max(100cqw,calc(100cqh * 16 / 9));height:max(100cqh,calc(100cqw * 9 / 16));translate:-50% -50%;pointer-events:none;opacity:0;transition:opacity .4s linear}
+.wc-project-item.is-loop iframe{inset:auto;left:50%;top:50%;width:max(100cqw,calc(100cqh * var(--ar,1.7778)));height:calc(max(100cqh,calc(100cqw / var(--ar,1.7778))) + 2 * var(--wc-loop-crop));translate:-50% -50%;pointer-events:none;opacity:0;transition:opacity .4s linear}
+/* The player is taller than the video by a band top and bottom, so the video sits letterboxed in the middle and the
+   player's own title bar / logo land in those bands, outside the slot (clipped). */
+.wc-project-item.is-loop{--wc-loop-crop:calc(64px + 3cqw)}
 .wc-project-item.is-loop iframe.is-on{opacity:1}
 .wc-project-media{will-change:opacity,translate}
 .wc-project-info{will-change:opacity}
@@ -128,14 +133,15 @@ function playerFrame(src, title) {
  */
 function embedItem(it, projectTitle) {
   const own = it.src && it.src !== it.embed.thumb; // the slot's own image, not YouTube's
-  const ratio = own && it.aspect ? it.aspect.toFixed(4) : '16 / 9';
+  const ar = it.embed.aspect || 16 / 9; // the video's own shape
+  const ratio = own && it.aspect ? it.aspect.toFixed(4) : ar.toFixed(4);
   const title = `${projectTitle} — video`;
   if (it.embed.autoplay) {
     const poster = it.src
       ? `<img src="${esc(it.src)}"${own && it.srcset ? ` srcset="${esc(it.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ''} alt="" ${it.hero ? 'decoding="sync"' : 'loading="lazy" decoding="async"'}${own ? '' : ' data-no-fit'}>`
       : '';
     const frame = `<iframe data-src="${esc(it.embed.loopSrc)}" data-provider="${it.embed.provider}" title="${esc(title)}" tabindex="-1" allow="autoplay; encrypted-media; picture-in-picture"></iframe>`;
-    return `<li class="wc-project-item is-embed is-loop${it.hero ? ' is-hero' : ''}" style="aspect-ratio:${ratio}">${poster}${frame}</li>`;
+    return `<li class="wc-project-item is-embed is-loop${it.hero ? ' is-hero' : ''}" style="aspect-ratio:${ratio};--ar:${ar.toFixed(4)}">${poster}${frame}</li>`;
   }
   const inner = it.src
     ? `<button type="button" class="wc-embed" data-src="${esc(autoplaySrc(it.embed))}" data-title="${esc(title)}" aria-label="Play video: ${esc(projectTitle)}">` +
@@ -281,17 +287,21 @@ export class ProjectView {
 
   /**
    * A wheel gesture is a run of events without a `gatePause` gap (trackpad
-   * momentum included). Only a gesture that starts with the page already at
-   * its end pulls, so the fling that got you there just stops.
+   * momentum included). A gesture that starts with the page already at its
+   * end pulls straight away; one that arrives there (the scroll that got you
+   * to the end) holds for `holdAtEnd` s first, then carries on into the pull.
    */
   onWheel(e) {
     if (this.ended || !this.scroll.firstElementChild) return;
     const now = performance.now();
     const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? this.scroll.clientHeight : 1);
-    if (now - this.lastInput > PROJECT_CONFIG.gatePause * 1000) this.gestureAtEnd = this.atEnd();
+    const atEnd = this.atEnd();
+    if (now - this.lastInput > PROJECT_CONFIG.gatePause * 1000) this.gestureAtEnd = atEnd;
+    this.endSince = atEnd ? this.endSince || now : 0;
     this.lastInput = now;
+    const held = now - this.endSince >= PROJECT_CONFIG.holdAtEnd * 1000;
     if (dy < 0) this.pull = 0; // scrolling back up lets go
-    else if (this.gestureAtEnd && this.atEnd()) this.addPull(dy);
+    else if (atEnd && (this.gestureAtEnd || held)) this.addPull(dy);
     this.kick();
   }
 
@@ -359,6 +369,7 @@ export class ProjectView {
     this.shown = 0; // what's drawn, eased toward `pull`
     this.lastInput = 0;
     this.gestureAtEnd = false;
+    this.endSince = 0; // when the current gesture reached the end
     this.ended = false;
   }
 
