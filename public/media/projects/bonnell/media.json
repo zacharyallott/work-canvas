@@ -1,7 +1,7 @@
 {
-  "generated": "2026-09-25T04:05:18.331Z",
-  "count": 5,
-  "images": 5,
+  "generated": "2026-09-25T04:31:43.908Z",
+  "count": 4,
+  "images": 4,
   "videos": 0,
   "items": [
     {
@@ -155,44 +155,6 @@
         "bytes": 7634
       },
       "aspect": 1.2177
-    },
-    {
-      "id": "lyrs-048",
-      "label": "LYRS",
-      "href": "",
-      "caseStudy": false,
-      "source": "LYRS_048.jpg",
-      "sourceHash": "ccd5caa8c4064779",
-      "type": "image",
-      "width": 4500,
-      "height": 3000,
-      "images": {
-        "sm": {
-          "src": "media/projects/bonnell/lyrs-048-sm.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 20792
-        },
-        "md": {
-          "src": "media/projects/bonnell/lyrs-048-md.webp",
-          "width": 1280,
-          "height": 853,
-          "bytes": 225990
-        },
-        "lg": {
-          "src": "media/projects/bonnell/lyrs-048-lg.webp",
-          "width": 2048,
-          "height": 1365,
-          "bytes": 656612
-        }
-      },
-      "poster": {
-        "src": "media/projects/bonnell/lyrs-048-sm.webp",
-        "width": 480,
-        "height": 320,
-        "bytes": 20792
-      },
-      "aspect": 1.5
     }
   ]
 }

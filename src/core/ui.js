@@ -41,7 +41,7 @@ const CSS = `
 .wc-about{position:absolute;left:0;right:0;bottom:0;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}
 .wc-root.is-about .wc-about{opacity:1;visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}
 .wc-about .wc-w{display:inline-block;will-change:opacity}
-.wc-about-statement{margin:0 0 32px;max-width:22.84em;font-size:clamp(26px,3.75vw,48px);line-height:1.25;letter-spacing:.02em;font-weight:500}
+.wc-about-statement{margin:0 0 64px;max-width:22.84em;font-size:clamp(26px,3.75vw,48px);line-height:1.25;letter-spacing:.02em;font-weight:500}
 .wc-about-statement img{display:inline-block;width:.75em;height:.75em;margin-left:.3em;vertical-align:-.06em}
 .wc-about-clients{display:flex;justify-content:space-between;gap:16px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:500;font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}
 .wc-about-clients ul{list-style:none;margin:0;padding:0;width:155px}
@@ -61,8 +61,11 @@ const CSS = `
 .wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .4s linear;cursor:auto}
 .wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 12px;border-radius:4px;overflow:hidden;background:#e2e2e2}
 .wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}
+/* Paragraphs avoid orphans and ragged endings; headings get evenly balanced lines. */
+.wc-ui p{text-wrap:pretty}
+.wc-ui h1,.wc-ui h2,.wc-ui h3{text-wrap:balance}
 .wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}
-@media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-clients{flex-wrap:wrap;row-gap:14px}.wc-about-clients ul{width:calc(50% - 8px)}.wc-about-footer{margin-top:4px}}
+@media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:32px}.wc-about-clients{flex-wrap:wrap;row-gap:14px}.wc-about-clients ul{width:calc(50% - 8px)}.wc-about-footer{margin-top:4px}}
 `;
 
 let styleInjected = false;

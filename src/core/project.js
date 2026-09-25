@@ -72,21 +72,27 @@ const baseName = (url) =>
     .replace(/-(sm|md|lg|poster)$/, '');
 
 /**
- * Everything that identifies a picture: its file names (minus size suffixes),
- * its Webflow asset ids — Webflow gives identical uploads one asset even under
- * different names — and a content hash where the page provides one. Two
- * entries sharing any key are the same picture.
+ * What identifies a picture. Strong: its Webflow asset ids (Webflow gives
+ * identical uploads one asset, even under different names) and a content hash
+ * where the page provides one. Weak: file names minus size suffixes — only
+ * trusted when there's nothing strong to go on, since two different pictures
+ * can share a name (e.g. two versions of Bonnell-Allott-02).
  */
-const keysOf = (it) => {
-  const keys = it.hash ? [`h:${it.hash}`] : [];
+const idsOf = (it) => {
+  const strong = it.hash ? [`h:${it.hash}`] : [];
+  const weak = [];
   for (const url of [it.src, it.poster, it.video]) {
     if (!url) continue;
-    keys.push(`n:${baseName(url)}`);
+    weak.push(`n:${baseName(url)}`);
     const id = String(url).match(/\/([0-9a-f]{24})_/i);
-    if (id) keys.push(`a:${id[1]}`);
+    if (id) strong.push(`a:${id[1]}`);
   }
-  return keys;
+  return { strong, weak };
 };
+
+const samePicture = (a, b) =>
+  a.strong.some((k) => b.strong.includes(k)) ||
+  ((!a.strong.length || !b.strong.length) && a.weak.some((k) => b.weak.includes(k)));
 
 export class ProjectView {
   constructor(uiRoot, { onEnd } = {}) {
@@ -126,11 +132,11 @@ export class ProjectView {
       items.push({ type: hero.type, src: heroSrc, srcset: hero.srcset, video: hero.sources?.at(-1)?.src, poster: hero.poster, hash: hero.hash, aspect: hero.aspect, alt: project.title, hero: true });
     }
     // No picture twice: skip gallery entries that match the hero or an earlier entry.
-    const seen = new Set(items.flatMap(keysOf));
+    const kept = items.map(idsOf);
     for (const g of project.gallery ?? []) {
-      const keys = keysOf(g);
-      if (keys.some((k) => seen.has(k))) continue;
-      keys.forEach((k) => seen.add(k));
+      const ids = idsOf(g);
+      if (kept.some((k) => samePicture(k, ids))) continue;
+      kept.push(ids);
       items.push(g);
     }
 
