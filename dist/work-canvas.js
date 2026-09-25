@@ -14349,7 +14349,7 @@ var wh = {
 	],
 	fan: .8,
 	interval: 2,
-	moveStep: 90,
+	moveStep: 100,
 	maxPerFrame: 1,
 	dealDuration: .12,
 	dealEase: "none",
@@ -14400,7 +14400,7 @@ var wh = {
 			let e = this.slotTile.indexOf(c.index);
 			e >= 0 && this.slotStamp[e] !== this.stamp && (this.slotStamp[e] = ++this.stamp);
 		}
-		let p = t.pauseOnHover && c || this.reduced || this.progress < 1, m = n.input?.pointer, h = t.moveStep * this.s;
+		let p = t.pauseOnHover && c || this.reduced || this.progress < 1, m = n.input?.pointer, h = t.moveStep;
 		s && m ? (this.lastPointer && !p && (this.travel += Math.hypot(m.x - this.lastPointer.x, m.y - this.lastPointer.y)), this.lastPointer = {
 			x: m.x,
 			y: m.y

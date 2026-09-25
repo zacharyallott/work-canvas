@@ -52,7 +52,7 @@ export const config = {
 
   // New cards
   interval: 2, // s without a new card before the next one comes in on its own
-  moveStep: 90, // design px of cursor travel per new card (lower = more cards)
+  moveStep: 100, // CSS px of cursor travel per new card, at any screen size (lower = more cards)
   maxPerFrame: 1, // cap on cards added in a single frame during very fast moves
   dealDuration: 0.12, // s for a new card to fade in (0 = instant cut)
   dealEase: 'none',
@@ -147,7 +147,7 @@ export default class Deck extends Layout {
     // `interval` s without any. Hovering a card (or the entrance) holds both.
     const paused = (c.pauseOnHover && hovered) || this.reduced || this.progress < 1;
     const p = e.input?.pointer;
-    const step = c.moveStep * this.s;
+    const step = c.moveStep;
     if (inside && p) {
       if (this.lastPointer && !paused) this.travel += Math.hypot(p.x - this.lastPointer.x, p.y - this.lastPointer.y);
       this.lastPointer = { x: p.x, y: p.y };
