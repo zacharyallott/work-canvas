@@ -12685,7 +12685,9 @@ var jp = class {
 	clickSlop: 6,
 	projectBase: "/work/",
 	homePath: "/",
+	aboutPath: "/about",
 	siteName: "zachary allott",
+	homeTitle: "zachary allott — brand design & art direction",
 	openDuration: .75,
 	openEase: "wc-move"
 }, Np = {
@@ -13467,19 +13469,19 @@ function Jm() {
 	e.dataset.workCanvas = "", e.textContent = Km, document.head.appendChild(e);
 }
 var Ym = class {
-	constructor(e, { layouts: t, current: n, onAbout: r, onHome: i, tagline: a, hint: o }) {
+	constructor(e, { layouts: t, current: n, onAbout: r, onHome: i, tagline: a, hint: o, aboutHref: s = "/about" }) {
 		Jm(), this.mount = e, this.layouts = t;
-		let s = `wc-about-${Math.random().toString(36).slice(2, 8)}`;
+		let c = `wc-about-${Math.random().toString(36).slice(2, 8)}`;
 		this.root = document.createElement("div"), this.root.className = "wc-ui", this.root.innerHTML = `
       <div class="wc-topbar">
         <button type="button" class="wc-icon"><img src="${Am}" alt="" width="16" height="16"></button>
-        <a class="wc-tagline" href="#${s}" role="button" aria-expanded="false" aria-controls="${s}">
+        <a class="wc-tagline" href="${s}" aria-expanded="false" aria-controls="${c}">
           <span>${a}</span>
           <span class="wc-arrow" aria-hidden="true"><span class="wc-arrow-track"><span class="wc-arrow-glyph">→</span><span class="wc-arrow-glyph is-next">→</span></span></span>
         </a>
       </div>
       <div class="wc-caption" aria-hidden="true"><span class="wc-caption-inner"></span></div>
-      <section class="wc-about" id="${s}" aria-label="About" data-wc-no-input>${Im()}</section>
+      <section class="wc-about" id="${c}" aria-label="About" data-wc-no-input>${Im()}</section>
       ${o ? `<div class="wc-hint" aria-hidden="true">${o}</div>` : ""}
     `, this.caption = this.root.querySelector(".wc-caption"), this.captionInner = this.root.querySelector(".wc-caption-inner"), this.icon = this.root.querySelector(".wc-icon"), this.tagline = this.root.querySelector(".wc-tagline"), this.about = this.root.querySelector(".wc-about"), Xm(this.about.querySelector(".wc-about-statement")), this.about.querySelectorAll(".wc-about-links a").forEach((e) => {
 			let t = e.querySelector(".wc-link-track");
@@ -13494,7 +13496,7 @@ var Ym = class {
 			};
 			e.addEventListener("pointerenter", r), e.addEventListener("focus", r);
 		}), this.arrowTrack = this.root.querySelector(".wc-arrow-track"), this.tagline.addEventListener("click", (e) => {
-			e.preventDefault(), r?.();
+			e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1 || (e.preventDefault(), r?.());
 		}), this.tagline.addEventListener("pointerdown", (e) => e.stopPropagation()), this.icon.addEventListener("click", (e) => {
 			e.preventDefault(), i?.();
 		}), this.icon.addEventListener("pointerdown", (e) => e.stopPropagation()), this.tagline.addEventListener("pointerenter", () => this.loopArrow()), this.tagline.addEventListener("focus", () => this.loopArrow()), this.setActive(n), e.appendChild(this.root), this.project = new Gm(this.root, {}), this.captionState = {
@@ -13705,11 +13707,12 @@ var sh = class {
 	async init() {
 		let { mount: e } = this;
 		if (e.classList.add("wc-root"), this.items = hm(e), !this.items.length) return console.warn("[work-canvas] no .work-item elements found — nothing to render."), this;
-		await _m(this.items), Zm(this.items), this.projectPage = !!this.pathSlug() && new Set(this.items.map((e) => e.slug)).size === 1, this._homeTitle = document.title;
+		await _m(this.items), Zm(this.items), this.projectPage = !!this.pathSlug() && new Set(this.items.map((e) => e.slug)).size === 1, this._homeTitle = this.isHomePath() ? document.title : this.options.homeTitle;
 		let t = this.layoutDefs.map((e) => e.key), n = t.includes(this.options.layout) ? this.options.layout : t[0];
 		this.options.rotate && (n = dh(t) ?? n), this.ui = new Ym(e, {
 			layouts: this.layoutDefs,
 			current: n,
+			aboutHref: this.options.aboutPath,
 			onAbout: () => this.toggleAbout(),
 			onHome: () => this.canCycle ? this.nextLayout() : this.projectOpen ? this.closeProject() : this.toggleAbout(!1),
 			tagline: this.options.tagline,
@@ -13727,7 +13730,7 @@ var sh = class {
 			videoPolicy: this.isMobile && this.options.mobileVideo === "focused" || this.reducedMotion ? "focused" : "all",
 			downgradeAfter: this.options.downgradeAfter,
 			maxTextureEdge: this.isMobile ? this.options.maxTextureEdgeMobile : this.options.maxTextureEdge
-		}), this.mediaItems = this.items.map((e) => this.media.add(e)), this.media.preload(), this.bindInput(), this.bindObservers(), this.bindKeyboard(), this.addSeo(), this.resize(), this.start(), this.projectPage) {
+		}), this.mediaItems = this.items.map((e) => this.media.add(e)), this.media.preload(), this.bindInput(), this.bindObservers(), this.bindKeyboard(), this.addSeo(), this.resize(), this.start(), !this.projectPage && this.isAboutPath() && this.toggleAbout(!0, { push: !1 }), this.projectPage) {
 			e.classList.add("is-ready");
 			let t = this.mediaItems.find((e) => e.caseStudy);
 			return t ? (await this.openProject({ item: t }, {
@@ -13738,6 +13741,12 @@ var sh = class {
 		await this.whenThumbsReady(), e.classList.add("is-ready"), await this.setLayout(n, { initial: !0 });
 		let r = this.slugFromLocation();
 		return r && this.openProjectBySlug(r, { push: !1 }) && this.replaceUrl(this.projectUrl(r)), this;
+	}
+	isHomePath() {
+		return location.pathname.replace(/\/$/, "") === this.options.homePath.replace(/\/$/, "");
+	}
+	isAboutPath() {
+		return location.pathname.replace(/\/$/, "") === this.options.aboutPath.replace(/\/$/, "");
 	}
 	projectUrl(e) {
 		return `${this.options.projectBase}${encodeURIComponent(e)}`;
@@ -13813,8 +13822,17 @@ var sh = class {
 	updateRunning() {
 		this.inView && this.pageVisible && !this.aboutOpen && !this.projectOpen ? this.start() : this.stop();
 	}
-	toggleAbout(e = !this.aboutOpen) {
-		e !== this.aboutOpen && (e && this.projectOpen && this.closeProject(), this.aboutOpen = e, this.mount.classList.toggle("is-about", e), this.ui?.setAbout(e), clearTimeout(this._aboutTimer), e ? (this.hovered = null, this.tapped = null, this.mount.classList.remove("is-hovering-tile"), this._aboutTimer = setTimeout(() => this.updateRunning(), 650)) : this.updateRunning());
+	toggleAbout(e = !this.aboutOpen, { push: t = !0, fromHistory: n = !1 } = {}) {
+		if (e !== this.aboutOpen) {
+			if (e && this.projectPage) {
+				location.assign(this.options.aboutPath);
+				return;
+			}
+			e && this.projectOpen && this.closeProject({ fromHistory: !0 }), this.aboutOpen = e, e ? (t && !this.isAboutPath() && history.pushState({
+				...history.state || {},
+				wcAbout: !0
+			}, "", new URL(this.options.aboutPath, location.href)), document.title = `About — ${this.options.siteName}`) : (document.title = this._homeTitle, !n && history.state?.wcAbout ? history.back() : !n && this.isAboutPath() && this.replaceUrl(this.options.homePath)), this.mount.classList.toggle("is-about", e), this.ui?.setAbout(e), clearTimeout(this._aboutTimer), e ? (this.hovered = null, this.tapped = null, this.mount.classList.remove("is-hovering-tile"), this._aboutTimer = setTimeout(() => this.updateRunning(), 650)) : this.updateRunning();
+		}
 	}
 	whenThumbsReady(e = .8, t = 2500) {
 		let n = performance.now();
@@ -13826,7 +13844,7 @@ var sh = class {
 		});
 	}
 	async setLayout(e, { initial: t = !1 } = {}) {
-		if (this.aboutOpen && this.toggleAbout(!1), this.projectOpen && this.closeProject(), this.switching || e === this.layoutKey || !this.renderer) return;
+		if (t || (this.aboutOpen && this.toggleAbout(!1), this.projectOpen && this.closeProject()), this.switching || e === this.layoutKey || !this.renderer) return;
 		let n = this.layoutDefs.find((t) => t.key === e);
 		if (n) {
 			if (this.switching = !0, this.ui?.setActive(e), fh(e), this.options.syncUrl) {
@@ -13902,7 +13920,7 @@ var sh = class {
 	async openProject(e, { push: t = !0, morph: n = !0 } = {}) {
 		let r = e?.item, i = r?.project;
 		if (!i || !r.caseStudy || this.openTile || this.projectOpen) return !1;
-		this.aboutOpen && this.toggleAbout(!1);
+		this.aboutOpen && this.toggleAbout(!1, { fromHistory: !0 });
 		let a = this.ui.project, o = {
 			type: r.type,
 			bestSrc: r.bestSrc,
@@ -13950,7 +13968,7 @@ var sh = class {
 		}), !0) : !1;
 	}
 	closeProject({ fromHistory: e = !1 } = {}) {
-		this.projectOpen && (this.projectOpen = !1, clearTimeout(this._projectTimer), mi.killTweensOf(this), this.mount.classList.remove("is-project"), this.ui.project.hide(), this.resetOpen(), this.updateRunning(), this._homeTitle && (document.title = this._homeTitle), !e && history.state?.wcProject ? history.back() : this.projectPage ? location.assign(this.options.homePath) : e || this.replaceUrl(this.options.homePath));
+		this.projectOpen && (this.projectOpen = !1, clearTimeout(this._projectTimer), mi.killTweensOf(this), this.mount.classList.remove("is-project"), this.ui.project.hide(), this.resetOpen(), this.updateRunning(), document.title = this._homeTitle, !e && history.state?.wcProject ? history.back() : this.projectPage ? location.assign(this.options.homePath) : e || this.replaceUrl(this.options.homePath));
 	}
 	pushProjectState(e) {
 		if (!e) return;
@@ -13989,6 +14007,8 @@ var sh = class {
 		}), this._onPopState = (e) => {
 			let t = e.state?.wcProject || this.slugFromLocation();
 			t && !this.projectOpen ? this.openProjectBySlug(t, { push: !1 }) : !t && this.projectOpen && this.closeProject({ fromHistory: !0 });
+			let n = this.isAboutPath();
+			n && !this.aboutOpen ? this.toggleAbout(!0, { push: !1 }) : !n && this.aboutOpen && this.toggleAbout(!1, { fromHistory: !0 });
 		}, window.addEventListener("popstate", this._onPopState), this._onPageShow = (e) => e.persisted && this.resetOpen(), window.addEventListener("pageshow", this._onPageShow);
 	}
 	bindObservers() {
@@ -14636,6 +14656,7 @@ async function Ah(e, t = {}) {
 		tagline: t.tagline ?? n.tagline ?? "design &amp; direction made to move",
 		...n.projectBase ? { projectBase: n.projectBase } : {},
 		...n.homePath ? { homePath: n.homePath } : {},
+		...n.aboutPath ? { aboutPath: n.aboutPath } : {},
 		hint: t.hint ?? n.hint,
 		...t
 	});

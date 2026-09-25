@@ -80,7 +80,7 @@ function injectStyles() {
 }
 
 export class UI {
-  constructor(mount, { layouts, current, onAbout, onHome, tagline, hint }) {
+  constructor(mount, { layouts, current, onAbout, onHome, tagline, hint, aboutHref = '/about' }) {
     injectStyles();
     this.mount = mount;
     this.layouts = layouts;
@@ -91,7 +91,7 @@ export class UI {
     this.root.innerHTML = `
       <div class="wc-topbar">
         <button type="button" class="wc-icon"><img src="${zaIcon}" alt="" width="16" height="16"></button>
-        <a class="wc-tagline" href="#${aboutId}" role="button" aria-expanded="false" aria-controls="${aboutId}">
+        <a class="wc-tagline" href="${aboutHref}" aria-expanded="false" aria-controls="${aboutId}">
           <span>${tagline}</span>
           <span class="wc-arrow" aria-hidden="true"><span class="wc-arrow-track"><span class="wc-arrow-glyph">→</span><span class="wc-arrow-glyph is-next">→</span></span></span>
         </a>
@@ -121,6 +121,7 @@ export class UI {
 
     // Tagline: hover loops the arrow; click toggles the about section.
     this.tagline.addEventListener('click', (e) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return; // new tab/window: follow the link
       e.preventDefault();
       onAbout?.();
     });

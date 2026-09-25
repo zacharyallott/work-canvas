@@ -10,7 +10,7 @@ It has three interaction versions. Each visit opens on the next one (the last ve
 | `b` | Deck: a pile of four cards that cycles through the whole collection | Pile trails the cursor with a little lag and fans out (parallax) the further the cursor gets from the centre; a new card fades in on top every 2 s, and more as the cursor moves; hovering pauses and brings a card to the front | Frame 48 · `1542:5581` |
 | `c` | Masonry: columns drifting in alternating directions | Columns drift on their own and slow on hover; the grid shifts left or right with the cursor | Frame 45 · `1542:5489` |
 
-Hovering a case-study tile brings in its project title and ↓; tiles without a project view show nothing on hover. Clicking a case-study tile opens its project view (Figma frame 50 · `1553:6590`): the tile glides to the top of the page, the title, description and services sit bottom-left, and the project's images follow on the right. The scroll stops on the last image; scrolling on (after a short pause) pulls against resistance and fades back to the work, and letting go early settles back. The tagline opens the about section (Figma frame 49 · `1542:5601`). On touch, tapping a case-study tile shows its title briefly.
+Hovering a case-study tile brings in its project title and ↓; tiles without a project view show nothing on hover. Clicking a case-study tile opens its project view (Figma frame 50 · `1553:6590`): the tile glides to the top of the page, the title, description and services sit bottom-left, and the project's images follow on the right. The scroll stops on the last image; scrolling on (after a short pause) pulls against resistance and fades back to the work, and letting go early settles back. The tagline opens the about section (Figma frame 49 · `1542:5601`) at its own address, `/about`. On touch, tapping a case-study tile shows its title briefly.
 
 ## Quick start
 
@@ -182,7 +182,7 @@ Tiles are ordered by the list's sort: every project's Image 1 first, then every 
 - For more than 100 projects, add more lists (each with offset/limit). The bundle collects every `.work-item` on the page in document order.
 - The older data-attribute formats (`data-image-1`, … or `data-src`, …) still work if you ever need a static list.
 
-Optional mount attributes: `data-project-base="/work/"`, `data-home-path="/"`, `data-layout="a|b|c"`, `data-switcher="false"` (the star only returns home instead of switching versions), `data-rotate="false"` (always open on `data-layout` instead of rotating), `data-max-videos="4"`, `data-per-project="2"`, `data-items=".my-selector"`, `data-tagline="…"`, `data-tagline-href="#work"`, `data-media-base="…"` (base for relative URLs).
+Optional mount attributes: `data-project-base="/work/"`, `data-home-path="/"`, `data-about-path="/about"`, `data-layout="a|b|c"`, `data-switcher="false"` (the star only returns home instead of switching versions), `data-rotate="false"` (always open on `data-layout` instead of rotating), `data-max-videos="4"`, `data-per-project="2"`, `data-items=".my-selector"`, `data-tagline="…"`, `data-tagline-href="#work"`, `data-media-base="…"` (base for relative URLs).
 
 ### 3. Project pages (the Projects template, `/work/<slug>`)
 
@@ -208,21 +208,25 @@ On a project page the project view opens straight away; closing it (star, Esc, t
 
 Set in the Designer (the API can't bind these): template **Page settings → SEO title** `{Project title} — zachary allott`, **Meta description** `{Short description}`, **Open Graph image** `{Image 1}`.
 
-### 4. SEO
+### 4. About page (`/about`)
+
+A copy of Home (same header, same Collection List) with its own SEO title, description, `AboutPage` JSON-LD and an h1 of "About Zachary Allott" in the `wc-seo` embed. Loading `/about` opens the header straight into the about section; closing it shows the work and moves the address to `/`. On the homepage the tagline links to `/about` and opening it moves the address there, so Back closes it. Keep the about copy in the two embeds (Home and About) in sync.
+
+### 5. SEO
 
 - Homepage HTML: the `wc-seo` embed (h1, about statement, clients, links). JSON-LD `Person` + `WebSite` in the Home page settings.
 - The bundle adds a visually hidden list of links to every case-study page (tabbing to one shows its caption on the canvas; Enter opens it) and JSON-LD: an `ItemList` of the case studies on the homepage, a `CreativeWork` on each project page.
-- Old `/projects/<slug>` pages are retired: add 301 redirects to `/work/<slug>` (case studies) or `/` (the rest) in Site settings → Publishing.
+- Old `/projects/<slug>` pages are retired: add 301 redirects to `/work/<slug>` (case studies) or `/` (the rest), and `/info` → `/about`, in Site settings → Publishing.
 
-### 5. Embed code
+### 6. Embed code
 
-Page settings → Custom code → Before `</body>` tag, on both Home and the Projects template:
+Page settings → Custom code → Before `</body>` tag, on Home, About and the Projects template:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.0/dist/work-canvas.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.3/dist/work-canvas.js"></script>
 ```
 
-When you release, bump the version in both, and `data-media-base` on `#work-canvas`.
+When you release, bump the version on all three, and `data-media-base` on each `#work-canvas`.
 
 ## Behaviour notes
 

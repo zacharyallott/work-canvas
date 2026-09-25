@@ -75,7 +75,8 @@ export class WorkCanvas {
     hideLinkLists(this.items);
     // A case study's own page (/work/<slug>, the CMS template) carries just that project.
     this.projectPage = Boolean(this.pathSlug()) && new Set(this.items.map((i) => i.slug)).size === 1;
-    this._homeTitle = document.title;
+    // Title to show when back on the work (the page may have loaded as /about or /work/<slug>).
+    this._homeTitle = this.isHomePath() ? document.title : this.options.homeTitle;
 
     const keys = this.layoutDefs.map((l) => l.key);
     let initial = keys.includes(this.options.layout) ? this.options.layout : keys[0];
@@ -83,6 +84,7 @@ export class WorkCanvas {
     this.ui = new UI(mount, {
       layouts: this.layoutDefs,
       current: initial,
+      aboutHref: this.options.aboutPath,
       onAbout: () => this.toggleAbout(),
       // The star cycles the homepage versions (closing the about / project view if open).
       onHome: () => (this.canCycle ? this.nextLayout() : this.projectOpen ? this.closeProject() : this.toggleAbout(false)),
@@ -124,6 +126,9 @@ export class WorkCanvas {
     this.resize();
     this.start();
 
+    // /about opens straight into the about section (the work loads behind it).
+    if (!this.projectPage && this.isAboutPath()) this.toggleAbout(true, { push: false });
+
     if (this.projectPage) {
       // The project opens straight away; closing it goes to the work on the homepage.
       mount.classList.add('is-ready');
@@ -147,6 +152,14 @@ export class WorkCanvas {
   }
 
   // ─── Project addresses & SEO ───────────────────────────────────────────────
+  isHomePath() {
+    return location.pathname.replace(/\/$/, '') === this.options.homePath.replace(/\/$/, '');
+  }
+
+  isAboutPath() {
+    return location.pathname.replace(/\/$/, '') === this.options.aboutPath.replace(/\/$/, '');
+  }
+
   projectUrl(slug) {
     return `${this.options.projectBase}${encodeURIComponent(slug)}`;
   }
@@ -273,12 +286,26 @@ export class WorkCanvas {
   /**
    * Tagline click: the images fade out (CSS on .wc-canvas) and the about
    * section fades in. Rendering pauses once the fade has finished and resumes
-   * as soon as it closes.
+   * as soon as it closes. The about section has its own address (/about, a
+   * Webflow page with the same header), so opening it here moves the address
+   * there and Back closes it.
    */
-  toggleAbout(open = !this.aboutOpen) {
+  toggleAbout(open = !this.aboutOpen, { push = true, fromHistory = false } = {}) {
     if (open === this.aboutOpen) return;
-    if (open && this.projectOpen) this.closeProject();
+    if (open && this.projectPage) {
+      location.assign(this.options.aboutPath); // a project's own page has no work behind it
+      return;
+    }
+    if (open && this.projectOpen) this.closeProject({ fromHistory: true });
     this.aboutOpen = open;
+    if (open) {
+      if (push && !this.isAboutPath()) history.pushState({ ...(history.state || {}), wcAbout: true }, '', new URL(this.options.aboutPath, location.href));
+      document.title = `About — ${this.options.siteName}`;
+    } else {
+      document.title = this._homeTitle;
+      if (!fromHistory && history.state?.wcAbout) history.back(); // opened here: Back returns to the work
+      else if (!fromHistory && this.isAboutPath()) this.replaceUrl(this.options.homePath);
+    }
     this.mount.classList.toggle('is-about', open);
     this.ui?.setAbout(open);
     clearTimeout(this._aboutTimer);
@@ -307,8 +334,11 @@ export class WorkCanvas {
 
   // ─── Layouts ───────────────────────────────────────────────────────────────
   async setLayout(key, { initial = false } = {}) {
-    if (this.aboutOpen) this.toggleAbout(false); // switching always brings the images back
-    if (this.projectOpen) this.closeProject();
+    if (!initial) {
+      // Switching always brings the images back (the first load keeps /about open).
+      if (this.aboutOpen) this.toggleAbout(false);
+      if (this.projectOpen) this.closeProject();
+    }
     if (this.switching || key === this.layoutKey || !this.renderer) return;
     const def = this.layoutDefs.find((l) => l.key === key);
     if (!def) return;
@@ -434,7 +464,7 @@ export class WorkCanvas {
     const item = tile?.item;
     const project = item?.project;
     if (!project || !item.caseStudy || this.openTile || this.projectOpen) return false;
-    if (this.aboutOpen) this.toggleAbout(false);
+    if (this.aboutOpen) this.toggleAbout(false, { fromHistory: true }); // the project gets its own history entry
 
     const view = this.ui.project;
     const hero = { type: item.type, bestSrc: item.bestSrc, srcset: item.srcset, sources: item.sources, poster: item.poster, hash: item.hash, aspect: item.aspect, alt: project.title };
@@ -487,7 +517,7 @@ export class WorkCanvas {
     this.ui.project.hide();
     this.resetOpen();
     this.updateRunning();
-    if (this._homeTitle) document.title = this._homeTitle;
+    document.title = this._homeTitle;
     if (!fromHistory && history.state?.wcProject) history.back(); // opened here: Back returns to the work
     else if (this.projectPage) location.assign(this.options.homePath); // landed on the project's page: go to the work
     else if (!fromHistory) this.replaceUrl(this.options.homePath);
@@ -537,11 +567,14 @@ export class WorkCanvas {
         if (!handled && hit?.tile.item.caseStudy) this.openProject(hit.tile);
       });
 
-    // Browser Back/Forward between the work and a project.
+    // Browser Back/Forward between the work, a project and the about section.
     this._onPopState = (e) => {
       const slug = e.state?.wcProject || this.slugFromLocation();
       if (slug && !this.projectOpen) this.openProjectBySlug(slug, { push: false });
       else if (!slug && this.projectOpen) this.closeProject({ fromHistory: true });
+      const about = this.isAboutPath();
+      if (about && !this.aboutOpen) this.toggleAbout(true, { push: false });
+      else if (!about && this.aboutOpen) this.toggleAbout(false, { fromHistory: true });
     };
     window.addEventListener('popstate', this._onPopState);
     // Back/forward cache: undo a half-finished transition when returning.

@@ -32,7 +32,9 @@ export const DEFAULTS = {
   // Project pages: each case study also has its own page at `${projectBase}<slug>` (the Webflow CMS template)
   projectBase: '/work/',
   homePath: '/',
-  siteName: 'zachary allott', // project titles become "<Project> — <siteName>"
+  aboutPath: '/about', // the about section's own page (same header, opens with the about section)
+  siteName: 'zachary allott', // project titles become "<Project> — <siteName>", the about section "About — <siteName>"
+  homeTitle: 'zachary allott — brand design & art direction', // title when returning to the work from /about or a project page
 
   // Transition when opening a project (eases are registered in motion.js)
   openDuration: 0.75,

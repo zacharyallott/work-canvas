@@ -15,6 +15,7 @@
  *   data-tagline="…"           top bar text (click opens the about section)
  *   data-project-base="/work/" where each case study's own page lives (default /work/)
  *   data-home-path="/"         the page with the work (closing a project page goes here)
+ *   data-about-path="/about"   the about section's own page (the tagline links here)
  *
  * Manual use:  import { mount } from '…/work-canvas.js'; const wc = await mount(el, { layout: 'b' }); wc.destroy();
  */
@@ -58,6 +59,7 @@ export async function mount(el, options = {}) {
     tagline: options.tagline ?? d.tagline ?? 'design &amp; direction made to move',
     ...(d.projectBase ? { projectBase: d.projectBase } : {}),
     ...(d.homePath ? { homePath: d.homePath } : {}),
+    ...(d.aboutPath ? { aboutPath: d.aboutPath } : {}),
     hint: options.hint ?? d.hint,
     ...options,
   });
