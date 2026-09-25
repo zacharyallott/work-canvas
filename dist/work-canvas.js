@@ -13845,30 +13845,30 @@ var sh = class {
 			i();
 		});
 	}
-	async setLayout(e, { initial: t = !1 } = {}) {
-		if (t || (this.aboutOpen && this.toggleAbout(!1), this.projectOpen && this.closeProject()), this.switching || e === this.layoutKey || !this.renderer) return;
-		let n = this.layoutDefs.find((t) => t.key === e);
-		if (n) {
+	async setLayout(e, { initial: t = !1, swap: n = !1 } = {}) {
+		if (t || (this.aboutOpen && this.toggleAbout(!1), this.projectOpen && this.closeProject({ cycle: !1 })), this.switching || e === this.layoutKey || !this.renderer) return;
+		let r = this.layoutDefs.find((t) => t.key === e);
+		if (r) {
 			if (this.switching = !0, this.ui?.setActive(e), fh(e), this.options.syncUrl) {
 				let t = new URL(location.href);
 				t.searchParams.set("v", e), history.replaceState(history.state, "", t);
 			}
-			this.layout && (await this.layout.leave(), this.layout.dispose(), this.hovered = null), this.layoutKey = e, this.layout = new n.Layout(this, {
-				...n.Layout.defaults,
-				...n.config
+			this.layout && (n || await this.layout.leave(), this.layout.dispose(), this.hovered = null), this.layoutKey = e, this.layout = new r.Layout(this, {
+				...r.Layout.defaults,
+				...r.config
 			}), this.media.maxVideos = this.layout.config.maxVideos ?? this.options.maxVideos, this.layout.resize(this.viewport), await this.layout.enter({ initial: t }), this.switching = !1;
 		}
 	}
 	get canCycle() {
 		return this.options.switcher && this.layoutDefs.length > 1;
 	}
-	nextLayout() {
-		let e = this.layoutDefs.map((e) => e.key), t = e[(e.indexOf(this.layoutKey) + 1) % e.length];
-		if (t === this.layoutKey) {
-			this.projectOpen && this.closeProject(), this.aboutOpen && this.toggleAbout(!1);
+	nextLayout({ swap: e = !1 } = {}) {
+		let t = this.layoutDefs.map((e) => e.key), n = t[(t.indexOf(this.layoutKey) + 1) % t.length];
+		if (n === this.layoutKey) {
+			this.projectOpen && this.closeProject({ cycle: !1 }), this.aboutOpen && this.toggleAbout(!1);
 			return;
 		}
-		this.setLayout(t);
+		this.setLayout(n, { swap: e });
 	}
 	tick(e, t) {
 		let n = Math.min(t / 1e3, 1 / 20);
@@ -13969,8 +13969,8 @@ var sh = class {
 			morph: !1
 		}), !0) : !1;
 	}
-	closeProject({ fromHistory: e = !1 } = {}) {
-		this.projectOpen && (this.projectOpen = !1, clearTimeout(this._projectTimer), mi.killTweensOf(this), this.mount.classList.remove("is-project"), this.ui.project.hide(), this.resetOpen(), this.updateRunning(), document.title = this._homeTitle, !e && history.state?.wcProject ? history.back() : this.projectPage ? location.assign(this.options.homePath) : e || this.replaceUrl(this.options.homePath));
+	closeProject({ fromHistory: e = !1, cycle: t = !0 } = {}) {
+		this.projectOpen && (this.projectOpen = !1, clearTimeout(this._projectTimer), mi.killTweensOf(this), this.ui.project.hide(), this.resetOpen(), t && !this.projectPage && this.canCycle && !this.switching && this.nextLayout({ swap: !0 }), this.mount.classList.remove("is-project"), this.updateRunning(), document.title = this._homeTitle, !e && history.state?.wcProject ? history.back() : this.projectPage ? location.assign(this.options.homePath) : e || this.replaceUrl(this.options.homePath));
 	}
 	pushProjectState(e) {
 		if (!e) return;

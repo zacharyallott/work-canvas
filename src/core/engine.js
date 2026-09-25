@@ -334,11 +334,12 @@ export class WorkCanvas {
   }
 
   // ─── Layouts ───────────────────────────────────────────────────────────────
-  async setLayout(key, { initial = false } = {}) {
+  /** `swap: true` replaces the current version without its leave fade (used while the canvas is hidden). */
+  async setLayout(key, { initial = false, swap = false } = {}) {
     if (!initial) {
       // Switching always brings the images back (the first load keeps /about open).
       if (this.aboutOpen) this.toggleAbout(false);
-      if (this.projectOpen) this.closeProject();
+      if (this.projectOpen) this.closeProject({ cycle: false }); // we're switching anyway
     }
     if (this.switching || key === this.layoutKey || !this.renderer) return;
     const def = this.layoutDefs.find((l) => l.key === key);
@@ -353,7 +354,7 @@ export class WorkCanvas {
     }
 
     if (this.layout) {
-      await this.layout.leave();
+      if (!swap) await this.layout.leave();
       this.layout.dispose();
       this.hovered = null;
     }
@@ -369,16 +370,16 @@ export class WorkCanvas {
     return this.options.switcher && this.layoutDefs.length > 1;
   }
 
-  /** Star click: on to the next version, wrapping around. */
-  nextLayout() {
+  /** Star click (and leaving a project): on to the next version, wrapping around. */
+  nextLayout({ swap = false } = {}) {
     const keys = this.layoutDefs.map((l) => l.key);
     const next = keys[(keys.indexOf(this.layoutKey) + 1) % keys.length];
     if (next === this.layoutKey) {
-      if (this.projectOpen) this.closeProject();
+      if (this.projectOpen) this.closeProject({ cycle: false });
       if (this.aboutOpen) this.toggleAbout(false);
       return;
     }
-    this.setLayout(next);
+    this.setLayout(next, { swap });
   }
 
   // ─── Frame loop ────────────────────────────────────────────────────────────
@@ -509,14 +510,19 @@ export class WorkCanvas {
     return true;
   }
 
-  closeProject({ fromHistory = false } = {}) {
+  /**
+   * Back to the work. It comes back as the next homepage version (`cycle`),
+   * swapped in while the canvas is still hidden so the old one never flashes.
+   */
+  closeProject({ fromHistory = false, cycle = true } = {}) {
     if (!this.projectOpen) return;
     this.projectOpen = false;
     clearTimeout(this._projectTimer);
     gsap.killTweensOf(this);
-    this.mount.classList.remove('is-project'); // canvas fades back in, page fades out
     this.ui.project.hide();
     this.resetOpen();
+    if (cycle && !this.projectPage && this.canCycle && !this.switching) this.nextLayout({ swap: true });
+    this.mount.classList.remove('is-project'); // canvas fades back in, page fades out
     this.updateRunning();
     document.title = this._homeTitle;
     if (!fromHistory && history.state?.wcProject) history.back(); // opened here: Back returns to the work
