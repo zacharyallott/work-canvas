@@ -3,6 +3,7 @@ import zaIcon from '../ui/za-icon.svg';
 import { aboutMarkup } from './about.js';
 import { EASE } from './motion.js';
 import { ProjectView } from './project.js';
+import { Pull } from './pull.js';
 
 /**
  * DOM layer on top of the canvas: top bar (ZA icon — also the version switch — and tagline),
@@ -41,8 +42,8 @@ const CSS = `
 .wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}
 .wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}
 /* About (Figma frame 49): bottom-anchored statement + client columns. */
-.wc-about{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;max-height:calc(100% - 44px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}
-.wc-root.is-about .wc-about{opacity:1;visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}
+.wc-about{position:absolute;left:0;right:0;bottom:0;translate:0 var(--wc-pull-lift,0px);box-sizing:border-box;max-height:calc(100% - 44px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}
+.wc-root.is-about .wc-about{opacity:var(--wc-pull-fade,1);visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}
 .wc-about .wc-w{display:inline-block}
 .wc-about-statement{margin:0 0 clamp(24px,8vh,64px);max-width:22.84em;font-size:clamp(22px,min(3.75vw,6.2vh),48px);line-height:1.25;letter-spacing:.02em;font-weight:500}
 .wc-about-statement img{display:inline-block;width:.72em;height:.72em;margin-left:.3em;vertical-align:baseline} /* Cassette cap height: sits on the baseline, tops out with the capitals */
@@ -111,6 +112,18 @@ export class UI {
     this.tagline = this.root.querySelector('.wc-tagline');
     this.about = this.root.querySelector('.wc-about');
     splitWords(this.about.querySelector('.wc-about-statement'));
+    // Scrolling on at the bottom of the about section pulls back to the work, like the end of a project page.
+    this.aboutOpen = false;
+    this.aboutPull = new Pull({
+      input: mount,
+      scroller: this.about,
+      enabled: () => this.aboutOpen,
+      draw: ({ opacity, lift }) => {
+        this.about.style.setProperty('--wc-pull-fade', opacity == null ? '' : String(opacity));
+        this.about.style.setProperty('--wc-pull-lift', lift ? `${lift.toFixed(2)}px` : '');
+      },
+      onEnd: () => this.onAboutEnd?.(),
+    });
     this.about.querySelectorAll('.wc-about-links a').forEach((a) => {
       const track = a.querySelector('.wc-link-track');
       if (!track) return;
@@ -178,6 +191,8 @@ export class UI {
    * whole section out (CSS).
    */
   setAbout(open) {
+    this.aboutOpen = open;
+    this.aboutPull.reset();
     this.flipArrow(open);
     this.tagline.setAttribute('aria-expanded', String(open));
     this.about.setAttribute('aria-hidden', String(!open));

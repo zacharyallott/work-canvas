@@ -94,6 +94,7 @@ export class WorkCanvas {
     });
     this.ui.setAbout(false);
     this.ui.project.onEnd = () => this.closeProject(); // pulled past the end of the page
+    this.ui.onAboutEnd = () => this.toggleAbout(false); // pulled past the bottom of the about section
     this._onKey = (e) => {
       if (e.key !== 'Escape') return;
       if (this.projectOpen) this.closeProject();

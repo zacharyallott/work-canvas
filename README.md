@@ -10,7 +10,7 @@ It has three interaction versions. Each visit opens on the next one (the last ve
 | `b` | Deck: a pile of four cards that cycles through the whole collection | Pile trails the cursor with a little lag and fans out (parallax) the further the cursor gets from the centre; new cards fade in on top only as you scroll (or swipe), one per 250 px | Frame 48 · `1542:5581` |
 | `c` | Masonry: columns drifting upward, each at its own pace | Columns drift on their own and slow on hover; the grid shifts left or right with the cursor; scrolling moves the columns, eased | Frame 45 · `1542:5489` |
 
-Hovering a case-study tile brings in its project title and ↓; tiles without a project view show nothing on hover. Clicking a case-study tile opens its project view (Figma frame 50 · `1553:6590`): the tile glides to the top of the page, the title, description and services sit bottom-left, and the project's images follow on the right. The scroll stops on the last image; scrolling on (after a short pause) pulls against resistance and fades back to the work, and letting go early settles back. The tagline opens the about section (Figma frame 49 · `1542:5601`) at its own address, `/about`. On touch, tapping a case-study tile shows its title briefly.
+Hovering a case-study tile brings in its project title and ↓; tiles without a project view show nothing on hover. Clicking a case-study tile opens its project view (Figma frame 50 · `1553:6590`): the tile glides to the top of the page, the title, description and services sit bottom-left, and the project's images follow on the right. The scroll stops on the last image; scrolling on (after a short pause) pulls against resistance and fades back to the work, and letting go early settles back. The tagline opens the about section (Figma frame 49 · `1542:5601`) at its own address, `/about`; scrolling on at its bottom pulls back to the work the same way. On touch, tapping a case-study tile shows its title briefly.
 
 ## Quick start
 
@@ -35,6 +35,7 @@ src/
     shaders.js         cover-fit, rounded corners (no warp/distortion)
     input.js           cursor, touch drag, wheel, page scroll, tap
     ui.js              top bar (star = next version), hover caption, about section, fallback grid
+    pull.js            scroll-past-the-end pull back to the work (project view + about section)
     about.js           about copy: statement, client columns, links
     project.js         project view (DOM page) + end-of-page pull
     seo.js             crawlable project links + JSON-LD
@@ -65,7 +66,7 @@ The most useful settings:
 - **Filmstrip:** `maxSpeed` (px/s at the edges), `deadZone`, `curve` (how quickly speed builds toward the edges), `response` (lag), `idleSpeed` (drift with no cursor), `hoverSlowdown`.
 - **Deck:** `follow` (how far the pile leans toward the cursor), `followRates` (lag per position), `depth` (parallax per position), `fan` (spread toward the edges), `scrollStep` / `scrollGap` (scroll per card, fastest pace), `interval` (seconds before a card comes in on its own; 0 = off), `moveStep` (cursor travel per extra card; 0 = off), `dealDuration`, `heights` (size scale), `slots` (pile shape), `pauseOnHover`, `hoverToFront`.
 - **Masonry:** `autoplaySpeed`, `hoverSlowdown`, `columnSpeeds`, `shift.max` (how far the grid moves with the cursor), `shift.response` (lag), `shift.mode` (`offset` leans, `drift` keeps travelling like the filmstrip).
-- **Project view:** `PROJECT_CONFIG` in `src/core/project.js`: `pullDistance` (how far you scroll past the end to go back to the work), `gatePause` (the pause that makes the next scroll a new gesture, which can pull straight away), `holdAtEnd` (how long a scroll that arrives at the end holds there before it carries on into the pull), `lift`, `fadeFrom`, `settle`.
+- **Project view / about section:** the pull at the end, `PULL_CONFIG` in `src/core/pull.js` (shared by both): `pullDistance` (how far you scroll past the end to go back to the work), `gatePause` (the pause that makes the next scroll a new gesture, which can pull straight away), `holdAtEnd` (how long a scroll that arrives at the end holds there before it carries on into the pull), `lift`, `fadeFrom`, `settle`.
 - **All:** `maxVideos`, `captionInset`, `enterDuration` / `leaveDuration` / `stagger` (switching versions: tiles dissolve in, nothing slides). Tiles are never warped, distorted or zoomed on hover.
 
 Motion follows one vocabulary (`src/core/motion.js`): things that travel accelerate hard and settle slowly (`wc-move`), things that answer the cursor start fast (`wc-out`), and opacity changes are short plain dissolves with no drift attached.
@@ -228,7 +229,7 @@ A copy of Home (same header, same Collection List) with its own SEO title, descr
 Page settings → Custom code → Before `</body>` tag, on Home, About and the Projects template:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.23/dist/work-canvas.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.24/dist/work-canvas.js"></script>
 ```
 
 When you release, bump the version on all three, and `data-media-base` on each `#work-canvas`.

@@ -13445,7 +13445,7 @@ function Um() {
     </div>`;
 }
 //#endregion
-//#region src/core/project.js
+//#region src/core/pull.js
 var Wm = {
 	pullDistance: .45,
 	gatePause: .15,
@@ -13454,7 +13454,59 @@ var Wm = {
 	lift: 72,
 	settle: .7,
 	smoothing: 10
-}, Gm = "\n.wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s linear,visibility 0s linear .35s}\n.wc-root.is-project .wc-project{opacity:1;visibility:visible;pointer-events:auto;transition:opacity 0s,visibility 0s}\n.wc-project-scroll{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:clamp(200px,26vw,285px) minmax(0,1fr);column-gap:clamp(24px,4.2vw,53px);padding:52px 15px 12px 19px;box-sizing:border-box;-webkit-user-select:text;user-select:text;outline:none}\n.wc-project-info{grid-column:1;grid-row:1;align-self:start;position:sticky;top:var(--wc-info-top,60vh);display:flex;flex-direction:column;gap:7px;color:#000}\n.wc-project-title{margin:0;font-size:16px;line-height:1;font-weight:500}\n.wc-project-desc{margin:0;max-width:271px;font-size:16px;line-height:1.1;font-weight:400;letter-spacing:.02em;color:#5f5f5f}\n.wc-project-services{display:flex;flex-wrap:wrap;column-gap:12px;row-gap:2px;margin:0;padding:0;list-style:none;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase;font-weight:400}\n.wc-project-desc+.wc-project-services{margin-top:41px}\n.wc-project-media{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-end;gap:12px;margin:0;padding:0;list-style:none}\n.wc-project-item{position:relative;width:73.5%;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-project-item.is-loaded{background:none} /* the placeholder grey would otherwise show as a hairline at antialiased edges */\n.wc-project-item:nth-child(4n+2){width:100%}\n.wc-project-item:nth-child(4n+3){width:51.8%}\n.wc-project-item img{display:block;width:100%;height:auto}\n.wc-project-item video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n/* External video (YouTube / Vimeo): thumbnail + play button until pressed, then the player. */\n.wc-project-item iframe{position:absolute;inset:0;width:100%;height:100%;border:0}\n.wc-embed{appearance:none;position:absolute;inset:0;display:block;width:100%;height:100%;margin:0;padding:0;border:0;background:#111;cursor:pointer}\n.wc-embed img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-embed-play{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:#f2f2f2}\n.wc-embed-play::after{content:\"\";position:absolute;left:22px;top:19px;border-style:solid;border-width:9px 0 9px 14px;border-color:transparent transparent transparent #111}\n.wc-embed:focus-visible{outline:2px solid #111;outline-offset:2px}\n/* #autoplay embeds: a muted loop like the MP4s. Scaled to cover the slot (--ar = the video's aspect), no pointer input,\n   faded in over the thumbnail once the player has loaded. */\n.wc-project-item.is-loop{container-type:size;background:#111}\n.wc-project-item.is-loop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-project-item.is-loop iframe{inset:auto;left:50%;top:50%;width:max(100cqw,calc(100cqh * var(--ar,1.7778)));height:calc(max(100cqh,calc(100cqw / var(--ar,1.7778))) + 2 * var(--wc-loop-crop));translate:-50% -50%;pointer-events:none;opacity:0;transition:opacity .4s linear}\n/* The player is taller than the video by a band top and bottom, so the video sits letterboxed in the middle and the\n   player's own title bar / logo land in those bands, outside the slot (clipped). */\n.wc-project-item.is-loop{--wc-loop-crop:calc(64px + 3cqw)}\n.wc-project-item.is-loop iframe.is-on{opacity:1}\n.wc-project-media{will-change:opacity,translate}\n.wc-project-info{will-change:opacity}\n@media (max-width:700px){\n  .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}\n  .wc-project-info{position:static;grid-row:1;margin-bottom:24px}\n  .wc-project-media{grid-column:1;grid-row:2}\n  .wc-project-item,.wc-project-item:nth-child(n){width:100%}\n}\n", Km = 12, qm = !1, Jm = (e) => String(e ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"), Ym = (e) => decodeURIComponent(String(e).split(/[?#]/)[0].split("/").pop() || "").replace(/^[0-9a-f]{24}_/, "").replace(/(-p-\d+)?\.[a-z0-9]+$/i, "").replace(/-(sm|md|lg|poster)$/, ""), Xm = (e) => {
+}, Gm = class {
+	constructor({ input: e, scroller: t = e, draw: n, onEnd: r, enabled: i = () => !0, config: a = Wm }) {
+		Object.assign(this, {
+			input: e,
+			scroller: t,
+			draw: n,
+			onEnd: r,
+			enabled: i,
+			config: a
+		}), this.reset(), e.addEventListener("wheel", (e) => this.onWheel(e), { passive: !0 }), e.addEventListener("touchstart", (e) => this.onTouchStart(e), { passive: !0 }), e.addEventListener("touchmove", (e) => this.onTouchMove(e), { passive: !0 });
+	}
+	atEnd() {
+		let e = this.scroller;
+		return e.scrollTop >= e.scrollHeight - e.clientHeight - 1;
+	}
+	onWheel(e) {
+		if (this.ended || !this.enabled()) return;
+		let t = this.config, n = performance.now(), r = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? this.input.clientHeight : 1), i = this.atEnd();
+		n - this.lastInput > t.gatePause * 1e3 && (this.gestureAtEnd = i), this.endSince = i ? this.endSince || n : 0, this.lastInput = n;
+		let a = n - this.endSince >= t.holdAtEnd * 1e3;
+		r < 0 ? this.pull = 0 : i && (this.gestureAtEnd || a) && this.addPull(r), this.kick();
+	}
+	onTouchStart(e) {
+		this.enabled() && (this.touchY = e.touches[0].clientY, this.gestureAtEnd = this.atEnd(), this.lastInput = performance.now());
+	}
+	onTouchMove(e) {
+		if (this.ended || !this.enabled() || this.touchY == null) return;
+		let t = e.touches[0].clientY, n = this.touchY - t;
+		this.touchY = t, this.lastInput = performance.now(), n < 0 ? this.pull = 0 : this.gestureAtEnd && this.atEnd() && this.addPull(n * 1.5), this.kick();
+	}
+	addPull(e) {
+		this.pull = Math.min(1, this.pull + e / (this.config.pullDistance * this.input.clientHeight)), this.pull >= 1 && !this.ended && (this.ended = !0, this.onEnd?.());
+	}
+	kick() {
+		this.raf || (this.raf = requestAnimationFrame((e) => this.frame(e)));
+	}
+	frame(e) {
+		this.raf = 0;
+		let t = this.config, n = this.lastFrame ? Math.min(.05, (e - this.lastFrame) / 1e3) : 1 / 60;
+		this.lastFrame = e, !this.ended && performance.now() - this.lastInput > t.settle * 1e3 && (this.pull = 0), this.shown += (this.pull - this.shown) * (1 - Math.exp(-n * t.smoothing)), Math.abs(this.pull - this.shown) < .002 && (this.shown = this.pull), this.paint(), this.shown !== this.pull || this.pull > 0 && !this.ended ? this.kick() : this.lastFrame = 0;
+	}
+	paint() {
+		let e = this.config, t = this.shown;
+		this.draw?.({
+			p: t,
+			opacity: t > 0 ? 1 - Math.min(1, Math.max(0, (t - e.fadeFrom) / (1 - e.fadeFrom))) : null,
+			lift: t > 0 ? -e.lift * (1 - (1 - t) ** 2) : 0
+		});
+	}
+	reset() {
+		cancelAnimationFrame(this.raf), this.raf = 0, this.lastFrame = 0, this.pull = 0, this.shown = 0, this.lastInput = 0, this.gestureAtEnd = !1, this.endSince = 0, this.touchY = null, this.ended = !1, this.paint();
+	}
+}, Km = "\n.wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s linear,visibility 0s linear .35s}\n.wc-root.is-project .wc-project{opacity:1;visibility:visible;pointer-events:auto;transition:opacity 0s,visibility 0s}\n.wc-project-scroll{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:clamp(200px,26vw,285px) minmax(0,1fr);column-gap:clamp(24px,4.2vw,53px);padding:52px 15px 12px 19px;box-sizing:border-box;-webkit-user-select:text;user-select:text;outline:none}\n.wc-project-info{grid-column:1;grid-row:1;align-self:start;position:sticky;top:var(--wc-info-top,60vh);display:flex;flex-direction:column;gap:7px;color:#000}\n.wc-project-title{margin:0;font-size:16px;line-height:1;font-weight:500}\n.wc-project-desc{margin:0;max-width:271px;font-size:16px;line-height:1.1;font-weight:400;letter-spacing:.02em;color:#5f5f5f}\n.wc-project-services{display:flex;flex-wrap:wrap;column-gap:12px;row-gap:2px;margin:0;padding:0;list-style:none;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase;font-weight:400}\n.wc-project-desc+.wc-project-services{margin-top:41px}\n.wc-project-media{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-end;gap:12px;margin:0;padding:0;list-style:none}\n.wc-project-item{position:relative;width:73.5%;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-project-item.is-loaded{background:none} /* the placeholder grey would otherwise show as a hairline at antialiased edges */\n.wc-project-item:nth-child(4n+2){width:100%}\n.wc-project-item:nth-child(4n+3){width:51.8%}\n.wc-project-item img{display:block;width:100%;height:auto}\n.wc-project-item video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n/* External video (YouTube / Vimeo): thumbnail + play button until pressed, then the player. */\n.wc-project-item iframe{position:absolute;inset:0;width:100%;height:100%;border:0}\n.wc-embed{appearance:none;position:absolute;inset:0;display:block;width:100%;height:100%;margin:0;padding:0;border:0;background:#111;cursor:pointer}\n.wc-embed img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-embed-play{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:#f2f2f2}\n.wc-embed-play::after{content:\"\";position:absolute;left:22px;top:19px;border-style:solid;border-width:9px 0 9px 14px;border-color:transparent transparent transparent #111}\n.wc-embed:focus-visible{outline:2px solid #111;outline-offset:2px}\n/* #autoplay embeds: a muted loop like the MP4s. Scaled to cover the slot (--ar = the video's aspect), no pointer input,\n   faded in over the thumbnail once the player has loaded. */\n.wc-project-item.is-loop{container-type:size;background:#111}\n.wc-project-item.is-loop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-project-item.is-loop iframe{inset:auto;left:50%;top:50%;width:max(100cqw,calc(100cqh * var(--ar,1.7778)));height:calc(max(100cqh,calc(100cqw / var(--ar,1.7778))) + 2 * var(--wc-loop-crop));translate:-50% -50%;pointer-events:none;opacity:0;transition:opacity .4s linear}\n/* The player is taller than the video by a band top and bottom, so the video sits letterboxed in the middle and the\n   player's own title bar / logo land in those bands, outside the slot (clipped). */\n.wc-project-item.is-loop{--wc-loop-crop:calc(64px + 3cqw)}\n.wc-project-item.is-loop iframe.is-on{opacity:1}\n.wc-project-media{will-change:opacity,translate}\n.wc-project-info{will-change:opacity}\n@media (max-width:700px){\n  .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}\n  .wc-project-info{position:static;grid-row:1;margin-bottom:24px}\n  .wc-project-media{grid-column:1;grid-row:2}\n  .wc-project-item,.wc-project-item:nth-child(n){width:100%}\n}\n", qm = 12, Jm = !1, Ym = (e) => String(e ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"), Xm = (e) => decodeURIComponent(String(e).split(/[?#]/)[0].split("/").pop() || "").replace(/^[0-9a-f]{24}_/, "").replace(/(-p-\d+)?\.[a-z0-9]+$/i, "").replace(/-(sm|md|lg|poster)$/, ""), Zm = (e) => {
 	let t = e.hash ? [`h:${e.hash}`] : [];
 	e.embed && t.push(`e:${e.embed.provider}:${e.embed.id}`);
 	let n = [];
@@ -13464,7 +13516,7 @@ var Wm = {
 		e.video
 	]) {
 		if (!r) continue;
-		n.push(`n:${Ym(r)}`);
+		n.push(`n:${Xm(r)}`);
 		let e = String(r).match(/\/([0-9a-f]{24})_/i);
 		e && t.push(`a:${e[1]}`);
 	}
@@ -13472,30 +13524,35 @@ var Wm = {
 		strong: t,
 		weak: n
 	};
-}, Zm = (e, t) => e.strong.some((e) => t.strong.includes(e)) || (!e.strong.length || !t.strong.length) && e.weak.some((e) => t.weak.includes(e));
-function Qm(e, t) {
+}, Qm = (e, t) => e.strong.some((e) => t.strong.includes(e)) || (!e.strong.length || !t.strong.length) && e.weak.some((e) => t.weak.includes(e));
+function $m(e, t) {
 	let n = document.createElement("iframe");
 	return n.src = e, n.title = t, n.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media", n.allowFullscreen = !0, n.referrerPolicy = "strict-origin-when-cross-origin", n;
 }
-function $m(e, t) {
+function eh(e, t) {
 	let n = e.src && e.src !== e.embed.thumb, r = e.embed.aspect || 16 / 9, i = n && e.aspect ? e.aspect.toFixed(4) : r.toFixed(4), a = `${t} — video`;
 	if (e.embed.autoplay) {
-		let t = e.src ? `<img src="${Jm(e.src)}"${n && e.srcset ? ` srcset="${Jm(e.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="" ${e.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}${n ? "" : " data-no-fit"}>` : "", o = `<iframe data-src="${Jm(e.embed.loopSrc)}" data-provider="${e.embed.provider}" title="${Jm(a)}" tabindex="-1" allow="autoplay; encrypted-media; picture-in-picture"></iframe>`;
+		let t = e.src ? `<img src="${Ym(e.src)}"${n && e.srcset ? ` srcset="${Ym(e.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="" ${e.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}${n ? "" : " data-no-fit"}>` : "", o = `<iframe data-src="${Ym(e.embed.loopSrc)}" data-provider="${e.embed.provider}" title="${Ym(a)}" tabindex="-1" allow="autoplay; encrypted-media; picture-in-picture"></iframe>`;
 		return `<li class="wc-project-item is-embed is-loop${e.hero ? " is-hero" : ""}" style="aspect-ratio:${i};--ar:${r.toFixed(4)}">${t}${o}</li>`;
 	}
-	let o = e.src ? `<button type="button" class="wc-embed" data-src="${Jm(um(e.embed))}" data-title="${Jm(a)}" aria-label="Play video: ${Jm(t)}"><img src="${Jm(e.src)}"${n && e.srcset ? ` srcset="${Jm(e.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="" ${e.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}${n ? "" : " data-no-fit"}><span class="wc-embed-play" aria-hidden="true"></span></button>` : Qm(e.embed.src, a).outerHTML.replace("<iframe", "<iframe loading=\"lazy\"");
+	let o = e.src ? `<button type="button" class="wc-embed" data-src="${Ym(um(e.embed))}" data-title="${Ym(a)}" aria-label="Play video: ${Ym(t)}"><img src="${Ym(e.src)}"${n && e.srcset ? ` srcset="${Ym(e.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="" ${e.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}${n ? "" : " data-no-fit"}><span class="wc-embed-play" aria-hidden="true"></span></button>` : $m(e.embed.src, a).outerHTML.replace("<iframe", "<iframe loading=\"lazy\"");
 	return `<li class="wc-project-item is-embed${e.hero ? " is-hero" : ""}" style="aspect-ratio:${i}">${o}</li>`;
 }
-var eh = class {
+var th = class {
 	constructor(e, { onEnd: t } = {}) {
-		if (!qm) {
-			qm = !0;
+		if (!Jm) {
+			Jm = !0;
 			let e = document.createElement("style");
-			e.textContent = Gm, document.head.appendChild(e);
+			e.textContent = Km, document.head.appendChild(e);
 		}
-		this.el = document.createElement("div"), this.el.className = "wc-project", this.el.dataset.wcNoInput = "", this.el.setAttribute("aria-hidden", "true"), this.el.innerHTML = "<div class=\"wc-project-scroll\" tabindex=\"-1\"></div>", this.scroll = this.el.firstElementChild, e.prepend(this.el), this.onEnd = t, this.resetPull(), this.scroll.addEventListener("wheel", (e) => this.onWheel(e), { passive: !0 }), this.scroll.addEventListener("touchstart", (e) => this.onTouchStart(e), { passive: !0 }), this.scroll.addEventListener("touchmove", (e) => this.onTouchMove(e), { passive: !0 }), this.scroll.addEventListener("click", (e) => {
+		this.el = document.createElement("div"), this.el.className = "wc-project", this.el.dataset.wcNoInput = "", this.el.setAttribute("aria-hidden", "true"), this.el.innerHTML = "<div class=\"wc-project-scroll\" tabindex=\"-1\"></div>", this.scroll = this.el.firstElementChild, e.prepend(this.el), this.onEnd = t, this.puller = new Gm({
+			input: this.scroll,
+			enabled: () => !!this.scroll.firstElementChild,
+			draw: (e) => this.drawPull(e),
+			onEnd: () => this.onEnd?.()
+		}), this.scroll.addEventListener("click", (e) => {
 			let t = e.target.closest(".wc-embed");
-			t && t.replaceWith(Qm(t.dataset.src, t.dataset.title));
+			t && t.replaceWith($m(t.dataset.src, t.dataset.title));
 		}), this.io = new IntersectionObserver((e) => e.forEach((e) => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), {
 			root: this.scroll,
 			threshold: .25
@@ -13526,22 +13583,22 @@ var eh = class {
 			alt: e.title,
 			hero: !0
 		});
-		let i = r.map(Xm);
+		let i = r.map(Zm);
 		for (let t of e.gallery ?? []) {
-			let e = Xm(t);
-			i.some((t) => Zm(t, e)) || (i.push(e), r.push(t));
+			let e = Zm(t);
+			i.some((t) => Qm(t, e)) || (i.push(e), r.push(t));
 		}
 		let a = (e.services || "").split(/\s*(?:,|→|\n)\s*/).map((e) => e.trim()).filter(Boolean);
 		this.scroll.innerHTML = `
       <div class="wc-project-info">
-        <h2 class="wc-project-title">${Jm(e.title)}</h2>
-        ${e.description ? `<p class="wc-project-desc">${Jm(e.description)}</p>` : ""}
-        ${a.length ? `<ul class="wc-project-services">${a.map((e) => `<li>${Jm(e)}</li>`).join("")}</ul>` : ""}
+        <h2 class="wc-project-title">${Ym(e.title)}</h2>
+        ${e.description ? `<p class="wc-project-desc">${Ym(e.description)}</p>` : ""}
+        ${a.length ? `<ul class="wc-project-services">${a.map((e) => `<li>${Ym(e)}</li>`).join("")}</ul>` : ""}
       </div>
-      <ul class="wc-project-media" aria-label="${Jm(e.title)} images">
+      <ul class="wc-project-media" aria-label="${Ym(e.title)} images">
         ${r.map((t) => {
-			if (t.type === "embed" && t.embed) return $m(t, e.title);
-			let n = ` style="aspect-ratio:${t.aspect ? t.aspect.toFixed(4) : "1.5"}"`, r = `<img crossorigin="anonymous" src="${Jm(t.src)}"${t.srcset ? ` srcset="${Jm(t.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="${Jm(t.alt)}" ${t.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}>`, i = t.type === "video" && t.video ? `<video src="${Jm(t.video)}" crossorigin="anonymous" muted loop playsinline preload="metadata"></video>` : "";
+			if (t.type === "embed" && t.embed) return eh(t, e.title);
+			let n = ` style="aspect-ratio:${t.aspect ? t.aspect.toFixed(4) : "1.5"}"`, r = `<img crossorigin="anonymous" src="${Ym(t.src)}"${t.srcset ? ` srcset="${Ym(t.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="${Ym(t.alt)}" ${t.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}>`, i = t.type === "video" && t.video ? `<video src="${Ym(t.video)}" crossorigin="anonymous" muted loop playsinline preload="metadata"></video>` : "";
 			return `<li class="wc-project-item${t.hero ? " is-hero" : ""}"${n}>${r}${i}</li>`;
 		}).join("")}
       </ul>`, this.resetPull(), this.scroll.scrollTop = 0, this.el.querySelectorAll(".wc-project-item img").forEach((e) => {
@@ -13556,45 +13613,15 @@ var eh = class {
 	layoutInfo() {
 		let e = this.el.querySelector(".wc-project-info");
 		if (!e) return;
-		let t = parseFloat(getComputedStyle(this.scroll).paddingTop) || 0, n = this.el.clientHeight - Km - e.offsetHeight - t;
+		let t = parseFloat(getComputedStyle(this.scroll).paddingTop) || 0, n = this.el.clientHeight - qm - e.offsetHeight - t;
 		this.el.style.setProperty("--wc-info-top", `${Math.max(0, n)}px`);
 	}
-	atEnd() {
-		let e = this.scroll;
-		return e.scrollTop >= e.scrollHeight - e.clientHeight - 1;
-	}
-	onWheel(e) {
-		if (this.ended || !this.scroll.firstElementChild) return;
-		let t = performance.now(), n = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? this.scroll.clientHeight : 1), r = this.atEnd();
-		t - this.lastInput > Wm.gatePause * 1e3 && (this.gestureAtEnd = r), this.endSince = r ? this.endSince || t : 0, this.lastInput = t;
-		let i = t - this.endSince >= Wm.holdAtEnd * 1e3;
-		n < 0 ? this.pull = 0 : r && (this.gestureAtEnd || i) && this.addPull(n), this.kick();
-	}
-	onTouchStart(e) {
-		this.touchY = e.touches[0].clientY, this.gestureAtEnd = this.atEnd(), this.lastInput = performance.now();
-	}
-	onTouchMove(e) {
-		if (this.ended) return;
-		let t = e.touches[0].clientY, n = this.touchY - t;
-		this.touchY = t, this.lastInput = performance.now(), n < 0 ? this.pull = 0 : this.gestureAtEnd && this.atEnd() && this.addPull(n * 1.5), this.kick();
-	}
-	addPull(e) {
-		this.pull = Math.min(1, this.pull + e / (Wm.pullDistance * this.scroll.clientHeight)), this.pull >= 1 && !this.ended && (this.ended = !0, this.onEnd?.());
-	}
-	kick() {
-		this.raf || (this.raf = requestAnimationFrame((e) => this.frame(e)));
-	}
-	frame(e) {
-		this.raf = 0;
-		let t = Wm, n = this.lastFrame ? Math.min(.05, (e - this.lastFrame) / 1e3) : 1 / 60;
-		this.lastFrame = e, !this.ended && performance.now() - this.lastInput > t.settle * 1e3 && (this.pull = 0), this.shown += (this.pull - this.shown) * (1 - Math.exp(-n * t.smoothing)), Math.abs(this.pull - this.shown) < .002 && (this.shown = this.pull), this.drawPull(), this.shown !== this.pull || this.pull > 0 && !this.ended ? this.kick() : this.lastFrame = 0;
-	}
-	drawPull() {
-		let e = Wm, t = this.shown, n = this.scroll.querySelector(".wc-project-media"), r = this.scroll.querySelector(".wc-project-info"), i = t > 0 ? String(1 - Math.min(1, Math.max(0, (t - e.fadeFrom) / (1 - e.fadeFrom)))) : "";
-		n && (n.style.opacity = i, n.style.translate = t > 0 ? `0 ${(-e.lift * (1 - (1 - t) ** 2)).toFixed(2)}px` : ""), r && (r.style.opacity = i);
+	drawPull({ opacity: e, lift: t }) {
+		let n = this.scroll.querySelector(".wc-project-media"), r = this.scroll.querySelector(".wc-project-info"), i = e == null ? "" : String(e);
+		n && (n.style.opacity = i, n.style.translate = t ? `0 ${t.toFixed(2)}px` : ""), r && (r.style.opacity = i);
 	}
 	resetPull() {
-		cancelAnimationFrame(this.raf), this.raf = 0, this.lastFrame = 0, this.pull = 0, this.shown = 0, this.lastInput = 0, this.gestureAtEnd = !1, this.endSince = 0, this.ended = !1;
+		this.puller?.reset();
 	}
 	heroRect() {
 		let e = this.el.querySelector(".wc-project-item.is-hero");
@@ -13629,16 +13656,16 @@ var eh = class {
 	destroy() {
 		this.clear(), this.io.disconnect(), this.loopIO.disconnect(), window.removeEventListener("message", this._onMessage), this.el.remove();
 	}
-}, th = "\n/* Full visible screen: svh leaves out the mobile browser toolbars (100vh would slide under them). */\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);height:100vh;isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n.wc-root.is-hovering-tile{cursor:pointer}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear;touch-action:none} /* swipes in any direction drive the layouts */\n.wc-root.is-ready .wc-canvas{opacity:1}\n.wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,400);color:#f2f2f2}\n/* Above everything else (about, project view, caption) so it always blends with what's behind it and stays\n   tappable when project images scroll under it; its own layer keeps Safari blending it against the page. */\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;z-index:2;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference;will-change:transform}\n.wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px);padding:0;border:0;background:none;pointer-events:auto;cursor:pointer}\n.wc-icon:focus-visible{outline:1px solid #f2f2f2;outline-offset:3px}\n.wc-icon img{display:block;width:100%;height:100%;pointer-events:none}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}\n.wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}\n/* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */\n.wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden}\n.wc-arrow-track{position:absolute;left:0;top:0;width:17px;height:17px}\n.wc-arrow-glyph{position:absolute;left:0;top:0;width:17px;height:17px;line-height:17px;text-align:center;transform:rotate(90deg)}\n.wc-arrow-glyph.is-next{top:-17px}\n.wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}\n.wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}\n/* About (Figma frame 49): bottom-anchored statement + client columns. */\n.wc-about{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;max-height:calc(100% - 44px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}\n.wc-root.is-about .wc-about{opacity:1;visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}\n.wc-about .wc-w{display:inline-block}\n.wc-about-statement{margin:0 0 clamp(24px,8vh,64px);max-width:22.84em;font-size:clamp(22px,min(3.75vw,6.2vh),48px);line-height:1.25;letter-spacing:.02em;font-weight:500}\n.wc-about-statement img{display:inline-block;width:.72em;height:.72em;margin-left:.3em;vertical-align:baseline} /* Cassette cap height: sits on the baseline, tops out with the capitals */\n.wc-about-clients{display:flex;justify-content:space-between;gap:16px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:400;font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}\n.wc-about-clients ul{list-style:none;margin:0;padding:0;flex:0 1 155px;min-width:0}\n.wc-about-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;line-height:1;font-weight:400}\n.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:400;letter-spacing:.02em}\n.wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}\n/* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */\n.wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}\n.wc-link-track{position:absolute;inset:0}\n.wc-link-track>span{position:absolute;left:0;top:0;width:1em;line-height:1em;text-align:center}\n.wc-link-track>span.is-next{left:-1em}\n.wc-about-links a:focus-visible{outline:1px solid currentColor;outline-offset:3px}\n.wc-about-copy{margin:0;font-size:16px}\n.wc-caption{position:absolute;left:0;top:0;font-size:12px;font-weight:400;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .4s linear;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 12px;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n/* Paragraphs avoid orphans and ragged endings; headings get evenly balanced lines. */\n.wc-ui p{text-wrap:pretty}\n.wc-ui h1,.wc-ui h2,.wc-ui h3{text-wrap:balance}\n.wc-seo{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@supports (height:100svh){.wc-root{height:100svh}}\n.wc-about::-webkit-scrollbar{display:none}\n@media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:32px}.wc-about-clients{flex-wrap:wrap;justify-content:flex-start;row-gap:14px}.wc-about-clients ul{flex:0 0 calc(50% - 8px)}.wc-about-footer{margin-top:4px}}\n", nh = !1;
-function rh() {
-	if (nh) return;
-	nh = !0;
+}, nh = "\n/* Full visible screen: svh leaves out the mobile browser toolbars (100vh would slide under them). */\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);height:100vh;isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n.wc-root.is-hovering-tile{cursor:pointer}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear;touch-action:none} /* swipes in any direction drive the layouts */\n.wc-root.is-ready .wc-canvas{opacity:1}\n.wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,400);color:#f2f2f2}\n/* Above everything else (about, project view, caption) so it always blends with what's behind it and stays\n   tappable when project images scroll under it; its own layer keeps Safari blending it against the page. */\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;z-index:2;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference;will-change:transform}\n.wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px);padding:0;border:0;background:none;pointer-events:auto;cursor:pointer}\n.wc-icon:focus-visible{outline:1px solid #f2f2f2;outline-offset:3px}\n.wc-icon img{display:block;width:100%;height:100%;pointer-events:none}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}\n.wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}\n/* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */\n.wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden}\n.wc-arrow-track{position:absolute;left:0;top:0;width:17px;height:17px}\n.wc-arrow-glyph{position:absolute;left:0;top:0;width:17px;height:17px;line-height:17px;text-align:center;transform:rotate(90deg)}\n.wc-arrow-glyph.is-next{top:-17px}\n.wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}\n.wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}\n/* About (Figma frame 49): bottom-anchored statement + client columns. */\n.wc-about{position:absolute;left:0;right:0;bottom:0;translate:0 var(--wc-pull-lift,0px);box-sizing:border-box;max-height:calc(100% - 44px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}\n.wc-root.is-about .wc-about{opacity:var(--wc-pull-fade,1);visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}\n.wc-about .wc-w{display:inline-block}\n.wc-about-statement{margin:0 0 clamp(24px,8vh,64px);max-width:22.84em;font-size:clamp(22px,min(3.75vw,6.2vh),48px);line-height:1.25;letter-spacing:.02em;font-weight:500}\n.wc-about-statement img{display:inline-block;width:.72em;height:.72em;margin-left:.3em;vertical-align:baseline} /* Cassette cap height: sits on the baseline, tops out with the capitals */\n.wc-about-clients{display:flex;justify-content:space-between;gap:16px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:400;font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}\n.wc-about-clients ul{list-style:none;margin:0;padding:0;flex:0 1 155px;min-width:0}\n.wc-about-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;line-height:1;font-weight:400}\n.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:400;letter-spacing:.02em}\n.wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}\n/* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */\n.wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}\n.wc-link-track{position:absolute;inset:0}\n.wc-link-track>span{position:absolute;left:0;top:0;width:1em;line-height:1em;text-align:center}\n.wc-link-track>span.is-next{left:-1em}\n.wc-about-links a:focus-visible{outline:1px solid currentColor;outline-offset:3px}\n.wc-about-copy{margin:0;font-size:16px}\n.wc-caption{position:absolute;left:0;top:0;font-size:12px;font-weight:400;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .4s linear;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 12px;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n/* Paragraphs avoid orphans and ragged endings; headings get evenly balanced lines. */\n.wc-ui p{text-wrap:pretty}\n.wc-ui h1,.wc-ui h2,.wc-ui h3{text-wrap:balance}\n.wc-seo{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@supports (height:100svh){.wc-root{height:100svh}}\n.wc-about::-webkit-scrollbar{display:none}\n@media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:32px}.wc-about-clients{flex-wrap:wrap;justify-content:flex-start;row-gap:14px}.wc-about-clients ul{flex:0 0 calc(50% - 8px)}.wc-about-footer{margin-top:4px}}\n", rh = !1;
+function ih() {
+	if (rh) return;
+	rh = !0;
 	let e = document.createElement("style");
-	e.dataset.workCanvas = "", e.textContent = th, document.head.appendChild(e);
+	e.dataset.workCanvas = "", e.textContent = nh, document.head.appendChild(e);
 }
-var ih = class {
+var ah = class {
 	constructor(e, { layouts: t, current: n, onAbout: r, onHome: i, tagline: a, hint: o, aboutHref: s = "/about" }) {
-		rh(), this.mount = e, this.layouts = t;
+		ih(), this.mount = e, this.layouts = t;
 		let c = `wc-about-${Math.random().toString(36).slice(2, 8)}`;
 		this.root = document.createElement("div"), this.root.className = "wc-ui", this.root.innerHTML = `
       <div class="wc-topbar">
@@ -13651,7 +13678,15 @@ var ih = class {
       <div class="wc-caption" aria-hidden="true"><span class="wc-caption-inner"></span></div>
       <section class="wc-about" id="${c}" aria-label="About" data-wc-no-input>${Um()}</section>
       ${o ? `<div class="wc-hint" aria-hidden="true">${o}</div>` : ""}
-    `, this.caption = this.root.querySelector(".wc-caption"), this.captionInner = this.root.querySelector(".wc-caption-inner"), this.icon = this.root.querySelector(".wc-icon"), this.tagline = this.root.querySelector(".wc-tagline"), this.about = this.root.querySelector(".wc-about"), ah(this.about.querySelector(".wc-about-statement")), this.about.querySelectorAll(".wc-about-links a").forEach((e) => {
+    `, this.caption = this.root.querySelector(".wc-caption"), this.captionInner = this.root.querySelector(".wc-caption-inner"), this.icon = this.root.querySelector(".wc-icon"), this.tagline = this.root.querySelector(".wc-tagline"), this.about = this.root.querySelector(".wc-about"), oh(this.about.querySelector(".wc-about-statement")), this.aboutOpen = !1, this.aboutPull = new Gm({
+			input: e,
+			scroller: this.about,
+			enabled: () => this.aboutOpen,
+			draw: ({ opacity: e, lift: t }) => {
+				this.about.style.setProperty("--wc-pull-fade", e == null ? "" : String(e)), this.about.style.setProperty("--wc-pull-lift", t ? `${t.toFixed(2)}px` : "");
+			},
+			onEnd: () => this.onAboutEnd?.()
+		}), this.about.querySelectorAll(".wc-about-links a").forEach((e) => {
 			let t = e.querySelector(".wc-link-track");
 			if (!t) return;
 			let n, r = () => {
@@ -13676,7 +13711,7 @@ var ih = class {
 				overwrite: !0
 			}));
 		};
-		this.icon.addEventListener("pointerenter", l), this.icon.addEventListener("focus", l), this.tagline.addEventListener("pointerenter", () => this.loopArrow()), this.tagline.addEventListener("focus", () => this.loopArrow()), this.setActive(n), e.appendChild(this.root), this.project = new eh(this.root, {}), this.captionState = {
+		this.icon.addEventListener("pointerenter", l), this.icon.addEventListener("focus", l), this.tagline.addEventListener("pointerenter", () => this.loopArrow()), this.tagline.addEventListener("focus", () => this.loopArrow()), this.setActive(n), e.appendChild(this.root), this.project = new th(this.root, {}), this.captionState = {
 			target: null,
 			shown: null
 		};
@@ -13692,7 +13727,7 @@ var ih = class {
 		});
 	}
 	setAbout(e) {
-		this.flipArrow(e), this.tagline.setAttribute("aria-expanded", String(e)), this.about.setAttribute("aria-hidden", String(!e));
+		this.aboutOpen = e, this.aboutPull.reset(), this.flipArrow(e), this.tagline.setAttribute("aria-expanded", String(e)), this.about.setAttribute("aria-hidden", String(!e));
 		let t = this.about.querySelectorAll(".wc-about-statement .wc-w"), n = this.about.querySelectorAll(".wc-about-clients ul"), r = this.about.querySelector(".wc-about-footer");
 		if (this.aboutTl?.kill(), !e) return;
 		let i = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -13783,7 +13818,7 @@ var ih = class {
 		this.project?.destroy(), this.root.remove(), this.fallback?.remove();
 	}
 };
-function ah(e) {
+function oh(e) {
 	if (!e) return;
 	let t = (e) => {
 		for (let n of [...e.childNodes]) if (n.nodeType === Node.TEXT_NODE) {
@@ -13801,13 +13836,13 @@ function ah(e) {
 	};
 	t(e);
 }
-function oh(e) {
+function sh(e) {
 	for (let { el: t } of e) (t.matches("a[href]") || t.querySelector("a[href]")) && (t.closest("[data-work-list]") ?? t).classList.add("wc-sr");
 }
 //#endregion
 //#region src/core/shaders.js
-var sh = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }\n", ch = "\n  uniform sampler2D uTex;\n  uniform float uTexReady;  // 0 → placeholder colour, 1 → texture (tweened for a fade-in)\n  uniform vec2 uTexSize;    // texture px (only the ratio matters)\n  uniform vec2 uSize;       // tile CSS px\n  uniform float uRadius;    // corner radius, CSS px\n  uniform float uDpr;\n  uniform vec3 uBase;       // placeholder colour\n\n  uniform float uZoom;      // extra texture zoom (0 = cover)\n  uniform float uGray;      // 0..1 desaturation\n  uniform float uAlpha;\n  uniform float uReveal;    // 0..1 wipe from the bottom\n\n  varying vec2 vUv;\n\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n\n  void main() {\n    vec2 uv = vUv;\n\n    // object-fit: cover (+ optional zoom around the centre)\n    float planeA = uSize.x / max(uSize.y, 1.0);\n    float texA = uTexSize.x / max(uTexSize.y, 1.0);\n    vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);\n    vec2 tuv = (uv - 0.5) * cover / (1.0 + uZoom) + 0.5;\n\n    vec3 col = mix(uBase, texture2D(uTex, tuv).rgb, uTexReady);\n    col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);\n\n    // rounded corners, ~1 device px of antialiasing\n    float d = sdRoundBox((uv - 0.5) * uSize, uSize * 0.5, uRadius);\n    float aa = 0.75 / uDpr;\n    float mask = 1.0 - smoothstep(-aa, aa, d);\n\n    // reveal wipe (uv.y = 0 at the bottom edge)\n    float reveal = uReveal >= 1.0 ? 1.0 : step(uv.y, uReveal);\n\n    gl_FragColor = vec4(col, uAlpha * mask * reveal);\n  }\n", lh = (e) => e ? new URL(e, location.href).href : void 0;
-function uh(e, t) {
+var ch = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }\n", lh = "\n  uniform sampler2D uTex;\n  uniform float uTexReady;  // 0 → placeholder colour, 1 → texture (tweened for a fade-in)\n  uniform vec2 uTexSize;    // texture px (only the ratio matters)\n  uniform vec2 uSize;       // tile CSS px\n  uniform float uRadius;    // corner radius, CSS px\n  uniform float uDpr;\n  uniform vec3 uBase;       // placeholder colour\n\n  uniform float uZoom;      // extra texture zoom (0 = cover)\n  uniform float uGray;      // 0..1 desaturation\n  uniform float uAlpha;\n  uniform float uReveal;    // 0..1 wipe from the bottom\n\n  varying vec2 vUv;\n\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n\n  void main() {\n    vec2 uv = vUv;\n\n    // object-fit: cover (+ optional zoom around the centre)\n    float planeA = uSize.x / max(uSize.y, 1.0);\n    float texA = uTexSize.x / max(uTexSize.y, 1.0);\n    vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);\n    vec2 tuv = (uv - 0.5) * cover / (1.0 + uZoom) + 0.5;\n\n    vec3 col = mix(uBase, texture2D(uTex, tuv).rgb, uTexReady);\n    col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);\n\n    // rounded corners, ~1 device px of antialiasing\n    float d = sdRoundBox((uv - 0.5) * uSize, uSize * 0.5, uRadius);\n    float aa = 0.75 / uDpr;\n    float mask = 1.0 - smoothstep(-aa, aa, d);\n\n    // reveal wipe (uv.y = 0 at the bottom edge)\n    float reveal = uReveal >= 1.0 ? 1.0 : step(uv.y, uReveal);\n\n    gl_FragColor = vec4(col, uAlpha * mask * reveal);\n  }\n", uh = (e) => e ? new URL(e, location.href).href : void 0;
+function dh(e, t) {
 	let n = document.createElement("nav");
 	n.className = "wc-sr", n.setAttribute("aria-label", "Projects");
 	let r = document.createElement("ul"), i = e.map((e) => {
@@ -13822,54 +13857,54 @@ function uh(e, t) {
 		links: i
 	};
 }
-function dh(e, t, n) {
+function fh(e, t, n) {
 	let r = (e.services || "").split(/\s*(?:,|→|\n)\s*/).filter(Boolean);
 	return {
 		"@type": "CreativeWork",
 		name: e.title,
 		url: t,
 		description: e.description || void 0,
-		image: n.filter(Boolean).map(lh),
+		image: n.filter(Boolean).map(uh),
 		keywords: r.length ? r.join(", ") : void 0,
 		creator: {
 			"@type": "Person",
 			name: "Zachary Allott",
-			url: lh("/")
+			url: uh("/")
 		}
 	};
 }
-function fh(e) {
+function ph(e) {
 	let t = document.head.querySelector("script[data-wc-seo]");
 	t || (t = document.createElement("script"), t.type = "application/ld+json", t.dataset.wcSeo = "", document.head.appendChild(t)), t.textContent = JSON.stringify({
 		"@context": "https://schema.org",
 		...e
 	});
 }
-function ph(e, t, n) {
-	fh({
+function mh(e, t, n) {
+	ph({
 		"@type": "ItemList",
 		name: "Selected work",
 		itemListElement: e.map((e, r) => ({
 			"@type": "ListItem",
 			position: r + 1,
-			url: lh(t(e.slug)),
-			item: dh(e, lh(t(e.slug)), [n(e)])
+			url: uh(t(e.slug)),
+			item: fh(e, uh(t(e.slug)), [n(e)])
 		}))
 	});
 }
-function mh(e, t, n) {
-	fh(dh(e, lh(t), n));
+function hh(e, t, n) {
+	ph(fh(e, uh(t), n));
 }
 //#endregion
 //#region src/core/engine.js
-function hh(e) {
+function gh(e) {
 	return new Promise((t) => {
 		if (!e) return t();
 		let n = new Image();
 		n.crossOrigin = "anonymous", n.onload = n.onerror = () => t(), n.src = e;
 	});
 }
-var gh = class {
+var _h = class {
 	constructor(e, t = {}) {
 		this.mount = e, this.options = {
 			...Mp,
@@ -13884,9 +13919,9 @@ var gh = class {
 	async init() {
 		let { mount: e } = this;
 		if (e.classList.add("wc-root"), this.items = xm(e), !this.items.length) return console.warn("[work-canvas] no .work-item elements found — nothing to render."), this;
-		await wm(this.items), oh(this.items), this.projectPage = !!this.pathSlug() && new Set(this.items.map((e) => e.slug)).size === 1, this._homeTitle = this.isHomePath() ? document.title : this.options.homeTitle;
+		await wm(this.items), sh(this.items), this.projectPage = !!this.pathSlug() && new Set(this.items.map((e) => e.slug)).size === 1, this._homeTitle = this.isHomePath() ? document.title : this.options.homeTitle;
 		let t = this.layoutDefs.map((e) => e.key), n = t.includes(this.options.layout) ? this.options.layout : t[0];
-		this.options.rotate && (n = bh(t) ?? n), this.ui = new ih(e, {
+		this.options.rotate && (n = xh(t) ?? n), this.ui = new ah(e, {
 			layouts: this.layoutDefs,
 			current: n,
 			aboutHref: this.options.aboutPath,
@@ -13894,7 +13929,7 @@ var gh = class {
 			onHome: () => this.canCycle ? this.nextLayout() : this.projectOpen ? this.closeProject() : this.toggleAbout(!1),
 			tagline: this.options.tagline,
 			hint: this.options.hint
-		}), this.ui.setAbout(!1), this.ui.project.onEnd = () => this.closeProject(), this._onKey = (e) => {
+		}), this.ui.setAbout(!1), this.ui.project.onEnd = () => this.closeProject(), this.ui.onAboutEnd = () => this.toggleAbout(!1), this._onKey = (e) => {
 			e.key === "Escape" && (this.projectOpen ? this.closeProject() : this.aboutOpen && this.toggleAbout(!1));
 		}, document.addEventListener("keydown", this._onKey);
 		try {
@@ -13939,11 +13974,11 @@ var gh = class {
 		let e = [...new Map(this.mediaItems.filter((e) => e.caseStudy && e.slug).map((e) => [e.slug, e])).values()];
 		if (this.projectPage) {
 			let t = e[0];
-			t && mh(t.project, location.href, [t.poster, ...(t.project.gallery ?? []).map((e) => e.src)]);
+			t && hh(t.project, location.href, [t.poster, ...(t.project.gallery ?? []).map((e) => e.src)]);
 			return;
 		}
 		if (!e.length) return;
-		let { nav: t, links: n } = uh(e.map((e) => e.project), (e) => this.projectUrl(e));
+		let { nav: t, links: n } = dh(e.map((e) => e.project), (e) => this.projectUrl(e));
 		n.forEach(({ a: t }, n) => {
 			let r = e[n];
 			t.addEventListener("focus", () => {
@@ -13954,7 +13989,7 @@ var gh = class {
 				let t = this.layout?.tileForItem(r);
 				t?.onScreen ? this.openProject(t) : this.openProjectBySlug(r.slug, { push: !0 });
 			});
-		}), this.mount.appendChild(t), this.seoNav = t, ph(e.map((e) => e.project), (e) => this.projectUrl(e), (t) => e.find((e) => e.project === t)?.poster);
+		}), this.mount.appendChild(t), this.seoNav = t, mh(e.map((e) => e.project), (e) => this.projectUrl(e), (t) => e.find((e) => e.project === t)?.poster);
 	}
 	createRenderer() {
 		let e = new jp({
@@ -13970,8 +14005,8 @@ var gh = class {
 			226,
 			255
 		]), 1, 1), this.emptyTexture.needsUpdate = !0, this.baseMaterial = new ml({
-			vertexShader: sh,
-			fragmentShader: ch,
+			vertexShader: ch,
+			fragmentShader: lh,
 			transparent: !0,
 			depthTest: !1,
 			depthWrite: !1,
@@ -14024,7 +14059,7 @@ var gh = class {
 		if (t || (this.aboutOpen && this.toggleAbout(!1), this.projectOpen && this.closeProject({ cycle: !1 })), this.switching || e === this.layoutKey || !this.renderer) return;
 		let r = this.layoutDefs.find((t) => t.key === e);
 		if (r) {
-			if (this.switching = !0, this.ui?.setActive(e), xh(e), this.options.syncUrl) {
+			if (this.switching = !0, this.ui?.setActive(e), Sh(e), this.options.syncUrl) {
 				let t = new URL(location.href);
 				t.searchParams.set("v", e), history.replaceState(history.state, "", t);
 			}
@@ -14109,7 +14144,7 @@ var gh = class {
 			aspect: r.aspect,
 			alt: i.title
 		};
-		await hh(o.bestSrc), this.projectOpen = !0, this.hovered = null, this.mount.classList.remove("is-hovering-tile"), a.render(i, o);
+		await gh(o.bestSrc), this.projectOpen = !0, this.hovered = null, this.mount.classList.remove("is-hovering-tile"), a.render(i, o);
 		let s = a.heroRect();
 		t && this.pushProjectState(i.slug);
 		let c = () => {
@@ -14222,29 +14257,29 @@ var gh = class {
 	destroy() {
 		this.stop(), mi.killTweensOf(this), this.resizeObserver?.disconnect(), this.intersection?.disconnect(), document.removeEventListener("visibilitychange", this._onVisibility), document.removeEventListener("keydown", this._onKey), clearTimeout(this._aboutTimer), window.removeEventListener("pageshow", this._onPageShow), window.removeEventListener("popstate", this._onPopState), this.seoNav?.remove(), clearTimeout(this._projectTimer), this._reducedQuery.removeEventListener?.("change", this._onReducedChange), this._focusHandlers?.forEach((e) => e()), this.input?.destroy(), this.layout?.dispose(), this.media?.dispose(), this.geometry?.dispose(), this.baseMaterial?.dispose(), this.emptyTexture?.dispose(), this.renderer && (this.renderer.dispose(), this.renderer.forceContextLoss(), this.renderer.domElement.remove()), this.ui?.destroy(), this.mount.classList.remove("wc-root", "is-ready", "is-fallback", "is-hovering-tile", "is-dragging");
 	}
-}, _h = "work-canvas:last-version", vh = /(?:^|;)wc-last=([^;]*)/;
-function yh() {
+}, vh = "work-canvas:last-version", yh = /(?:^|;)wc-last=([^;]*)/;
+function bh() {
 	try {
-		let e = localStorage.getItem(_h);
+		let e = localStorage.getItem(vh);
 		if (e) return e;
 	} catch {}
-	return vh.exec(window.name || "")?.[1] ?? null;
-}
-function bh(e) {
-	let t = e.indexOf(yh());
-	return t >= 0 ? e[(t + 1) % e.length] : null;
+	return yh.exec(window.name || "")?.[1] ?? null;
 }
 function xh(e) {
+	let t = e.indexOf(bh());
+	return t >= 0 ? e[(t + 1) % e.length] : null;
+}
+function Sh(e) {
 	try {
-		localStorage.setItem(_h, e);
+		localStorage.setItem(vh, e);
 	} catch {}
 	try {
-		window.name = `${(window.name || "").replace(new RegExp(vh.source, "g"), "")};wc-last=${e}`;
+		window.name = `${(window.name || "").replace(new RegExp(yh.source, "g"), "")};wc-last=${e}`;
 	} catch {}
 }
 //#endregion
 //#region src/core/tile.js
-var Sh = class {
+var Ch = class {
 	constructor(e, t, n = 0) {
 		this.engine = e, this.item = t, this.index = n, this.x = 0, this.y = 0, this.w = 100, this.h = 100, this.z = 0, this.rotation = 0, this.alpha = 1, this.reveal = 1, this.gray = 0, this.zoom = 0, this.priority = 0, this.interactive = !0, this.hover = 0, this.texReady = 0, this.onScreen = !1, this.override = null, this.material = e.baseMaterial.clone(), this.uniforms = this.material.uniforms, this.uniforms.uSize.value = new bo(100, 100), this.uniforms.uTexSize.value = t.texSize, this.mesh = new Gc(e.geometry, this.material), this.mesh.frustumCulled = !1, this.mesh.userData.tile = this, e.scene.add(this.mesh);
 	}
@@ -14271,36 +14306,36 @@ var Sh = class {
 };
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/typeof.js
-function Ch(e) {
+function wh(e) {
 	"@babel/helpers - typeof";
-	return Ch = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
+	return wh = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
 		return typeof e;
 	} : function(e) {
 		return e && typeof Symbol == "function" && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
-	}, Ch(e);
+	}, wh(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/toPrimitive.js
-function wh(e, t) {
-	if (Ch(e) != "object" || !e) return e;
+function Th(e, t) {
+	if (wh(e) != "object" || !e) return e;
 	var n = e[Symbol.toPrimitive];
 	if (n !== void 0) {
 		var r = n.call(e, t || "default");
-		if (Ch(r) != "object") return r;
+		if (wh(r) != "object") return r;
 		throw TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return (t === "string" ? String : Number)(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/toPropertyKey.js
-function Th(e) {
-	var t = wh(e, "string");
-	return Ch(t) == "symbol" ? t : t + "";
+function Eh(e) {
+	var t = Th(e, "string");
+	return wh(t) == "symbol" ? t : t + "";
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/defineProperty.js
-function Eh(e, t, n) {
-	return (t = Th(t)) in e ? Object.defineProperty(e, t, {
+function Dh(e, t, n) {
+	return (t = Eh(t)) in e ? Object.defineProperty(e, t, {
 		value: n,
 		enumerable: !0,
 		configurable: !0,
@@ -14309,7 +14344,7 @@ function Eh(e, t, n) {
 }
 //#endregion
 //#region src/core/layout.js
-var Dh = (e) => Math.min(1, Math.max(0, e)), Oh = class {
+var Oh = (e) => Math.min(1, Math.max(0, e)), kh = class {
 	constructor(e, t) {
 		this.engine = e, this.config = t, this.tiles = [], this.featured = null, this.progress = 0, this.introEase = mi.parseEase(t.easing ?? "none");
 	}
@@ -14323,7 +14358,7 @@ var Dh = (e) => Math.min(1, Math.max(0, e)), Oh = class {
 		return this.engine.reducedMotion;
 	}
 	makeTiles(e) {
-		return this.tiles = e.map((e, t) => new Sh(this.engine, e, t)), this.tiles;
+		return this.tiles = e.map((e, t) => new Ch(this.engine, e, t)), this.tiles;
 	}
 	repeatItems(e) {
 		let t = [];
@@ -14332,7 +14367,7 @@ var Dh = (e) => Math.min(1, Math.max(0, e)), Oh = class {
 	}
 	tileProgress(e) {
 		let t = this.leaving || this.reduced ? 0 : this.config.stagger ?? .3;
-		return this.introEase(Dh(this.progress * (1 + t) - e * t));
+		return this.introEase(Oh(this.progress * (1 + t) - e * t));
 	}
 	applyTransition(e, t) {
 		let n = this.tileProgress(t);
@@ -14372,7 +14407,7 @@ var Dh = (e) => Math.min(1, Math.max(0, e)), Oh = class {
 	}
 	centerScore(e) {
 		let t = (e.x + e.w / 2 - this.vp.width / 2) / this.vp.width, n = (e.y + e.h / 2 - this.vp.height / 2) / this.vp.height;
-		return Dh(1 - Math.hypot(t, n)) * .99 + .01;
+		return Oh(1 - Math.hypot(t, n)) * .99 + .01;
 	}
 	resize() {}
 	update() {}
@@ -14380,10 +14415,10 @@ var Dh = (e) => Math.min(1, Math.max(0, e)), Oh = class {
 		mi.killTweensOf(this), this.tiles.forEach((e) => e.dispose()), this.tiles = [];
 	}
 };
-Eh(Oh, "defaults", {});
+Dh(kh, "defaults", {});
 //#endregion
 //#region src/core/sizing.js
-function kh(e, t, n = 1) {
+function Ah(e, t, n = 1) {
 	let r = n * 2654435769, i = () => {
 		r = r + 1831565813 | 0;
 		let e = Math.imul(r ^ r >>> 15, 1 | r);
@@ -14398,7 +14433,7 @@ function kh(e, t, n = 1) {
 	}
 	return a;
 }
-function Ah(e, t, { minW: n, maxW: r, maxH: i }) {
+function jh(e, t, { minW: n, maxW: r, maxH: i }) {
 	let a = t, o = a * e;
 	return o > r && ([o, a] = [r, r / e]), o < n && ([o, a] = [n, n / e]), a > i && (a = i), {
 		w: o,
@@ -14407,7 +14442,7 @@ function Ah(e, t, { minW: n, maxW: r, maxH: i }) {
 }
 //#endregion
 //#region src/core/spring.js
-var jh = class {
+var Mh = class {
 	constructor(e = 6) {
 		this.omega = e, this.x = 0, this.v = 0, this.target = 0;
 	}
@@ -14419,7 +14454,7 @@ var jh = class {
 		for (let e = 0; e < n; e++) this.v += (t * t * (this.target - this.x) - 2 * t * this.v) * r, this.x += this.v * r;
 		return this.x;
 	}
-}, Mh = {
+}, Nh = {
 	heights: [
 		210,
 		280,
@@ -14460,18 +14495,18 @@ var jh = class {
 	enterDuration: .8,
 	leaveDuration: .25,
 	captionInset: [20, 12]
-}, Nh = class extends Oh {
+}, Ph = class extends kh {
 	constructor(e, t) {
-		super(e, t), this.offset = 0, this.target = 0, this.drift = -t.idleSpeed, this.velocity = 0, this.scrolled = new jh(t.scroll.omega);
+		super(e, t), this.offset = 0, this.target = 0, this.drift = -t.idleSpeed, this.velocity = 0, this.scrolled = new Mh(t.scroll.omega);
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.height / Np.height));
 		this.s = n, this.engine.scale = n, this.gapPx = t.gap, this.bottom = e.height - t.bottomInset;
 		let r = Math.min(t.maxWidth * n, e.width * t.mobileMaxWidth), i = Math.min(t.minWidth * n, r), a = Math.max(...t.heights) * n, o = Math.ceil((e.width + r * 3) / (i + this.gapPx)), s = Math.max(this.items.length, o);
 		s !== this.tiles.length && (this.tiles.forEach((e) => e.dispose()), this.makeTiles(this.repeatItems(s)));
-		let c = kh(this.tiles.length, t.heights.length, t.seed), l = 0;
+		let c = Ah(this.tiles.length, t.heights.length, t.seed), l = 0;
 		this.tiles.forEach((e, o) => {
-			let { w: s, h: u } = Ah(e.item.aspect, t.heights[c[o]] * n, {
+			let { w: s, h: u } = jh(e.item.aspect, t.heights[c[o]] * n, {
 				minW: i,
 				maxW: r,
 				maxH: a
@@ -14510,10 +14545,10 @@ var jh = class {
 		t && (this.target += this.vp.width / 2 - (t.x + t.w / 2));
 	}
 };
-Eh(Nh, "defaults", Mh), Eh(Nh, "label", "Filmstrip");
+Dh(Ph, "defaults", Nh), Dh(Ph, "label", "Filmstrip");
 //#endregion
 //#region src/layouts/deck.js
-var Ph = {
+var Fh = {
 	heights: [
 		220,
 		300,
@@ -14584,7 +14619,7 @@ var Ph = {
 	enterDuration: .7,
 	leaveDuration: .25,
 	captionInset: [16, 12]
-}, Fh = class extends Oh {
+}, Ih = class extends kh {
 	constructor(e, t) {
 		super(e, t), this.makeTiles(this.items);
 		let n = this.tiles.length;
@@ -14600,9 +14635,9 @@ var Ph = {
 		this.s = n, this.engine.scale = n;
 		let r = Math.min(t.maxWidth * n, e.width * t.mobileMaxWidth), i = Math.min(t.minWidth * n, r);
 		this.k = r / t.maxWidth;
-		let a = Math.max(...t.heights) * this.k, o = kh(this.tiles.length, t.heights.length, t.seed);
+		let a = Math.max(...t.heights) * this.k, o = Ah(this.tiles.length, t.heights.length, t.seed);
 		this.tiles.forEach((e, n) => {
-			let { w: s, h: c } = Ah(e.item.aspect, t.heights[o[n]] * this.k, {
+			let { w: s, h: c } = jh(e.item.aspect, t.heights[o[n]] * this.k, {
 				minW: i,
 				maxW: r,
 				maxH: a
@@ -14689,10 +14724,10 @@ var Ph = {
 		this.finishFade(), super.dispose();
 	}
 };
-Eh(Fh, "defaults", Ph), Eh(Fh, "label", "Deck");
+Dh(Ih, "defaults", Fh), Dh(Ih, "label", "Deck");
 //#endregion
 //#region src/layouts/masonry.js
-var Ih = {
+var Lh = {
 	columnWidth: 212,
 	gutter: 12,
 	gap: 12,
@@ -14745,7 +14780,7 @@ var Ih = {
 	leaveDuration: .25,
 	captionInset: [14, 13]
 };
-function Lh(e, t) {
+function Rh(e, t) {
 	let n = t * 2654435769, r = () => {
 		n = n + 1831565813 | 0;
 		let e = Math.imul(n ^ n >>> 15, 1 | n);
@@ -14757,9 +14792,9 @@ function Lh(e, t) {
 	}
 	return i;
 }
-var Rh = class extends Oh {
+var zh = class extends kh {
 	constructor(e, t) {
-		super(e, t), this.scroll = 0, this.scrollSprings = t.columnSpeeds.map((e) => new jh(t.scroll.omega * Math.sqrt(e))), this.slow = 1, this.shiftX = 0, this.shiftV = 0, this.columns = [];
+		super(e, t), this.scroll = 0, this.scrollSprings = t.columnSpeeds.map((e) => new Mh(t.scroll.omega * Math.sqrt(e))), this.slow = 1, this.shiftX = 0, this.shiftV = 0, this.columns = [];
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.width / Np.width));
@@ -14770,7 +14805,7 @@ var Rh = class extends Oh {
 			tiles: [],
 			length: 0,
 			has: /* @__PURE__ */ new Set()
-		})), l = this.items.length, u = new Map(Lh(this.items, 1).map((e, t) => [e, t])), d = new Map(this.items.map((e) => [e, 0])), f = (e, t) => {
+		})), l = this.items.length, u = new Map(Rh(this.items, 1).map((e, t) => [e, t])), d = new Map(this.items.map((e) => [e, 0])), f = (e, t) => {
 			let n = /* @__PURE__ */ new Set();
 			for (let r = -t; r <= t; r++) c[(e + r + i) % i].has.forEach((e) => n.add(e));
 			return n;
@@ -14830,30 +14865,30 @@ var Rh = class extends Oh {
 		for (let t of this.scrollSprings) t.push(e * this.config.scroll.multiplier);
 	}
 };
-Eh(Rh, "defaults", Ih), Eh(Rh, "label", "Masonry");
+Dh(zh, "defaults", Lh), Dh(zh, "label", "Masonry");
 //#endregion
 //#region src/main.js
-var zh = [
+var Bh = [
 	{
 		key: "a",
 		name: "Filmstrip",
-		Layout: Nh,
-		config: Mh
+		Layout: Ph,
+		config: Nh
 	},
 	{
 		key: "b",
 		name: "Deck",
-		Layout: Fh,
-		config: Ph
+		Layout: Ih,
+		config: Fh
 	},
 	{
 		key: "c",
 		name: "Masonry",
-		Layout: Rh,
-		config: Ih
+		Layout: zh,
+		config: Lh
 	}
 ];
-async function Bh(e, t = {}) {
+async function Vh(e, t = {}) {
 	if (e.__workCanvas) return e.__workCanvas;
 	let n = e.dataset, r = new URLSearchParams(location.search), i = r.get("v");
 	if (i && !(t.syncUrl ?? n.syncUrl === "true")) {
@@ -14861,7 +14896,7 @@ async function Bh(e, t = {}) {
 		let e = new URL(location.href);
 		e.search = r.toString(), history.replaceState(history.state, "", e);
 	}
-	let a = parseInt(t.maxVideos ?? n.maxVideos, 10), o = zh.map((e) => ({
+	let a = parseInt(t.maxVideos ?? n.maxVideos, 10), o = Bh.map((e) => ({
 		...e,
 		config: {
 			...e.config,
@@ -14869,7 +14904,7 @@ async function Bh(e, t = {}) {
 		}
 	}));
 	a && o.forEach((e) => e.config.maxVideos = a);
-	let s = new gh(e, {
+	let s = new _h(e, {
 		layouts: o,
 		layout: t.layout ?? i ?? n.layout ?? "a",
 		rotate: t.rotate ?? (!(t.layout ?? i) && n.rotate !== "false"),
@@ -14884,14 +14919,14 @@ async function Bh(e, t = {}) {
 	});
 	return e.__workCanvas = s, await s.init(), s;
 }
-function Vh() {
-	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Bh(e));
+function Hh() {
+	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Vh(e));
 }
 typeof window < "u" && (window.WorkCanvas = {
-	mount: Bh,
-	LAYOUTS: zh
-}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", Vh, { once: !0 }) : Vh());
+	mount: Vh,
+	LAYOUTS: Bh
+}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", Hh, { once: !0 }) : Hh());
 //#endregion
-export { zh as LAYOUTS, gh as WorkCanvas, Bh as mount };
+export { Bh as LAYOUTS, _h as WorkCanvas, Vh as mount };
 
 //# sourceMappingURL=work-canvas.js.map

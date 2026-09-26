@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 import { EASE } from './motion.js';
 import { autoplaySrc, commandLoop, listenLoop, isPlayingMessage } from './embed.js';
+import { Pull, PULL_CONFIG } from './pull.js';
 
 /**
  * Project view (Figma frame 50, node 1553:6590).
@@ -20,21 +21,10 @@ import { autoplaySrc, commandLoop, listenLoop, isPlayingMessage } from './embed.
  * (the info block only fades). Pull far enough and the page hands back to the
  * work; let go early and it settles back.
  *
- * The pull is driven by wheel/touch input and eased every frame rather than
- * tied to the scroll position, so it never fights the browser's own
- * (off-main-thread) scrolling — that's what made a scroll-linked version
- * jitter.
+ * The pull itself (shared with the about section) lives in pull.js.
  */
 
-export const PROJECT_CONFIG = {
-  pullDistance: 0.45, // × view height of scrolling past the end to go back to the work
-  gatePause: 0.15, // s without scroll input that makes the next scroll a new gesture (which can pull straight away)
-  holdAtEnd: 0.3, // s a continuing gesture holds at the end before it starts pulling, so a fling still stops there
-  fadeFrom: 0.15, // pull progress where the fade starts
-  lift: 72, // px the images rise over a full pull (they resist rather than follow)
-  settle: 0.7, // s without input before an unfinished pull eases back
-  smoothing: 10, // 1/s: how quickly what's drawn follows the input
-};
+export const PROJECT_CONFIG = PULL_CONFIG; // the pull at the end of the page: see pull.js
 
 const CSS = `
 .wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s linear,visibility 0s linear .35s}
@@ -167,10 +157,12 @@ export class ProjectView {
     this.scroll = this.el.firstElementChild;
     uiRoot.prepend(this.el); // before the top bar, so the top bar draws on top
     this.onEnd = onEnd; // called when the visitor pulls past the end of the page
-    this.resetPull();
-    this.scroll.addEventListener('wheel', (e) => this.onWheel(e), { passive: true });
-    this.scroll.addEventListener('touchstart', (e) => this.onTouchStart(e), { passive: true });
-    this.scroll.addEventListener('touchmove', (e) => this.onTouchMove(e), { passive: true });
+    this.puller = new Pull({
+      input: this.scroll,
+      enabled: () => Boolean(this.scroll.firstElementChild),
+      draw: (state) => this.drawPull(state),
+      onEnd: () => this.onEnd?.(),
+    });
     // Pressing an external video's thumbnail swaps in its player, playing.
     this.scroll.addEventListener('click', (e) => {
       const button = e.target.closest('.wc-embed');
@@ -279,98 +271,21 @@ export class ProjectView {
     this.el.style.setProperty('--wc-info-top', `${Math.max(0, top)}px`);
   }
 
-  // ─── Pull at the end of the page ──────────────────────────────────────────
-  atEnd() {
-    const s = this.scroll;
-    return s.scrollTop >= s.scrollHeight - s.clientHeight - 1;
-  }
-
-  /**
-   * A wheel gesture is a run of events without a `gatePause` gap (trackpad
-   * momentum included). A gesture that starts with the page already at its
-   * end pulls straight away; one that arrives there (the scroll that got you
-   * to the end) holds for `holdAtEnd` s first, then carries on into the pull.
-   */
-  onWheel(e) {
-    if (this.ended || !this.scroll.firstElementChild) return;
-    const now = performance.now();
-    const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? this.scroll.clientHeight : 1);
-    const atEnd = this.atEnd();
-    if (now - this.lastInput > PROJECT_CONFIG.gatePause * 1000) this.gestureAtEnd = atEnd;
-    this.endSince = atEnd ? this.endSince || now : 0;
-    this.lastInput = now;
-    const held = now - this.endSince >= PROJECT_CONFIG.holdAtEnd * 1000;
-    if (dy < 0) this.pull = 0; // scrolling back up lets go
-    else if (atEnd && (this.gestureAtEnd || held)) this.addPull(dy);
-    this.kick();
-  }
-
-  onTouchStart(e) {
-    this.touchY = e.touches[0].clientY;
-    this.gestureAtEnd = this.atEnd();
-    this.lastInput = performance.now();
-  }
-
-  onTouchMove(e) {
-    if (this.ended) return;
-    const y = e.touches[0].clientY;
-    const dy = this.touchY - y; // finger up = scrolling down
-    this.touchY = y;
-    this.lastInput = performance.now();
-    if (dy < 0) this.pull = 0;
-    else if (this.gestureAtEnd && this.atEnd()) this.addPull(dy * 1.5);
-    this.kick();
-  }
-
-  addPull(dy) {
-    this.pull = Math.min(1, this.pull + dy / (PROJECT_CONFIG.pullDistance * this.scroll.clientHeight));
-    if (this.pull >= 1 && !this.ended) {
-      this.ended = true;
-      this.onEnd?.();
-    }
-  }
-
-  kick() {
-    if (!this.raf) this.raf = requestAnimationFrame((t) => this.frame(t));
-  }
-
-  /** Eases what's drawn toward the pull; lets an unfinished pull settle back once input stops. */
-  frame(t) {
-    this.raf = 0;
-    const c = PROJECT_CONFIG;
-    const dt = this.lastFrame ? Math.min(0.05, (t - this.lastFrame) / 1000) : 1 / 60;
-    this.lastFrame = t;
-    if (!this.ended && performance.now() - this.lastInput > c.settle * 1000) this.pull = 0;
-    this.shown += (this.pull - this.shown) * (1 - Math.exp(-dt * c.smoothing));
-    if (Math.abs(this.pull - this.shown) < 0.002) this.shown = this.pull;
-    this.drawPull();
-    if (this.shown !== this.pull || (this.pull > 0 && !this.ended)) this.kick();
-    else this.lastFrame = 0;
-  }
-
-  drawPull() {
-    const c = PROJECT_CONFIG;
-    const p = this.shown;
+  // ─── Pull at the end of the page (pull.js) ─────────────────────────────────
+  /** The images rise a little and fade; the info block only fades. */
+  drawPull({ opacity, lift }) {
     const media = this.scroll.querySelector('.wc-project-media');
     const info = this.scroll.querySelector('.wc-project-info');
-    const fade = p > 0 ? String(1 - Math.min(1, Math.max(0, (p - c.fadeFrom) / (1 - c.fadeFrom)))) : '';
+    const fade = opacity == null ? '' : String(opacity);
     if (media) {
       media.style.opacity = fade;
-      media.style.translate = p > 0 ? `0 ${(-c.lift * (1 - (1 - p) ** 2)).toFixed(2)}px` : ''; // eases off: resistance
+      media.style.translate = lift ? `0 ${lift.toFixed(2)}px` : '';
     }
     if (info) info.style.opacity = fade;
   }
 
   resetPull() {
-    cancelAnimationFrame(this.raf);
-    this.raf = 0;
-    this.lastFrame = 0;
-    this.pull = 0; // input, 0..1
-    this.shown = 0; // what's drawn, eased toward `pull`
-    this.lastInput = 0;
-    this.gestureAtEnd = false;
-    this.endSince = 0; // when the current gesture reached the end
-    this.ended = false;
+    this.puller?.reset();
   }
 
   /** Where the hero will sit, in mount coordinates (for the tile → page morph). */
