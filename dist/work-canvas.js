@@ -14565,8 +14565,8 @@ var Ph = {
 		.65
 	],
 	fan: .8,
-	interval: 2,
-	moveStep: 100,
+	interval: 0,
+	moveStep: 0,
 	scrollStep: 250,
 	scrollGap: .35,
 	maxPerFrame: 1,
@@ -14620,13 +14620,13 @@ var Ph = {
 			e >= 0 && this.slotStamp[e] !== this.stamp && (this.slotStamp[e] = ++this.stamp);
 		}
 		let p = t.pauseOnHover && c || this.reduced || this.progress < 1, m = n.input?.pointer, h = t.moveStep;
-		s && m ? (this.lastPointer && !p && (this.travel += Math.hypot(m.x - this.lastPointer.x, m.y - this.lastPointer.y)), this.lastPointer = {
+		h > 0 && s && m ? (this.lastPointer && !p && (this.travel += Math.hypot(m.x - this.lastPointer.x, m.y - this.lastPointer.y)), this.lastPointer = {
 			x: m.x,
 			y: m.y
 		}) : (this.lastPointer = null, this.travel = 0);
 		let g = !1;
-		for (let e = 0; this.travel >= h && e < t.maxPerFrame; e++) this.travel -= h, this.deal(), g = !0;
-		this.travel = Math.min(this.travel, h * 2), this.sinceScrollDeal += e, this.progress >= 1 && this.scrollTravel >= t.scrollStep && this.sinceScrollDeal >= t.scrollGap && (this.scrollTravel -= t.scrollStep, this.sinceScrollDeal = 0, this.deal(), g = !0), this.scrollTravel = Math.min(this.scrollTravel, t.scrollStep * 2), p || (this.timer += e), g ? this.timer = 0 : this.timer >= t.interval && (this.timer = 0, this.deal());
+		for (let e = 0; h > 0 && this.travel >= h && e < t.maxPerFrame; e++) this.travel -= h, this.deal(), g = !0;
+		this.travel = Math.min(this.travel, h * 2), this.sinceScrollDeal += e, this.progress >= 1 && this.scrollTravel >= t.scrollStep && this.sinceScrollDeal >= t.scrollGap && (this.scrollTravel -= t.scrollStep, this.sinceScrollDeal = 0, this.deal(), g = !0), this.scrollTravel = Math.min(this.scrollTravel, t.scrollStep * 2), p || (this.timer += e), g ? this.timer = 0 : t.interval > 0 && this.timer >= t.interval && (this.timer = 0, this.deal());
 		let _ = r / 2, v = i / 2, y = (e, n) => {
 			let r = t.slots[n], i = this.anchors[n];
 			e.w = e.baseW, e.h = e.baseH, e.x = _ + i.x + r.x * this.k - e.w / 2, e.y = v + i.y + r.y * this.k - e.h / 2;
