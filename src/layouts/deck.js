@@ -20,12 +20,11 @@ import { sizePattern, fitSize } from '../core/sizing.js';
  * between positions. It starts with a single card; each new card fades in on
  * top in the next empty position, and once all four are filled, in the
  * position of the oldest card, which fades out underneath it. The other cards
- * stay exactly as they are. After `interval` s without a new card the next one comes in on
- * its own; moving the cursor brings in more — one per `moveStep` px of
- * travel, so faster movement stacks faster. Hovering a card pauses the
- * stacking; the pile's order stays as dealt. Scrolling (wheel /
- * trackpad, or a swipe on touch) deals cards too: one per `scrollStep` px,
- * at most one every `scrollGap` s so a fast scroll deals at a steady pace.
+ * stay exactly as they are. New cards come in only by scrolling (wheel /
+ * trackpad, or a swipe on touch): one per `scrollStep` px, at most one every
+ * `scrollGap` s so a fast scroll deals at a steady pace. The cursor only
+ * moves the pile. (`moveStep` and `interval` can bring back dealing from
+ * cursor travel and on a timer; both are off.) The pile's order stays as dealt.
  */
 export const config = {
   // Size scale (design px): each card picks one of these heights; width = height × aspect.
@@ -53,8 +52,8 @@ export const config = {
   fan: 0.8, // how far the positions spread from the pile centre with the cursor at an edge (0.8 = offsets up to 1.8×)
 
   // New cards
-  interval: 2, // s without a new card before the next one comes in on its own
-  moveStep: 100, // CSS px of cursor travel per new card, at any screen size (lower = more cards)
+  interval: 0, // s without a new card before the next one comes in on its own (0 = off: scroll only)
+  moveStep: 0, // CSS px of cursor travel per new card (0 = off: the cursor doesn't deal)
   scrollStep: 250, // px scrolled (wheel / trackpad / swipe) per new card
   scrollGap: 0.35, // s: fastest pace scrolling deals at
   maxPerFrame: 1, // cap on cards added in a single frame during very fast moves
@@ -149,12 +148,12 @@ export default class Deck extends Layout {
       if (k >= 0 && this.slotStamp[k] !== this.stamp) this.slotStamp[k] = ++this.stamp;
     }
 
-    // New cards: one for every `moveStep` px the cursor travels, and one after
-    // `interval` s without any. Hovering a card (or the entrance) holds both.
+    // New cards from cursor travel (`moveStep`) and on a timer (`interval`), when enabled.
+    // Hovering a card (or the entrance) holds both.
     const paused = (c.pauseOnHover && hovered) || this.reduced || this.progress < 1;
     const p = e.input?.pointer;
     const step = c.moveStep;
-    if (inside && p) {
+    if (step > 0 && inside && p) {
       if (this.lastPointer && !paused) this.travel += Math.hypot(p.x - this.lastPointer.x, p.y - this.lastPointer.y);
       this.lastPointer = { x: p.x, y: p.y };
     } else {
@@ -162,7 +161,7 @@ export default class Deck extends Layout {
       this.travel = 0;
     }
     let dealt = false;
-    for (let n = 0; this.travel >= step && n < c.maxPerFrame; n++) {
+    for (let n = 0; step > 0 && this.travel >= step && n < c.maxPerFrame; n++) {
       this.travel -= step;
       this.deal();
       dealt = true;
@@ -179,7 +178,7 @@ export default class Deck extends Layout {
     this.scrollTravel = Math.min(this.scrollTravel, c.scrollStep * 2);
     if (!paused) this.timer += dt;
     if (dealt) this.timer = 0;
-    else if (this.timer >= c.interval) {
+    else if (c.interval > 0 && this.timer >= c.interval) {
       this.timer = 0;
       this.deal();
     }
