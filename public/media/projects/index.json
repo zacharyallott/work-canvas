@@ -488,6 +488,120 @@
           "bytes": 8232
         },
         "aspect": 1.5
+      },
+      {
+        "id": "burton-zebs-allott-05",
+        "label": "Burton Zebs",
+        "href": "",
+        "caseStudy": true,
+        "source": "Burton-Zebs-Allott-05.jpg",
+        "sourceHash": "963e6a5ad685d4b3",
+        "type": "image",
+        "width": 2000,
+        "height": 1334,
+        "images": {
+          "sm": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-05-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 12982
+          },
+          "md": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-05-md.webp",
+            "width": 1280,
+            "height": 854,
+            "bytes": 73404
+          },
+          "lg": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-05-lg.webp",
+            "width": 2000,
+            "height": 1334,
+            "bytes": 185996
+          }
+        },
+        "poster": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-05-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 12982
+        },
+        "aspect": 1.4993
+      },
+      {
+        "id": "burton-zebs-allott-06",
+        "label": "Burton Zebs",
+        "href": "",
+        "caseStudy": true,
+        "source": "Burton-Zebs-Allott-06.jpg",
+        "sourceHash": "0c544699815ffcb4",
+        "type": "image",
+        "width": 2000,
+        "height": 1342,
+        "images": {
+          "sm": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-06-sm.webp",
+            "width": 480,
+            "height": 322,
+            "bytes": 6736
+          },
+          "md": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-06-md.webp",
+            "width": 1280,
+            "height": 859,
+            "bytes": 40566
+          },
+          "lg": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-06-lg.webp",
+            "width": 2000,
+            "height": 1342,
+            "bytes": 147006
+          }
+        },
+        "poster": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-06-sm.webp",
+          "width": 480,
+          "height": 322,
+          "bytes": 6736
+        },
+        "aspect": 1.4903
+      },
+      {
+        "id": "burton-zebs-allott-07",
+        "label": "Burton Zebs",
+        "href": "",
+        "caseStudy": true,
+        "source": "Burton-Zebs-Allott-07.jpg",
+        "sourceHash": "42198f6c27047564",
+        "type": "image",
+        "width": 1800,
+        "height": 1200,
+        "images": {
+          "sm": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-07-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 30110
+          },
+          "md": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-07-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 262378
+          },
+          "lg": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-07-lg.webp",
+            "width": 1800,
+            "height": 1200,
+            "bytes": 555566
+          }
+        },
+        "poster": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-07-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 30110
+        },
+        "aspect": 1.5
       }
     ]
   },
@@ -764,6 +878,82 @@
           "bytes": 10020
         },
         "aspect": 1.5
+      },
+      {
+        "id": "dialpad-allott-11",
+        "label": "Dialpad",
+        "href": "/projects/dialpad",
+        "caseStudy": true,
+        "source": "Dialpad-Allott-11.webp",
+        "sourceHash": "5859d3f1ff7311c5",
+        "type": "image",
+        "width": 2400,
+        "height": 2400,
+        "images": {
+          "sm": {
+            "src": "media/projects/dialpad/dialpad-allott-11-sm.webp",
+            "width": 480,
+            "height": 480,
+            "bytes": 24516
+          },
+          "md": {
+            "src": "media/projects/dialpad/dialpad-allott-11-md.webp",
+            "width": 1280,
+            "height": 1280,
+            "bytes": 150742
+          },
+          "lg": {
+            "src": "media/projects/dialpad/dialpad-allott-11-lg.webp",
+            "width": 2048,
+            "height": 2048,
+            "bytes": 336314
+          }
+        },
+        "poster": {
+          "src": "media/projects/dialpad/dialpad-allott-11-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 24516
+        },
+        "aspect": 1
+      },
+      {
+        "id": "dialpad-allott-13",
+        "label": "Dialpad",
+        "href": "/projects/dialpad",
+        "caseStudy": true,
+        "source": "Dialpad-Allott-13.webp",
+        "sourceHash": "863b9b426b78dec3",
+        "type": "image",
+        "width": 2400,
+        "height": 2400,
+        "images": {
+          "sm": {
+            "src": "media/projects/dialpad/dialpad-allott-13-sm.webp",
+            "width": 480,
+            "height": 480,
+            "bytes": 4040
+          },
+          "md": {
+            "src": "media/projects/dialpad/dialpad-allott-13-md.webp",
+            "width": 1280,
+            "height": 1280,
+            "bytes": 13098
+          },
+          "lg": {
+            "src": "media/projects/dialpad/dialpad-allott-13-lg.webp",
+            "width": 2048,
+            "height": 2048,
+            "bytes": 23898
+          }
+        },
+        "poster": {
+          "src": "media/projects/dialpad/dialpad-allott-13-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 4040
+        },
+        "aspect": 1
       },
       {
         "id": "in-situ-005",
@@ -1061,6 +1251,38 @@
           "bytes": 11446
         },
         "aspect": 1.25
+      },
+      {
+        "id": "stelo-site-scroll",
+        "label": "Stelo",
+        "href": "/projects/stelo",
+        "caseStudy": true,
+        "source": "Stelo-Site-Scroll.mp4",
+        "sourceHash": "4ed260464c15e635",
+        "type": "video",
+        "width": 1080,
+        "height": 720,
+        "duration": 23,
+        "sourceDuration": 23.04,
+        "poster": {
+          "src": "media/projects/stelo/stelo-site-scroll-poster.webp",
+          "width": 1080,
+          "height": 720,
+          "bytes": 40524
+        },
+        "sources": [
+          {
+            "src": "media/projects/stelo/stelo-site-scroll.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 1977764
+          },
+          {
+            "src": "media/projects/stelo/stelo-site-scroll.mp4",
+            "type": "video/mp4",
+            "bytes": 2716264
+          }
+        ],
+        "aspect": 1.5
       },
       {
         "id": "work-frame-4-5-1",

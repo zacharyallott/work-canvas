@@ -1,8 +1,8 @@
 {
-  "generated": "2026-09-25T20:52:15.284Z",
-  "count": 9,
+  "generated": "2026-09-26T00:05:28.158Z",
+  "count": 10,
   "images": 8,
-  "videos": 1,
+  "videos": 2,
   "items": [
     {
       "id": "01-intro-image-inset-l",
@@ -263,6 +263,38 @@
         "bytes": 11446
       },
       "aspect": 1.25
+    },
+    {
+      "id": "stelo-site-scroll",
+      "label": "Stelo",
+      "href": "/projects/stelo",
+      "caseStudy": true,
+      "source": "Stelo-Site-Scroll.mp4",
+      "sourceHash": "4ed260464c15e635",
+      "type": "video",
+      "width": 1080,
+      "height": 720,
+      "duration": 23,
+      "sourceDuration": 23.04,
+      "poster": {
+        "src": "media/projects/stelo/stelo-site-scroll-poster.webp",
+        "width": 1080,
+        "height": 720,
+        "bytes": 40524
+      },
+      "sources": [
+        {
+          "src": "media/projects/stelo/stelo-site-scroll.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 1977764
+        },
+        {
+          "src": "media/projects/stelo/stelo-site-scroll.mp4",
+          "type": "video/mp4",
+          "bytes": 2716264
+        }
+      ],
+      "aspect": 1.5
     },
     {
       "id": "work-frame-4-5-1",
