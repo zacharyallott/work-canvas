@@ -22,7 +22,10 @@ import { sizePattern, fitSize } from '../core/sizing.js';
  * position of the oldest card, which fades out underneath it. The other cards
  * stay exactly as they are. New cards come in only by scrolling (wheel /
  * trackpad, or a swipe on touch): one per `scrollStep` px, at most one every
- * `scrollGap` s so a fast scroll deals at a steady pace. The cursor only
+ * `scrollGap` s so a fast scroll deals at a steady pace. On touch a swipe deals
+ * by distance and speed: one per `swipe.step` px of finger travel, and a flick
+ * carries on like scroll momentum after the finger lifts — dealing quickly at
+ * first and slowing as it dies away — so a faster swipe brings in more. The cursor only
  * moves the pile. (`moveStep` and `interval` can bring back dealing from
  * cursor travel and on a timer; both are off.) The pile's order stays as dealt.
  */
@@ -56,6 +59,9 @@ export const config = {
   moveStep: 0, // CSS px of cursor travel per new card (0 = off: the cursor doesn't deal)
   scrollStep: 250, // px scrolled (wheel / trackpad / swipe) per new card
   scrollGap: 0.35, // s: fastest pace scrolling deals at
+  // Touch: step = px of finger travel per card; gap = fastest pace (s); decay = how quickly a flick's
+  // momentum dies (1/s, lower = a flick deals more); backlog = most cards' worth of travel held at once.
+  swipe: { step: 140, gap: 0.1, decay: 2.8, backlog: 3 },
   maxPerFrame: 1, // cap on cards added in a single frame during very fast moves
   dealDuration: 0.12, // s for a new card to fade in (0 = instant cut)
   dealEase: 'none',
@@ -98,6 +104,8 @@ export default class Deck extends Layout {
 
     this.timer = 0; // s since the last card
     this.scrollTravel = 0; // px scrolled toward the next card
+    this.fling = 0; // px/s of swipe momentum still dealing after the finger lifted
+    this.swiping = false; // last deal input was touch (uses the swipe pacing)
     this.sinceScrollDeal = 1;
     this.travel = 0; // cursor travel (px) since the last card
     this.lastPointer = null;
@@ -168,14 +176,21 @@ export default class Deck extends Layout {
     }
     this.travel = Math.min(this.travel, step * 2); // don't bank a backlog from one big swipe
     // Scrolling deals too (hover doesn't hold it — it's deliberate), at a steady pace.
+    // A touch flick keeps adding travel as its momentum dies away.
+    const stepPx = this.swiping ? c.swipe.step : c.scrollStep;
+    if (this.fling) {
+      this.scrollTravel += this.fling * dt;
+      this.fling *= Math.exp(-c.swipe.decay * dt);
+      if (this.fling < 40) this.fling = 0;
+    }
     this.sinceScrollDeal += dt;
-    if (this.progress >= 1 && this.scrollTravel >= c.scrollStep && this.sinceScrollDeal >= c.scrollGap) {
-      this.scrollTravel -= c.scrollStep;
+    if (this.progress >= 1 && this.scrollTravel >= stepPx && this.sinceScrollDeal >= (this.swiping ? c.swipe.gap : c.scrollGap)) {
+      this.scrollTravel -= stepPx;
       this.sinceScrollDeal = 0;
       this.deal();
       dealt = true;
     }
-    this.scrollTravel = Math.min(this.scrollTravel, c.scrollStep * 2);
+    this.scrollTravel = Math.min(this.scrollTravel, stepPx * (this.swiping ? c.swipe.backlog : 2));
     if (!paused) this.timer += dt;
     if (dealt) this.timer = 0;
     else if (c.interval > 0 && this.timer >= c.interval) {
@@ -258,12 +273,23 @@ export default class Deck extends Layout {
   }
 
   onWheel({ dx, dy }) {
+    this.swiping = false;
+    this.fling = 0;
     this.scrollTravel += Math.abs(dy) + Math.abs(dx);
   }
 
-  // Touch: any swipe on the canvas counts like scrolling.
+  // Touch: any swipe on the canvas counts like scrolling, by distance…
   onDrag({ dx, dy }) {
-    if (this.engine.touch) this.scrollTravel += Math.hypot(dx, dy);
+    if (!this.engine.touch) return;
+    if (!this.swiping) this.scrollTravel = 0; // switching from wheel pacing
+    this.swiping = true;
+    this.fling = 0; // a finger down stops any momentum
+    this.scrollTravel += Math.hypot(dx, dy);
+  }
+
+  // …and by speed: the flick carries on dealing after the finger lifts.
+  onRelease({ vx, vy }) {
+    if (this.engine.touch && this.swiping) this.fling = Math.hypot(vx, vy);
   }
 
   finishFade() {

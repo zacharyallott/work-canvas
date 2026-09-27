@@ -14604,6 +14604,12 @@ var Fh = {
 	moveStep: 0,
 	scrollStep: 250,
 	scrollGap: .35,
+	swipe: {
+		step: 140,
+		gap: .1,
+		decay: 3.5,
+		backlog: 3
+	},
 	maxPerFrame: 1,
 	dealDuration: .12,
 	dealEase: "none",
@@ -14625,7 +14631,7 @@ var Fh = {
 		let n = this.tiles.length;
 		this.slotCount = Math.min(t.slots.length, n), this.fillOrder = t.fillOrder.filter((e) => e < this.slotCount), this.slotTile = Array.from({ length: this.slotCount }, () => -1), this.slotStamp = Array.from({ length: this.slotCount }, () => 0);
 		let r = Math.max(0, this.tiles.findIndex((e) => e.item.caseStudy));
-		this.slotTile[this.fillOrder[0]] = r, this.slotStamp[this.fillOrder[0]] = 1, this.stamp = 1, this.next = (r + 1) % n, this.fading = null, this.timer = 0, this.scrollTravel = 0, this.sinceScrollDeal = 1, this.travel = 0, this.lastPointer = null, this.anchors = t.slots.map(() => ({
+		this.slotTile[this.fillOrder[0]] = r, this.slotStamp[this.fillOrder[0]] = 1, this.stamp = 1, this.next = (r + 1) % n, this.fading = null, this.timer = 0, this.scrollTravel = 0, this.fling = 0, this.swiping = !1, this.sinceScrollDeal = 1, this.travel = 0, this.lastPointer = null, this.anchors = t.slots.map(() => ({
 			x: 0,
 			y: 0
 		}));
@@ -14661,26 +14667,28 @@ var Fh = {
 		}) : (this.lastPointer = null, this.travel = 0);
 		let g = !1;
 		for (let e = 0; h > 0 && this.travel >= h && e < t.maxPerFrame; e++) this.travel -= h, this.deal(), g = !0;
-		this.travel = Math.min(this.travel, h * 2), this.sinceScrollDeal += e, this.progress >= 1 && this.scrollTravel >= t.scrollStep && this.sinceScrollDeal >= t.scrollGap && (this.scrollTravel -= t.scrollStep, this.sinceScrollDeal = 0, this.deal(), g = !0), this.scrollTravel = Math.min(this.scrollTravel, t.scrollStep * 2), p || (this.timer += e), g ? this.timer = 0 : t.interval > 0 && this.timer >= t.interval && (this.timer = 0, this.deal());
-		let _ = r / 2, v = i / 2, y = (e, n) => {
+		this.travel = Math.min(this.travel, h * 2);
+		let _ = this.swiping ? t.swipe.step : t.scrollStep;
+		this.fling && (this.scrollTravel += this.fling * e, this.fling *= Math.exp(-t.swipe.decay * e), this.fling < 40 && (this.fling = 0)), this.sinceScrollDeal += e, this.progress >= 1 && this.scrollTravel >= _ && this.sinceScrollDeal >= (this.swiping ? t.swipe.gap : t.scrollGap) && (this.scrollTravel -= _, this.sinceScrollDeal = 0, this.deal(), g = !0), this.scrollTravel = Math.min(this.scrollTravel, _ * (this.swiping ? t.swipe.backlog : 2)), p || (this.timer += e), g ? this.timer = 0 : t.interval > 0 && this.timer >= t.interval && (this.timer = 0, this.deal());
+		let v = r / 2, y = i / 2, b = (e, n) => {
 			let r = t.slots[n], i = this.anchors[n];
-			e.w = e.baseW, e.h = e.baseH, e.x = _ + i.x + r.x * this.k - e.w / 2, e.y = v + i.y + r.y * this.k - e.h / 2;
+			e.w = e.baseW, e.h = e.baseH, e.x = v + i.x + r.x * this.k - e.w / 2, e.y = y + i.y + r.y * this.k - e.h / 2;
 		};
 		for (let e of this.tiles) e.alpha = 0, e.interactive = !1, e.rotation = 0, e.reveal = 1, e.gray = 0, e.zoom = 0, e.priority = 0;
-		let b = this.slotTile.filter((e) => e >= 0).length, x = this.slotStamp.filter((e, t) => this.slotTile[t] >= 0).sort((e, t) => t - e), S = null;
+		let x = this.slotTile.filter((e) => e >= 0).length, S = this.slotStamp.filter((e, t) => this.slotTile[t] >= 0).sort((e, t) => t - e), C = null;
 		this.slotTile.forEach((e, t) => {
 			if (e < 0) return;
 			let n = this.tiles[e];
-			y(n, t), n.z = this.slotStamp[t], n.alpha = this.fading?.to === e ? this.fading.p : 1, n.interactive = !0;
-			let r = x.indexOf(this.slotStamp[t]);
-			n.priority = 1 - r * .2, r === 0 && (S = n), this.applyTransition(n, Math.max(0, Math.min(1, (b - 1 - r) / Math.max(1, b))));
+			b(n, t), n.z = this.slotStamp[t], n.alpha = this.fading?.to === e ? this.fading.p : 1, n.interactive = !0;
+			let r = S.indexOf(this.slotStamp[t]);
+			n.priority = 1 - r * .2, r === 0 && (C = n), this.applyTransition(n, Math.max(0, Math.min(1, (x - 1 - r) / Math.max(1, x))));
 		});
-		let C = this.fading;
-		if (C && C.from >= 0 && C.from !== C.to && !this.slotTile.includes(C.from)) {
-			let e = this.tiles[C.from];
-			y(e, C.slot), e.z = C.fromStamp, e.alpha = 1 - C.p;
+		let w = this.fading;
+		if (w && w.from >= 0 && w.from !== w.to && !this.slotTile.includes(w.from)) {
+			let e = this.tiles[w.from];
+			b(e, w.slot), e.z = w.fromStamp, e.alpha = 1 - w.p;
 		}
-		this.featured = S, S && (S.priority = 3);
+		this.featured = C, C && (C.priority = 3);
 	}
 	deal(e = null) {
 		let t = this.tiles.length;
@@ -14706,10 +14714,13 @@ var Fh = {
 		});
 	}
 	onWheel({ dx: e, dy: t }) {
-		this.scrollTravel += Math.abs(t) + Math.abs(e);
+		this.swiping = !1, this.fling = 0, this.scrollTravel += Math.abs(t) + Math.abs(e);
 	}
 	onDrag({ dx: e, dy: t }) {
-		this.engine.touch && (this.scrollTravel += Math.hypot(e, t));
+		this.engine.touch && (this.swiping || (this.scrollTravel = 0), this.swiping = !0, this.fling = 0, this.scrollTravel += Math.hypot(e, t));
+	}
+	onRelease({ vx: e, vy: t }) {
+		this.engine.touch && this.swiping && (this.fling = Math.hypot(e, t));
 	}
 	finishFade() {
 		this.fadeTween?.kill(), this.fadeTween = null, this.fading = null;
