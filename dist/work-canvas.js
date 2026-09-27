@@ -14607,7 +14607,7 @@ var Fh = {
 	swipe: {
 		step: 140,
 		gap: .1,
-		decay: 3.5,
+		decay: 2.8,
 		backlog: 3
 	},
 	maxPerFrame: 1,
