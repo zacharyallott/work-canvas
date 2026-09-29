@@ -15032,8 +15032,8 @@ var Hh = {
 	},
 	maxVideos: 4,
 	easing: "sine.inOut",
-	stagger: 32,
-	enterDuration: 6.2,
+	stagger: 20,
+	enterDuration: 3.6,
 	leaveDuration: .25,
 	swing: 0,
 	captionInset: [20, 12]
