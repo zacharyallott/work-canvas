@@ -70,8 +70,8 @@ export const config = {
   // Entrance: the tiles fade in one at a time, clockwise from the left (`stagger` 0 = the whole fan at once;
   // `swing` > 0 also turns each into place from further back as it comes in).
   easing: 'sine.inOut', // each tile's fade eases in and out, overlapping the next for a smooth sweep
-  stagger: 32, // high = more one-at-a-time; each tile fades over enterDuration / (1 + stagger) ≈ 0.19 s
-  enterDuration: 6.2,
+  stagger: 20, // high = more one-at-a-time; each tile fades over enterDuration / (1 + stagger) ≈ 0.17 s
+  enterDuration: 3.6,
   leaveDuration: 0.25,
   swing: 0,
   captionInset: [20, 12],
