@@ -7,12 +7,12 @@ import { sizePattern } from '../core/sizing.js';
 /**
  * Version D — Fan (Figma frame 54, node 1601:6774)
  *
- * The tiles fan out around one point centred just below the bottom of the view (`drop`): each
- * tile's bottom-right corner points at that point (sitting `hole` px out from
- * it, so there's a gap in the middle) and each is turned 11.25° on from the
- * one before, so 32 tiles make the full circle (the lower half is below the
- * fold). With the bottom-right corner as the anchor, the tiles on the left
- * stand upright and they turn clockwise towards the right. Tiles are around 400 design px wide — each picks a size
+ * The tiles fan out around one point centred just below the bottom of the view (`drop`), like
+ * spokes: each tile stands on its own line out from that point, the middle of
+ * its bottom edge `hole` px out (a gap in the middle), turned with the line —
+ * so a tile pointing straight up is upright, and they lean further the further
+ * round they are. Each line is 11.25° on from the one before, so 32 tiles make
+ * the full circle (the lower half is below the fold). Tiles are around 400 design px wide — each picks a size
  * from a scale, never the same as its neighbour — with their height from the
  * piece's real aspect ratio. Later (more clockwise) tiles lie on top, like a
  * hand of cards.
@@ -45,7 +45,7 @@ export const config = {
   minScale: 0.55,
   maxScale: 1.05, // with the sizes and minAspect above, the longest edge stays within a 1280 px texture at 2×
   mobileMaxWidth: 0.55, // tile width never exceeds this fraction of the view width (phones)
-  seam: 225, // degrees: where places leave/join the loop — a tile turned this far is wholly below the fold
+  seam: 180, // degrees: where places leave/join the loop — a tile pointing straight down is wholly below the fold
   hole: 420, // design px each tile sits out from the centre point at rest (a gap in the middle; the speed spread adds to it)
   drop: 180, // design px the centre point sits below the bottom edge of the view
   hoverOut: 56, // design px a hovered tile slides out from the others, along its own direction (eased with the hover)
@@ -108,7 +108,6 @@ export default class Fan extends Layout {
       const aspect = Math.min(c.maxAspect, Math.max(c.minAspect, t.item.aspect || 1));
       t.w = base * c.sizes[pattern[i]];
       t.h = t.w / aspect;
-      t.diag = Math.atan2(t.w, t.h); // radians from the tile's right edge to its centre, seen from the pivot corner
     });
     this.pivot = { x: vp.width / 2, y: vp.height + c.drop * s };
   }
@@ -145,24 +144,21 @@ export default class Fan extends Layout {
     placed.sort((p, q) => p.a - q.a); // later (clockwise) on top
 
     placed.forEach(({ t, a }, rank) => {
-      // Entrance: left to right across the visible arc (-90° … 180°), each swinging in from the one before.
-      const order = Math.min(1, Math.max(0, (a + 90) / 270));
+      // Entrance: left to right across the visible arc (-120° … 120°), each swinging in from the one before.
+      const order = Math.min(1, Math.max(0, (a + 120) / 240));
       const p = this.tileProgress(order);
       const deg = a - (1 - p) * c.swing;
       const phi = deg * RAD;
-      const dir = phi - t.diag; // towards the tile's centre from the pivot
       const cos = Math.cos(phi);
       const sin = Math.sin(phi);
-      // Centre = pivot + the bottom-right corner→centre vector turned clockwise by phi, plus the spread.
-      const lx = -t.w / 2;
-      const ly = -t.h / 2;
-      const bx = px + lx * cos - ly * sin; // centre with the corner on the pivot
-      const by = py + lx * sin + ly * cos;
-      t.restX = bx + Math.sin(dir) * out; // where it sits without the hover slide (for pick)
-      t.restY = by - Math.cos(dir) * out;
-      const r = out + (t.hover || 0) * c.hoverOut * this.s; // a hovered tile slides out past the others
-      const cx = bx + Math.sin(dir) * r;
-      const cy = by - Math.cos(dir) * r;
+      // Radial: the tile stands on the line at angle phi (clockwise from straight up), the middle of its bottom
+      // edge `out` px from the pivot, so its centre is half its height further along the same line.
+      const [ux, uy] = [sin, -cos]; // unit vector along the line, outward
+      t.restX = px + ux * (out + t.h / 2); // where it sits without the hover slide (for pick)
+      t.restY = py + uy * (out + t.h / 2);
+      const r = out + (t.hover || 0) * c.hoverOut * this.s + t.h / 2; // a hovered tile slides out past the others
+      const cx = px + ux * r;
+      const cy = py + uy * r;
       t.x = cx - t.w / 2;
       t.y = cy - t.h / 2;
       t.rotation = phi;
@@ -240,8 +236,6 @@ export default class Fan extends Layout {
   focusItem(item) {
     const tile = this.tileForItem(item) ?? this.tiles.find((t) => t.item === item);
     if (!tile || tile.alpha <= 0) return;
-    const current = tile.rotation / RAD;
-    const upright = tile.diag / RAD; // its centre straight above the pivot
-    this.scrolled.push(upright - current);
+    this.scrolled.push(-tile.rotation / RAD); // turn it back to 0°: standing straight up above the pivot
   }
 }

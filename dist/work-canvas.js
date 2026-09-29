@@ -15006,7 +15006,7 @@ var Hh = {
 	minScale: .55,
 	maxScale: 1.05,
 	mobileMaxWidth: .55,
-	seam: 225,
+	seam: 180,
 	hole: 420,
 	drop: 180,
 	hoverOut: 56,
@@ -15049,7 +15049,7 @@ var Hh = {
 		let a = Math.min(t.tileWidth * n, e.width * t.mobileMaxWidth), o = Ah(this.tiles.length, t.sizes.length, t.seed);
 		this.tiles.forEach((e, n) => {
 			let r = Math.min(t.maxAspect, Math.max(t.minAspect, e.item.aspect || 1));
-			e.w = a * t.sizes[o[n]], e.h = e.w / r, e.diag = Math.atan2(e.w, e.h);
+			e.w = a * t.sizes[o[n]], e.h = e.w / r;
 		}), this.pivot = {
 			x: e.width / 2,
 			y: e.height + t.drop * n
@@ -15070,12 +15070,12 @@ var Hh = {
 				a: s
 			});
 		}), f.sort((e, t) => e.a - t.a), f.forEach(({ t: e, a: n }, i) => {
-			let a = Math.min(1, Math.max(0, (n + 90) / 270)), f = this.tileProgress(a), p = (n - (1 - f) * t.swing) * Uh, m = p - e.diag, h = Math.cos(p), g = Math.sin(p), _ = -e.w / 2, v = -e.h / 2, y = o + _ * h - v * g, b = s + _ * g + v * h;
-			e.restX = y + Math.sin(m) * r, e.restY = b - Math.cos(m) * r;
-			let x = r + (e.hover || 0) * t.hoverOut * this.s, S = y + Math.sin(m) * x, C = b - Math.cos(m) * x;
-			e.x = S - e.w / 2, e.y = C - e.h / 2, e.rotation = p, e.z = i, e.alpha = t.swing ? Math.min(1, f * 2.5) : f, e.reveal = 1, e.pivot = this.pivot;
-			let w = (Math.abs(e.w * h) + Math.abs(e.h * g)) / 2, T = (Math.abs(e.w * g) + Math.abs(e.h * h)) / 2, E = S + w > 0 && S - w < c && C - T < l && C + T > 0 && e.alpha > 0;
-			e.interactive = E, e.priority = E ? this.centerScore(e) : 0, e.priority > d && (d = e.priority, u = e);
+			let a = Math.min(1, Math.max(0, (n + 120) / 240)), f = this.tileProgress(a), p = (n - (1 - f) * t.swing) * Uh, m = Math.cos(p), h = Math.sin(p), [g, _] = [h, -m];
+			e.restX = o + g * (r + e.h / 2), e.restY = s + _ * (r + e.h / 2);
+			let v = r + (e.hover || 0) * t.hoverOut * this.s + e.h / 2, y = o + g * v, b = s + _ * v;
+			e.x = y - e.w / 2, e.y = b - e.h / 2, e.rotation = p, e.z = i, e.alpha = t.swing ? Math.min(1, f * 2.5) : f, e.reveal = 1, e.pivot = this.pivot;
+			let x = (Math.abs(e.w * m) + Math.abs(e.h * h)) / 2, S = (Math.abs(e.w * h) + Math.abs(e.h * m)) / 2, C = y + x > 0 && y - x < c && b - S < l && b + S > 0 && e.alpha > 0;
+			e.interactive = C, e.priority = C ? this.centerScore(e) : 0, e.priority > d && (d = e.priority, u = e);
 		}), this.featured = u, u && (u.priority = 2);
 		let p = this.engine.hovered;
 		p && this.tiles.includes(p) && (p.priority = 3, p.z = f.length);
@@ -15101,9 +15101,7 @@ var Hh = {
 	}
 	focusItem(e) {
 		let t = this.tileForItem(e) ?? this.tiles.find((t) => t.item === e);
-		if (!t || t.alpha <= 0) return;
-		let n = t.rotation / Uh, r = t.diag / Uh;
-		this.scrolled.push(r - n);
+		!t || t.alpha <= 0 || this.scrolled.push(-t.rotation / Uh);
 	}
 };
 Dh(Wh, "defaults", Hh), Dh(Wh, "label", "Fan");

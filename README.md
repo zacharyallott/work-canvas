@@ -9,7 +9,7 @@ It has four interaction versions. Each visit opens on the next one (the last ver
 | `a` | Filmstrip: one infinite row, bottom-aligned skyline | Cursor steers the drift: left of centre drifts right, right drifts left, faster toward the edges. Scrolling moves the strip along (down = forward), eased; the faster it moves, the wider the gaps | Frame 46 · `1542:5556` |
 | `b` | Deck: a pile of four cards that cycles through the whole collection | Each card comes in turned to 0°, ±11.25° or ±22.5°. Pile trails the cursor with a little lag and fans out (parallax) the further the cursor gets from the centre; the further left or right the cursor, the faster new cards come in (none in the middle); new cards fade in on top only as you scroll, one per 250 px; on touch, one per 140 px of swipe, and a flick carries on dealing after the finger lifts, so a faster swipe brings in more | Frame 48 · `1542:5581` |
 | `c` | Masonry: columns drifting upward, each at its own pace | Columns drift on their own and slow on hover; the grid shifts left or right with the cursor; scrolling moves the columns, eased, and the faster a column moves the wider its gaps | Frame 45 · `1542:5489` |
-| `d` | Fan: tiles turned 11.25° apart around a point below the bottom centre, with an open centre; upright on the left | Tiles fade in one at a time, clockwise from the left. Scrolling turns the fan slowly; the faster it turns, the further the tiles move out from the centre, drawing back in step as it slows. It loops: places passing through the hidden lower half take the next piece. Hovering a tile brings it to the front and slides it outward | Frame 54 · `1601:6774` |
+| `d` | Fan: tiles on lines 11.25° apart out from a point below the bottom centre, like spokes, with an open centre; the tile pointing straight up is upright | Tiles fade in one at a time, clockwise from the left. Scrolling turns the fan slowly; the faster it turns, the further the tiles move out from the centre, drawing back in step as it slows. It loops: places passing through the hidden lower half take the next piece. Hovering a tile brings it to the front and slides it outward | Frame 54 · `1601:6774` |
 
 Hovering a case-study tile brings in its project title and ↓ (on turned tiles — fan, cards — along the tile's outer, most horizontal edge, reading left to right); tiles without a project view show nothing on hover. Clicking a case-study tile opens its project view (Figma frame 50 · `1553:6590`): the tile glides to the top of the page, the title, description and services sit bottom-left, and the project's images follow on the right. The scroll stops on the last image; scrolling on (after a short pause) pulls against resistance and fades back to the work, and letting go early settles back. The tagline opens the about section (Figma frame 49 · `1542:5601`) at its own address, `/about`; scrolling on at its bottom pulls back to the work the same way. On touch, tapping a case-study tile shows its title briefly.
 
@@ -232,7 +232,7 @@ A copy of Home (same header, same Collection List) with its own SEO title, descr
 Page settings → Custom code → Before `</body>` tag, on Home, About and the Projects template:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.4.2/dist/work-canvas.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.4.3/dist/work-canvas.js"></script>
 ```
 
 When you release, bump the version on all three, and `data-media-base` on each `#work-canvas`.
