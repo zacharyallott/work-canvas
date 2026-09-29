@@ -308,6 +308,10 @@ export class WorkCanvas {
       if (!fromHistory && history.state?.wcAbout) history.back(); // opened here: Back returns to the work
       else if (!fromHistory && this.isAboutPath()) this.replaceUrl(this.options.homePath);
     }
+    // Closing: hold the work back until the about copy has faded (CSS delay), so the two never cross-fade.
+    clearTimeout(this._leaveAboutTimer);
+    this.mount.classList.toggle('is-leaving-about', !open);
+    if (!open) this._leaveAboutTimer = setTimeout(() => this.mount.classList.remove('is-leaving-about'), 1000);
     this.mount.classList.toggle('is-about', open);
     this.ui?.setAbout(open);
     clearTimeout(this._aboutTimer);
@@ -413,6 +417,7 @@ export class WorkCanvas {
   // ─── Picking / hover ───────────────────────────────────────────────────────
   pick(x, y) {
     if (!this.layout) return null;
+    if (this.layout.pick) return this.layout.pick(x, y); // a layout can decide its own hover/tap target (fan)
     const ndc = new THREE.Vector2((x / this.viewport.width) * 2 - 1, -(y / this.viewport.height) * 2 + 1);
     this.raycaster.setFromCamera(ndc, this.camera);
     const meshes = this.layout.tiles.filter((t) => t.onScreen && t.interactive && t.alpha > 0.5).map((t) => t.mesh);
@@ -497,8 +502,8 @@ export class WorkCanvas {
     const duration = this.options.openDuration;
     gsap
       .timeline({ defaults: { duration, ease: this.options.openEase }, onComplete: finish })
-      .to(this, { openProgress: 1, duration: 0.3, ease: EASE.fade }, 0) // the other tiles dissolve
-      .to(from, { ...target, radius: this.radius }, 0);
+      .to(this, { openProgress: 1, duration: this.options.openFade ?? 0.4, ease: EASE.fade }, 0) // the other tiles dissolve
+      .to(from, { ...target, radius: this.radius, rotation: 0 }, 0); // a turned tile (fan) straightens as it opens
     return true;
   }
 

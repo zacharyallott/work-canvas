@@ -5,11 +5,15 @@
  * out instead of jumping or stopping dead.
  *
  * `omega` sets the pace (1/s): higher = snappier. Around 4 / omega seconds
- * to settle.
+ * to settle. `maxLead` (optional) caps how far the target can run ahead of
+ * the value: a big flick then moves less rather than for longer, which keeps
+ * both its top speed and the time it takes to settle after the input stops
+ * in check.
  */
 export class Spring {
-  constructor(omega = 6) {
+  constructor(omega = 6, { maxLead = Infinity } = {}) {
     this.omega = omega;
+    this.maxLead = maxLead;
     this.x = 0; // current value
     this.v = 0; // velocity
     this.target = 0;
@@ -17,6 +21,8 @@ export class Spring {
 
   push(delta) {
     this.target += delta;
+    if (this.target > this.x + this.maxLead) this.target = this.x + this.maxLead;
+    else if (this.target < this.x - this.maxLead) this.target = this.x - this.maxLead;
   }
 
   update(dt) {

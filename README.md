@@ -2,22 +2,23 @@
 
 Immersive WebGL work header for zacharyallott.com. It's a standalone ES module (Three.js and GSAP bundled) that mounts into a `<div>` on a Webflow page and reads its content from the page's **Projects** Collection List, so the Webflow CMS stays the source of truth. The first two images of each project become tiles.
 
-It has three interaction versions. Each visit opens on the next one (the last version seen is remembered per browser), leaving a project view comes back to the next one, and clicking the star in the top-left moves on to the next (hovering it turns it 45°):
+It has four interaction versions. Each visit opens on the next one (the last version seen is remembered per browser), leaving a project view comes back to the next one, and clicking the star in the top-left moves on to the next (hovering it turns it 45°):
 
 | Key | Version | Motion | Figma frame |
 | --- | --- | --- | --- |
-| `a` | Filmstrip: one infinite row, bottom-aligned skyline | Cursor steers the drift: left of centre drifts right, right drifts left, faster toward the edges. Scrolling moves the strip along (down = forward), eased | Frame 46 · `1542:5556` |
-| `b` | Deck: a pile of four cards that cycles through the whole collection | Pile trails the cursor with a little lag and fans out (parallax) the further the cursor gets from the centre; new cards fade in on top only as you scroll, one per 250 px; on touch, one per 140 px of swipe, and a flick carries on dealing after the finger lifts, so a faster swipe brings in more | Frame 48 · `1542:5581` |
-| `c` | Masonry: columns drifting upward, each at its own pace | Columns drift on their own and slow on hover; the grid shifts left or right with the cursor; scrolling moves the columns, eased | Frame 45 · `1542:5489` |
+| `a` | Filmstrip: one infinite row, bottom-aligned skyline | Cursor steers the drift: left of centre drifts right, right drifts left, faster toward the edges. Scrolling moves the strip along (down = forward), eased; the faster it moves, the wider the gaps | Frame 46 · `1542:5556` |
+| `b` | Deck: a pile of four cards that cycles through the whole collection | Each card comes in turned to 0°, ±11.25° or ±22.5°. Pile trails the cursor with a little lag and fans out (parallax) the further the cursor gets from the centre; the further left or right the cursor, the faster new cards come in (none in the middle); new cards fade in on top only as you scroll, one per 250 px; on touch, one per 140 px of swipe, and a flick carries on dealing after the finger lifts, so a faster swipe brings in more | Frame 48 · `1542:5581` |
+| `c` | Masonry: columns drifting upward, each at its own pace | Columns drift on their own and slow on hover; the grid shifts left or right with the cursor; scrolling moves the columns, eased, and the faster a column moves the wider its gaps | Frame 45 · `1542:5489` |
+| `d` | Fan: tiles turned 11.25° apart around a point below the bottom centre, with an open centre; upright on the left | Tiles fade in one at a time, clockwise from the left. Scrolling turns the fan slowly; the faster it turns, the further the tiles move out from the centre, drawing back in step as it slows. It loops: places passing through the hidden lower half take the next piece. Hovering a tile brings it to the front and slides it outward | Frame 54 · `1601:6774` |
 
-Hovering a case-study tile brings in its project title and ↓; tiles without a project view show nothing on hover. Clicking a case-study tile opens its project view (Figma frame 50 · `1553:6590`): the tile glides to the top of the page, the title, description and services sit bottom-left, and the project's images follow on the right. The scroll stops on the last image; scrolling on (after a short pause) pulls against resistance and fades back to the work, and letting go early settles back. The tagline opens the about section (Figma frame 49 · `1542:5601`) at its own address, `/about`; scrolling on at its bottom pulls back to the work the same way. On touch, tapping a case-study tile shows its title briefly.
+Hovering a case-study tile brings in its project title and ↓ (on turned tiles — fan, cards — along the tile's outer, most horizontal edge, reading left to right); tiles without a project view show nothing on hover. Clicking a case-study tile opens its project view (Figma frame 50 · `1553:6590`): the tile glides to the top of the page, the title, description and services sit bottom-left, and the project's images follow on the right. The scroll stops on the last image; scrolling on (after a short pause) pulls against resistance and fades back to the work, and letting go early settles back. The tagline opens the about section (Figma frame 49 · `1542:5601`) at its own address, `/about`; scrolling on at its bottom pulls back to the work the same way. On touch, tapping a case-study tile shows its title briefly.
 
 ## Quick start
 
 ```bash
 npm install
 npm run media      # process originals → public/media + media.json (first run only)
-npm run dev        # http://localhost:5173  (?v=a|b|c picks a version)
+npm run dev        # http://localhost:5173  (?v=a|b|c|d picks a version)
 ```
 
 `index.html` is a local mock of the Webflow page. A small Vite plugin fills it with the same `.work-item` markup the Projects Collection List renders, built from `public/media/media.json`.
@@ -65,6 +66,8 @@ The most useful settings:
 
 - **Filmstrip:** `maxSpeed` (px/s at the edges), `deadZone`, `curve` (how quickly speed builds toward the edges), `response` (lag), `idleSpeed` (drift with no cursor), `hoverSlowdown`.
 - **Deck:** `follow` (how far the pile leans toward the cursor), `followRates` (lag per position), `depth` (parallax per position), `fan` (spread toward the edges), `scrollStep` / `scrollGap` (scroll per card, fastest pace), `swipe` (touch: `step` px per card, `gap` fastest pace, `decay` how quickly a flick's momentum dies — lower deals more, `backlog`), `interval` (seconds before a card comes in on its own; 0 = off), `moveStep` (cursor travel per extra card; 0 = off), `dealDuration`, `heights` (size scale), `slots` (pile shape), `pauseOnHover`, `hoverToFront`.
+- **Fan:** `tileWidth`, `sizes`, `step` (degrees between tiles), `hole` (open centre), `drop` (how far below the view the centre sits), `hoverOut`, `idleSpeed`, `scroll` (`multiplier`, `omega`, `maxLead`), `spread` (speed → radius), `stagger` / `enterDuration` (entrance).
+- **Speed → spacing** (filmstrip, masonry, fan): `spread` in each config, via `src/core/spread.js` — `gain` per px/s (or °/s) above `rest`, capped at `max`, following the speed through a spring. Scroll springs take `maxLead`, which caps both a flick's top speed and how long it runs on after the scroll stops.
 - **Masonry:** `autoplaySpeed`, `hoverSlowdown`, `columnSpeeds`, `shift.max` (how far the grid moves with the cursor), `shift.response` (lag), `shift.mode` (`offset` leans, `drift` keeps travelling like the filmstrip).
 - **Project view / about section:** the pull at the end, `PULL_CONFIG` in `src/core/pull.js` (shared by both): `pullDistance` (how far you scroll past the end to go back to the work), `gatePause` (the pause that makes the next scroll a new gesture, which can pull straight away), `holdAtEnd` (how long a scroll that arrives at the end holds there before it carries on into the pull), `lift`, `fadeFrom`, `settle`.
 - **All:** `maxVideos`, `captionInset`, `enterDuration` / `leaveDuration` / `stagger` (switching versions: tiles dissolve in, nothing slides). Tiles are never warped, distorted or zoomed on hover.
@@ -188,7 +191,7 @@ Tiles come out in a fresh random order on every load, with neighbours from diffe
 - For more than 100 projects, add more lists (each with offset/limit). The bundle collects every `.work-item` on the page in document order.
 - The older data-attribute formats (`data-image-1`, … or `data-src`, …) still work if you ever need a static list.
 
-Optional mount attributes: `data-project-base="/work/"`, `data-home-path="/"`, `data-about-path="/about"`, `data-layout="a|b|c"`, `data-switcher="false"` (the star only returns home instead of switching versions), `data-rotate="false"` (always open on `data-layout` instead of rotating), `data-shuffle="false"` (keep the CMS order instead of a fresh random order on every load), `data-max-videos="4"`, `data-per-project="2"`, `data-items=".my-selector"`, `data-tagline="…"`, `data-tagline-href="#work"`, `data-media-base="…"` (base for relative URLs).
+Optional mount attributes: `data-project-base="/work/"`, `data-home-path="/"`, `data-about-path="/about"`, `data-layout="a|b|c|d"`, `data-switcher="false"` (the star only returns home instead of switching versions), `data-rotate="false"` (always open on `data-layout` instead of rotating), `data-shuffle="false"` (keep the CMS order instead of a fresh random order on every load), `data-max-videos="4"`, `data-per-project="2"`, `data-items=".my-selector"`, `data-tagline="…"`, `data-tagline-href="#work"`, `data-media-base="…"` (base for relative URLs).
 
 ### 3. Project pages (the Projects template, `/work/<slug>`)
 
@@ -229,7 +232,7 @@ A copy of Home (same header, same Collection List) with its own SEO title, descr
 Page settings → Custom code → Before `</body>` tag, on Home, About and the Projects template:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.3.26/dist/work-canvas.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.4.0/dist/work-canvas.js"></script>
 ```
 
 When you release, bump the version on all three, and `data-media-base` on each `#work-canvas`.

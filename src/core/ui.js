@@ -23,6 +23,8 @@ const CSS = `
 .wc-root.is-hovering-tile{cursor:pointer}
 .wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear;touch-action:none} /* swipes in any direction drive the layouts */
 .wc-root.is-ready .wc-canvas{opacity:1}
+/* Leaving the about section: the work only starts to fade back once the about copy has gone (no cross-fade). */
+.wc-root.is-leaving-about .wc-canvas{transition:opacity .45s linear .45s}
 .wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}
 /* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */
 .wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,400);color:#f2f2f2}
@@ -59,7 +61,7 @@ const CSS = `
 .wc-link-track>span.is-next{left:-1em}
 .wc-about-links a:focus-visible{outline:1px solid currentColor;outline-offset:3px}
 .wc-about-copy{margin:0;font-size:16px}
-.wc-caption{position:absolute;left:0;top:0;font-size:12px;font-weight:400;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}
+.wc-caption{position:absolute;left:0;top:0;transform-origin:0 0;font-size:12px;font-weight:400;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}
 .wc-caption-inner{display:block;transform:translateY(110%)}
 .wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}
 .wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .4s linear;cursor:auto}
@@ -283,6 +285,7 @@ export class UI {
         if (tile) {
           inner.textContent = `${tile.item.title}  ↓`;
           this.captionH = this.caption.offsetHeight; // measured once per text change, not per frame
+          this.captionW = this.caption.offsetWidth;
         }
       });
       if (tile) {
@@ -298,10 +301,71 @@ export class UI {
     const shown = s.shown;
     this.caption.style.visibility = shown ? 'visible' : 'hidden';
     if (shown) {
-      const { x, y, h } = shown.rect;
-      const cx = Math.round(x + inset[0]);
-      const cy = Math.round(y + h - inset[1] - (this.captionH || 14));
-      this.caption.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+      const { x, y, w, h } = shown.rect;
+      const rot = shown.rect.rotation || 0;
+      const capH = this.captionH || 14;
+      if (!rot) {
+        const cx = Math.round(x + inset[0]);
+        const cy = Math.round(y + h - inset[1] - capH);
+        this.caption.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+      } else {
+        // A turned tile (fan): the title lies along one of the tile's edges, just inside it, reading left to
+        // right. First choice: the two edges nearest horizontal, the outer one (further from the fan's centre)
+        // first; if neither keeps the whole title on screen, the other two. Along the edge it starts `inset`
+        // in from the left end, sliding along if that would run off either side of the view.
+        const cos = Math.cos(rot);
+        const sin = Math.sin(rot);
+        const ox = x + w / 2;
+        const oy = y + h / 2;
+        const at = ([lx, ly]) => [ox + lx * cos - ly * sin, oy + lx * sin + ly * cos];
+        const [hw, hh] = [w / 2, h / 2];
+        const topBottom = [[[-hw, -hh], [hw, -hh]], [[-hw, hh], [hw, hh]]];
+        const leftRight = [[[-hw, -hh], [-hw, hh]], [[hw, -hh], [hw, hh]]];
+        // The tile's own x axis runs at `rot` on screen, its y axis at rot + 90°.
+        const flatFirst = Math.abs(cos) >= Math.abs(sin) ? [topBottom, leftRight] : [leftRight, topBottom];
+        const pivot = shown.pivot ?? { x: ox, y: oy + h };
+        const reach = (edge) => {
+          const [a, b] = edge.map(at);
+          return Math.hypot((a[0] + b[0]) / 2 - pivot.x, (a[1] + b[1]) / 2 - pivot.y);
+        };
+        const outerFirst = (pair) => (reach(pair[0]) >= reach(pair[1]) ? pair : [pair[1], pair[0]]);
+        const vw = this.root.clientWidth;
+        const vh = this.root.clientHeight;
+        const cw = this.captionW || 0;
+        const place = (edge) => {
+          let [p, q] = edge.map(at);
+          if (q[0] < p[0]) [p, q] = [q, p]; // run from the left end, so the text reads left to right
+          const ang = Math.atan2(q[1] - p[1], q[0] - p[0]);
+          const [ux, uy] = [Math.cos(ang), Math.sin(ang)]; // along the text
+          const [dx, dy] = [-uy, ux]; // "down" in the text's frame
+          const below = (ox - (p[0] + q[0]) / 2) * dx + (oy - (p[1] + q[1]) / 2) * dy > 0; // tile is under the line
+          const off = below ? inset[1] : -(inset[1] + capH); // keep the text inside the tile
+          const len = Math.hypot(q[0] - p[0], q[1] - p[1]);
+          let s = inset[0];
+          if (ux > 0.05) {
+            const lo = Math.min(dx * off, dx * (off + capH)); // x of the box's left corners, relative
+            const hi = Math.max(dx * off, dx * (off + capH));
+            const fromLeft = (16 - p[0] - lo) / ux; // leftmost corner on screen
+            const toRight = (vw - 16 - p[0] - hi) / ux - cw; // rightmost corner on screen
+            s = Math.max(0, Math.min(Math.max(inset[0], fromLeft), toRight, len - inset[0] - cw));
+          }
+          const cx = p[0] + ux * s + dx * off;
+          const cy = p[1] + uy * s + dy * off;
+          const corners = [[0, 0], [cw, 0], [0, capH], [cw, capH]].map(([a, b]) => [cx + ux * a + dx * b, cy + uy * a + dy * b]);
+          const fits = corners.every(([X, Y]) => X >= 8 && X <= vw - 8 && Y >= 8 && Y <= vh - 4);
+          return { cx, cy, ang, fits };
+        };
+        let spot = null;
+        for (const edge of flatFirst.flatMap(outerFirst)) {
+          const option = place(edge);
+          spot ??= option;
+          if (option.fits) {
+            spot = option;
+            break;
+          }
+        }
+        this.caption.style.transform = `translate3d(${spot.cx.toFixed(1)}px, ${spot.cy.toFixed(1)}px, 0) rotate(${spot.ang.toFixed(4)}rad)`;
+      }
     }
   }
 

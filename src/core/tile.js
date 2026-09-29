@@ -75,7 +75,7 @@ export class Tile {
     const opening = this.engine.openTile;
     this.mesh.position.set(x + w / 2, -(y + h / 2), 0);
     this.mesh.scale.set(w, h, 1);
-    this.mesh.rotation.z = this.override ? 0 : -this.rotation;
+    this.mesh.rotation.z = -(this.override ? this.override.rotation ?? 0 : this.rotation); // clockwise on screen
     this.mesh.renderOrder = opening === this ? 10000 : this.z; // depth test is off; order = stacking
 
     // Ease hover + texture fade.

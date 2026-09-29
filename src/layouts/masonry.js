@@ -1,6 +1,7 @@
 import { Layout } from '../core/layout.js';
 import { ARTBOARD } from '../core/defaults.js';
 import { Spring } from '../core/spring.js';
+import { Spread, spreadFrom } from '../core/spread.js';
 
 /**
  * Version C — Masonry columns (Figma frame 45, node 1542:5489)
@@ -17,8 +18,10 @@ import { Spring } from '../core/spring.js';
  * trackpad, or a vertical swipe on touch) moves the columns too — down the page
  * moves them up, back up moves them down — each at its drift pace and through
  * its own spring, so each scroll eases in and out and the columns pull apart
- * and settle one after another. Hover reveals the title. Switching
- * to it, the columns fade in where they are (left to right); nothing slides.
+ * and settle one after another. The faster a column moves, the wider the gaps
+ * between its tiles (spreading from the middle of the view, with a slight lag
+ * — see spread.js), so faster columns open up more. Hover reveals the title. Switching
+ * to it, every tile fades in together where it is; nothing slides.
  */
 export const config = {
   columnWidth: 212, // Figma 168, scaled up so fewer, larger tiles fill the view
@@ -41,9 +44,16 @@ export const config = {
   hoverEase: 3, // how quickly it slows / recovers (1/s)
 
   // Scroll: wheel / trackpad / vertical swipe moves the columns; eased by a spring
+  // Speed → spacing per column (spread.js): extra gap (CSS px) per px/s above `rest` (the drift), capped at `max`;
+  // opens with a lag (`omega`, 1/s) and closes sooner (`closing`) — back to normal before the pace is.
+  // Columns move slower than the filmstrip, hence the higher gain.
+  spread: { gain: 0.045, max: 18, rest: 60, omega: 4, closing: 18 },
+
   scroll: {
     multiplier: 0.35, // px of travel per px scrolled (swipes too), for a pace-1 column
-    omega: 3, // spring pace (1/s, higher = snappier; ~4/omega s to settle)
+    omega: 5.5, // spring pace for a pace-1 column (1/s, higher = settles sooner after the scroll stops)
+    maxLead: 120, // how far (px, pace-1 column) the columns can lag behind the scroll — caps a flick's speed and run-on
+    // (while scrolling steadily the fastest column tops out around 520 px/s)
   },
 
   // Horizontal shift from the cursor
@@ -91,7 +101,8 @@ export default class Masonry extends Layout {
     super(engine, cfg);
     this.scroll = 0; // vertical travel from the drift
     // Scroll travel per column pattern slot, each eased by its own spring (kept across resizes).
-    this.scrollSprings = cfg.columnSpeeds.map((v) => new Spring(cfg.scroll.omega * Math.sqrt(v)));
+    this.scrollSprings = cfg.columnSpeeds.map((v) => new Spring(cfg.scroll.omega * Math.sqrt(v), { maxLead: cfg.scroll.maxLead }));
+    this.spreads = cfg.columnSpeeds.map(() => new Spread(cfg.spread)); // per pace slot, like the springs
     this.slow = 1; // eased hover slowdown multiplier
     this.shiftX = 0; // horizontal offset (px)
     this.shiftV = 0; // horizontal speed for 'drift' mode (px/s)
@@ -169,7 +180,7 @@ export default class Masonry extends Layout {
       const len = c.columnOffsets.length;
       const p = (((i - 1) % len) + len) % len;
       const k = p % c.columnSpeeds.length;
-      return { baseX: firstX + i * this.pitch, start: c.columnOffsets[p] * s, pace: c.columnSpeeds[k], spring: this.scrollSprings[k], length: cum, tiles };
+      return { baseX: firstX + i * this.pitch, start: c.columnOffsets[p] * s, pace: c.columnSpeeds[k], slot: k, spring: this.scrollSprings[k], length: cum, tiles };
     });
   }
 
@@ -186,7 +197,8 @@ export default class Masonry extends Layout {
     // Horizontal shift from the cursor (cursor left → grid moves right).
     const { nx, inside } = e.cursor;
     const pull = inside ? -Math.sign(nx) * Math.pow(Math.abs(nx), c.shift.curve) : 0;
-    const r = 1 - Math.exp(-dt * c.shift.response);
+    // While the grid fades in it takes its lean straight away, so it doesn't slide sideways as it appears.
+    const r = this.progress < 1 && !this.leaving ? 1 : 1 - Math.exp(-dt * c.shift.response);
     if (c.shift.mode === 'drift') {
       this.shiftV += (pull * c.shift.speed * this.s - this.shiftV) * r;
       this.shiftX += this.shiftV * dt;
@@ -195,6 +207,8 @@ export default class Masonry extends Layout {
     }
 
     this.scrollSprings.forEach((sp) => sp.update(dt));
+    // Each pace slot's travel → its extra gap (columns sharing a slot move identically).
+    const extra = this.spreads.map((sp, k) => sp.update((this.scroll - this.scrollSprings[k].x) * c.columnSpeeds[k], dt, this.reduced));
     const pad = this.colW / c.minAspect + this.gapPx; // vertical wrap margin
     const W = this.totalW;
     let featured = null;
@@ -208,6 +222,9 @@ export default class Masonry extends Layout {
         t.x = x;
         t.y = ((((pos + t.offsetInCol + pad) % L) + L) % L) - pad;
         t.w = this.colW;
+      }
+      spreadFrom(col.tiles, 'y', this.gapPx, extra[col.slot], height / 2);
+      for (const t of col.tiles) {
         t.z = 0;
         t.alpha = 1;
         t.reveal = 1;
@@ -218,7 +235,7 @@ export default class Masonry extends Layout {
           bestScore = t.priority;
           featured = t;
         }
-        this.applyTransition(t, Math.min(1, Math.max(0, x / width))); // fade in place, column by column
+        this.applyTransition(t, 0); // every tile fades in together, in place
       }
     }
 

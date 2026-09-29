@@ -37,7 +37,8 @@ export const DEFAULTS = {
   homeTitle: 'zachary allott — brand design & art direction', // title when returning to the work from /about or a project page
 
   // Transition when opening a project (eases are registered in motion.js)
-  openDuration: 0.75,
+  openDuration: 1.15, // s for the clicked tile to glide into the project view
+  openFade: 0.5, // s for the other tiles to dissolve meanwhile
   openEase: 'wc-move', // quick to leave, slow to land
 };
 

@@ -2,6 +2,7 @@ import { Layout } from '../core/layout.js';
 import { ARTBOARD } from '../core/defaults.js';
 import { sizePattern, fitSize } from '../core/sizing.js';
 import { Spring } from '../core/spring.js';
+import { Spread, spreadFrom } from '../core/spread.js';
 
 /**
  * Version A — Horizontal filmstrip (Figma frame 46, node 1542:5556)
@@ -20,6 +21,10 @@ import { Spring } from '../core/spring.js';
  * Scrolling (wheel / trackpad, or a vertical swipe on touch) moves the strip
  * along too — scroll down to go forward — through a spring, so each scroll
  * eases in and out.
+ * The faster the strip moves (drift, scroll or swipe), the wider the gaps
+ * between tiles: the extra spacing follows the speed through a spring, so it
+ * opens with a slight lag and settles back as the strip slows, like something
+ * with weight. It spreads from the centre of the view, so the middle stays put.
  * Tiles stay flat (no warp or distortion). Hover reveals the title.
  */
 export const config = {
@@ -46,7 +51,14 @@ export const config = {
   hoverSlowdown: 1, // speed multiplier while a tile is hovered (1 = no slowdown)
 
   // Scroll: wheel / trackpad (either axis) moves the strip; eased by a spring
-  scroll: { multiplier: 0.6, omega: 4 }, // px of strip per px scrolled; spring pace (higher = snappier, ~4/omega s to settle)
+  // px of strip per px scrolled; spring pace (1/s, higher = settles sooner after the scroll stops);
+  // how far (px) the strip can lag behind the scroll — caps a big flick's speed and how long it runs on.
+  // (While scrolling steadily, top speed ≈ omega × maxLead / 2 ≈ 750 px/s.)
+  scroll: { multiplier: 0.5, omega: 7, maxLead: 215 },
+
+  // Speed → spacing (spread.js): extra gap (CSS px) per px/s of strip speed above `rest` (the idle drift), capped
+  // at `max`; opens with a lag (`omega`, 1/s) and closes sooner (`closing`) — back to normal before the pace is.
+  spread: { gain: 0.016, max: 18, rest: 60, omega: 4, closing: 18 },
 
   // Touch swipe (no cursor on touch devices)
   dragMultiplier: 1.15,
@@ -78,7 +90,8 @@ export default class Filmstrip extends Layout {
     this.target = 0;
     this.drift = -cfg.idleSpeed; // px/s, eased toward the cursor-derived speed
     this.velocity = 0; // px/s from touch throws
-    this.scrolled = new Spring(cfg.scroll.omega); // strip offset from scrolling, eased
+    this.scrolled = new Spring(cfg.scroll.omega, { maxLead: cfg.scroll.maxLead }); // strip offset from scrolling, eased
+    this.spread = new Spread(cfg.spread); // extra px per gap, following the strip's speed
   }
 
   resize(vp) {
@@ -135,15 +148,23 @@ export default class Filmstrip extends Layout {
     this.offset += (this.target - this.offset) * (1 - Math.pow(1 - c.ease, dt * 60));
     const scrolled = this.scrolled.update(dt);
 
+    // How fast the strip is actually moving → how much extra gap, eased (the lag gives it weight).
+    const pos = this.offset + scrolled;
+    const extra = this.spread.update(pos, dt, this.reduced);
+
     let featured = null;
     let bestD = Infinity;
     const cx = this.vp.width / 2;
     const L = this.length;
+    const m = this.margin;
 
-    this.tiles.forEach((t, i) => {
-      const raw = c.startOffset * this.s + t.baseX + this.offset + scrolled;
-      const m = this.margin;
+    this.tiles.forEach((t) => {
+      const raw = c.startOffset * this.s + t.baseX + pos;
       t.x = ((((raw + m) % L) + L) % L) - m; // wrap into [-margin, L - margin)
+    });
+    spreadFrom(this.tiles, 'x', this.gapPx, extra, cx);
+
+    this.tiles.forEach((t) => {
       t.y = this.bottom - t.h;
       t.z = 0;
       t.alpha = 1;

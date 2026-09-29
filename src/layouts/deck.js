@@ -25,9 +25,12 @@ import { sizePattern, fitSize } from '../core/sizing.js';
  * `scrollGap` s so a fast scroll deals at a steady pace. On touch a swipe deals
  * by distance and speed: one per `swipe.step` px of finger travel, and a flick
  * carries on like scroll momentum after the finger lifts — dealing quickly at
- * first and slowing as it dies away — so a faster swipe brings in more. The cursor only
- * moves the pile. (`moveStep` and `interval` can bring back dealing from
- * cursor travel and on a timer; both are off.) The pile's order stays as dealt.
+ * first and slowing as it dies away — so a faster swipe brings in more. With a
+ * cursor, its distance from the centre sets a pace too: nothing in the middle,
+ * then faster the further left or right it goes (`cursorPace`). Hovering
+ * doesn't hold it (the fanned pile often reaches the edges); bring the cursor
+ * back to the middle to stop. (`moveStep` and `interval` can bring back dealing from cursor
+ * travel and on a timer; both are off.) The pile's order stays as dealt.
  */
 export const config = {
   // Size scale (design px): each card picks one of these heights; width = height × aspect.
@@ -57,6 +60,9 @@ export const config = {
   // New cards
   interval: 0, // s without a new card before the next one comes in on its own (0 = off: scroll only)
   moveStep: 0, // CSS px of cursor travel per new card (0 = off: the cursor doesn't deal)
+  // Cursor position → pace: cards/s rises from 0 at `deadZone` (fraction of the half-width around the centre)
+  // to `max` at the left/right edges, along `curve` (>1 = gentle near the middle, quick toward the edges).
+  cursorPace: { max: 3, deadZone: 0.15, curve: 1.4 },
   scrollStep: 250, // px scrolled (wheel / trackpad / swipe) per new card
   scrollGap: 0.35, // s: fastest pace scrolling deals at
   // Touch: step = px of finger travel per card; gap = fastest pace (s); decay = how quickly a flick's
@@ -64,6 +70,7 @@ export const config = {
   swipe: { step: 140, gap: 0.1, decay: 2.8, backlog: 3 },
   maxPerFrame: 1, // cap on cards added in a single frame during very fast moves
   dealDuration: 0.12, // s for a new card to fade in (0 = instant cut)
+  angles: [0, 11.25, -11.25, 22.5, -22.5], // each card comes in turned to one of these (degrees; never the same twice in a row)
   dealEase: 'none',
   pauseOnHover: true,
   hoverToFront: false, // true = hovering a card brings it to the top of the pile
@@ -98,6 +105,7 @@ export default class Deck extends Layout {
     const first = Math.max(0, this.tiles.findIndex((t) => t.item.caseStudy));
     this.slotTile[this.fillOrder[0]] = first;
     this.slotStamp[this.fillOrder[0]] = 1;
+    this.tiles[first].cardAngle = this.pickAngle();
     this.stamp = 1;
     this.next = (first + 1) % n; // next tile to deal
     this.fading = null; // { slot, from, fromStamp, to, p } while a new card fades in
@@ -108,6 +116,7 @@ export default class Deck extends Layout {
     this.swiping = false; // last deal input was touch (uses the swipe pacing)
     this.sinceScrollDeal = 1;
     this.travel = 0; // cursor travel (px) since the last card
+    this.paced = 0; // cards owed from the cursor's position (deals at 1)
     this.lastPointer = null;
     this.anchors = cfg.slots.map(() => ({ x: 0, y: 0 })); // per-position lagged pile offset, screen px
   }
@@ -175,6 +184,17 @@ export default class Deck extends Layout {
       dealt = true;
     }
     this.travel = Math.min(this.travel, step * 2); // don't bank a backlog from one big swipe
+    // The further left or right the cursor is, the faster cards come in.
+    const cp = c.cursorPace;
+    if (cp?.max > 0 && inside && !e.touch && !this.reduced && this.progress >= 1) {
+      const mag = Math.max(0, (Math.abs(nx) - cp.deadZone) / (1 - cp.deadZone));
+      this.paced = Math.min(1, this.paced + Math.pow(mag, cp.curve) * cp.max * dt);
+      if (this.paced >= 1 && !dealt) {
+        this.paced = 0;
+        this.deal();
+        dealt = true;
+      }
+    }
     // Scrolling deals too (hover doesn't hold it — it's deliberate), at a steady pace.
     // A touch flick keeps adding travel as its momentum dies away.
     const stepPx = this.swiping ? c.swipe.step : c.scrollStep;
@@ -208,6 +228,8 @@ export default class Deck extends Layout {
       t.h = t.baseH;
       t.x = cx + a.x + slot.x * this.k - t.w / 2;
       t.y = cy + a.y + slot.y * this.k - t.h / 2;
+      t.rotation = ((t.cardAngle || 0) * Math.PI) / 180;
+      t.pivot = { x: t.x + t.w / 2, y: t.y - t.h / 2 }; // "outer" = the bottom edge: a turned card's title sits along it
     };
     for (const t of this.tiles) {
       t.alpha = 0;
@@ -249,6 +271,16 @@ export default class Deck extends Layout {
     if (top) top.priority = 3;
   }
 
+  /** A card's angle: one of `angles`, never the same as the card dealt before it. */
+  pickAngle() {
+    const angles = this.config.angles ?? [0];
+    let a;
+    do a = angles[Math.floor(Math.random() * angles.length)];
+    while (angles.length > 1 && a === this.lastAngle);
+    this.lastAngle = a;
+    return a;
+  }
+
   /** Bring the next card in: it fades in on top, in the next empty position, or else in place of the oldest card. */
   deal(tileIndex = null) {
     const n = this.tiles.length;
@@ -267,6 +299,7 @@ export default class Deck extends Layout {
     this.fading = { slot, from, fromStamp: this.slotStamp[slot], to, p: 0 };
     this.slotTile[slot] = to;
     this.slotStamp[slot] = ++this.stamp;
+    this.tiles[to].cardAngle = this.pickAngle();
 
     const duration = this.config.dealDuration;
     this.fadeTween = gsap.to(this.fading, { p: 1, duration, ease: this.config.dealEase, onComplete: () => this.finishFade() });
