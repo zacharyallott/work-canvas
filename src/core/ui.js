@@ -149,11 +149,11 @@ export class UI {
       onHome?.();
     });
     this.icon.addEventListener('pointerdown', (e) => e.stopPropagation());
-    // Star: each hover turns it another 60° (one point on), easing in and out.
+    // Star: each hover turns it another 45°, easing in and out.
     this.starAngle = 0;
     const turnStar = () => {
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      this.starAngle += 60;
+      this.starAngle += 45;
       gsap.to(this.icon.querySelector('img'), { rotation: this.starAngle, duration: 0.6, ease: EASE.move, overwrite: true });
     };
     this.icon.addEventListener('pointerenter', turnStar);
