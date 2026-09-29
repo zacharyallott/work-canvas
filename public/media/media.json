@@ -1,7 +1,7 @@
 {
-  "generated": "2026-09-26T00:05:21.493Z",
-  "count": 54,
-  "images": 40,
+  "generated": "2026-09-29T22:02:31.097Z",
+  "count": 57,
+  "images": 43,
   "videos": 14,
   "items": [
     {
@@ -555,6 +555,120 @@
       ],
       "aspect": 1.5,
       "caseStudy": true
+    },
+    {
+      "id": "counterspace-allott-03",
+      "label": "Counter Space",
+      "href": "/projects/counter-space",
+      "caseStudy": true,
+      "source": "CounterSpace-Allott-03.jpg",
+      "sourceHash": "61cbbfe4681e1f37",
+      "type": "image",
+      "width": 1600,
+      "height": 2400,
+      "images": {
+        "sm": {
+          "src": "media/counterspace-allott-03-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 3412
+        },
+        "md": {
+          "src": "media/counterspace-allott-03-md.webp",
+          "width": 853,
+          "height": 1280,
+          "bytes": 17572
+        },
+        "lg": {
+          "src": "media/counterspace-allott-03-lg.webp",
+          "width": 1365,
+          "height": 2048,
+          "bytes": 43138
+        }
+      },
+      "poster": {
+        "src": "media/counterspace-allott-03-sm.webp",
+        "width": 320,
+        "height": 480,
+        "bytes": 3412
+      },
+      "aspect": 0.6667
+    },
+    {
+      "id": "counterspace-allott-09",
+      "label": "Counter Space",
+      "href": "/projects/counter-space",
+      "caseStudy": true,
+      "source": "CounterSpace-Allott-09.jpg",
+      "sourceHash": "6cdce79488d8c1b8",
+      "type": "image",
+      "width": 1600,
+      "height": 2400,
+      "images": {
+        "sm": {
+          "src": "media/counterspace-allott-09-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 11908
+        },
+        "md": {
+          "src": "media/counterspace-allott-09-md.webp",
+          "width": 853,
+          "height": 1280,
+          "bytes": 72858
+        },
+        "lg": {
+          "src": "media/counterspace-allott-09-lg.webp",
+          "width": 1365,
+          "height": 2048,
+          "bytes": 157570
+        }
+      },
+      "poster": {
+        "src": "media/counterspace-allott-09-sm.webp",
+        "width": 320,
+        "height": 480,
+        "bytes": 11908
+      },
+      "aspect": 0.6667
+    },
+    {
+      "id": "counterspace-allott-10",
+      "label": "Counter Space",
+      "href": "/projects/counter-space",
+      "caseStudy": true,
+      "source": "CounterSpace-Allott-10.jpg",
+      "sourceHash": "99efa34df0753206",
+      "type": "image",
+      "width": 4000,
+      "height": 6000,
+      "images": {
+        "sm": {
+          "src": "media/counterspace-allott-10-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 24800
+        },
+        "md": {
+          "src": "media/counterspace-allott-10-md.webp",
+          "width": 853,
+          "height": 1280,
+          "bytes": 127894
+        },
+        "lg": {
+          "src": "media/counterspace-allott-10-lg.webp",
+          "width": 1365,
+          "height": 2048,
+          "bytes": 259318
+        }
+      },
+      "poster": {
+        "src": "media/counterspace-allott-10-sm.webp",
+        "width": 320,
+        "height": 480,
+        "bytes": 24800
+      },
+      "aspect": 0.6667
     },
     {
       "id": "ctrl-alt-delete-can",

@@ -26,6 +26,7 @@
     { "match": "^FiveStars", "label": "Otis Mountain Get Down", "href": "/projects/otis-mountain-get-down", "caseStudy": true },
     { "match": "^(ctrl-alt-delete|inside-job|untitled|upward-spiral)", "label": "Misc", "href": "", "caseStudy": false },
     { "match": "^Wall-Sign", "label": "Music: Not Impossible", "href": "/projects/mni", "caseStudy": true },
+    { "match": "^CounterSpace", "label": "Counter Space", "href": "/projects/counter-space", "caseStudy": true },
     { "match": "CAHA", "label": "Caha", "href": "", "caseStudy": false },
     { "match": "(^|_)UA_", "label": "Under Armour", "href": "", "caseStudy": false },
     { "match": "Tosdal",                "label": "Tosdal APC",                "href": "/projects/tosdal-law", "caseStudy": false }
@@ -44,7 +45,8 @@
     "10_OtisMountain": "otis-mountain-get-down",
     "11_MusicNotImpossible": "mni",
     "12_GTBikes": "gt-bikes",
-    "13_MicrosoftInnovationHub": "microsoft-innovation-hub"
+    "13_MicrosoftInnovationHub": "microsoft-innovation-hub",
+    "14_CounterSpace": "counter-space"
   },
   "video": {
     "_readme": "Per-file overrides, keyed by source filename. start/duration trim the loop (default: first `maxSeconds` s). crop = 'w:h:x:y' in source px (find with: ffmpeg -i file -vf cropdetect -f null -).",
