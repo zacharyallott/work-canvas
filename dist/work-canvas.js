@@ -13704,7 +13704,7 @@ var ah = class {
 			e.preventDefault(), i?.();
 		}), this.icon.addEventListener("pointerdown", (e) => e.stopPropagation()), this.starAngle = 0;
 		let l = () => {
-			matchMedia("(prefers-reduced-motion: reduce)").matches || (this.starAngle += 60, mi.to(this.icon.querySelector("img"), {
+			matchMedia("(prefers-reduced-motion: reduce)").matches || (this.starAngle += 45, mi.to(this.icon.querySelector("img"), {
 				rotation: this.starAngle,
 				duration: .6,
 				ease: cm.move,
