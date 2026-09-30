@@ -46,17 +46,27 @@ export const config = {
   tileWidth: 414, // the front card's width
   maxHeight: 440, // taller pieces are cropped to this, so the cards behind still show (every card keeps the full width)
   frontHeight: 300, // typical front card height: the cards behind are placed around it
-  peek: 150, // how far the first card behind shows beyond the front one (further ones show less, with their depth)
+  peek: 170, // how far the first card behind shows beyond the front one (further ones show less, with their depth)
+  // How many show: landscape screens draw everything `zoom` × the design size, so the front card and two either side
+  // (5 cards) all fit in the view; portrait screens (phones) — where the card width is held by the view's width —
+  // space the cards further apart instead (`portraitPeek`), for the front card and three either side (7).
+  zoom: 0.95,
+  portraitPeek: 220,
+  portraitShape: 2.16, // the portrait height ÷ width portraitPeek is set for (a 375 × 812 phone)
+  // Cards shown either side of the front (landscape, portrait): any further out slide on past the edge of the view,
+  // so exactly that many show and cards glide in and out of frame rather than peeking.
+  showing: [2, 3],
   // How cards shrink with distance from the front: scale = floor + (1 − floor) / (1 + depth × distance²), so the
-  // furthest ones never get smaller than about `floor` (1 → 0.83 → 0.58 → 0.41 at distance 0–3).
-  depth: 0.25,
+  // furthest ones never get smaller than about `floor` (1 → 0.91 → 0.72 → 0.56 at distance 0–3).
+  depth: 0.12,
   depthFloor: 0.15,
-  centerY: 0.52, // the front card's centre, as a fraction of the view height
-  slots: 3.4, // cards shown either side of the front (further ones fade out, off screen)
+  portraitDepth: 0.25, // portrait screens (phones): `depth` there (1 → 0.83 → 0.58 → 0.41), for seven cards
+  centerY: 0.5, // the front card's centre, as a fraction of the view height
+  slots: 6, // at least this many cards either side of the front (the loop's seam stays well off screen)
   minAspect: 0.75, // taller than this gets cropped
   maxAspect: 1.4, // wider than this gets cropped (keeps the cards deep enough to overlap)
   minScale: 0.55,
-  maxScale: 1.3, // keeps the front card within a 1280 px texture on 2× screens
+  maxScale: 1.3, // with `zoom`, keeps the front card within a 1280 px texture on 2× screens
   mobileMaxWidth: 0.78, // the front card's width never exceeds this fraction of the view width (phones)
 
   // Motion (cards)
@@ -70,7 +80,12 @@ export const config = {
   // `perCard` beyond, at most `max` (the momentum after that doesn't add more). A scroll after `gap` s without wheel
   // events is a new one; one that keeps going moves on again every `repeat` px once it's locked in. Touch: a swipe
   // needs `swipe` px of travel; its length plus `swipeCarry` s of its release speed counts (`swipeFrom`, `swipePerCard`).
-  gesture: { gap: 0.2, window: 0.4, repeat: 800, from: 550, perCard: 250, max: 3, swipe: 30, swipeFrom: 300, swipePerCard: 200, swipeCarry: 0.15 },
+  gesture: { gap: 0.2, window: 0.4, repeat: 800, from: 900, perCard: 450, max: 3, swipe: 30, swipeFrom: 450, swipePerCard: 300, swipeCarry: 0.15 },
+  // Lock: a longer, quicker scroll also plays its moves faster. Tempo = 1 + `amount` × (px beyond gesture.from, per
+  // gesture.from) + `speed` × (peak px/s beyond `speedFrom`, per speedFrom), at most `max`; each card's move and pause
+  // divide by it (the last card by its square root, so it still settles in gently). Touch uses the swipe's length
+  // and release speed (`swipeSpeedFrom`).
+  tempo: { amount: 0.5, speed: 0.4, speedFrom: 2000, swipeSpeedFrom: 800, max: 2.5 },
   // Smooth: cards per px scrolled; spring pace (1/s); how many cards the input can run ahead (caps a flick's speed,
   // ≈ omega × maxLead / 2 cards/s); `snapDelay` s after the scroll stops it settles on the next whole card the way it
   // was going (a nudge under `deadband` cards settles back). Touch: cards per px of swipe; s of a flick carried on.
@@ -81,8 +96,9 @@ export const config = {
   // vertically, `deadZoneX` of the half-width sideways — about the column's edges) to `max` at the edge, along `curve`
   // (>1 = gentle near the middle, quick toward the edges), eased in and out through `response` (1/s, lower = more
   // lag). Bottom / right = on, top / left = back, by whichever edge the cursor is nearer.
+  // Lock mode: the faster the pace, the quicker each card's move and hold play, so it keeps up (up to `tempo.max`).
   // Scrolling / swiping takes over from it: the cursor pace stops, and picks up again `resume` s after the last scroll.
-  cursorPace: { max: 1.1, deadZone: 0.2, deadZoneX: 0.45, curve: 1.5, response: 3, resume: 0.8 },
+  cursorPace: { max: 2, deadZone: 0.2, deadZoneX: 0.45, curve: 1.5, response: 3, resume: 0.8 },
   // Cursor parallax: design px the front card leans toward the cursor at the edges (x, y); cards behind lean less,
   // in step with their depth scale. Eased through `response` (1/s).
   parallax: { x: 28, y: 16, response: 3 },
@@ -115,7 +131,9 @@ export default class Rolodex extends Layout {
     this.shown = 0; // cards: where it's shown this frame
     this.move = null; // lock: { from, to, t, D, v0 } while a move plays
     this.hold = 0; // lock: s left holding after a move
-    this.gesture = null; // lock: the scroll under way { base, dir, n, start, amount }
+    this.gesture = null; // lock: the scroll under way { base, dir, n, start, amount, peak }
+    this.wheelLog = []; // lock: recent wheel deltas, for the scroll's speed
+    this.tempo = 1; // lock: how much faster the current moves play (long, quick scrolls)
     this.moveEase = gsap.parseEase(cfg.move.ease);
     this.roll = new Spring(cfg.scroll.omega); // smooth: follows the goal
     this.spread = new Spread(cfg.spread);
@@ -138,8 +156,18 @@ export default class Rolodex extends Layout {
       this.tiles.forEach((t) => t.dispose());
       this.makeTiles(this.repeatItems(count));
     }
-    const base = Math.min(c.tileWidth * s, vp.width * c.mobileMaxWidth);
+    const portrait = vp.width < vp.height;
+    const base = Math.min(c.tileWidth * s * (portrait ? 1 : c.zoom), vp.width * c.mobileMaxWidth);
+    this.peek = portrait ? c.portraitPeek ?? c.peek : c.peek;
+    this.showing = c.showing[portrait ? 1 : 0];
+    this.depth = portrait ? c.portraitDepth ?? c.depth : c.depth;
     this.unit = base / c.tileWidth; // CSS px per design px at the cards' size (below s on narrow screens)
+    // Spacing follows the view height even past maxScale (big screens), so the same number of cards show; only the
+    // cards' own size stops at the cap, for sharpness.
+    // Portrait: in step with how tall the view is for its width (taller phones spread out, shorter ones close up).
+    this.space = portrait
+      ? this.unit * Math.min(1.2, Math.max(0.9, vp.height / vp.width / c.portraitShape))
+      : Math.max(this.unit, Math.max(c.minScale, vp.height / ARTBOARD.height) * c.zoom);
     this.tiles.forEach((t) => {
       const aspect = Math.min(c.maxAspect, Math.max(c.minAspect, t.item.aspect || 1));
       t.baseW = base; // all the same width, so the front card is always the widest
@@ -177,12 +205,16 @@ export default class Rolodex extends Layout {
     if (Math.abs(this.pace) < 0.02 && !want) this.pace = 0;
     if (lock) {
       // Card by card: a card each time the pace has built up a whole one (and it's free to move).
-      this.paceCards += this.pace * dt;
+      this.paceCards = Math.max(-1.2, Math.min(1.2, this.paceCards + this.pace * dt)); // no backlog while it's busy
       if (!this.pace) this.paceCards = 0;
       if (Math.abs(this.paceCards) >= 1 && !this.locked) {
         const dir = Math.sign(this.paceCards);
         this.paceCards -= dir;
         this.goal = this.pos + dir;
+        // Quick enough to keep up with the pace: each move + hold takes about 1 / pace seconds.
+        const m = c.move;
+        this.tempo = Math.min(c.tempo.max, Math.max(1, Math.abs(this.pace) * (m.duration + m.hold)));
+        this.paced = true;
         this.dir = dir;
       }
     } else if (this.pace) {
@@ -211,6 +243,8 @@ export default class Rolodex extends Layout {
       if (this.timer >= c.interval) {
         this.timer = 0;
         this.goal += 1;
+        this.tempo = 1;
+        this.paced = false;
         this.dir = 1;
       }
     } else if (!resting) {
@@ -230,10 +264,18 @@ export default class Rolodex extends Layout {
     const n = this.tiles.length;
     const cx = this.vp.width / 2;
     const cy = this.vp.height * c.centerY;
-    const half = (c.frontHeight / 2) * this.unit;
-    const peek = c.peek * this.unit + extra;
-    const rd = Math.sqrt(c.depth);
+    const half = (c.frontHeight / 2) * this.space;
+    const peek = this.peek * this.space + extra;
+    const depth = this.depth;
+    const rd = Math.sqrt(depth);
     const f = c.depthFloor ?? 0;
+    const H = this.vp.height;
+    const scaleAt = (d) => f + (1 - f) / (1 + depth * d * d); // smaller with depth
+    // The card's outer edge (top for cards above, bottom for cards below; its centre at the front) sits a band
+    // further out than the one in front of it: `peek` scaled by depth all the way out, so the bands narrow as they
+    // recede (the integral of the depth scale: floor × d + (1 − floor) × atan(d√depth) / √depth).
+    const outAt = (d) => half * Math.min(d, 1) + peek * (f * d + ((1 - f) * Math.atan(d * rd)) / rd);
+    const next = this.showing + 1; // the first place past the cards that show
     let featured = null;
     let bestD = Infinity;
 
@@ -241,29 +283,31 @@ export default class Rolodex extends Layout {
       let u = (((i - roll) % n) + n) % n; // distance from the front: − above, + below
       if (u >= n / 2) u -= n;
       const d = Math.abs(u);
-      if (d > c.slots) {
-        t.alpha = 0;
-        t.priority = 0;
-        t.interactive = false;
-        return;
-      }
-      const k = f + (1 - f) / (1 + c.depth * u * u); // smaller with depth
+      const k = scaleAt(d);
       t.w = t.baseW * k;
       t.h = t.baseH * k;
-      // The card's outer edge (top for cards above, bottom for cards below; its centre at the front) sits a band
-      // further out than the one in front of it: `peek` scaled by depth all the way out, so the bands narrow as
-      // they recede (the integral of the depth scale: floor × d + (1 − floor) × atan(d√depth) / √depth).
       const frac = 0.5 + 0.5 * Math.max(-1, Math.min(1, u)); // 0 = top edge, 0.5 = centre, 1 = bottom edge
-      const out = Math.sign(u) * (half * Math.min(d, 1) + peek * (f * d + ((1 - f) * Math.atan(d * rd)) / rd));
+      let out = outAt(d);
+      if (d > this.showing) {
+        // Past the cards that show: nudged out just far enough that at the next place it's clear of the edge, so it
+        // waits just off screen and comes in at the same pace as the others.
+        const he = t.baseH * scaleAt(next);
+        const oe = outAt(next);
+        const clear = u < 0 ? cy - oe + he : H - cy - oe + he; // how far it would still overlap the view there
+        out += Math.min(1, d - this.showing) * Math.max(0, clear + 12); // 12 px spare for the cursor lean
+      }
+      out *= Math.sign(u);
       // Parallax: nearer cards lean further toward the cursor (in step with their depth scale).
       t.x = cx - t.w / 2 + lean.x * pr.x * this.unit * k;
       t.y = cy + out - frac * t.h + lean.y * pr.y * this.unit * k;
-      t.z = Math.round((c.slots - d) * 1000) + (u * this.dir > 0 ? 1 : 0); // the front on top (level: the one coming in)
+      t.z = Math.round((n - d) * 1000) + (u * this.dir > 0 ? 1 : 0); // the front on top (level: the one coming in)
       t.rotation = 0;
-      t.alpha = Math.min(1, (c.slots - d) / 0.6);
+      // Cards stay solid in and out of frame (no fades). The next ones either side are kept live just off screen, so
+      // their images are loaded before they come in.
+      const visible = t.y + t.h > 0 && t.y < H;
+      t.alpha = d <= next + 0.5 ? 1 : 0;
       t.reveal = 1;
       t.captionAt = u < -0.5 ? 'top-left' : null; // the title goes on the band that shows (UI.updateCaption)
-      const visible = t.y + t.h > 0 && t.y < this.vp.height && t.alpha > 0;
       t.interactive = visible;
       t.priority = visible ? this.centerScore(t) : 0;
       if (visible && d < bestD) {
@@ -292,18 +336,25 @@ export default class Rolodex extends Layout {
     const c = this.config.move;
     if (this.move) {
       const m = this.move;
+      // A scroll that turns out longer / quicker (more cards queued, higher tempo) hurries the move under way too:
+      // same point along its ease, just less time left.
+      const want = this.moveTime(Math.abs(this.goal - m.from));
+      if (want < m.D) {
+        m.t *= want / m.D;
+        m.D = want;
+      }
       m.t += dt;
       if (m.t < m.D) return m.from + (m.to - m.from) * this.moveEase(m.t / m.D);
       this.pos = m.to;
       this.move = null;
-      this.hold = this.reduced ? 0 : this.goal === this.pos ? c.hold : c.between;
+      this.hold = this.reduced ? 0 : this.goal === this.pos ? c.hold / (this.paced ? this.tempo : 1) : c.between / this.tempo;
       return this.pos;
     }
     if (this.hold > 0) {
       this.hold = Math.max(0, this.hold - dt);
     } else if (this.goal !== this.pos) {
       const left = Math.abs(this.goal - this.pos); // cards still to go, this one included
-      const D = this.reduced ? 0.001 : c.duration / (1 + c.quicken * (left - 1));
+      const D = this.moveTime(left);
       this.move = { from: this.pos, to: this.pos + Math.sign(this.goal - this.pos), t: 0, D };
       return this.advance(0);
     }
@@ -315,9 +366,28 @@ export default class Rolodex extends Layout {
     return Math.min(this.config.gesture.max, 1 + Math.floor(Math.max(0, amount - from) / perCard));
   }
 
-  /** Starts a move of `n` cards on (dir +1) or back (−1) from where it's locked in. */
+  /** Seconds for the next card's move with `left` cards still to go (this one included): quicker while more are to
+   *  come, and with the tempo (a scroll's last card settles in gentler, by the tempo's square root; the cursor pace's
+   *  cards all play at its tempo). */
+  moveTime(left) {
+    const c = this.config.move;
+    if (this.reduced) return 0.001;
+    const tempo = left <= 1 && !this.paced ? Math.sqrt(this.tempo) : this.tempo;
+    return c.duration / (1 + c.quicken * Math.max(0, left - 1)) / tempo;
+  }
+
+  /** How much faster a scroll of `amount` px peaking at `peak` px/s plays its moves (1 = normal). */
+  tempoFor(amount, from, peak, speedFrom) {
+    const t = this.config.tempo;
+    const more = t.amount * Math.max(0, amount - from) / from + t.speed * Math.max(0, peak - speedFrom) / speedFrom;
+    return Math.min(t.max, 1 + more);
+  }
+
+  /** Starts a move of `n` cards on (dir +1) or back (−1) from where it's locked in (at normal tempo). */
   go(dir, n = 1) {
     this.goal = this.pos + dir * n;
+    this.tempo = 1;
+    this.paced = false;
     this.dir = dir;
     this.pace = this.paceCards = 0;
     this.sinceInput = 0;
@@ -343,14 +413,22 @@ export default class Rolodex extends Layout {
     if (c.mode === 'smooth') return this.input(d * c.scroll.multiplier);
     if (!d) return;
 
+    // The scroll's speed: px over the last 0.1 s.
+    this.wheelLog = fresh ? [] : this.wheelLog.filter((w) => now - w.t < 0.1);
+    this.wheelLog.push({ t: now, d: Math.abs(d) });
+    const speed = this.wheelLog.reduce((a, w) => a + w.d, 0) / 0.1;
+
     if (fresh) {
       this.gesture = null;
       this.travel = 0;
     }
     const gs = this.gesture;
     if (gs && Math.sign(d) === gs.dir && now - gs.start < g.window) {
-      // Still the start of this scroll: the further it goes, the more cards the move takes in.
+      // Still the start of this scroll: the further it goes, the more cards the move takes in; the further and
+      // quicker, the faster they play.
       gs.amount += Math.abs(d);
+      gs.peak = Math.max(gs.peak, speed);
+      this.tempo = Math.max(this.tempo, this.tempoFor(gs.amount, g.from, gs.peak, c.tempo.speedFrom));
       const n = this.cardsFor(gs.amount, g.from, g.perCard);
       if (n > gs.n) {
         gs.n = n;
@@ -369,7 +447,7 @@ export default class Rolodex extends Layout {
     this.travel = 0;
     const dir = Math.sign(d);
     const n = fresh ? this.cardsFor(Math.abs(d), g.from, g.perCard) : 1;
-    this.gesture = { base: this.pos, dir, n, start: now, amount: Math.abs(d) };
+    this.gesture = { base: this.pos, dir, n, start: now, amount: Math.abs(d), peak: speed };
     this.go(dir, n);
   }
 
@@ -392,9 +470,10 @@ export default class Rolodex extends Layout {
       const travel = this.swipe ?? 0;
       this.swipe = 0;
       if (Math.abs(travel) < c.gesture.swipe || this.locked) return;
-      // Lock: a longer (or quicker) swipe moves more cards.
+      // Lock: a longer (or quicker) swipe moves more cards, and plays them faster.
       const g = c.gesture;
       this.go(-Math.sign(travel), this.cardsFor(Math.abs(travel) + Math.abs(vy) * g.swipeCarry, g.swipeFrom, g.swipePerCard));
+      this.tempo = this.tempoFor(Math.abs(travel), g.swipeFrom, Math.abs(vy), c.tempo.swipeSpeedFrom);
       return;
     }
     this.dragging = false;

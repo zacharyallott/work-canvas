@@ -51,8 +51,12 @@ export const config = {
   sharpDensity: 2,
   mobileMaxWidth: 0.55, // tile width never exceeds this fraction of the view width (phones)
   seam: 180, // degrees: where places leave/join the loop — a tile pointing straight down is wholly below the fold
-  hole: 520, // design px each tile sits out from the centre point at rest (a gap in the middle; the speed spread adds to it)
-  drop: 180, // design px the centre point sits below the bottom edge of the view
+  hole: 640, // design px each tile sits out from the centre point at rest (a gap in the middle; the speed spread adds to it)
+  drop: 360, // design px the centre point sits below the bottom edge of the view
+  // Portrait screens (phones): the centre point goes further down, so the open centre's top edge (at rest) sits this
+  // far down the view — the arc of tiles lower on the screen, the centre well below it.
+  portraitRing: 0.88,
+  portraitHole: 520, // portrait screens: `hole` there (a tighter circle suits the narrow view)
   hoverOut: 56, // design px a hovered tile slides out from the others, along its own direction (eased with the hover)
 
   // Motion (degrees)
@@ -120,7 +124,10 @@ export default class Fan extends Layout {
       t.w = Math.min(base * c.sizes[pattern[i]], shown);
       t.h = t.w / aspect;
     });
-    this.pivot = { x: vp.width / 2, y: vp.height + c.drop * s };
+    const portrait = vp.width < vp.height;
+    this.hole = portrait ? c.portraitHole ?? c.hole : c.hole;
+    const ring = portrait ? vp.height * c.portraitRing + this.hole * s : 0; // portrait: lower the fan
+    this.pivot = { x: vp.width / 2, y: Math.max(vp.height + c.drop * s, ring) };
   }
 
   update(dt) {
@@ -129,7 +136,7 @@ export default class Fan extends Layout {
     this.angle += this.velocity * dt;
     this.velocity *= Math.pow(c.inertia, dt * 60);
     const turn = this.angle + this.scrolled.update(dt);
-    const out = (c.hole + this.spread.update(turn, dt, this.reduced)) * this.s; // resting gap + speed spread
+    const out = (this.hole + this.spread.update(turn, dt, this.reduced)) * this.s; // resting gap + speed spread
 
     const n = this.tiles.length;
     const period = n * c.step; // ≥ 360: with more pieces than places, some wait in the hidden half
