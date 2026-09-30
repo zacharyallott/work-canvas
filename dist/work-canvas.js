@@ -15025,8 +15025,10 @@ var Hh = {
 	sharpDensity: 2,
 	mobileMaxWidth: .55,
 	seam: 180,
-	hole: 520,
-	drop: 180,
+	hole: 640,
+	drop: 360,
+	portraitRing: .88,
+	portraitHole: 520,
 	hoverOut: 56,
 	idleSpeed: .8,
 	scroll: {
@@ -15068,15 +15070,19 @@ var Hh = {
 		this.tiles.forEach((e, n) => {
 			let r = e.item.aspect || 1, i = Math.min(t.maxAspect, Math.max(t.minAspect, r * t.shapes[s[n]])), l = r >= 1 ? c : c * r, u = i < r ? l / r * i : l;
 			e.w = Math.min(a * t.sizes[o[n]], u), e.h = e.w / i;
-		}), this.pivot = {
+		});
+		let l = e.width < e.height;
+		this.hole = l ? t.portraitHole ?? t.hole : t.hole;
+		let u = l ? e.height * t.portraitRing + this.hole * n : 0;
+		this.pivot = {
 			x: e.width / 2,
-			y: e.height + t.drop * n
+			y: Math.max(e.height + t.drop * n, u)
 		};
 	}
 	update(e) {
 		let t = this.config;
 		this.reduced || (this.angle += t.idleSpeed * e), this.angle += this.velocity * e, this.velocity *= t.inertia ** (e * 60);
-		let n = this.angle + this.scrolled.update(e), r = (t.hole + this.spread.update(n, e, this.reduced)) * this.s, i = this.tiles.length * t.step, a = t.seam - 360, { x: o, y: s } = this.pivot, { width: c, height: l } = this.vp, u = null, d = 0, f = [];
+		let n = this.angle + this.scrolled.update(e), r = (this.hole + this.spread.update(n, e, this.reduced)) * this.s, i = this.tiles.length * t.step, a = t.seam - 360, { x: o, y: s } = this.pivot, { width: c, height: l } = this.vp, u = null, d = 0, f = [];
 		this.tiles.forEach((e, r) => {
 			let o = n + r * t.step, s = o + Math.ceil((a - o) / i) * i;
 			if (s >= t.seam) {
@@ -15421,11 +15427,16 @@ var qh = {
 	tileWidth: 414,
 	maxHeight: 440,
 	frontHeight: 300,
-	peek: 150,
-	depth: .25,
+	peek: 170,
+	zoom: .95,
+	portraitPeek: 220,
+	portraitShape: 2.16,
+	showing: [2, 3],
+	depth: .12,
 	depthFloor: .15,
-	centerY: .52,
-	slots: 3.4,
+	portraitDepth: .25,
+	centerY: .5,
+	slots: 6,
 	minAspect: .75,
 	maxAspect: 1.4,
 	minScale: .55,
@@ -15443,13 +15454,20 @@ var qh = {
 		gap: .2,
 		window: .4,
 		repeat: 800,
-		from: 550,
-		perCard: 250,
+		from: 900,
+		perCard: 450,
 		max: 3,
 		swipe: 30,
-		swipeFrom: 300,
-		swipePerCard: 200,
+		swipeFrom: 450,
+		swipePerCard: 300,
 		swipeCarry: .15
+	},
+	tempo: {
+		amount: .5,
+		speed: .4,
+		speedFrom: 2e3,
+		swipeSpeedFrom: 800,
+		max: 2.5
 	},
 	scroll: {
 		multiplier: 1 / 220,
@@ -15461,7 +15479,7 @@ var qh = {
 	dragMultiplier: 1 / 260,
 	throw: .35,
 	cursorPace: {
-		max: 1.1,
+		max: 2,
 		deadZone: .2,
 		deadZoneX: .45,
 		curve: 1.5,
@@ -15494,17 +15512,17 @@ var qh = {
 	captionInset: [20, 12]
 }, Jh = class extends kh {
 	constructor(e, t) {
-		super(e, t), this.goal = 0, this.pos = 0, this.shown = 0, this.move = null, this.hold = 0, this.gesture = null, this.moveEase = hi.parseEase(t.move.ease), this.roll = new Mh(t.scroll.omega), this.spread = new Nh(t.spread), this.sinceInput = Infinity, this.dragging = !1, this.timer = 0, this.settled = 0, this.dir = 1, this.pace = 0, this.paceCards = 0;
+		super(e, t), this.goal = 0, this.pos = 0, this.shown = 0, this.move = null, this.hold = 0, this.gesture = null, this.wheelLog = [], this.tempo = 1, this.moveEase = hi.parseEase(t.move.ease), this.roll = new Mh(t.scroll.omega), this.spread = new Nh(t.spread), this.sinceInput = Infinity, this.dragging = !1, this.timer = 0, this.settled = 0, this.dir = 1, this.pace = 0, this.paceCards = 0;
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.height / Np.height));
 		this.s = n, this.engine.scale = n;
 		let r = Math.max(this.items.length, Math.ceil(t.slots * 2) + 2);
 		r !== this.tiles.length && (this.tiles.forEach((e) => e.dispose()), this.makeTiles(this.repeatItems(r)));
-		let i = Math.min(t.tileWidth * n, e.width * t.mobileMaxWidth);
-		this.unit = i / t.tileWidth, this.tiles.forEach((e) => {
+		let i = e.width < e.height, a = Math.min(t.tileWidth * n * (i ? 1 : t.zoom), e.width * t.mobileMaxWidth);
+		this.peek = i ? t.portraitPeek ?? t.peek : t.peek, this.showing = t.showing[+!!i], this.depth = i ? t.portraitDepth ?? t.depth : t.depth, this.unit = a / t.tileWidth, this.space = i ? this.unit * Math.min(1.2, Math.max(.9, e.height / e.width / t.portraitShape)) : Math.max(this.unit, Math.max(t.minScale, e.height / Np.height) * t.zoom), this.tiles.forEach((e) => {
 			let n = Math.min(t.maxAspect, Math.max(t.minAspect, e.item.aspect || 1));
-			e.baseW = i, e.baseH = Math.min(i / n, t.maxHeight * this.unit);
+			e.baseW = a, e.baseH = Math.min(a / n, t.maxHeight * this.unit);
 		});
 	}
 	update(e) {
@@ -15515,9 +15533,11 @@ var qh = {
 			y: 0
 		});
 		if (v.x += ((c && !this.reduced ? o : 0) - v.x) * _, v.y += ((c && !this.reduced ? s : 0) - v.y) * _, m && (this.pace = this.paceCards = 0), this.pace += (h - this.pace) * (1 - Math.exp(-e * a.response)), Math.abs(this.pace) < .02 && !h && (this.pace = 0), i) {
-			if (this.paceCards += this.pace * e, this.pace || (this.paceCards = 0), Math.abs(this.paceCards) >= 1 && !this.locked) {
+			if (this.paceCards = Math.max(-1.2, Math.min(1.2, this.paceCards + this.pace * e)), this.pace || (this.paceCards = 0), Math.abs(this.paceCards) >= 1 && !this.locked) {
 				let e = Math.sign(this.paceCards);
-				this.paceCards -= e, this.goal = this.pos + e, this.dir = e;
+				this.paceCards -= e, this.goal = this.pos + e;
+				let n = t.move;
+				this.tempo = Math.min(t.tempo.max, Math.max(1, Math.abs(this.pace) * (n.duration + n.hold))), this.paced = !0, this.dir = e;
 			}
 		} else this.pace && this.input(this.pace * e);
 		if (!i && !this.dragging && this.sinceInput > t.scroll.snapDelay && this.goal !== Math.round(this.goal)) {
@@ -15528,25 +15548,24 @@ var qh = {
 			}
 		}
 		let y = i ? !this.move && this.hold <= 0 && this.goal === this.pos : Math.abs(this.goal - this.roll.x) < .02 && Math.abs(this.roll.v) < .05;
-		!i && y && Number.isInteger(this.goal) && (this.settled = this.goal), t.interval && !this.reduced && y && !(r && t.pauseOnHover) && this.progress >= 1 ? (this.timer += e, this.timer >= t.interval && (this.timer = 0, this.goal += 1, this.dir = 1)) : y || (this.timer = 0);
+		!i && y && Number.isInteger(this.goal) && (this.settled = this.goal), t.interval && !this.reduced && y && !(r && t.pauseOnHover) && this.progress >= 1 ? (this.timer += e, this.timer >= t.interval && (this.timer = 0, this.goal += 1, this.tempo = 1, this.paced = !1, this.dir = 1)) : y || (this.timer = 0);
 		let b;
 		i ? b = this.advance(e) : (this.roll.target = this.goal, b = this.pos = this.roll.update(e)), this.shown = b;
-		let x = i ? 0 : this.spread.update(b, e, this.reduced) * this.unit, S = this.tiles.length, C = this.vp.width / 2, w = this.vp.height * t.centerY, T = t.frontHeight / 2 * this.unit, E = t.peek * this.unit + x, D = Math.sqrt(t.depth), O = t.depthFloor ?? 0, k = null, A = Infinity;
-		this.tiles.forEach((e, n) => {
-			let r = ((n - b) % S + S) % S;
-			r >= S / 2 && (r -= S);
-			let i = Math.abs(r);
-			if (i > t.slots) {
-				e.alpha = 0, e.priority = 0, e.interactive = !1;
-				return;
+		let x = i ? 0 : this.spread.update(b, e, this.reduced) * this.unit, S = this.tiles.length, C = this.vp.width / 2, w = this.vp.height * t.centerY, T = t.frontHeight / 2 * this.space, E = this.peek * this.space + x, D = this.depth, O = Math.sqrt(D), k = t.depthFloor ?? 0, A = this.vp.height, j = (e) => k + (1 - k) / (1 + D * e * e), M = (e) => T * Math.min(e, 1) + E * (k * e + (1 - k) * Math.atan(e * O) / O), N = this.showing + 1, P = null, F = Infinity;
+		this.tiles.forEach((e, t) => {
+			let n = ((t - b) % S + S) % S;
+			n >= S / 2 && (n -= S);
+			let r = Math.abs(n), i = j(r);
+			e.w = e.baseW * i, e.h = e.baseH * i;
+			let a = .5 + .5 * Math.max(-1, Math.min(1, n)), o = M(r);
+			if (r > this.showing) {
+				let t = e.baseH * j(N), i = M(N), a = n < 0 ? w - i + t : A - w - i + t;
+				o += Math.min(1, r - this.showing) * Math.max(0, a + 12);
 			}
-			let a = O + (1 - O) / (1 + t.depth * r * r);
-			e.w = e.baseW * a, e.h = e.baseH * a;
-			let o = .5 + .5 * Math.max(-1, Math.min(1, r)), s = Math.sign(r) * (T * Math.min(i, 1) + E * (O * i + (1 - O) * Math.atan(i * D) / D));
-			e.x = C - e.w / 2 + v.x * g.x * this.unit * a, e.y = w + s - o * e.h + v.y * g.y * this.unit * a, e.z = Math.round((t.slots - i) * 1e3) + +(r * this.dir > 0), e.rotation = 0, e.alpha = Math.min(1, (t.slots - i) / .6), e.reveal = 1, e.captionAt = r < -.5 ? "top-left" : null;
-			let c = e.y + e.h > 0 && e.y < this.vp.height && e.alpha > 0;
-			e.interactive = c, e.priority = c ? this.centerScore(e) : 0, c && i < A && (A = i, k = e), this.applyTransition(e, Math.min(1, i / 3));
-		}), this.featured = k, k && (k.priority = 2), r && (n.hovered.priority = 3);
+			o *= Math.sign(n), e.x = C - e.w / 2 + v.x * g.x * this.unit * i, e.y = w + o - a * e.h + v.y * g.y * this.unit * i, e.z = Math.round((S - r) * 1e3) + +(n * this.dir > 0), e.rotation = 0;
+			let s = e.y + e.h > 0 && e.y < A;
+			e.alpha = +(r <= N + .5), e.reveal = 1, e.captionAt = n < -.5 ? "top-left" : null, e.interactive = s, e.priority = s ? this.centerScore(e) : 0, s && r < F && (F = r, P = e), this.applyTransition(e, Math.min(1, r / 3));
+		}), this.featured = P, P && (P.priority = 2), r && (n.hovered.priority = 3);
 	}
 	get locked() {
 		return !!this.move || this.hold > 0 || this.goal !== this.pos;
@@ -15554,17 +15573,17 @@ var qh = {
 	advance(e) {
 		let t = this.config.move;
 		if (this.move) {
-			let n = this.move;
-			return n.t += e, n.t < n.D ? n.from + (n.to - n.from) * this.moveEase(n.t / n.D) : (this.pos = n.to, this.move = null, this.hold = this.reduced ? 0 : this.goal === this.pos ? t.hold : t.between, this.pos);
+			let n = this.move, r = this.moveTime(Math.abs(this.goal - n.from));
+			return r < n.D && (n.t *= r / n.D, n.D = r), n.t += e, n.t < n.D ? n.from + (n.to - n.from) * this.moveEase(n.t / n.D) : (this.pos = n.to, this.move = null, this.hold = this.reduced ? 0 : this.goal === this.pos ? t.hold / (this.paced ? this.tempo : 1) : t.between / this.tempo, this.pos);
 		}
 		if (this.hold > 0) this.hold = Math.max(0, this.hold - e);
 		else if (this.goal !== this.pos) {
-			let e = Math.abs(this.goal - this.pos), n = this.reduced ? .001 : t.duration / (1 + t.quicken * (e - 1));
+			let e = Math.abs(this.goal - this.pos), t = this.moveTime(e);
 			return this.move = {
 				from: this.pos,
 				to: this.pos + Math.sign(this.goal - this.pos),
 				t: 0,
-				D: n
+				D: t
 			}, this.advance(0);
 		}
 		return this.pos;
@@ -15572,8 +15591,18 @@ var qh = {
 	cardsFor(e, t, n) {
 		return Math.min(this.config.gesture.max, 1 + Math.floor(Math.max(0, e - t) / n));
 	}
+	moveTime(e) {
+		let t = this.config.move;
+		if (this.reduced) return .001;
+		let n = e <= 1 && !this.paced ? Math.sqrt(this.tempo) : this.tempo;
+		return t.duration / (1 + t.quicken * Math.max(0, e - 1)) / n;
+	}
+	tempoFor(e, t, n, r) {
+		let i = this.config.tempo, a = i.amount * Math.max(0, e - t) / t + i.speed * Math.max(0, n - r) / r;
+		return Math.min(i.max, 1 + a);
+	}
 	go(e, t = 1) {
-		this.goal = this.pos + e * t, this.dir = e, this.pace = this.paceCards = 0, this.sinceInput = 0;
+		this.goal = this.pos + e * t, this.tempo = 1, this.paced = !1, this.dir = e, this.pace = this.paceCards = 0, this.sinceInput = 0;
 	}
 	input(e) {
 		let t = this.config.scroll.maxLead;
@@ -15583,28 +15612,34 @@ var qh = {
 		let n = this.config, r = n.gesture, i = t + e, a = performance.now() / 1e3, o = a - (this.lastWheel ?? -Infinity) > r.gap;
 		if (this.lastWheel = a, n.mode === "smooth") return this.input(i * n.scroll.multiplier);
 		if (!i) return;
+		this.wheelLog = o ? [] : this.wheelLog.filter((e) => a - e.t < .1), this.wheelLog.push({
+			t: a,
+			d: Math.abs(i)
+		});
+		let s = this.wheelLog.reduce((e, t) => e + t.d, 0) / .1;
 		o && (this.gesture = null, this.travel = 0);
-		let s = this.gesture;
-		if (s && Math.sign(i) === s.dir && a - s.start < r.window) {
-			s.amount += Math.abs(i);
-			let e = this.cardsFor(s.amount, r.from, r.perCard);
-			e > s.n && (s.n = e, this.goal = s.base + s.dir * e);
+		let c = this.gesture;
+		if (c && Math.sign(i) === c.dir && a - c.start < r.window) {
+			c.amount += Math.abs(i), c.peak = Math.max(c.peak, s), this.tempo = Math.max(this.tempo, this.tempoFor(c.amount, r.from, c.peak, n.tempo.speedFrom));
+			let e = this.cardsFor(c.amount, r.from, r.perCard);
+			e > c.n && (c.n = e, this.goal = c.base + c.dir * e);
 			return;
 		}
 		if (this.locked) {
 			this.travel = 0;
 			return;
 		}
-		if (s && (this.travel = (this.travel ?? 0) + i, Math.abs(this.travel) < r.repeat)) return;
+		if (c && (this.travel = (this.travel ?? 0) + i, Math.abs(this.travel) < r.repeat)) return;
 		this.travel = 0;
-		let c = Math.sign(i), l = o ? this.cardsFor(Math.abs(i), r.from, r.perCard) : 1;
+		let l = Math.sign(i), u = o ? this.cardsFor(Math.abs(i), r.from, r.perCard) : 1;
 		this.gesture = {
 			base: this.pos,
-			dir: c,
-			n: l,
+			dir: l,
+			n: u,
 			start: a,
-			amount: Math.abs(i)
-		}, this.go(c, l);
+			amount: Math.abs(i),
+			peak: s
+		}, this.go(l, u);
 	}
 	onDrag({ dy: e }) {
 		if (this.engine.touch) {
@@ -15622,7 +15657,7 @@ var qh = {
 			let n = this.swipe ?? 0;
 			if (this.swipe = 0, Math.abs(n) < t.gesture.swipe || this.locked) return;
 			let r = t.gesture;
-			this.go(-Math.sign(n), this.cardsFor(Math.abs(n) + Math.abs(e) * r.swipeCarry, r.swipeFrom, r.swipePerCard));
+			this.go(-Math.sign(n), this.cardsFor(Math.abs(n) + Math.abs(e) * r.swipeCarry, r.swipeFrom, r.swipePerCard)), this.tempo = this.tempoFor(Math.abs(n), r.swipeFrom, Math.abs(e), t.tempo.swipeSpeedFrom);
 			return;
 		}
 		this.dragging = !1, this.input(-e * t.dragMultiplier * t.throw);
