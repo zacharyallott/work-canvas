@@ -59,6 +59,18 @@ export class Layout {
     if (p < 1) tile.alpha *= p;
   }
 
+  /**
+   * Fades the whole canvas as one layer (a CSS filter, separate from the canvas's own opacity, which the
+   * about / project views use), so overlapping tiles don't show through one another mid-fade. 1 = cleared.
+   */
+  fadeCanvas(p) {
+    const el = this.engine.renderer?.domElement;
+    const v = p >= 1 ? '' : `opacity(${Math.max(0, p).toFixed(3)})`;
+    if (!el || v === this.canvasFade) return;
+    this.canvasFade = v;
+    el.style.filter = v;
+  }
+
   enter() {
     const duration = this.reduced ? 0.3 : this.config.enterDuration ?? 0.8;
     return new Promise((resolve) => gsap.fromTo(this, { progress: 0 }, { progress: 1, duration, ease: 'none', onComplete: resolve }));
@@ -108,6 +120,7 @@ export class Layout {
 
   dispose() {
     gsap.killTweensOf(this);
+    this.fadeCanvas(1);
     this.tiles.forEach((t) => t.dispose());
     this.tiles = [];
   }

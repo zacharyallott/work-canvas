@@ -4,7 +4,7 @@
  * Auto-mounts on <div id="work-canvas"> (or any [data-work-canvas]) once the
  * DOM is ready. Options come from data attributes on the mount:
  *
- *   data-layout="a|b|c|d"      version for a first visit; later visits rotate to the next one
+ *   data-layout="a|b|c|d|e|f"  version for a first visit; later visits rotate to the next one
  *   data-rotate="false"        always open on data-layout instead of rotating
  *                              (?v=b in the URL opens that version once; it's then dropped from the URL so a refresh rotates on)
  *   data-switcher="false"      the star doesn't cycle versions (it only returns home)
@@ -25,12 +25,16 @@ import Filmstrip, { config as filmstripConfig } from './layouts/filmstrip.js';
 import Deck, { config as deckConfig } from './layouts/deck.js';
 import Masonry, { config as masonryConfig } from './layouts/masonry.js';
 import Fan, { config as fanConfig } from './layouts/fan.js';
+import Universe, { config as universeConfig } from './layouts/universe.js';
+import Rolodex, { config as rolodexConfig } from './layouts/rolodex.js';
 
 export const LAYOUTS = [
   { key: 'a', name: 'Filmstrip', Layout: Filmstrip, config: filmstripConfig },
   { key: 'b', name: 'Deck', Layout: Deck, config: deckConfig },
   { key: 'c', name: 'Masonry', Layout: Masonry, config: masonryConfig },
   { key: 'd', name: 'Fan', Layout: Fan, config: fanConfig },
+  { key: 'e', name: 'Universe', Layout: Universe, config: universeConfig },
+  { key: 'f', name: 'Rolodex', Layout: Rolodex, config: rolodexConfig },
 ];
 
 export { WorkCanvas };

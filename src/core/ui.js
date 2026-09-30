@@ -304,7 +304,16 @@ export class UI {
       const { x, y, w, h } = shown.rect;
       const rot = shown.rect.rotation || 0;
       const capH = this.captionH || 14;
-      if (!rot) {
+      if (shown.captionAt === 'top-left') {
+        // Fixed in the tile's own frame (fan): inside its top-left corner, turned with the tile.
+        const lx = -w / 2 + inset[0];
+        const ly = -h / 2 + inset[1];
+        const cos = Math.cos(rot);
+        const sin = Math.sin(rot);
+        const cx = x + w / 2 + lx * cos - ly * sin;
+        const cy = y + h / 2 + lx * sin + ly * cos;
+        this.caption.style.transform = `translate3d(${cx.toFixed(1)}px, ${cy.toFixed(1)}px, 0) rotate(${rot.toFixed(4)}rad)`;
+      } else if (!rot) {
         const cx = Math.round(x + inset[0]);
         const cy = Math.round(y + h - inset[1] - capH);
         this.caption.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;

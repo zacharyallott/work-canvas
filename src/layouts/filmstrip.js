@@ -43,7 +43,7 @@ export const config = {
   seed: 7, // change to reshuffle the size pattern
 
   // Cursor drift
-  maxSpeed: 340, // px/s with the cursor at either edge
+  maxSpeed: 170, // px/s with the cursor at either edge
   deadZone: 0.06, // fraction of the half-width around the centre with no drift
   curve: 1.7, // >1 = gentle near the centre, quick toward the edges
   response: 2.2, // how fast the speed follows the cursor (higher = less lag)
@@ -53,8 +53,8 @@ export const config = {
   // Scroll: wheel / trackpad (either axis) moves the strip; eased by a spring
   // px of strip per px scrolled; spring pace (1/s, higher = settles sooner after the scroll stops);
   // how far (px) the strip can lag behind the scroll — caps a big flick's speed and how long it runs on.
-  // (While scrolling steadily, top speed ≈ omega × maxLead / 2 ≈ 750 px/s.)
-  scroll: { multiplier: 0.5, omega: 7, maxLead: 215 },
+  // (While scrolling steadily, top speed ≈ omega × maxLead / 2 ≈ 440 px/s.)
+  scroll: { multiplier: 0.5, omega: 7, maxLead: 125 },
 
   // Speed → spacing (spread.js): extra gap (CSS px) per px/s of strip speed above `rest` (the idle drift), capped
   // at `max`; opens with a lag (`omega`, 1/s) and closes sooner (`closing`) — back to normal before the pace is.

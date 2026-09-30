@@ -13,40 +13,45 @@ import { sizePattern } from '../core/sizing.js';
  * so a tile pointing straight up is upright, and they lean further the further
  * round they are. Each line is 11.25° on from the one before, so 32 tiles make
  * the full circle (the lower half is below the fold). Tiles are around 400 design px wide — each picks a size
- * from a scale, never the same as its neighbour — with their height from the
- * piece's real aspect ratio. Later (more clockwise) tiles lie on top, like a
- * hand of cards.
+ * from a scale, never the same as its neighbour — and a shape: the piece's own
+ * aspect ratio stretched taller or wider (cropped to fit), so the fan mixes
+ * tall, square-ish and wide frames. Later (more clockwise) tiles lie on top,
+ * like a hand of cards.
  *
  * It's a loop: the circle has 32 places, and as the fan turns, the place
  * passing through the hidden lower half takes the next piece in the
  * collection, so a full turn brings round new work.
  *
- * Motion: on load the tiles fade in one at a time, clockwise from the left.
+ * Motion: on load the whole fan fades in together, unhurried.
  * Scrolling (wheel / trackpad, or a
  * swipe on touch) turns it slowly, eased through a spring; with nothing
  * happening it drifts round very slowly. The faster it turns, the further the
  * tiles move out from the centre point (see spread.js: it opens with a slight
  * lag and closes sooner than the turn slows). Hovering a tile brings it to the
  * front and slides it out past the others along its own direction, with its
- * title if it has a project view — set along whichever of the tile's two
- * most-horizontal edges is further from the centre point, reading left to
- * right, so it's always legible.
+ * title if it has a project view — always inside the tile's top-left corner,
+ * turned with the tile.
  */
 export const config = {
   // Layout (design px at the 1280×794 artboard; scaled by mount height)
   tileWidth: 400,
   // Size variety: each tile's width is tileWidth × one of these (seeded, never the same as its neighbour).
-  // Kept modest so the biggest tiles don't outgrow the loaded image (textures top out at 1280 px) on 2× screens.
-  sizes: [0.76, 0.88, 1, 1.12],
-  seed: 11, // change to reshuffle the sizes
+  sizes: [0.5, 0.64, 0.8, 0.96, 1.12, 1.3],
+  // Shape variety: each tile is cropped to the piece's own aspect ratio × one of these (seeded separately), so
+  // pieces of the same ratio still come out tall, square-ish or wide. Then held within min/maxAspect.
+  shapes: [0.55, 0.75, 1, 1.3],
+  seed: 11, // change to reshuffle the sizes and shapes
   step: 11.25, // degrees between neighbouring tiles (360 / 11.25 = 32 places)
-  minAspect: 0.75, // taller than this gets cropped (keeps portraits from towering)
-  maxAspect: 1.8, // wider than this gets cropped
+  minAspect: 0.6, // never taller than this
+  maxAspect: 2.2, // never wider than this
   minScale: 0.55,
-  maxScale: 1.05, // with the sizes and minAspect above, the longest edge stays within a 1280 px texture at 2×
+  maxScale: 1.05,
+  // Sharpness: a tile never shows its image bigger than the loaded texture (maxTextureEdge, e.g. 1280 px) covers
+  // on a screen this dense — big or tightly cropped tiles give way to stay crisp.
+  sharpDensity: 2,
   mobileMaxWidth: 0.55, // tile width never exceeds this fraction of the view width (phones)
   seam: 180, // degrees: where places leave/join the loop — a tile pointing straight down is wholly below the fold
-  hole: 420, // design px each tile sits out from the centre point at rest (a gap in the middle; the speed spread adds to it)
+  hole: 520, // design px each tile sits out from the centre point at rest (a gap in the middle; the speed spread adds to it)
   drop: 180, // design px the centre point sits below the bottom edge of the view
   hoverOut: 56, // design px a hovered tile slides out from the others, along its own direction (eased with the hover)
 
@@ -67,11 +72,11 @@ export const config = {
   hover: { zoom: 0, speed: 7 },
   maxVideos: 4,
 
-  // Entrance: the tiles fade in one at a time, clockwise from the left (`stagger` 0 = the whole fan at once;
-  // `swing` > 0 also turns each into place from further back as it comes in).
-  easing: 'sine.inOut', // each tile's fade eases in and out, overlapping the next for a smooth sweep
-  stagger: 20, // high = more one-at-a-time; each tile fades over enterDuration / (1 + stagger) ≈ 0.17 s
-  enterDuration: 3.6,
+  // Entrance: the whole fan fades in at once, as one layer (`stagger` > 0 fades the tiles in one after another
+  // instead, clockwise from the left; `swing` > 0 also turns each into place from further back as it comes in).
+  easing: 'sine.inOut',
+  stagger: 0,
+  enterDuration: 1.2,
   leaveDuration: 0.25,
   swing: 0,
   captionInset: [20, 12],
@@ -104,9 +109,15 @@ export default class Fan extends Layout {
     }
     const base = Math.min(c.tileWidth * s, vp.width * c.mobileMaxWidth);
     const pattern = sizePattern(this.tiles.length, c.sizes.length, c.seed);
+    const shapes = sizePattern(this.tiles.length, c.shapes.length, c.seed + 7);
+    const texEdge = (this.engine.options.maxTextureEdge ?? 1280) / c.sharpDensity; // CSS px the texture's longest edge covers
     this.tiles.forEach((t, i) => {
-      const aspect = Math.min(c.maxAspect, Math.max(c.minAspect, t.item.aspect || 1));
-      t.w = base * c.sizes[pattern[i]];
+      const real = t.item.aspect || 1;
+      const aspect = Math.min(c.maxAspect, Math.max(c.minAspect, real * c.shapes[shapes[i]]));
+      // The part of the texture a cover crop to this shape shows (CSS px at sharpDensity) caps the width.
+      const texW = real >= 1 ? texEdge : texEdge * real;
+      const shown = aspect < real ? (texW / real) * aspect : texW;
+      t.w = Math.min(base * c.sizes[pattern[i]], shown);
       t.h = t.w / aspect;
     });
     this.pivot = { x: vp.width / 2, y: vp.height + c.drop * s };
@@ -142,6 +153,8 @@ export default class Fan extends Layout {
       placed.push({ t, a });
     });
     placed.sort((p, q) => p.a - q.a); // later (clockwise) on top
+    const together = !c.stagger && !c.swing; // the whole fan fades as one layer rather than tile by tile
+    this.fadeCanvas(together ? this.tileProgress(0) : 1);
 
     placed.forEach(({ t, a }, rank) => {
       // Entrance: left to right across the visible arc (-120° … 120°), each swinging in from the one before.
@@ -163,9 +176,9 @@ export default class Fan extends Layout {
       t.y = cy - t.h / 2;
       t.rotation = phi;
       t.z = rank;
-      t.alpha = c.swing ? Math.min(1, p * 2.5) : p;
+      t.alpha = together ? 1 : c.swing ? Math.min(1, p * 2.5) : p;
       t.reveal = 1;
-      t.pivot = this.pivot; // the title sits along the outer, most horizontal edge (see UI.updateCaption)
+      t.captionAt = 'top-left'; // the title sits inside the tile's top-left corner, turned with it (UI.updateCaption)
 
       // On screen if the turned tile's bounding box meets the view.
       const ex = (Math.abs(t.w * cos) + Math.abs(t.h * sin)) / 2;

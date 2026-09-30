@@ -14,7 +14,8 @@ import { Spread, spreadFrom } from '../core/spread.js';
  *
  * Motion: all columns drift upward on their own, each at its own pace, and
  * slow down while a tile is hovered. The whole grid shifts left/right with the
- * cursor (cursor left → grid moves right), with a little lag. Scrolling (wheel /
+ * cursor (cursor left → grid moves right), with a little lag, and stays put when
+ * the cursor leaves the header. Scrolling (wheel /
  * trackpad, or a vertical swipe on touch) moves the columns too — down the page
  * moves them up, back up moves them down — each at its drift pace and through
  * its own spring, so each scroll eases in and out and the columns pull apart
@@ -24,7 +25,7 @@ import { Spread, spreadFrom } from '../core/spread.js';
  * to it, every tile fades in together where it is; nothing slides.
  */
 export const config = {
-  columnWidth: 212, // Figma 168, scaled up so fewer, larger tiles fill the view
+  columnWidth: 176, // design px (Figma 168)
   gutter: 12, // CSS px between columns (fixed, not scaled with the viewport)
   gap: 12, // CSS px between tiles in a column (fixed)
   firstColumnX: -8,
@@ -33,7 +34,7 @@ export const config = {
   // Relative pace per column (all move the same way), for the drift and for scrolling; repeats for extra columns.
   // Faster columns also settle a scroll sooner, slower ones lag behind.
   columnSpeeds: [1, 0.55, 1.35, 0.75, 1.15, 0.45, 0.9],
-  minScale: 0.72, // column width never drops below 168 × this
+  minScale: 0.72, // column width never drops below columnWidth × this
   maxScale: 1.35,
   minAspect: 0.62, // taller than this gets cropped (cover)
   maxAspect: 2.2, // wider than this gets cropped
@@ -52,8 +53,8 @@ export const config = {
   scroll: {
     multiplier: 0.35, // px of travel per px scrolled (swipes too), for a pace-1 column
     omega: 5.5, // spring pace for a pace-1 column (1/s, higher = settles sooner after the scroll stops)
-    maxLead: 120, // how far (px, pace-1 column) the columns can lag behind the scroll — caps a flick's speed and run-on
-    // (while scrolling steadily the fastest column tops out around 520 px/s)
+    maxLead: 90, // how far (px, pace-1 column) the columns can lag behind the scroll — caps a flick's speed and run-on
+    // (while scrolling steadily the fastest column tops out around 390 px/s)
   },
 
   // Horizontal shift from the cursor
@@ -106,6 +107,7 @@ export default class Masonry extends Layout {
     this.slow = 1; // eased hover slowdown multiplier
     this.shiftX = 0; // horizontal offset (px)
     this.shiftV = 0; // horizontal speed for 'drift' mode (px/s)
+    this.pull = 0; // -1..1: the cursor's last pull on the grid (held while the cursor is outside the header)
     this.columns = [];
   }
 
@@ -194,9 +196,11 @@ export default class Masonry extends Layout {
     this.slow += ((hovering ? c.hoverSlowdown : 1) - this.slow) * (1 - Math.exp(-dt * c.hoverEase));
     if (!this.reduced) this.scroll += c.autoplaySpeed * this.s * this.slow * dt;
 
-    // Horizontal shift from the cursor (cursor left → grid moves right).
+    // Horizontal shift from the cursor (cursor left → grid moves right). When the cursor leaves the header the
+    // grid stays where it was, rather than drifting back to the middle.
     const { nx, inside } = e.cursor;
-    const pull = inside ? -Math.sign(nx) * Math.pow(Math.abs(nx), c.shift.curve) : 0;
+    if (inside) this.pull = -Math.sign(nx) * Math.pow(Math.abs(nx), c.shift.curve);
+    const pull = c.shift.mode === 'drift' && !inside ? 0 : this.pull;
     // While the grid fades in it takes its lean straight away, so it doesn't slide sideways as it appears.
     const r = this.progress < 1 && !this.leaving ? 1 : 1 - Math.exp(-dt * c.shift.response);
     if (c.shift.mode === 'drift') {

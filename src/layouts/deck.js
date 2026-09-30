@@ -62,7 +62,7 @@ export const config = {
   moveStep: 0, // CSS px of cursor travel per new card (0 = off: the cursor doesn't deal)
   // Cursor position → pace: cards/s rises from 0 at `deadZone` (fraction of the half-width around the centre)
   // to `max` at the left/right edges, along `curve` (>1 = gentle near the middle, quick toward the edges).
-  cursorPace: { max: 3, deadZone: 0.15, curve: 1.4 },
+  cursorPace: { max: 2.2, deadZone: 0.15, curve: 1.4 },
   scrollStep: 250, // px scrolled (wheel / trackpad / swipe) per new card
   scrollGap: 0.35, // s: fastest pace scrolling deals at
   // Touch: step = px of finger travel per card; gap = fastest pace (s); decay = how quickly a flick's
