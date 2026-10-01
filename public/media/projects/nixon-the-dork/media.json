@@ -1,7 +1,7 @@
 {
-  "generated": "2026-09-25T03:14:43.243Z",
-  "count": 4,
-  "images": 4,
+  "generated": "2026-10-01T20:12:55.384Z",
+  "count": 5,
+  "images": 5,
   "videos": 0,
   "items": [
     {
@@ -155,6 +155,44 @@
         "bytes": 11964
       },
       "aspect": 1.6682
+    },
+    {
+      "id": "nixon-dork-allott-billboard",
+      "label": "Nixon: The Dork",
+      "href": "/projects/nixon-the-dork",
+      "caseStudy": true,
+      "source": "Nixon-Dork-Allott-Billboard.jpg",
+      "sourceHash": "208dddc6addaa30e",
+      "type": "image",
+      "width": 2000,
+      "height": 1333,
+      "images": {
+        "sm": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-billboard-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 21852
+        },
+        "md": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-billboard-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 148280
+        },
+        "lg": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-billboard-lg.webp",
+          "width": 2000,
+          "height": 1333,
+          "bytes": 414348
+        }
+      },
+      "poster": {
+        "src": "media/projects/nixon-the-dork/nixon-dork-allott-billboard-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 21852
+      },
+      "aspect": 1.5004
     }
   ]
 }

@@ -53,6 +53,7 @@
     "MNI-Allott-01.mp4":       { "start": 0, "duration": 12 },
     "MIH-Allott-02.mp4":       { "start": 0, "duration": 12 },
     "Stelo-Site-Scroll.mp4": { "start": 0, "duration": 23 },
+    "Dialpad-Allott-Web-Comp-01.mp4": { "start": 0, "duration": 22 },
     "Nixon-Push-Allott-01.mp4": { "start": 0, "duration": 12, "crop": "1920:820:0:130" }
   }
 }

@@ -956,44 +956,6 @@
     "folder": "04_Dialpad",
     "items": [
       {
-        "id": "acte-macbook-mockup-005",
-        "label": "ACTE MACBOOK MOCKUP",
-        "href": "",
-        "caseStudy": false,
-        "source": "ACTE-MACBOOK-MOCKUP-005.jpg",
-        "sourceHash": "5564a0453af183c5",
-        "type": "image",
-        "width": 4000,
-        "height": 6000,
-        "images": {
-          "sm": {
-            "src": "media/projects/dialpad/acte-macbook-mockup-005-sm.webp",
-            "width": 320,
-            "height": 480,
-            "bytes": 9898
-          },
-          "md": {
-            "src": "media/projects/dialpad/acte-macbook-mockup-005-md.webp",
-            "width": 853,
-            "height": 1280,
-            "bytes": 71542
-          },
-          "lg": {
-            "src": "media/projects/dialpad/acte-macbook-mockup-005-lg.webp",
-            "width": 1365,
-            "height": 2048,
-            "bytes": 185392
-          }
-        },
-        "poster": {
-          "src": "media/projects/dialpad/acte-macbook-mockup-005-sm.webp",
-          "width": 320,
-          "height": 480,
-          "bytes": 9898
-        },
-        "aspect": 0.6667
-      },
-      {
         "id": "dialpad-allott-01",
         "label": "Dialpad",
         "href": "/projects/dialpad",
@@ -1066,6 +1028,44 @@
           "width": 480,
           "height": 320,
           "bytes": 10020
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "dialpad-allott-04",
+        "label": "Dialpad",
+        "href": "/projects/dialpad",
+        "caseStudy": true,
+        "source": "Dialpad-Allott-04.webp",
+        "sourceHash": "553b9a88b89680c2",
+        "type": "image",
+        "width": 2400,
+        "height": 1600,
+        "images": {
+          "sm": {
+            "src": "media/projects/dialpad/dialpad-allott-04-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 26852
+          },
+          "md": {
+            "src": "media/projects/dialpad/dialpad-allott-04-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 165024
+          },
+          "lg": {
+            "src": "media/projects/dialpad/dialpad-allott-04-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 322638
+          }
+        },
+        "poster": {
+          "src": "media/projects/dialpad/dialpad-allott-04-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 26852
         },
         "aspect": 1.5
       },
@@ -1146,11 +1146,11 @@
         "aspect": 1
       },
       {
-        "id": "in-situ-005",
-        "label": "IN SITU",
-        "href": "",
-        "caseStudy": false,
-        "source": "IN-SITU-005.mp4",
+        "id": "dialpad-allott-14",
+        "label": "Dialpad",
+        "href": "/projects/dialpad",
+        "caseStudy": true,
+        "source": "Dialpad-Allott-14.mp4",
         "sourceHash": "124b6bc6ab66ecc1",
         "type": "video",
         "width": 1080,
@@ -1158,24 +1158,88 @@
         "duration": 12,
         "sourceDuration": 14.97,
         "poster": {
-          "src": "media/projects/dialpad/in-situ-005-poster.webp",
+          "src": "media/projects/dialpad/dialpad-allott-14-poster.webp",
           "width": 1080,
           "height": 720,
           "bytes": 34676
         },
         "sources": [
           {
-            "src": "media/projects/dialpad/in-situ-005.webm",
+            "src": "media/projects/dialpad/dialpad-allott-14.webm",
             "type": "video/webm; codecs=\"av01.0.05M.08\"",
             "bytes": 475656
           },
           {
-            "src": "media/projects/dialpad/in-situ-005.mp4",
+            "src": "media/projects/dialpad/dialpad-allott-14.mp4",
             "type": "video/mp4",
             "bytes": 568193
           }
         ],
         "aspect": 1.5
+      },
+      {
+        "id": "dialpad-allott-logo-comp-01",
+        "label": "Dialpad",
+        "href": "/projects/dialpad",
+        "caseStudy": true,
+        "source": "Dialpad-Allott-Logo-Comp-01.mp4",
+        "sourceHash": "715d5d28bc845c08",
+        "type": "video",
+        "width": 1080,
+        "height": 1080,
+        "duration": 6.88,
+        "sourceDuration": 6.88,
+        "poster": {
+          "src": "media/projects/dialpad/dialpad-allott-logo-comp-01-poster.webp",
+          "width": 1080,
+          "height": 1080,
+          "bytes": 42636
+        },
+        "sources": [
+          {
+            "src": "media/projects/dialpad/dialpad-allott-logo-comp-01.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 551352
+          },
+          {
+            "src": "media/projects/dialpad/dialpad-allott-logo-comp-01.mp4",
+            "type": "video/mp4",
+            "bytes": 858719
+          }
+        ],
+        "aspect": 1
+      },
+      {
+        "id": "dialpad-allott-web-comp-01",
+        "label": "Dialpad",
+        "href": "/projects/dialpad",
+        "caseStudy": true,
+        "source": "Dialpad-Allott-Web-Comp-01.mp4",
+        "sourceHash": "24bb4983dbac9822",
+        "type": "video",
+        "width": 1080,
+        "height": 1080,
+        "duration": 21.9,
+        "sourceDuration": 21.9,
+        "poster": {
+          "src": "media/projects/dialpad/dialpad-allott-web-comp-01-poster.webp",
+          "width": 1080,
+          "height": 1080,
+          "bytes": 78480
+        },
+        "sources": [
+          {
+            "src": "media/projects/dialpad/dialpad-allott-web-comp-01.webm",
+            "type": "video/webm; codecs=\"av01.0.05M.08\"",
+            "bytes": 2427096
+          },
+          {
+            "src": "media/projects/dialpad/dialpad-allott-web-comp-01.mp4",
+            "type": "video/mp4",
+            "bytes": 2921379
+          }
+        ],
+        "aspect": 1
       }
     ]
   },
@@ -2231,6 +2295,44 @@
           "bytes": 11964
         },
         "aspect": 1.6682
+      },
+      {
+        "id": "nixon-dork-allott-billboard",
+        "label": "Nixon: The Dork",
+        "href": "/projects/nixon-the-dork",
+        "caseStudy": true,
+        "source": "Nixon-Dork-Allott-Billboard.jpg",
+        "sourceHash": "208dddc6addaa30e",
+        "type": "image",
+        "width": 2000,
+        "height": 1333,
+        "images": {
+          "sm": {
+            "src": "media/projects/nixon-the-dork/nixon-dork-allott-billboard-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 21852
+          },
+          "md": {
+            "src": "media/projects/nixon-the-dork/nixon-dork-allott-billboard-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 148280
+          },
+          "lg": {
+            "src": "media/projects/nixon-the-dork/nixon-dork-allott-billboard-lg.webp",
+            "width": 2000,
+            "height": 1333,
+            "bytes": 414348
+          }
+        },
+        "poster": {
+          "src": "media/projects/nixon-the-dork/nixon-dork-allott-billboard-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 21852
+        },
+        "aspect": 1.5004
       }
     ]
   },
