@@ -81,7 +81,8 @@ export class WorkCanvas {
 
     const keys = this.layoutDefs.map((l) => l.key);
     let initial = keys.includes(this.options.layout) ? this.options.layout : keys[0];
-    if (this.options.rotate) initial = rotatedLayout(keys) ?? initial; // a different version on every visit
+    // A different version on every load: a random one (never the one seen last), or the next in order.
+    if (this.options.rotate) initial = (this.options.rotate === 'next' ? rotatedLayout(keys) : randomLayout(keys)) ?? initial;
     this.ui = new UI(mount, {
       layouts: this.layoutDefs,
       current: initial,
@@ -478,6 +479,9 @@ export class WorkCanvas {
     const hero = { type: item.type, bestSrc: item.bestSrc, srcset: item.srcset, sources: item.sources, poster: item.poster, hash: item.hash, embed: item.embed, aspect: item.aspect, alt: project.title };
     await preload(hero.bestSrc); // cached already, so the DOM copy appears without a flash
 
+    // A tile partly behind others (cards, fan, rolodex, universe) waits for them to fade before it moves: judged
+    // now, while a hovered tile is still raised to the front by its layout.
+    const covered = morph && tile.rect ? this.isCovered(tile) : false;
     this.projectOpen = true;
     this.hovered = null;
     this.mount.classList.remove('is-hovering-tile');
@@ -497,14 +501,38 @@ export class WorkCanvas {
       return true;
     }
     this.openTile = tile;
+    this.openRaised = !covered; // drawn above everything once it moves (see Tile.sync)
     const from = { ...tile.rect, radius: this.radius };
     tile.override = from;
     const duration = this.options.openDuration;
+    const fade = this.options.openFade ?? 0.4;
+    // Uncovered: the other tiles dissolve as it moves. Covered: they dissolve first, uncovering it where it is,
+    // then it comes to the front and moves.
+    const at = covered ? fade : 0;
     gsap
       .timeline({ defaults: { duration, ease: this.options.openEase }, onComplete: finish })
-      .to(this, { openProgress: 1, duration: this.options.openFade ?? 0.4, ease: EASE.fade }, 0) // the other tiles dissolve
-      .to(from, { ...target, radius: this.radius, rotation: 0 }, 0); // a turned tile (fan) straightens as it opens
+      .to(this, { openProgress: 1, duration: fade, ease: EASE.fade }, 0)
+      .call(() => (this.openRaised = true), null, at)
+      .to(from, { ...target, radius: this.radius, rotation: 0 }, at); // a turned tile (fan) straightens as it opens
     return true;
+  }
+
+  /** Whether another tile is drawn over part of this one (bounding boxes, turned tiles included). */
+  isCovered(tile) {
+    const box = (t) => {
+      const { x, y, w, h, rotation = 0 } = t.rect;
+      const c = Math.abs(Math.cos(rotation));
+      const s = Math.abs(Math.sin(rotation));
+      const ex = (w * c + h * s) / 2;
+      const ey = (w * s + h * c) / 2;
+      return { l: x + w / 2 - ex, r: x + w / 2 + ex, t: y + h / 2 - ey, b: y + h / 2 + ey };
+    };
+    const a = box(tile);
+    return (this.layout?.tiles ?? []).some((t) => {
+      if (t === tile || !t.onScreen || t.alpha < 0.01 || t.z <= tile.z) return false;
+      const b = box(t);
+      return Math.min(a.r, b.r) - Math.max(a.l, b.l) > 4 && Math.min(a.b, b.b) - Math.max(a.t, b.t) > 4;
+    });
   }
 
   /** Opens a project without a clicked tile (deep link / browser forward / link). */
@@ -559,6 +587,7 @@ export class WorkCanvas {
     gsap.killTweensOf(this);
     this.openTile.override = null;
     this.openTile = null;
+    this.openRaised = false;
     this.openProgress = 0;
   }
 
@@ -699,6 +728,13 @@ function lastLayout() {
 function rotatedLayout(keys) {
   const i = keys.indexOf(lastLayout());
   return i >= 0 ? keys[(i + 1) % keys.length] : null;
+}
+
+/** A random version other than the one this visitor saw last (any of them on a first visit). */
+function randomLayout(keys) {
+  const last = lastLayout();
+  const pool = keys.length > 1 ? keys.filter((k) => k !== last) : keys;
+  return pool[Math.floor(Math.random() * pool.length)] ?? null;
 }
 
 function rememberLayout(key) {

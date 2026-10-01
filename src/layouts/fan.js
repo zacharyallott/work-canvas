@@ -53,9 +53,9 @@ export const config = {
   seam: 180, // degrees: where places leave/join the loop — a tile pointing straight down is wholly below the fold
   hole: 640, // design px each tile sits out from the centre point at rest (a gap in the middle; the speed spread adds to it)
   drop: 360, // design px the centre point sits below the bottom edge of the view
-  // Portrait screens (phones): the centre point goes further down, so the open centre's top edge (at rest) sits this
-  // far down the view — the arc of tiles lower on the screen, the centre well below it.
-  portraitRing: 0.88,
+  // Portrait screens (phones): the open centre's top edge (at rest) sits this far down the view, which sets where
+  // the centre point is (lower = the arc of tiles and its centre further down).
+  portraitRing: 0.72,
   portraitHole: 520, // portrait screens: `hole` there (a tighter circle suits the narrow view)
   hoverOut: 56, // design px a hovered tile slides out from the others, along its own direction (eased with the hover)
 
@@ -126,8 +126,8 @@ export default class Fan extends Layout {
     });
     const portrait = vp.width < vp.height;
     this.hole = portrait ? c.portraitHole ?? c.hole : c.hole;
-    const ring = portrait ? vp.height * c.portraitRing + this.hole * s : 0; // portrait: lower the fan
-    this.pivot = { x: vp.width / 2, y: Math.max(vp.height + c.drop * s, ring) };
+    // Portrait: placed by where the open centre's top edge sits (portraitRing) rather than by `drop`.
+    this.pivot = { x: vp.width / 2, y: portrait ? vp.height * c.portraitRing + this.hole * s : vp.height + c.drop * s };
   }
 
   update(dt) {

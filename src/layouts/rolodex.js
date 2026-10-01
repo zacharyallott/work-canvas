@@ -15,15 +15,17 @@ import { Spread } from '../core/spread.js';
  * width at the same depth — so the front one is always the widest — with
  * their height from the piece's real aspect ratio (very tall pieces are
  * cropped to `maxHeight`, so there's always some of the next card showing). The
- * collection loops through the column.
+ * collection loops through the column — only the pieces that open a project
+ * view (`caseStudiesOnly`).
  *
  * Motion: it moves card by card and locks in. A scroll (wheel / trackpad
  * gesture, or a swipe on touch) moves it on — down the page brings the next
  * cards up to the front — easing smoothly into place, where it holds for a
  * moment. How far a scroll moves it comes from how much it scrolls: a
- * normal scroll moves one card, a long one two or three (`gesture.max`) — card by
- * card, each easing in and pausing briefly (`move.between`) before the next,
- * the earlier ones a little quicker, the last settling in and locking. Scrolling while it's moving or
+ * normal scroll moves one card, a long one two or three (`gesture.max`) in
+ * one flowing move that eases off as each card passes the front — friction
+ * at every card (`move.friction`), without coming to a dead stop — and
+ * settles in and locks on the last. Scrolling while it's moving or
  * holding does nothing, so a flick's momentum doesn't carry it on; a new
  * scroll after that moves it again, and a scroll that keeps going moves on
  * again every `gesture.repeat` px. (`mode: 'smooth'` makes it roll
@@ -63,6 +65,7 @@ export const config = {
   portraitDepth: 0.25, // portrait screens (phones): `depth` there (1 → 0.83 → 0.58 → 0.41), for seven cards
   centerY: 0.5, // the front card's centre, as a fraction of the view height
   slots: 6, // at least this many cards either side of the front (the loop's seam stays well off screen)
+  caseStudiesOnly: true, // only pieces that open a project view (all of them if there are none)
   minAspect: 0.75, // taller than this gets cropped
   maxAspect: 1.4, // wider than this gets cropped (keeps the cards deep enough to overlap)
   minScale: 0.55,
@@ -73,9 +76,10 @@ export const config = {
   // 'lock': card by card — each move eases along `move.ease` and locks in, holding `move.hold` s before it can move
   // again. 'smooth': a continuous roll through a spring (`scroll`), settling on a whole card.
   mode: 'lock',
-  // Each card's move takes `duration` s — quicker while more cards are still to come (÷ 1 + `quicken` per extra card),
-  // pausing `between` s on each card on the way and holding `hold` s once it's there.
-  move: { duration: 1.05, hold: 0.3, between: 0.14, ease: 'power2.inOut', quicken: 0.25 },
+  // A one-card move takes `duration` s along `ease` and then holds `hold` s. A move of more cards is one run along
+  // `runEase` taking `stretch` × duration more per extra card, slowing at each card it passes — to (1 − `friction`) of
+  // its pace (1 = a dead stop at each, 0 = gliding straight through) — so it has friction at every card but flows.
+  move: { duration: 1.05, hold: 0.3, ease: 'power2.inOut', runEase: 'sine.inOut', stretch: 0.9, friction: 0.65 },
   // Lock: cards per scroll from how far it scrolls (px) in its first `window` s — 1 up to `from`, one more per
   // `perCard` beyond, at most `max` (the momentum after that doesn't add more). A scroll after `gap` s without wheel
   // events is a new one; one that keeps going moves on again every `repeat` px once it's locked in. Touch: a swipe
@@ -135,6 +139,7 @@ export default class Rolodex extends Layout {
     this.wheelLog = []; // lock: recent wheel deltas, for the scroll's speed
     this.tempo = 1; // lock: how much faster the current moves play (long, quick scrolls)
     this.moveEase = gsap.parseEase(cfg.move.ease);
+    this.runEase = gsap.parseEase(cfg.move.runEase ?? cfg.move.ease);
     this.roll = new Spring(cfg.scroll.omega); // smooth: follows the goal
     this.spread = new Spread(cfg.spread);
     this.sinceInput = Infinity; // s since the last scroll / swipe
@@ -144,6 +149,14 @@ export default class Rolodex extends Layout {
     this.dir = 1; // which way it last went (+1 on, -1 back)
     this.pace = 0; // cards/s from the cursor's position, eased
     this.paceCards = 0; // lock: the cursor pace's progress toward its next card
+  }
+
+  /** Only the pieces with a project view (case studies), when there are any. */
+  get items() {
+    const all = super.items;
+    if (!this.config.caseStudiesOnly) return all;
+    const linked = all.filter((item) => item.caseStudy);
+    return linked.length ? linked : all;
   }
 
   resize(vp) {
@@ -323,42 +336,73 @@ export default class Rolodex extends Layout {
   }
 
   // ─── Lock mode ─────────────────────────────────────────────────────────────
-  /** Moving, pausing between cards or holding after a move: a scroll is spent until it's free again. */
+  /** Moving or holding after a move: a scroll is spent until it's free again. */
   get locked() {
     return !!this.move || this.hold > 0 || this.goal !== this.pos;
   }
 
   /**
-   * Plays the moves toward the goal one card at a time — each easing from rest to rest, quicker while more are
-   * still to come — pausing on each card on the way and holding once it's there. Returns the position to show.
+   * Plays the move toward the goal — one eased run, slowing at each card it passes — then holds. Returns the position
+   * to show.
    */
   advance(dt) {
     const c = this.config.move;
     if (this.move) {
       const m = this.move;
-      // A scroll that turns out longer / quicker (more cards queued, higher tempo) hurries the move under way too:
-      // same point along its ease, just less time left.
-      const want = this.moveTime(Math.abs(this.goal - m.from));
+      if (this.goal !== m.to) {
+        // The scroll turned out longer: run on to the new goal from the same start, picking up at the point along
+        // the new run where it is now (no jump).
+        const x = this.curve(m, m.t / m.D);
+        const next = { from: m.from, to: this.goal, t: 0, D: this.moveTime(Math.abs(this.goal - m.from)) };
+        let lo = 0;
+        let hi = 1;
+        for (let i = 0; i < 24; i++) {
+          const mid = (lo + hi) / 2;
+          if ((this.curve(next, mid) - x) * Math.sign(next.to - next.from) < 0) lo = mid;
+          else hi = mid;
+        }
+        next.t = lo * next.D;
+        this.move = next;
+        return this.advance(dt);
+      }
+      // A quicker scroll (higher tempo) hurries the move under way: same point along it, less time left.
+      const want = this.moveTime(Math.abs(m.to - m.from));
       if (want < m.D) {
         m.t *= want / m.D;
         m.D = want;
       }
       m.t += dt;
-      if (m.t < m.D) return m.from + (m.to - m.from) * this.moveEase(m.t / m.D);
+      if (m.t < m.D) return this.curve(m, m.t / m.D);
       this.pos = m.to;
       this.move = null;
-      this.hold = this.reduced ? 0 : this.goal === this.pos ? c.hold / (this.paced ? this.tempo : 1) : c.between / this.tempo;
+      this.hold = this.reduced ? 0 : c.hold / (this.paced ? this.tempo : 1);
       return this.pos;
     }
     if (this.hold > 0) {
       this.hold = Math.max(0, this.hold - dt);
     } else if (this.goal !== this.pos) {
-      const left = Math.abs(this.goal - this.pos); // cards still to go, this one included
-      const D = this.moveTime(left);
-      this.move = { from: this.pos, to: this.pos + Math.sign(this.goal - this.pos), t: 0, D };
-      return this.advance(0);
+      // Whole cards only (the cursor pace's goal can be part-way).
+      const to = this.pos + Math.trunc(this.goal - this.pos);
+      if (to !== this.pos) {
+        this.move = { from: this.pos, to, t: 0, D: this.moveTime(Math.abs(to - this.pos)) };
+        return this.advance(0);
+      }
     }
     return this.pos;
+  }
+
+  /**
+   * Where move `m` is at `s` (0–1): eased along `move.ease`; over several cards, along `move.runEase` with a detent
+   * at each card it passes — its pace drops to (1 − friction) there and picks up again between
+   * (x − friction × sin(2πx) / 2π).
+   */
+  curve(m, s) {
+    const n = m.to - m.from;
+    const a = Math.abs(n);
+    const k = Math.min(1, Math.max(0, s));
+    if (a <= 1) return m.from + n * this.moveEase(k);
+    const x = a * this.runEase(k);
+    return m.from + Math.sign(n) * (x - (this.config.move.friction * Math.sin(2 * Math.PI * x)) / (2 * Math.PI));
   }
 
   /** Cards a scroll (or swipe) of `amount` px moves: 1 up to `from`, one more per `perCard` beyond, at most `max`. */
@@ -366,14 +410,13 @@ export default class Rolodex extends Layout {
     return Math.min(this.config.gesture.max, 1 + Math.floor(Math.max(0, amount - from) / perCard));
   }
 
-  /** Seconds for the next card's move with `left` cards still to go (this one included): quicker while more are to
-   *  come, and with the tempo (a scroll's last card settles in gentler, by the tempo's square root; the cursor pace's
-   *  cards all play at its tempo). */
-  moveTime(left) {
+  /** Seconds for a move of `cards`: `stretch` × duration more per extra card, quicker with the tempo (a scroll's by
+   *  its square root, so the run still settles in gently; the cursor pace's at its full tempo, to keep up). */
+  moveTime(cards) {
     const c = this.config.move;
     if (this.reduced) return 0.001;
-    const tempo = left <= 1 && !this.paced ? Math.sqrt(this.tempo) : this.tempo;
-    return c.duration / (1 + c.quicken * Math.max(0, left - 1)) / tempo;
+    const tempo = this.paced ? this.tempo : Math.sqrt(this.tempo);
+    return (c.duration * (1 + c.stretch * Math.max(0, cards - 1))) / tempo;
   }
 
   /** How much faster a scroll of `amount` px peaking at `peak` px/s plays its moves (1 = normal). */
