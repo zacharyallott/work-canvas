@@ -13964,7 +13964,7 @@ var _h = class {
 		if (e.classList.add("wc-root"), this.items = xm(e), !this.items.length) return console.warn("[work-canvas] no .work-item elements found — nothing to render."), this;
 		await wm(this.items), sh(this.items), this.projectPage = !!this.pathSlug() && new Set(this.items.map((e) => e.slug)).size === 1, this._homeTitle = this.isHomePath() ? document.title : this.options.homeTitle;
 		let t = this.layoutDefs.map((e) => e.key), n = t.includes(this.options.layout) ? this.options.layout : t[0];
-		this.options.rotate && (n = xh(t) ?? n), this.ui = new ah(e, {
+		this.options.rotate && (n = (this.options.rotate === "next" ? xh(t) : Sh(t)) ?? n), this.ui = new ah(e, {
 			layouts: this.layoutDefs,
 			current: n,
 			aboutHref: this.options.aboutPath,
@@ -14102,7 +14102,7 @@ var _h = class {
 		if (t || (this.aboutOpen && this.toggleAbout(!1), this.projectOpen && this.closeProject({ cycle: !1 })), this.switching || e === this.layoutKey || !this.renderer) return;
 		let r = this.layoutDefs.find((t) => t.key === e);
 		if (r) {
-			if (this.switching = !0, this.ui?.setActive(e), Sh(e), this.options.syncUrl) {
+			if (this.switching = !0, this.ui?.setActive(e), Ch(e), this.options.syncUrl) {
 				let t = new URL(location.href);
 				t.searchParams.set("v", e), history.replaceState(history.state, "", t);
 			}
@@ -14188,35 +14188,53 @@ var _h = class {
 			aspect: r.aspect,
 			alt: i.title
 		};
-		await gh(o.bestSrc), this.projectOpen = !0, this.hovered = null, this.mount.classList.remove("is-hovering-tile"), a.render(i, o);
-		let s = a.heroRect();
+		await gh(o.bestSrc);
+		let s = n && e.rect ? this.isCovered(e) : !1;
+		this.projectOpen = !0, this.hovered = null, this.mount.classList.remove("is-hovering-tile"), a.render(i, o);
+		let c = a.heroRect();
 		t && this.pushProjectState(i.slug);
-		let c = () => {
+		let l = () => {
 			this.mount.classList.add("is-project"), a.reveal({ reduced: this.reducedMotion }), clearTimeout(this._projectTimer), this._projectTimer = setTimeout(() => this.updateRunning(), 500);
 		};
-		if (!n || this.reducedMotion || !s) return c(), !0;
-		this.openTile = e;
-		let l = {
+		if (!n || this.reducedMotion || !c) return l(), !0;
+		this.openTile = e, this.openRaised = !s;
+		let u = {
 			...e.rect,
 			radius: this.radius
 		};
-		e.override = l;
-		let u = this.options.openDuration;
+		e.override = u;
+		let d = this.options.openDuration, f = this.options.openFade ?? .4, p = s ? f : 0;
 		return hi.timeline({
 			defaults: {
-				duration: u,
+				duration: d,
 				ease: this.options.openEase
 			},
-			onComplete: c
+			onComplete: l
 		}).to(this, {
 			openProgress: 1,
-			duration: this.options.openFade ?? .4,
+			duration: f,
 			ease: cm.fade
-		}, 0).to(l, {
-			...s,
+		}, 0).call(() => this.openRaised = !0, null, p).to(u, {
+			...c,
 			radius: this.radius,
 			rotation: 0
-		}, 0), !0;
+		}, p), !0;
+	}
+	isCovered(e) {
+		let t = (e) => {
+			let { x: t, y: n, w: r, h: i, rotation: a = 0 } = e.rect, o = Math.abs(Math.cos(a)), s = Math.abs(Math.sin(a)), c = (r * o + i * s) / 2, l = (r * s + i * o) / 2;
+			return {
+				l: t + r / 2 - c,
+				r: t + r / 2 + c,
+				t: n + i / 2 - l,
+				b: n + i / 2 + l
+			};
+		}, n = t(e);
+		return (this.layout?.tiles ?? []).some((r) => {
+			if (r === e || !r.onScreen || r.alpha < .01 || r.z <= e.z) return !1;
+			let i = t(r);
+			return Math.min(n.r, i.r) - Math.max(n.l, i.l) > 4 && Math.min(n.b, i.b) - Math.max(n.t, i.t) > 4;
+		});
 	}
 	openProjectBySlug(e, t) {
 		let n = this.mediaItems?.find((t) => t.project?.slug === e && t.caseStudy);
@@ -14246,7 +14264,7 @@ var _h = class {
 		}, "", t);
 	}
 	resetOpen() {
-		this.openTile && (hi.killTweensOf(this), this.openTile.override = null, this.openTile = null, this.openProgress = 0);
+		this.openTile && (hi.killTweensOf(this), this.openTile.override = null, this.openTile = null, this.openRaised = !1, this.openProgress = 0);
 	}
 	bindInput() {
 		let e = this.mount.dataset.wheel || this.options.wheel;
@@ -14315,6 +14333,10 @@ function xh(e) {
 	return t >= 0 ? e[(t + 1) % e.length] : null;
 }
 function Sh(e) {
+	let t = bh(), n = e.length > 1 ? e.filter((e) => e !== t) : e;
+	return n[Math.floor(Math.random() * n.length)] ?? null;
+}
+function Ch(e) {
 	try {
 		localStorage.setItem(vh, e);
 	} catch {}
@@ -14324,7 +14346,7 @@ function Sh(e) {
 }
 //#endregion
 //#region src/core/tile.js
-var Ch = class {
+var wh = class {
 	constructor(e, t, n = 0) {
 		this.engine = e, this.item = t, this.index = n, this.x = 0, this.y = 0, this.w = 100, this.h = 100, this.z = 0, this.rotation = 0, this.alpha = 1, this.reveal = 1, this.gray = 0, this.zoom = 0, this.priority = 0, this.interactive = !0, this.hover = 0, this.texReady = 0, this.onScreen = !1, this.override = null, this.material = e.baseMaterial.clone(), this.uniforms = this.material.uniforms, this.uniforms.uSize.value = new bo(100, 100), this.uniforms.uTexSize.value = t.texSize, this.mesh = new Gc(e.geometry, this.material), this.mesh.frustumCulled = !1, this.mesh.userData.tile = this, e.scene.add(this.mesh);
 	}
@@ -14335,7 +14357,7 @@ var Ch = class {
 		let { x: r, y: i, w: a, h: o } = this.rect, s = Math.max(t.width, t.height) * .25;
 		if (this.onScreen = this.alpha > .001 && r + a > -s && r < t.width + s && i + o > -s && i < t.height + s, this.mesh.visible = this.onScreen, !this.onScreen) return;
 		let c = this.engine.openTile;
-		this.mesh.position.set(r + a / 2, -(i + o / 2), 0), this.mesh.scale.set(a, o, 1), this.mesh.rotation.z = -(this.override ? this.override.rotation ?? 0 : this.rotation), this.mesh.renderOrder = c === this ? 1e4 : this.z;
+		this.mesh.position.set(r + a / 2, -(i + o / 2), 0), this.mesh.scale.set(a, o, 1), this.mesh.rotation.z = -(this.override ? this.override.rotation ?? 0 : this.rotation), this.mesh.renderOrder = c === this && this.engine.openRaised ? 1e4 : this.z;
 		let l = 1 - Math.exp(-e * (n?.speed ?? 8)), u = this.engine.hovered === this;
 		this.hover += (+!!u - this.hover) * l, this.texReady += (+!!this.item.ready - this.texReady) * (1 - Math.exp(-e * 6));
 		let d = this.uniforms;
@@ -14351,36 +14373,36 @@ var Ch = class {
 };
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/typeof.js
-function wh(e) {
+function Th(e) {
 	"@babel/helpers - typeof";
-	return wh = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
+	return Th = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
 		return typeof e;
 	} : function(e) {
 		return e && typeof Symbol == "function" && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
-	}, wh(e);
+	}, Th(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/toPrimitive.js
-function Th(e, t) {
-	if (wh(e) != "object" || !e) return e;
+function Eh(e, t) {
+	if (Th(e) != "object" || !e) return e;
 	var n = e[Symbol.toPrimitive];
 	if (n !== void 0) {
 		var r = n.call(e, t || "default");
-		if (wh(r) != "object") return r;
+		if (Th(r) != "object") return r;
 		throw TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return (t === "string" ? String : Number)(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/toPropertyKey.js
-function Eh(e) {
-	var t = Th(e, "string");
-	return wh(t) == "symbol" ? t : t + "";
+function Dh(e) {
+	var t = Eh(e, "string");
+	return Th(t) == "symbol" ? t : t + "";
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/defineProperty.js
-function Dh(e, t, n) {
-	return (t = Eh(t)) in e ? Object.defineProperty(e, t, {
+function Oh(e, t, n) {
+	return (t = Dh(t)) in e ? Object.defineProperty(e, t, {
 		value: n,
 		enumerable: !0,
 		configurable: !0,
@@ -14389,7 +14411,7 @@ function Dh(e, t, n) {
 }
 //#endregion
 //#region src/core/layout.js
-var Oh = (e) => Math.min(1, Math.max(0, e)), kh = class {
+var kh = (e) => Math.min(1, Math.max(0, e)), Ah = class {
 	constructor(e, t) {
 		this.engine = e, this.config = t, this.tiles = [], this.featured = null, this.progress = 0, this.introEase = hi.parseEase(t.easing ?? "none");
 	}
@@ -14403,7 +14425,7 @@ var Oh = (e) => Math.min(1, Math.max(0, e)), kh = class {
 		return this.engine.reducedMotion;
 	}
 	makeTiles(e) {
-		return this.tiles = e.map((e, t) => new Ch(this.engine, e, t)), this.tiles;
+		return this.tiles = e.map((e, t) => new wh(this.engine, e, t)), this.tiles;
 	}
 	repeatItems(e) {
 		let t = [];
@@ -14412,7 +14434,7 @@ var Oh = (e) => Math.min(1, Math.max(0, e)), kh = class {
 	}
 	tileProgress(e) {
 		let t = this.leaving || this.reduced ? 0 : this.config.stagger ?? .3;
-		return this.introEase(Oh(this.progress * (1 + t) - e * t));
+		return this.introEase(kh(this.progress * (1 + t) - e * t));
 	}
 	applyTransition(e, t) {
 		let n = this.tileProgress(t);
@@ -14456,7 +14478,7 @@ var Oh = (e) => Math.min(1, Math.max(0, e)), kh = class {
 	}
 	centerScore(e) {
 		let t = (e.x + e.w / 2 - this.vp.width / 2) / this.vp.width, n = (e.y + e.h / 2 - this.vp.height / 2) / this.vp.height;
-		return Oh(1 - Math.hypot(t, n)) * .99 + .01;
+		return kh(1 - Math.hypot(t, n)) * .99 + .01;
 	}
 	resize() {}
 	update() {}
@@ -14464,10 +14486,10 @@ var Oh = (e) => Math.min(1, Math.max(0, e)), kh = class {
 		hi.killTweensOf(this), this.fadeCanvas(1), this.tiles.forEach((e) => e.dispose()), this.tiles = [];
 	}
 };
-Dh(kh, "defaults", {});
+Oh(Ah, "defaults", {});
 //#endregion
 //#region src/core/sizing.js
-function Ah(e, t, n = 1) {
+function jh(e, t, n = 1) {
 	let r = n * 2654435769, i = () => {
 		r = r + 1831565813 | 0;
 		let e = Math.imul(r ^ r >>> 15, 1 | r);
@@ -14482,7 +14504,7 @@ function Ah(e, t, n = 1) {
 	}
 	return a;
 }
-function jh(e, t, { minW: n, maxW: r, maxH: i }) {
+function Mh(e, t, { minW: n, maxW: r, maxH: i }) {
 	let a = t, o = a * e;
 	return o > r && ([o, a] = [r, r / e]), o < n && ([o, a] = [n, n / e]), a > i && (a = i), {
 		w: o,
@@ -14491,7 +14513,7 @@ function jh(e, t, { minW: n, maxW: r, maxH: i }) {
 }
 //#endregion
 //#region src/core/spring.js
-var Mh = class {
+var Nh = class {
 	constructor(e = 6, { maxLead: t = Infinity } = {}) {
 		this.omega = e, this.maxLead = t, this.x = 0, this.v = 0, this.target = 0;
 	}
@@ -14503,9 +14525,9 @@ var Mh = class {
 		for (let e = 0; e < n; e++) this.v += (t * t * (this.target - this.x) - 2 * t * this.v) * r, this.x += this.v * r;
 		return this.x;
 	}
-}, Nh = class {
+}, Ph = class {
 	constructor(e) {
-		this.config = e, this.spring = new Mh(e.omega), this.last = null, this.speed = 0;
+		this.config = e, this.spring = new Nh(e.omega), this.last = null, this.speed = 0;
 	}
 	update(e, t, n = !1) {
 		let r = this.config;
@@ -14514,7 +14536,7 @@ var Mh = class {
 		return this.spring.target = i, this.spring.omega = i < this.spring.x ? r.closing ?? r.omega : r.omega, Math.max(0, this.spring.update(t));
 	}
 };
-function Ph(e, t, n, r, i) {
+function Fh(e, t, n, r, i) {
 	if (!(r > .05) || !e.length) return;
 	let a = t === "x" ? "w" : "h", o = (e) => e[a] + n, s = e.findIndex((e) => e[t] <= i && i < e[t] + o(e));
 	if (s < 0) return;
@@ -14526,7 +14548,7 @@ function Ph(e, t, n, r, i) {
 }
 //#endregion
 //#region src/layouts/filmstrip.js
-var Fh = {
+var Ih = {
 	heights: [
 		210,
 		280,
@@ -14575,18 +14597,18 @@ var Fh = {
 	enterDuration: .8,
 	leaveDuration: .25,
 	captionInset: [20, 12]
-}, Ih = class extends kh {
+}, Lh = class extends Ah {
 	constructor(e, t) {
-		super(e, t), this.offset = 0, this.target = 0, this.drift = -t.idleSpeed, this.velocity = 0, this.scrolled = new Mh(t.scroll.omega, { maxLead: t.scroll.maxLead }), this.spread = new Nh(t.spread);
+		super(e, t), this.offset = 0, this.target = 0, this.drift = -t.idleSpeed, this.velocity = 0, this.scrolled = new Nh(t.scroll.omega, { maxLead: t.scroll.maxLead }), this.spread = new Ph(t.spread);
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.height / Np.height));
 		this.s = n, this.engine.scale = n, this.gapPx = t.gap, this.bottom = e.height - t.bottomInset;
 		let r = Math.min(t.maxWidth * n, e.width * t.mobileMaxWidth), i = Math.min(t.minWidth * n, r), a = Math.max(...t.heights) * n, o = Math.ceil((e.width + r * 3) / (i + this.gapPx)), s = Math.max(this.items.length, o);
 		s !== this.tiles.length && (this.tiles.forEach((e) => e.dispose()), this.makeTiles(this.repeatItems(s)));
-		let c = Ah(this.tiles.length, t.heights.length, t.seed), l = 0;
+		let c = jh(this.tiles.length, t.heights.length, t.seed), l = 0;
 		this.tiles.forEach((e, o) => {
-			let { w: s, h: u } = jh(e.item.aspect, t.heights[c[o]] * n, {
+			let { w: s, h: u } = Mh(e.item.aspect, t.heights[c[o]] * n, {
 				minW: i,
 				maxW: r,
 				maxH: a
@@ -14606,7 +14628,7 @@ var Fh = {
 		let n = this.scrolled.update(e), r = this.offset + n, i = this.spread.update(r, e, this.reduced), a = null, o = Infinity, s = this.vp.width / 2, c = this.length, l = this.margin;
 		this.tiles.forEach((e) => {
 			e.x = ((t.startOffset * this.s + e.baseX + r + l) % c + c) % c - l;
-		}), Ph(this.tiles, "x", this.gapPx, i, s), this.tiles.forEach((e) => {
+		}), Fh(this.tiles, "x", this.gapPx, i, s), this.tiles.forEach((e) => {
 			e.y = this.bottom - e.h, e.z = 0, e.alpha = 1, e.reveal = 1;
 			let t = e.x + e.w > 0 && e.x < this.vp.width, n = Math.abs(e.x + e.w / 2 - s);
 			t && n < o && (o = n, a = e), e.priority = t ? this.centerScore(e) : 0, this.applyTransition(e, Math.min(1, Math.max(0, e.x / this.vp.width)));
@@ -14626,10 +14648,10 @@ var Fh = {
 		t && (this.target += this.vp.width / 2 - (t.x + t.w / 2));
 	}
 };
-Dh(Ih, "defaults", Fh), Dh(Ih, "label", "Filmstrip");
+Oh(Lh, "defaults", Ih), Oh(Lh, "label", "Filmstrip");
 //#endregion
 //#region src/layouts/deck.js
-var Lh = {
+var Rh = {
 	heights: [
 		220,
 		300,
@@ -14718,7 +14740,7 @@ var Lh = {
 	enterDuration: .7,
 	leaveDuration: .25,
 	captionInset: [16, 12]
-}, Rh = class extends kh {
+}, zh = class extends Ah {
 	constructor(e, t) {
 		super(e, t), this.makeTiles(this.items);
 		let n = this.tiles.length;
@@ -14734,9 +14756,9 @@ var Lh = {
 		this.s = n, this.engine.scale = n;
 		let r = Math.min(t.maxWidth * n, e.width * t.mobileMaxWidth), i = Math.min(t.minWidth * n, r);
 		this.k = r / t.maxWidth;
-		let a = Math.max(...t.heights) * this.k, o = Ah(this.tiles.length, t.heights.length, t.seed);
+		let a = Math.max(...t.heights) * this.k, o = jh(this.tiles.length, t.heights.length, t.seed);
 		this.tiles.forEach((e, n) => {
-			let { w: s, h: c } = jh(e.item.aspect, t.heights[o[n]] * this.k, {
+			let { w: s, h: c } = Mh(e.item.aspect, t.heights[o[n]] * this.k, {
 				minW: i,
 				maxW: r,
 				maxH: a
@@ -14843,10 +14865,10 @@ var Lh = {
 		this.finishFade(), super.dispose();
 	}
 };
-Dh(Rh, "defaults", Lh), Dh(Rh, "label", "Deck");
+Oh(zh, "defaults", Rh), Oh(zh, "label", "Deck");
 //#endregion
 //#region src/layouts/masonry.js
-var zh = {
+var Bh = {
 	columnWidth: 176,
 	gutter: 12,
 	gap: 12,
@@ -14907,7 +14929,7 @@ var zh = {
 	leaveDuration: .25,
 	captionInset: [14, 13]
 };
-function Bh(e, t) {
+function Vh(e, t) {
 	let n = t * 2654435769, r = () => {
 		n = n + 1831565813 | 0;
 		let e = Math.imul(n ^ n >>> 15, 1 | n);
@@ -14919,9 +14941,9 @@ function Bh(e, t) {
 	}
 	return i;
 }
-var Vh = class extends kh {
+var Hh = class extends Ah {
 	constructor(e, t) {
-		super(e, t), this.scroll = 0, this.scrollSprings = t.columnSpeeds.map((e) => new Mh(t.scroll.omega * Math.sqrt(e), { maxLead: t.scroll.maxLead })), this.spreads = t.columnSpeeds.map(() => new Nh(t.spread)), this.slow = 1, this.shiftX = 0, this.shiftV = 0, this.pull = 0, this.columns = [];
+		super(e, t), this.scroll = 0, this.scrollSprings = t.columnSpeeds.map((e) => new Nh(t.scroll.omega * Math.sqrt(e), { maxLead: t.scroll.maxLead })), this.spreads = t.columnSpeeds.map(() => new Ph(t.spread)), this.slow = 1, this.shiftX = 0, this.shiftV = 0, this.pull = 0, this.columns = [];
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.width / Np.width));
@@ -14932,7 +14954,7 @@ var Vh = class extends kh {
 			tiles: [],
 			length: 0,
 			has: /* @__PURE__ */ new Set()
-		})), l = this.items.length, u = new Map(Bh(this.items, 1).map((e, t) => [e, t])), d = new Map(this.items.map((e) => [e, 0])), f = (e, t) => {
+		})), l = this.items.length, u = new Map(Vh(this.items, 1).map((e, t) => [e, t])), d = new Map(this.items.map((e) => [e, 0])), f = (e, t) => {
 			let n = /* @__PURE__ */ new Set();
 			for (let r = -t; r <= t; r++) c[(e + r + i) % i].has.forEach((e) => n.add(e));
 			return n;
@@ -14979,7 +15001,7 @@ var Vh = class extends kh {
 				let n = e.length;
 				t.x = o, t.y = ((s + t.offsetInCol + d) % n + n) % n - d, t.w = this.colW;
 			}
-			Ph(e.tiles, "y", this.gapPx, u[e.slot], i / 2);
+			Fh(e.tiles, "y", this.gapPx, u[e.slot], i / 2);
 			for (let o of e.tiles) o.z = 0, o.alpha = 1, o.reveal = 1, o.gray = a && o !== n.hovered ? t.dimOthers * (1 - this.slow) : 0, o.priority = o.y + o.h > 0 && o.y < i && o.x + o.w > 0 && o.x < r ? this.centerScore(o) : 0, o.priority > m && (m = o.priority, p = o), this.applyTransition(o, 0);
 		}
 		this.featured = p, p && (p.priority = 2), a && (n.hovered.priority = 3);
@@ -14997,10 +15019,10 @@ var Vh = class extends kh {
 		for (let t of this.scrollSprings) t.push(e * this.config.scroll.multiplier);
 	}
 };
-Dh(Vh, "defaults", zh), Dh(Vh, "label", "Masonry");
+Oh(Hh, "defaults", Bh), Oh(Hh, "label", "Masonry");
 //#endregion
 //#region src/layouts/fan.js
-var Hh = {
+var Uh = {
 	tileWidth: 400,
 	sizes: [
 		.5,
@@ -15027,7 +15049,7 @@ var Hh = {
 	seam: 180,
 	hole: 640,
 	drop: 360,
-	portraitRing: .88,
+	portraitRing: .72,
 	portraitHole: 520,
 	hoverOut: 56,
 	idleSpeed: .8,
@@ -15057,26 +15079,24 @@ var Hh = {
 	leaveDuration: .25,
 	swing: 0,
 	captionInset: [20, 12]
-}, Uh = Math.PI / 180, Wh = class extends kh {
+}, Wh = Math.PI / 180, Gh = class extends Ah {
 	constructor(e, t) {
-		super(e, t), this.angle = 0, this.velocity = 0, this.scrolled = new Mh(t.scroll.omega, { maxLead: t.scroll.maxLead }), this.spread = new Nh(t.spread);
+		super(e, t), this.angle = 0, this.velocity = 0, this.scrolled = new Nh(t.scroll.omega, { maxLead: t.scroll.maxLead }), this.spread = new Ph(t.spread);
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.height / Np.height));
 		this.s = n, this.engine.scale = n;
 		let r = Math.round(360 / t.step), i = Math.max(this.items.length, r);
 		i !== this.tiles.length && (this.tiles.forEach((e) => e.dispose()), this.makeTiles(this.repeatItems(i)));
-		let a = Math.min(t.tileWidth * n, e.width * t.mobileMaxWidth), o = Ah(this.tiles.length, t.sizes.length, t.seed), s = Ah(this.tiles.length, t.shapes.length, t.seed + 7), c = (this.engine.options.maxTextureEdge ?? 1280) / t.sharpDensity;
+		let a = Math.min(t.tileWidth * n, e.width * t.mobileMaxWidth), o = jh(this.tiles.length, t.sizes.length, t.seed), s = jh(this.tiles.length, t.shapes.length, t.seed + 7), c = (this.engine.options.maxTextureEdge ?? 1280) / t.sharpDensity;
 		this.tiles.forEach((e, n) => {
 			let r = e.item.aspect || 1, i = Math.min(t.maxAspect, Math.max(t.minAspect, r * t.shapes[s[n]])), l = r >= 1 ? c : c * r, u = i < r ? l / r * i : l;
 			e.w = Math.min(a * t.sizes[o[n]], u), e.h = e.w / i;
 		});
 		let l = e.width < e.height;
-		this.hole = l ? t.portraitHole ?? t.hole : t.hole;
-		let u = l ? e.height * t.portraitRing + this.hole * n : 0;
-		this.pivot = {
+		this.hole = l ? t.portraitHole ?? t.hole : t.hole, this.pivot = {
 			x: e.width / 2,
-			y: Math.max(e.height + t.drop * n, u)
+			y: l ? e.height * t.portraitRing + this.hole * n : e.height + t.drop * n
 		};
 	}
 	update(e) {
@@ -15096,7 +15116,7 @@ var Hh = {
 		}), f.sort((e, t) => e.a - t.a);
 		let p = !t.stagger && !t.swing;
 		this.fadeCanvas(p ? this.tileProgress(0) : 1), f.forEach(({ t: e, a: n }, i) => {
-			let a = Math.min(1, Math.max(0, (n + 120) / 240)), f = this.tileProgress(a), m = (n - (1 - f) * t.swing) * Uh, h = Math.cos(m), g = Math.sin(m), [_, v] = [g, -h];
+			let a = Math.min(1, Math.max(0, (n + 120) / 240)), f = this.tileProgress(a), m = (n - (1 - f) * t.swing) * Wh, h = Math.cos(m), g = Math.sin(m), [_, v] = [g, -h];
 			e.restX = o + _ * (r + e.h / 2), e.restY = s + v * (r + e.h / 2);
 			let y = r + (e.hover || 0) * t.hoverOut * this.s + e.h / 2, b = o + _ * y, x = s + v * y;
 			e.x = b - e.w / 2, e.y = x - e.h / 2, e.rotation = m, e.z = i, e.alpha = p ? 1 : t.swing ? Math.min(1, f * 2.5) : f, e.reveal = 1, e.captionAt = "top-left";
@@ -15127,13 +15147,13 @@ var Hh = {
 	}
 	focusItem(e) {
 		let t = this.tileForItem(e) ?? this.tiles.find((t) => t.item === e);
-		!t || t.alpha <= 0 || this.scrolled.push(-t.rotation / Uh);
+		!t || t.alpha <= 0 || this.scrolled.push(-t.rotation / Wh);
 	}
 };
-Dh(Wh, "defaults", Hh), Dh(Wh, "label", "Fan");
+Oh(Gh, "defaults", Uh), Oh(Gh, "label", "Fan");
 //#endregion
 //#region src/layouts/universe.js
-var Gh = {
+var Kh = {
 	tileWidth: 400,
 	field: {
 		width: 4269,
@@ -15334,7 +15354,7 @@ var Gh = {
 	enterDuration: 1.4,
 	leaveDuration: .25,
 	captionInset: [20, 12]
-}, Kh = class extends kh {
+}, qh = class extends Ah {
 	constructor(e, t) {
 		super(e, t), this.pan = {
 			x: 0,
@@ -15346,7 +15366,7 @@ var Gh = {
 			x: 0,
 			y: 0
 		};
-		let n = () => new Mh(t.scroll.omega, { maxLead: t.scroll.maxLead });
+		let n = () => new Nh(t.scroll.omega, { maxLead: t.scroll.maxLead });
 		this.scrolled = {
 			x: n(),
 			y: n()
@@ -15357,7 +15377,7 @@ var Gh = {
 		this.s = n, this.engine.scale = n;
 		let r = t.places.length, i = this.items, a = Math.min(t.tileWidth * n, e.width * t.mobileMaxWidth), o = t.spacing * n, s = a * Math.max(...t.layers.scale) / t.minAspect, c = Math.max(1, Math.ceil(i.length / r)), l = t.field.height * o - s < e.height ? 2 : 1, u = r * c * l;
 		u !== this.tiles.length && (this.tiles.forEach((e) => e.dispose()), this.makeTiles(Array.from({ length: u }, (e, t) => i[t < i.length ? t : t % r % i.length])));
-		let d = Ah(r, t.layers.pace.length, t.seed);
+		let d = jh(r, t.layers.pace.length, t.seed);
 		this.period = {
 			x: t.field.width * c * o,
 			y: t.field.height * l * o
@@ -15420,10 +15440,10 @@ var Gh = {
 		t && (this.scrolled.x.target += (this.vp.width / 2 - (t.x + t.w / 2)) / t.pace, this.scrolled.y.target += (this.vp.height / 2 - (t.y + t.h / 2)) / t.pace);
 	}
 };
-Dh(Kh, "defaults", Gh), Dh(Kh, "label", "Universe");
+Oh(qh, "defaults", Kh), Oh(qh, "label", "Universe");
 //#endregion
 //#region src/layouts/rolodex.js
-var qh = {
+var Jh = {
 	tileWidth: 414,
 	maxHeight: 440,
 	frontHeight: 300,
@@ -15437,6 +15457,7 @@ var qh = {
 	portraitDepth: .25,
 	centerY: .5,
 	slots: 6,
+	caseStudiesOnly: !0,
 	minAspect: .75,
 	maxAspect: 1.4,
 	minScale: .55,
@@ -15446,9 +15467,10 @@ var qh = {
 	move: {
 		duration: 1.05,
 		hold: .3,
-		between: .14,
 		ease: "power2.inOut",
-		quicken: .25
+		runEase: "sine.inOut",
+		stretch: .9,
+		friction: .65
 	},
 	gesture: {
 		gap: .2,
@@ -15510,9 +15532,15 @@ var qh = {
 	enterDuration: 1.3,
 	leaveDuration: .25,
 	captionInset: [20, 12]
-}, Jh = class extends kh {
+}, Yh = class extends Ah {
 	constructor(e, t) {
-		super(e, t), this.goal = 0, this.pos = 0, this.shown = 0, this.move = null, this.hold = 0, this.gesture = null, this.wheelLog = [], this.tempo = 1, this.moveEase = hi.parseEase(t.move.ease), this.roll = new Mh(t.scroll.omega), this.spread = new Nh(t.spread), this.sinceInput = Infinity, this.dragging = !1, this.timer = 0, this.settled = 0, this.dir = 1, this.pace = 0, this.paceCards = 0;
+		super(e, t), this.goal = 0, this.pos = 0, this.shown = 0, this.move = null, this.hold = 0, this.gesture = null, this.wheelLog = [], this.tempo = 1, this.moveEase = hi.parseEase(t.move.ease), this.runEase = hi.parseEase(t.move.runEase ?? t.move.ease), this.roll = new Nh(t.scroll.omega), this.spread = new Ph(t.spread), this.sinceInput = Infinity, this.dragging = !1, this.timer = 0, this.settled = 0, this.dir = 1, this.pace = 0, this.paceCards = 0;
+	}
+	get items() {
+		let e = super.items;
+		if (!this.config.caseStudiesOnly) return e;
+		let t = e.filter((e) => e.caseStudy);
+		return t.length ? t : e;
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.height / Np.height));
@@ -15573,20 +15601,40 @@ var qh = {
 	advance(e) {
 		let t = this.config.move;
 		if (this.move) {
-			let n = this.move, r = this.moveTime(Math.abs(this.goal - n.from));
-			return r < n.D && (n.t *= r / n.D, n.D = r), n.t += e, n.t < n.D ? n.from + (n.to - n.from) * this.moveEase(n.t / n.D) : (this.pos = n.to, this.move = null, this.hold = this.reduced ? 0 : this.goal === this.pos ? t.hold / (this.paced ? this.tempo : 1) : t.between / this.tempo, this.pos);
+			let n = this.move;
+			if (this.goal !== n.to) {
+				let t = this.curve(n, n.t / n.D), r = {
+					from: n.from,
+					to: this.goal,
+					t: 0,
+					D: this.moveTime(Math.abs(this.goal - n.from))
+				}, i = 0, a = 1;
+				for (let e = 0; e < 24; e++) {
+					let e = (i + a) / 2;
+					(this.curve(r, e) - t) * Math.sign(r.to - r.from) < 0 ? i = e : a = e;
+				}
+				return r.t = i * r.D, this.move = r, this.advance(e);
+			}
+			let r = this.moveTime(Math.abs(n.to - n.from));
+			return r < n.D && (n.t *= r / n.D, n.D = r), n.t += e, n.t < n.D ? this.curve(n, n.t / n.D) : (this.pos = n.to, this.move = null, this.hold = this.reduced ? 0 : t.hold / (this.paced ? this.tempo : 1), this.pos);
 		}
 		if (this.hold > 0) this.hold = Math.max(0, this.hold - e);
 		else if (this.goal !== this.pos) {
-			let e = Math.abs(this.goal - this.pos), t = this.moveTime(e);
-			return this.move = {
+			let e = this.pos + Math.trunc(this.goal - this.pos);
+			if (e !== this.pos) return this.move = {
 				from: this.pos,
-				to: this.pos + Math.sign(this.goal - this.pos),
+				to: e,
 				t: 0,
-				D: t
+				D: this.moveTime(Math.abs(e - this.pos))
 			}, this.advance(0);
 		}
 		return this.pos;
+	}
+	curve(e, t) {
+		let n = e.to - e.from, r = Math.abs(n), i = Math.min(1, Math.max(0, t));
+		if (r <= 1) return e.from + n * this.moveEase(i);
+		let a = r * this.runEase(i);
+		return e.from + Math.sign(n) * (a - this.config.move.friction * Math.sin(2 * Math.PI * a) / (2 * Math.PI));
 	}
 	cardsFor(e, t, n) {
 		return Math.min(this.config.gesture.max, 1 + Math.floor(Math.max(0, e - t) / n));
@@ -15594,8 +15642,8 @@ var qh = {
 	moveTime(e) {
 		let t = this.config.move;
 		if (this.reduced) return .001;
-		let n = e <= 1 && !this.paced ? Math.sqrt(this.tempo) : this.tempo;
-		return t.duration / (1 + t.quicken * Math.max(0, e - 1)) / n;
+		let n = this.paced ? this.tempo : Math.sqrt(this.tempo);
+		return t.duration * (1 + t.stretch * Math.max(0, e - 1)) / n;
 	}
 	tempoFor(e, t, n, r) {
 		let i = this.config.tempo, a = i.amount * Math.max(0, e - t) / t + i.speed * Math.max(0, n - r) / r;
@@ -15672,48 +15720,48 @@ var qh = {
 		n != null && (this.goal = Math.round(this.goal + n), n && (this.dir = Math.sign(n)));
 	}
 };
-Dh(Jh, "defaults", qh), Dh(Jh, "label", "Rolodex");
+Oh(Yh, "defaults", Jh), Oh(Yh, "label", "Rolodex");
 //#endregion
 //#region src/main.js
-var Yh = [
+var Xh = [
 	{
 		key: "a",
 		name: "Filmstrip",
-		Layout: Ih,
-		config: Fh
+		Layout: Lh,
+		config: Ih
 	},
 	{
 		key: "b",
 		name: "Deck",
-		Layout: Rh,
-		config: Lh
+		Layout: zh,
+		config: Rh
 	},
 	{
 		key: "c",
 		name: "Masonry",
-		Layout: Vh,
-		config: zh
+		Layout: Hh,
+		config: Bh
 	},
 	{
 		key: "d",
 		name: "Fan",
-		Layout: Wh,
-		config: Hh
+		Layout: Gh,
+		config: Uh
 	},
 	{
 		key: "e",
 		name: "Universe",
-		Layout: Kh,
-		config: Gh
+		Layout: qh,
+		config: Kh
 	},
 	{
 		key: "f",
 		name: "Rolodex",
-		Layout: Jh,
-		config: qh
+		Layout: Yh,
+		config: Jh
 	}
 ];
-async function Xh(e, t = {}) {
+async function Zh(e, t = {}) {
 	if (e.__workCanvas) return e.__workCanvas;
 	let n = e.dataset, r = new URLSearchParams(location.search), i = r.get("v");
 	if (i && !(t.syncUrl ?? n.syncUrl === "true")) {
@@ -15721,7 +15769,7 @@ async function Xh(e, t = {}) {
 		let e = new URL(location.href);
 		e.search = r.toString(), history.replaceState(history.state, "", e);
 	}
-	let a = parseInt(t.maxVideos ?? n.maxVideos, 10), o = Yh.map((e) => ({
+	let a = parseInt(t.maxVideos ?? n.maxVideos, 10), o = Xh.map((e) => ({
 		...e,
 		config: {
 			...e.config,
@@ -15732,7 +15780,7 @@ async function Xh(e, t = {}) {
 	let s = new _h(e, {
 		layouts: o,
 		layout: t.layout ?? i ?? n.layout ?? "a",
-		rotate: t.rotate ?? (!(t.layout ?? i) && n.rotate !== "false"),
+		rotate: t.rotate ?? ((t.layout ?? i) || n.rotate === "false" ? !1 : n.rotate === "next" ? "next" : "random"),
 		switcher: t.switcher ?? n.switcher !== "false",
 		syncUrl: t.syncUrl ?? n.syncUrl === "true",
 		tagline: t.tagline ?? n.tagline ?? "design &amp; direction made to move",
@@ -15744,14 +15792,14 @@ async function Xh(e, t = {}) {
 	});
 	return e.__workCanvas = s, await s.init(), s;
 }
-function Zh() {
-	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Xh(e));
+function Qh() {
+	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Zh(e));
 }
 typeof window < "u" && (window.WorkCanvas = {
-	mount: Xh,
-	LAYOUTS: Yh
-}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", Zh, { once: !0 }) : Zh());
+	mount: Zh,
+	LAYOUTS: Xh
+}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", Qh, { once: !0 }) : Qh());
 //#endregion
-export { Yh as LAYOUTS, _h as WorkCanvas, Xh as mount };
+export { Xh as LAYOUTS, _h as WorkCanvas, Zh as mount };
 
 //# sourceMappingURL=work-canvas.js.map
