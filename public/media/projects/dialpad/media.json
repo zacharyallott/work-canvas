@@ -1,8 +1,8 @@
 {
-  "generated": "2026-10-01T20:14:14.670Z",
-  "count": 8,
+  "generated": "2026-10-01T22:12:38.103Z",
+  "count": 10,
   "images": 5,
-  "videos": 3,
+  "videos": 5,
   "items": [
     {
       "id": "dialpad-allott-01",
@@ -225,6 +225,70 @@
         }
       ],
       "aspect": 1.5
+    },
+    {
+      "id": "dialpad-allott-billboard-02",
+      "label": "Dialpad",
+      "href": "/projects/dialpad",
+      "caseStudy": true,
+      "source": "Dialpad-Allott-Billboard-02.mp4",
+      "sourceHash": "e3fd69f9307fe7c9",
+      "type": "video",
+      "width": 1080,
+      "height": 720,
+      "duration": 23.06,
+      "sourceDuration": 23.06,
+      "poster": {
+        "src": "media/projects/dialpad/dialpad-allott-billboard-02-poster.webp",
+        "width": 1080,
+        "height": 720,
+        "bytes": 29936
+      },
+      "sources": [
+        {
+          "src": "media/projects/dialpad/dialpad-allott-billboard-02.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 1279326
+        },
+        {
+          "src": "media/projects/dialpad/dialpad-allott-billboard-02.mp4",
+          "type": "video/mp4",
+          "bytes": 1750413
+        }
+      ],
+      "aspect": 1.5
+    },
+    {
+      "id": "dialpad-allott-billboard",
+      "label": "Dialpad",
+      "href": "/projects/dialpad",
+      "caseStudy": true,
+      "source": "Dialpad-Allott-Billboard.mp4",
+      "sourceHash": "88cb70da9df6a596",
+      "type": "video",
+      "width": 756,
+      "height": 1080,
+      "duration": 20.85,
+      "sourceDuration": 20.85,
+      "poster": {
+        "src": "media/projects/dialpad/dialpad-allott-billboard-poster.webp",
+        "width": 756,
+        "height": 1080,
+        "bytes": 113470
+      },
+      "sources": [
+        {
+          "src": "media/projects/dialpad/dialpad-allott-billboard.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 3164450
+        },
+        {
+          "src": "media/projects/dialpad/dialpad-allott-billboard.mp4",
+          "type": "video/mp4",
+          "bytes": 3206882
+        }
+      ],
+      "aspect": 0.7
     },
     {
       "id": "dialpad-allott-logo-comp-01",
