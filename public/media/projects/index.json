@@ -414,82 +414,6 @@
         "aspect": 1.5
       },
       {
-        "id": "burton-zebs-allott-03",
-        "label": "Burton Zebs",
-        "href": "",
-        "caseStudy": true,
-        "source": "Burton-Zebs-Allott-03.jpg",
-        "sourceHash": "05bdba939042c688",
-        "type": "image",
-        "width": 3000,
-        "height": 2000,
-        "images": {
-          "sm": {
-            "src": "media/projects/burton-zebs/burton-zebs-allott-03-sm.webp",
-            "width": 480,
-            "height": 320,
-            "bytes": 14864
-          },
-          "md": {
-            "src": "media/projects/burton-zebs/burton-zebs-allott-03-md.webp",
-            "width": 1280,
-            "height": 853,
-            "bytes": 119402
-          },
-          "lg": {
-            "src": "media/projects/burton-zebs/burton-zebs-allott-03-lg.webp",
-            "width": 2048,
-            "height": 1365,
-            "bytes": 363328
-          }
-        },
-        "poster": {
-          "src": "media/projects/burton-zebs/burton-zebs-allott-03-sm.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 14864
-        },
-        "aspect": 1.5
-      },
-      {
-        "id": "burton-zebs-allott-04",
-        "label": "Burton Zebs",
-        "href": "",
-        "caseStudy": true,
-        "source": "Burton-Zebs-Allott-04.jpg",
-        "sourceHash": "a025fdc9158ddefb",
-        "type": "image",
-        "width": 3000,
-        "height": 2000,
-        "images": {
-          "sm": {
-            "src": "media/projects/burton-zebs/burton-zebs-allott-04-sm.webp",
-            "width": 480,
-            "height": 320,
-            "bytes": 8232
-          },
-          "md": {
-            "src": "media/projects/burton-zebs/burton-zebs-allott-04-md.webp",
-            "width": 1280,
-            "height": 853,
-            "bytes": 51190
-          },
-          "lg": {
-            "src": "media/projects/burton-zebs/burton-zebs-allott-04-lg.webp",
-            "width": 2048,
-            "height": 1365,
-            "bytes": 112492
-          }
-        },
-        "poster": {
-          "src": "media/projects/burton-zebs/burton-zebs-allott-04-sm.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 8232
-        },
-        "aspect": 1.5
-      },
-      {
         "id": "burton-zebs-allott-05",
         "label": "Burton Zebs",
         "href": "",
@@ -528,44 +452,6 @@
         "aspect": 1.4993
       },
       {
-        "id": "burton-zebs-allott-06",
-        "label": "Burton Zebs",
-        "href": "",
-        "caseStudy": true,
-        "source": "Burton-Zebs-Allott-06.jpg",
-        "sourceHash": "0c544699815ffcb4",
-        "type": "image",
-        "width": 2000,
-        "height": 1342,
-        "images": {
-          "sm": {
-            "src": "media/projects/burton-zebs/burton-zebs-allott-06-sm.webp",
-            "width": 480,
-            "height": 322,
-            "bytes": 6736
-          },
-          "md": {
-            "src": "media/projects/burton-zebs/burton-zebs-allott-06-md.webp",
-            "width": 1280,
-            "height": 859,
-            "bytes": 40566
-          },
-          "lg": {
-            "src": "media/projects/burton-zebs/burton-zebs-allott-06-lg.webp",
-            "width": 2000,
-            "height": 1342,
-            "bytes": 147006
-          }
-        },
-        "poster": {
-          "src": "media/projects/burton-zebs/burton-zebs-allott-06-sm.webp",
-          "width": 480,
-          "height": 322,
-          "bytes": 6736
-        },
-        "aspect": 1.4903
-      },
-      {
         "id": "burton-zebs-allott-07",
         "label": "Burton Zebs",
         "href": "",
@@ -602,12 +488,240 @@
           "bytes": 30110
         },
         "aspect": 1.5
+      },
+      {
+        "id": "burton-zebs-allott-08",
+        "label": "Burton Zebs",
+        "href": "",
+        "caseStudy": true,
+        "source": "Burton-Zebs-Allott-08.jpg",
+        "sourceHash": "413182c294b3ce84",
+        "type": "image",
+        "width": 2400,
+        "height": 1600,
+        "images": {
+          "sm": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-08-sm.webp",
+            "width": 480,
+            "height": 320,
+            "bytes": 9832
+          },
+          "md": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-08-md.webp",
+            "width": 1280,
+            "height": 853,
+            "bytes": 59982
+          },
+          "lg": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-08-lg.webp",
+            "width": 2048,
+            "height": 1365,
+            "bytes": 155298
+          }
+        },
+        "poster": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-08-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 9832
+        },
+        "aspect": 1.5
+      },
+      {
+        "id": "burton-zebs-allott-09",
+        "label": "Burton Zebs",
+        "href": "",
+        "caseStudy": true,
+        "source": "Burton-Zebs-Allott-09.jpg",
+        "sourceHash": "5331a812edb80b2b",
+        "type": "image",
+        "width": 1600,
+        "height": 2400,
+        "images": {
+          "sm": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-09-sm.webp",
+            "width": 320,
+            "height": 480,
+            "bytes": 9772
+          },
+          "md": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-09-md.webp",
+            "width": 853,
+            "height": 1280,
+            "bytes": 65098
+          },
+          "lg": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-09-lg.webp",
+            "width": 1365,
+            "height": 2048,
+            "bytes": 165370
+          }
+        },
+        "poster": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-09-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 9772
+        },
+        "aspect": 0.6667
+      },
+      {
+        "id": "burton-zebs-allott-10",
+        "label": "Burton Zebs",
+        "href": "",
+        "caseStudy": true,
+        "source": "Burton-Zebs-Allott-10.jpg",
+        "sourceHash": "c22d1b0dbbfce3f2",
+        "type": "image",
+        "width": 1600,
+        "height": 2400,
+        "images": {
+          "sm": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-10-sm.webp",
+            "width": 320,
+            "height": 480,
+            "bytes": 6094
+          },
+          "md": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-10-md.webp",
+            "width": 853,
+            "height": 1280,
+            "bytes": 43786
+          },
+          "lg": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-10-lg.webp",
+            "width": 1365,
+            "height": 2048,
+            "bytes": 137094
+          }
+        },
+        "poster": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-10-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 6094
+        },
+        "aspect": 0.6667
+      },
+      {
+        "id": "burton-zebs-allott-11",
+        "label": "Burton Zebs",
+        "href": "",
+        "caseStudy": true,
+        "source": "Burton-Zebs-Allott-11.jpg",
+        "sourceHash": "016c032fe6075d90",
+        "type": "image",
+        "width": 1920,
+        "height": 2400,
+        "images": {
+          "sm": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-11-sm.webp",
+            "width": 384,
+            "height": 480,
+            "bytes": 11972
+          },
+          "md": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-11-md.webp",
+            "width": 1024,
+            "height": 1280,
+            "bytes": 64948
+          },
+          "lg": {
+            "src": "media/projects/burton-zebs/burton-zebs-allott-11-lg.webp",
+            "width": 1638,
+            "height": 2048,
+            "bytes": 173022
+          }
+        },
+        "poster": {
+          "src": "media/projects/burton-zebs/burton-zebs-allott-11-sm.webp",
+          "width": 384,
+          "height": 480,
+          "bytes": 11972
+        },
+        "aspect": 0.8
       }
     ]
   },
   "bonnell": {
     "folder": "04_Bonnell",
     "items": [
+      {
+        "id": "902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351",
+        "label": "902 MA Aime a8f6e924 1e53 4b7d 9fbd ff2071e55351",
+        "href": "",
+        "caseStudy": false,
+        "source": "902_MA_Aime_a8f6e924-1e53-4b7d-9fbd-ff2071e55351.webp",
+        "sourceHash": "01ce439f7a6cfc3a",
+        "type": "image",
+        "width": 663,
+        "height": 828,
+        "images": {
+          "sm": {
+            "src": "media/projects/bonnell/902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351-sm.webp",
+            "width": 384,
+            "height": 480,
+            "bytes": 23510
+          },
+          "md": {
+            "src": "media/projects/bonnell/902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351-md.webp",
+            "width": 663,
+            "height": 828,
+            "bytes": 71748
+          },
+          "lg": {
+            "src": "media/projects/bonnell/902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351-lg.webp",
+            "width": 663,
+            "height": 828,
+            "bytes": 76158
+          }
+        },
+        "poster": {
+          "src": "media/projects/bonnell/902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351-sm.webp",
+          "width": 384,
+          "height": 480,
+          "bytes": 23510
+        },
+        "aspect": 0.8007
+      },
+      {
+        "id": "bonnell-new-1",
+        "label": "bonnell new",
+        "href": "",
+        "caseStudy": false,
+        "source": "bonnell_new_1.jpg",
+        "sourceHash": "1aa36b792d135715",
+        "type": "image",
+        "width": 1000,
+        "height": 1000,
+        "images": {
+          "sm": {
+            "src": "media/projects/bonnell/bonnell-new-1-sm.webp",
+            "width": 480,
+            "height": 480,
+            "bytes": 24464
+          },
+          "md": {
+            "src": "media/projects/bonnell/bonnell-new-1-md.webp",
+            "width": 1000,
+            "height": 1000,
+            "bytes": 73906
+          },
+          "lg": {
+            "src": "media/projects/bonnell/bonnell-new-1-lg.webp",
+            "width": 1000,
+            "height": 1000,
+            "bytes": 81084
+          }
+        },
+        "poster": {
+          "src": "media/projects/bonnell/bonnell-new-1-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 24464
+        },
+        "aspect": 1
+      },
       {
         "id": "bonnell-allott-01",
         "label": "Bonnell",
@@ -723,42 +837,42 @@
         "aspect": 1.3308
       },
       {
-        "id": "frame-227",
-        "label": "Frame",
+        "id": "bonnell-allott-03",
+        "label": "Bonnell",
         "href": "",
-        "caseStudy": false,
-        "source": "Frame 227.webp",
-        "sourceHash": "cbaa9229e18e3068",
+        "caseStudy": true,
+        "source": "Bonnell-Allott-03.jpg",
+        "sourceHash": "004c806f26652654",
         "type": "image",
-        "width": 990,
-        "height": 813,
+        "width": 1600,
+        "height": 1600,
         "images": {
           "sm": {
-            "src": "media/projects/bonnell/frame-227-sm.webp",
+            "src": "media/projects/bonnell/bonnell-allott-03-sm.webp",
             "width": 480,
-            "height": 394,
-            "bytes": 7634
+            "height": 480,
+            "bytes": 16596
           },
           "md": {
-            "src": "media/projects/bonnell/frame-227-md.webp",
-            "width": 990,
-            "height": 813,
-            "bytes": 23296
+            "src": "media/projects/bonnell/bonnell-allott-03-md.webp",
+            "width": 1280,
+            "height": 1280,
+            "bytes": 116322
           },
           "lg": {
-            "src": "media/projects/bonnell/frame-227-lg.webp",
-            "width": 990,
-            "height": 813,
-            "bytes": 24602
+            "src": "media/projects/bonnell/bonnell-allott-03-lg.webp",
+            "width": 1600,
+            "height": 1600,
+            "bytes": 210252
           }
         },
         "poster": {
-          "src": "media/projects/bonnell/frame-227-sm.webp",
+          "src": "media/projects/bonnell/bonnell-allott-03-sm.webp",
           "width": 480,
-          "height": 394,
-          "bytes": 7634
+          "height": 480,
+          "bytes": 16596
         },
-        "aspect": 1.2177
+        "aspect": 1
       }
     ]
   },

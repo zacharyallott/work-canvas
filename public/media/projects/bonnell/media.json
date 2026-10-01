@@ -1,9 +1,85 @@
 {
-  "generated": "2026-09-25T04:31:43.908Z",
-  "count": 4,
-  "images": 4,
+  "generated": "2026-10-01T18:19:31.945Z",
+  "count": 6,
+  "images": 6,
   "videos": 0,
   "items": [
+    {
+      "id": "902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351",
+      "label": "902 MA Aime a8f6e924 1e53 4b7d 9fbd ff2071e55351",
+      "href": "",
+      "caseStudy": false,
+      "source": "902_MA_Aime_a8f6e924-1e53-4b7d-9fbd-ff2071e55351.webp",
+      "sourceHash": "01ce439f7a6cfc3a",
+      "type": "image",
+      "width": 663,
+      "height": 828,
+      "images": {
+        "sm": {
+          "src": "media/projects/bonnell/902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351-sm.webp",
+          "width": 384,
+          "height": 480,
+          "bytes": 23510
+        },
+        "md": {
+          "src": "media/projects/bonnell/902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351-md.webp",
+          "width": 663,
+          "height": 828,
+          "bytes": 71748
+        },
+        "lg": {
+          "src": "media/projects/bonnell/902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351-lg.webp",
+          "width": 663,
+          "height": 828,
+          "bytes": 76158
+        }
+      },
+      "poster": {
+        "src": "media/projects/bonnell/902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351-sm.webp",
+        "width": 384,
+        "height": 480,
+        "bytes": 23510
+      },
+      "aspect": 0.8007
+    },
+    {
+      "id": "bonnell-new-1",
+      "label": "bonnell new",
+      "href": "",
+      "caseStudy": false,
+      "source": "bonnell_new_1.jpg",
+      "sourceHash": "1aa36b792d135715",
+      "type": "image",
+      "width": 1000,
+      "height": 1000,
+      "images": {
+        "sm": {
+          "src": "media/projects/bonnell/bonnell-new-1-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 24464
+        },
+        "md": {
+          "src": "media/projects/bonnell/bonnell-new-1-md.webp",
+          "width": 1000,
+          "height": 1000,
+          "bytes": 73906
+        },
+        "lg": {
+          "src": "media/projects/bonnell/bonnell-new-1-lg.webp",
+          "width": 1000,
+          "height": 1000,
+          "bytes": 81084
+        }
+      },
+      "poster": {
+        "src": "media/projects/bonnell/bonnell-new-1-sm.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 24464
+      },
+      "aspect": 1
+    },
     {
       "id": "bonnell-allott-01",
       "label": "Bonnell",
@@ -119,42 +195,42 @@
       "aspect": 1.3308
     },
     {
-      "id": "frame-227",
-      "label": "Frame",
+      "id": "bonnell-allott-03",
+      "label": "Bonnell",
       "href": "",
-      "caseStudy": false,
-      "source": "Frame 227.webp",
-      "sourceHash": "cbaa9229e18e3068",
+      "caseStudy": true,
+      "source": "Bonnell-Allott-03.jpg",
+      "sourceHash": "004c806f26652654",
       "type": "image",
-      "width": 990,
-      "height": 813,
+      "width": 1600,
+      "height": 1600,
       "images": {
         "sm": {
-          "src": "media/projects/bonnell/frame-227-sm.webp",
+          "src": "media/projects/bonnell/bonnell-allott-03-sm.webp",
           "width": 480,
-          "height": 394,
-          "bytes": 7634
+          "height": 480,
+          "bytes": 16596
         },
         "md": {
-          "src": "media/projects/bonnell/frame-227-md.webp",
-          "width": 990,
-          "height": 813,
-          "bytes": 23296
+          "src": "media/projects/bonnell/bonnell-allott-03-md.webp",
+          "width": 1280,
+          "height": 1280,
+          "bytes": 116322
         },
         "lg": {
-          "src": "media/projects/bonnell/frame-227-lg.webp",
-          "width": 990,
-          "height": 813,
-          "bytes": 24602
+          "src": "media/projects/bonnell/bonnell-allott-03-lg.webp",
+          "width": 1600,
+          "height": 1600,
+          "bytes": 210252
         }
       },
       "poster": {
-        "src": "media/projects/bonnell/frame-227-sm.webp",
+        "src": "media/projects/bonnell/bonnell-allott-03-sm.webp",
         "width": 480,
-        "height": 394,
-        "bytes": 7634
+        "height": 480,
+        "bytes": 16596
       },
-      "aspect": 1.2177
+      "aspect": 1
     }
   ]
 }
