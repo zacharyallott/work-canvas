@@ -1,7 +1,7 @@
 {
-  "generated": "2026-09-25T23:04:37.434Z",
-  "count": 14,
-  "images": 12,
+  "generated": "2026-10-04T17:50:24.133Z",
+  "count": 13,
+  "images": 11,
   "videos": 2,
   "items": [
     {
@@ -377,44 +377,6 @@
         "bytes": 2524
       },
       "aspect": 0.75
-    },
-    {
-      "id": "tjb-allott-05",
-      "label": "The James Brand",
-      "href": "/projects/the-james-brand",
-      "caseStudy": true,
-      "source": "TJB-Allott-05.webp",
-      "sourceHash": "59e69d38ffee931c",
-      "type": "image",
-      "width": 837,
-      "height": 837,
-      "images": {
-        "sm": {
-          "src": "media/projects/the-james-brand/tjb-allott-05-sm.webp",
-          "width": 480,
-          "height": 480,
-          "bytes": 7834
-        },
-        "md": {
-          "src": "media/projects/the-james-brand/tjb-allott-05-md.webp",
-          "width": 837,
-          "height": 837,
-          "bytes": 20228
-        },
-        "lg": {
-          "src": "media/projects/the-james-brand/tjb-allott-05-lg.webp",
-          "width": 837,
-          "height": 837,
-          "bytes": 21554
-        }
-      },
-      "poster": {
-        "src": "media/projects/the-james-brand/tjb-allott-05-sm.webp",
-        "width": 480,
-        "height": 480,
-        "bytes": 7834
-      },
-      "aspect": 1
     },
     {
       "id": "tjb-allott-06",

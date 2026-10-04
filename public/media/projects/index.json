@@ -949,6 +949,44 @@
           "bytes": 16596
         },
         "aspect": 1
+      },
+      {
+        "id": "bonnell-icon",
+        "label": "Bonnell",
+        "href": "",
+        "caseStudy": true,
+        "source": "Bonnell-Icon.webp",
+        "sourceHash": "da51b3d2800b3161",
+        "type": "image",
+        "width": 1080,
+        "height": 1080,
+        "images": {
+          "sm": {
+            "src": "media/projects/bonnell/bonnell-icon-sm.webp",
+            "width": 480,
+            "height": 480,
+            "bytes": 7700
+          },
+          "md": {
+            "src": "media/projects/bonnell/bonnell-icon-md.webp",
+            "width": 1080,
+            "height": 1080,
+            "bytes": 26542
+          },
+          "lg": {
+            "src": "media/projects/bonnell/bonnell-icon-lg.webp",
+            "width": 1080,
+            "height": 1080,
+            "bytes": 27212
+          }
+        },
+        "poster": {
+          "src": "media/projects/bonnell/bonnell-icon-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 7700
+        },
+        "aspect": 1
       }
     ]
   },
@@ -1962,44 +2000,6 @@
         "aspect": 0.75
       },
       {
-        "id": "tjb-allott-05",
-        "label": "The James Brand",
-        "href": "/projects/the-james-brand",
-        "caseStudy": true,
-        "source": "TJB-Allott-05.webp",
-        "sourceHash": "59e69d38ffee931c",
-        "type": "image",
-        "width": 837,
-        "height": 837,
-        "images": {
-          "sm": {
-            "src": "media/projects/the-james-brand/tjb-allott-05-sm.webp",
-            "width": 480,
-            "height": 480,
-            "bytes": 7834
-          },
-          "md": {
-            "src": "media/projects/the-james-brand/tjb-allott-05-md.webp",
-            "width": 837,
-            "height": 837,
-            "bytes": 20228
-          },
-          "lg": {
-            "src": "media/projects/the-james-brand/tjb-allott-05-lg.webp",
-            "width": 837,
-            "height": 837,
-            "bytes": 21554
-          }
-        },
-        "poster": {
-          "src": "media/projects/the-james-brand/tjb-allott-05-sm.webp",
-          "width": 480,
-          "height": 480,
-          "bytes": 7834
-        },
-        "aspect": 1
-      },
-      {
         "id": "tjb-allott-06",
         "label": "The James Brand",
         "href": "/projects/the-james-brand",
@@ -2859,9 +2859,9 @@
     "items": [
       {
         "id": "fivestars-08",
-        "label": "FiveStars",
-        "href": "",
-        "caseStudy": false,
+        "label": "Otis Mountain Get Down",
+        "href": "/projects/otis-mountain-get-down",
+        "caseStudy": true,
         "source": "FiveStars_08.jpg",
         "sourceHash": "93e3b47fc3610253",
         "type": "image",
@@ -2897,9 +2897,9 @@
       },
       {
         "id": "fivestars-09",
-        "label": "FiveStars",
-        "href": "",
-        "caseStudy": false,
+        "label": "Otis Mountain Get Down",
+        "href": "/projects/otis-mountain-get-down",
+        "caseStudy": true,
         "source": "FiveStars_09.jpg",
         "sourceHash": "3383effdd2ecbe44",
         "type": "image",
@@ -2935,9 +2935,9 @@
       },
       {
         "id": "fivestars-36",
-        "label": "FiveStars",
-        "href": "",
-        "caseStudy": false,
+        "label": "Otis Mountain Get Down",
+        "href": "/projects/otis-mountain-get-down",
+        "caseStudy": true,
         "source": "FiveStars_36.jpg",
         "sourceHash": "32f9c79dc0569f7e",
         "type": "image",
@@ -3422,9 +3422,9 @@
       },
       {
         "id": "wall-sign-standard-mockup-01",
-        "label": "Wall Sign Standard Mockup",
-        "href": "",
-        "caseStudy": false,
+        "label": "Music: Not Impossible",
+        "href": "/projects/mni",
+        "caseStudy": true,
         "source": "Wall-Sign-Standard-Mockup-01.jpg",
         "sourceHash": "5e81090cbe1854a5",
         "type": "image",
@@ -3503,9 +3503,9 @@
       },
       {
         "id": "1-medium",
-        "label": "1 Medium",
-        "href": "",
-        "caseStudy": false,
+        "label": "Microsoft Innovation Hub",
+        "href": "/projects/microsoft-innovation-hub",
+        "caseStudy": true,
         "source": "1-Medium.webp",
         "sourceHash": "4e9bf7c82625a6ef",
         "type": "image",
@@ -3686,9 +3686,9 @@
     "items": [
       {
         "id": "1-medium",
-        "label": "1 Medium",
-        "href": "",
-        "caseStudy": false,
+        "label": "Microsoft Innovation Hub",
+        "href": "/projects/microsoft-innovation-hub",
+        "caseStudy": true,
         "source": "1-Medium.webp",
         "sourceHash": "6cb5ad6d12cdeb0a",
         "type": "image",
@@ -3867,44 +3867,6 @@
   "counter-space": {
     "folder": "14_CounterSpace",
     "items": [
-      {
-        "id": "counterspace-allott-02",
-        "label": "Counter Space",
-        "href": "/projects/counter-space",
-        "caseStudy": true,
-        "source": "CounterSpace-Allott-02.jpg",
-        "sourceHash": "a06e3c019751eb9a",
-        "type": "image",
-        "width": 1600,
-        "height": 2400,
-        "images": {
-          "sm": {
-            "src": "media/projects/counter-space/counterspace-allott-02-sm.webp",
-            "width": 320,
-            "height": 480,
-            "bytes": 9940
-          },
-          "md": {
-            "src": "media/projects/counter-space/counterspace-allott-02-md.webp",
-            "width": 853,
-            "height": 1280,
-            "bytes": 75888
-          },
-          "lg": {
-            "src": "media/projects/counter-space/counterspace-allott-02-lg.webp",
-            "width": 1365,
-            "height": 2048,
-            "bytes": 201576
-          }
-        },
-        "poster": {
-          "src": "media/projects/counter-space/counterspace-allott-02-sm.webp",
-          "width": 320,
-          "height": 480,
-          "bytes": 9940
-        },
-        "aspect": 0.6667
-      },
       {
         "id": "counterspace-allott-03",
         "label": "Counter Space",

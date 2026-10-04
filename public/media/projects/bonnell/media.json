@@ -1,7 +1,7 @@
 {
-  "generated": "2026-10-01T19:35:12.757Z",
-  "count": 8,
-  "images": 8,
+  "generated": "2026-10-04T17:50:03.609Z",
+  "count": 9,
+  "images": 9,
   "videos": 0,
   "items": [
     {
@@ -305,6 +305,44 @@
         "width": 480,
         "height": 480,
         "bytes": 16596
+      },
+      "aspect": 1
+    },
+    {
+      "id": "bonnell-icon",
+      "label": "Bonnell",
+      "href": "",
+      "caseStudy": true,
+      "source": "Bonnell-Icon.webp",
+      "sourceHash": "da51b3d2800b3161",
+      "type": "image",
+      "width": 1080,
+      "height": 1080,
+      "images": {
+        "sm": {
+          "src": "media/projects/bonnell/bonnell-icon-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 7700
+        },
+        "md": {
+          "src": "media/projects/bonnell/bonnell-icon-md.webp",
+          "width": 1080,
+          "height": 1080,
+          "bytes": 26542
+        },
+        "lg": {
+          "src": "media/projects/bonnell/bonnell-icon-lg.webp",
+          "width": 1080,
+          "height": 1080,
+          "bytes": 27212
+        }
+      },
+      "poster": {
+        "src": "media/projects/bonnell/bonnell-icon-sm.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 7700
       },
       "aspect": 1
     }

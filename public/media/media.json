@@ -1,7 +1,7 @@
 {
-  "generated": "2026-10-04T15:34:55.924Z",
-  "count": 53,
-  "images": 39,
+  "generated": "2026-10-04T17:49:25.677Z",
+  "count": 52,
+  "images": 38,
   "videos": 14,
   "items": [
     {
@@ -1895,44 +1895,6 @@
         "bytes": 10616
       },
       "aspect": 1.4545
-    },
-    {
-      "id": "wi20-ua-huaihai-store-02",
-      "label": "Under Armour",
-      "href": "",
-      "caseStudy": false,
-      "source": "WI20_UA_HuaiHai_Store_02.png",
-      "sourceHash": "5828d507a0b9ba00",
-      "type": "image",
-      "width": 2560,
-      "height": 1440,
-      "images": {
-        "sm": {
-          "src": "media/wi20-ua-huaihai-store-02-sm.webp",
-          "width": 480,
-          "height": 270,
-          "bytes": 14158
-        },
-        "md": {
-          "src": "media/wi20-ua-huaihai-store-02-md.webp",
-          "width": 1280,
-          "height": 720,
-          "bytes": 106910
-        },
-        "lg": {
-          "src": "media/wi20-ua-huaihai-store-02-lg.webp",
-          "width": 2048,
-          "height": 1152,
-          "bytes": 267922
-        }
-      },
-      "poster": {
-        "src": "media/wi20-ua-huaihai-store-02-sm.webp",
-        "width": 480,
-        "height": 270,
-        "bytes": 14158
-      },
-      "aspect": 1.7778
     }
   ]
 }
