@@ -31,9 +31,9 @@ export const config = {
   // Layout (design px at the 1280×794 artboard; scaled by mount height)
   // Size scale: each tile picks one of these heights (seeded, never the same as
   // its neighbour). Width = height × the image's aspect ratio.
-  heights: [210, 280, 360, 440, 540],
-  minWidth: 190, // narrower pieces get taller instead (keeps the aspect ratio)
-  maxWidth: 760, // wider pieces get shorter instead
+  heights: [158, 210, 270, 330, 405],
+  minWidth: 143, // narrower pieces get taller instead (keeps the aspect ratio)
+  maxWidth: 570, // wider pieces get shorter instead
   gap: 12, // CSS px between tiles (fixed, not scaled with the viewport)
   bottomInset: 12, // CSS px from the bottom edge (fixed)
   startOffset: -162,

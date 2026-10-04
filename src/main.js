@@ -6,7 +6,7 @@
  *
  *   data-rotate="random"       (default) every load opens a random version, never the one seen last;
  *                              "next" = the next one in order; "false" = always open on data-layout
- *   data-layout="a|b|c|d|e|f"  the version when not rotating (and the fallback)
+ *   data-layout="a|b|d|e"      the version when not rotating (and the fallback)
  *                              (?v=b in the URL opens that version once; it's then dropped from the URL so a refresh rotates on)
  *   data-switcher="false"      the star doesn't cycle versions (it only returns home)
  *   data-items=".work-item"    selector for the item links
@@ -24,18 +24,20 @@ import gsap from 'gsap';
 import { WorkCanvas } from './core/engine.js';
 import Filmstrip, { config as filmstripConfig } from './layouts/filmstrip.js';
 import Deck, { config as deckConfig } from './layouts/deck.js';
-import Masonry, { config as masonryConfig } from './layouts/masonry.js';
 import Fan, { config as fanConfig } from './layouts/fan.js';
 import Universe, { config as universeConfig } from './layouts/universe.js';
-import Rolodex, { config as rolodexConfig } from './layouts/rolodex.js';
+// Parked for now — the code stays in src/layouts/ for reference. To show them again, restore these imports and
+// their LAYOUTS rows below:
+//   import Masonry, { config as masonryConfig } from './layouts/masonry.js';
+//   import Rolodex, { config as rolodexConfig } from './layouts/rolodex.js';
 
 export const LAYOUTS = [
   { key: 'a', name: 'Filmstrip', Layout: Filmstrip, config: filmstripConfig },
   { key: 'b', name: 'Deck', Layout: Deck, config: deckConfig },
-  { key: 'c', name: 'Masonry', Layout: Masonry, config: masonryConfig },
+  // { key: 'c', name: 'Masonry', Layout: Masonry, config: masonryConfig }, (parked)
   { key: 'd', name: 'Fan', Layout: Fan, config: fanConfig },
   { key: 'e', name: 'Universe', Layout: Universe, config: universeConfig },
-  { key: 'f', name: 'Rolodex', Layout: Rolodex, config: rolodexConfig },
+  // { key: 'f', name: 'Rolodex', Layout: Rolodex, config: rolodexConfig }, (parked)
 ];
 
 export { WorkCanvas };

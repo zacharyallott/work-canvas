@@ -2,7 +2,7 @@
 
 Immersive WebGL work header for zacharyallott.com. It's a standalone ES module (Three.js and GSAP bundled) that mounts into a `<div>` on a Webflow page and reads its content from the page's **Projects** Collection List, so the Webflow CMS stays the source of truth. The first two images of each project become tiles.
 
-It has six interaction versions. Every load of the page opens a random one — never the one seen last (remembered per browser) — leaving a project view comes back to the next one, and clicking the star in the top-left moves on to the next (hovering it turns it 45°):
+It has four interaction versions showing (film strip, cards, fan, universe; masonry and rolodex are parked — their code stays in `src/layouts/`, restore them in `src/main.js`). Every load of the page opens a random one — never the one seen last (remembered per browser) — leaving a project view comes back to the next one, and clicking the star in the top-left moves on to the next (hovering it turns it 45°):
 
 | Key | Version | Motion | Figma frame |
 | --- | --- | --- | --- |
@@ -195,7 +195,7 @@ Tiles come out in a fresh random order on every load, with neighbours from diffe
 - For more than 100 projects, add more lists (each with offset/limit). The bundle collects every `.work-item` on the page in document order.
 - The older data-attribute formats (`data-image-1`, … or `data-src`, …) still work if you ever need a static list.
 
-Optional mount attributes: `data-project-base="/work/"`, `data-home-path="/"`, `data-about-path="/about"`, `data-layout="a|b|c|d|e|f"`, `data-switcher="false"` (the star only returns home instead of switching versions), `data-rotate="random|next|false"` (random version on every load — the default; the next in order; or always `data-layout`), `data-shuffle="false"` (keep the CMS order instead of a fresh random order on every load), `data-max-videos="4"`, `data-per-project="2"`, `data-items=".my-selector"`, `data-tagline="…"`, `data-tagline-href="#work"`, `data-media-base="…"` (base for relative URLs).
+Optional mount attributes: `data-project-base="/work/"`, `data-home-path="/"`, `data-about-path="/about"`, `data-layout="a|b|d|e"`, `data-switcher="false"` (the star only returns home instead of switching versions), `data-rotate="random|next|false"` (random version on every load — the default; the next in order; or always `data-layout`), `data-shuffle="false"` (keep the CMS order instead of a fresh random order on every load), `data-max-videos="4"`, `data-per-project="2"`, `data-items=".my-selector"`, `data-tagline="…"`, `data-tagline-href="#work"`, `data-media-base="…"` (base for relative URLs).
 
 ### 3. Project pages (the Projects template, `/work/<slug>`)
 
