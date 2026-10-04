@@ -1,7 +1,7 @@
 {
-  "generated": "2026-09-29T22:02:31.097Z",
-  "count": 57,
-  "images": 43,
+  "generated": "2026-10-04T15:34:55.924Z",
+  "count": 53,
+  "images": 39,
   "videos": 14,
   "items": [
     {
@@ -335,42 +335,42 @@
       "aspect": 1.5
     },
     {
-      "id": "bonnell-allott-02",
+      "id": "bonnell-allott-04",
       "label": "Bonnell",
       "href": "",
       "caseStudy": true,
-      "source": "Bonnell-Allott-02.jpg",
-      "sourceHash": "5b9cbc65ceef43bb",
+      "source": "Bonnell-Allott-04.jpg",
+      "sourceHash": "e233f973075f1e59",
       "type": "image",
-      "width": 4500,
-      "height": 3000,
+      "width": 1800,
+      "height": 1294,
       "images": {
         "sm": {
-          "src": "media/bonnell-allott-02-sm.webp",
+          "src": "media/bonnell-allott-04-sm.webp",
           "width": 480,
-          "height": 320,
-          "bytes": 21040
+          "height": 345,
+          "bytes": 7474
         },
         "md": {
-          "src": "media/bonnell-allott-02-md.webp",
+          "src": "media/bonnell-allott-04-md.webp",
           "width": 1280,
-          "height": 853,
-          "bytes": 217660
+          "height": 920,
+          "bytes": 56486
         },
         "lg": {
-          "src": "media/bonnell-allott-02-lg.webp",
-          "width": 2048,
-          "height": 1365,
-          "bytes": 641374
+          "src": "media/bonnell-allott-04-lg.webp",
+          "width": 1800,
+          "height": 1294,
+          "bytes": 147990
         }
       },
       "poster": {
-        "src": "media/bonnell-allott-02-sm.webp",
+        "src": "media/bonnell-allott-04-sm.webp",
         "width": 480,
-        "height": 320,
-        "bytes": 21040
+        "height": 345,
+        "bytes": 7474
       },
-      "aspect": 1.5
+      "aspect": 1.391
     },
     {
       "id": "burton-zebs-allott-01",
@@ -703,44 +703,6 @@
       "aspect": 1.2827
     },
     {
-      "id": "dialpad-allott-01",
-      "label": "Dialpad",
-      "href": "/projects/dialpad",
-      "source": "Dialpad-Allott-01.webp",
-      "sourceHash": "e8111d038396c762",
-      "type": "image",
-      "width": 2701,
-      "height": 1801,
-      "images": {
-        "sm": {
-          "src": "media/dialpad-allott-01-sm.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 21186
-        },
-        "md": {
-          "src": "media/dialpad-allott-01-md.webp",
-          "width": 1280,
-          "height": 853,
-          "bytes": 128938
-        },
-        "lg": {
-          "src": "media/dialpad-allott-01-lg.webp",
-          "width": 2048,
-          "height": 1366,
-          "bytes": 261592
-        }
-      },
-      "poster": {
-        "src": "media/dialpad-allott-01-sm.webp",
-        "width": 480,
-        "height": 320,
-        "bytes": 21186
-      },
-      "aspect": 1.4997,
-      "caseStudy": true
-    },
-    {
       "id": "dialpad-allott-03",
       "label": "Dialpad",
       "href": "/projects/dialpad",
@@ -779,41 +741,35 @@
       "caseStudy": true
     },
     {
-      "id": "dialpad-allott-11",
+      "id": "dialpad-allott-logo-comp-01",
       "label": "Dialpad",
       "href": "/projects/dialpad",
       "caseStudy": true,
-      "source": "Dialpad-Allott-11.webp",
-      "sourceHash": "5859d3f1ff7311c5",
-      "type": "image",
-      "width": 2400,
-      "height": 2400,
-      "images": {
-        "sm": {
-          "src": "media/dialpad-allott-11-sm.webp",
-          "width": 480,
-          "height": 480,
-          "bytes": 24516
-        },
-        "md": {
-          "src": "media/dialpad-allott-11-md.webp",
-          "width": 1280,
-          "height": 1280,
-          "bytes": 150742
-        },
-        "lg": {
-          "src": "media/dialpad-allott-11-lg.webp",
-          "width": 2048,
-          "height": 2048,
-          "bytes": 336314
-        }
-      },
+      "source": "Dialpad-Allott-Logo-Comp-01.mp4",
+      "sourceHash": "715d5d28bc845c08",
+      "type": "video",
+      "width": 1080,
+      "height": 1080,
+      "duration": 6.88,
+      "sourceDuration": 6.88,
       "poster": {
-        "src": "media/dialpad-allott-11-sm.webp",
-        "width": 480,
-        "height": 480,
-        "bytes": 24516
+        "src": "media/dialpad-allott-logo-comp-01-poster.webp",
+        "width": 1080,
+        "height": 1080,
+        "bytes": 42636
       },
+      "sources": [
+        {
+          "src": "media/dialpad-allott-logo-comp-01.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 551352
+        },
+        {
+          "src": "media/dialpad-allott-logo-comp-01.mp4",
+          "type": "video/mp4",
+          "bytes": 858719
+        }
+      ],
       "aspect": 1
     },
     {
@@ -1541,82 +1497,6 @@
       "caseStudy": false
     },
     {
-      "id": "smi-kor-comp-retail-display-v1-r4",
-      "label": "Smith",
-      "href": "/projects/smith-mag",
-      "source": "SMI_KOR_Comp_Retail_Display_V1_R4.jpg",
-      "sourceHash": "4767f13f4b849986",
-      "type": "image",
-      "width": 3600,
-      "height": 1962,
-      "images": {
-        "sm": {
-          "src": "media/smi-kor-comp-retail-display-v1-r4-sm.webp",
-          "width": 480,
-          "height": 262,
-          "bytes": 4620
-        },
-        "md": {
-          "src": "media/smi-kor-comp-retail-display-v1-r4-md.webp",
-          "width": 1280,
-          "height": 698,
-          "bytes": 25416
-        },
-        "lg": {
-          "src": "media/smi-kor-comp-retail-display-v1-r4-lg.webp",
-          "width": 2048,
-          "height": 1116,
-          "bytes": 61664
-        }
-      },
-      "poster": {
-        "src": "media/smi-kor-comp-retail-display-v1-r4-sm.webp",
-        "width": 480,
-        "height": 262,
-        "bytes": 4620
-      },
-      "aspect": 1.8349,
-      "caseStudy": false
-    },
-    {
-      "id": "solace-identity-allott-bikecards-01",
-      "label": "Solace Cycles",
-      "href": "/projects/solace-cycles",
-      "source": "solace-identity-allott-BikeCards-01.jpg",
-      "sourceHash": "e4f1ec49f39d25f0",
-      "type": "image",
-      "width": 3600,
-      "height": 2159,
-      "images": {
-        "sm": {
-          "src": "media/solace-identity-allott-bikecards-01-sm.webp",
-          "width": 480,
-          "height": 288,
-          "bytes": 20146
-        },
-        "md": {
-          "src": "media/solace-identity-allott-bikecards-01-md.webp",
-          "width": 1280,
-          "height": 768,
-          "bytes": 123828
-        },
-        "lg": {
-          "src": "media/solace-identity-allott-bikecards-01-lg.webp",
-          "width": 2048,
-          "height": 1228,
-          "bytes": 258150
-        }
-      },
-      "poster": {
-        "src": "media/solace-identity-allott-bikecards-01-sm.webp",
-        "width": 480,
-        "height": 288,
-        "bytes": 20146
-      },
-      "aspect": 1.6674,
-      "caseStudy": false
-    },
-    {
       "id": "solace-identity-allott-downtube-01",
       "label": "Solace Cycles",
       "href": "/projects/solace-cycles",
@@ -1904,38 +1784,6 @@
           "src": "media/untitled.mp4",
           "type": "video/mp4",
           "bytes": 485853
-        }
-      ],
-      "aspect": 1.2827
-    },
-    {
-      "id": "upward-spiral",
-      "label": "Misc",
-      "href": "",
-      "caseStudy": false,
-      "source": "upward-spiral.mp4",
-      "sourceHash": "0ac2ebbdfc2db2d7",
-      "type": "video",
-      "width": 1080,
-      "height": 842,
-      "duration": 12,
-      "sourceDuration": 24,
-      "poster": {
-        "src": "media/upward-spiral-poster.webp",
-        "width": 1080,
-        "height": 842,
-        "bytes": 21744
-      },
-      "sources": [
-        {
-          "src": "media/upward-spiral.webm",
-          "type": "video/webm; codecs=\"av01.0.05M.08\"",
-          "bytes": 304840
-        },
-        {
-          "src": "media/upward-spiral.mp4",
-          "type": "video/mp4",
-          "bytes": 431982
         }
       ],
       "aspect": 1.2827

@@ -1,8 +1,8 @@
 {
-  "generated": "2026-10-02T15:24:20.452Z",
-  "count": 6,
+  "generated": "2026-10-04T15:34:58.375Z",
+  "count": 7,
   "images": 5,
-  "videos": 1,
+  "videos": 2,
   "items": [
     {
       "id": "dialpad-allott-01",
@@ -225,6 +225,38 @@
         }
       ],
       "aspect": 1.5
+    },
+    {
+      "id": "dialpad-allott-logo-comp-01",
+      "label": "Dialpad",
+      "href": "/projects/dialpad",
+      "caseStudy": true,
+      "source": "Dialpad-Allott-Logo-Comp-01.mp4",
+      "sourceHash": "715d5d28bc845c08",
+      "type": "video",
+      "width": 1080,
+      "height": 1080,
+      "duration": 6.88,
+      "sourceDuration": 6.88,
+      "poster": {
+        "src": "media/projects/dialpad/dialpad-allott-logo-comp-01-poster.webp",
+        "width": 1080,
+        "height": 1080,
+        "bytes": 42636
+      },
+      "sources": [
+        {
+          "src": "media/projects/dialpad/dialpad-allott-logo-comp-01.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 551352
+        },
+        {
+          "src": "media/projects/dialpad/dialpad-allott-logo-comp-01.mp4",
+          "type": "video/mp4",
+          "bytes": 858719
+        }
+      ],
+      "aspect": 1
     }
   ]
 }
