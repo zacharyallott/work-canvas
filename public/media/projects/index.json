@@ -1070,44 +1070,6 @@
         "aspect": 1.5
       },
       {
-        "id": "dialpad-allott-04",
-        "label": "Dialpad",
-        "href": "/projects/dialpad",
-        "caseStudy": true,
-        "source": "Dialpad-Allott-04.webp",
-        "sourceHash": "553b9a88b89680c2",
-        "type": "image",
-        "width": 2400,
-        "height": 1600,
-        "images": {
-          "sm": {
-            "src": "media/projects/dialpad/dialpad-allott-04-sm.webp",
-            "width": 480,
-            "height": 320,
-            "bytes": 26852
-          },
-          "md": {
-            "src": "media/projects/dialpad/dialpad-allott-04-md.webp",
-            "width": 1280,
-            "height": 853,
-            "bytes": 165024
-          },
-          "lg": {
-            "src": "media/projects/dialpad/dialpad-allott-04-lg.webp",
-            "width": 2048,
-            "height": 1365,
-            "bytes": 322638
-          }
-        },
-        "poster": {
-          "src": "media/projects/dialpad/dialpad-allott-04-sm.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 26852
-        },
-        "aspect": 1.5
-      },
-      {
         "id": "dialpad-allott-11",
         "label": "Dialpad",
         "href": "/projects/dialpad",
@@ -2859,9 +2821,9 @@
     "items": [
       {
         "id": "fivestars-08",
-        "label": "Otis Mountain Get Down",
-        "href": "/projects/otis-mountain-get-down",
-        "caseStudy": true,
+        "label": "FiveStars",
+        "href": "",
+        "caseStudy": false,
         "source": "FiveStars_08.jpg",
         "sourceHash": "93e3b47fc3610253",
         "type": "image",
@@ -2897,9 +2859,9 @@
       },
       {
         "id": "fivestars-09",
-        "label": "Otis Mountain Get Down",
-        "href": "/projects/otis-mountain-get-down",
-        "caseStudy": true,
+        "label": "FiveStars",
+        "href": "",
+        "caseStudy": false,
         "source": "FiveStars_09.jpg",
         "sourceHash": "3383effdd2ecbe44",
         "type": "image",
@@ -2935,9 +2897,9 @@
       },
       {
         "id": "fivestars-36",
-        "label": "Otis Mountain Get Down",
-        "href": "/projects/otis-mountain-get-down",
-        "caseStudy": true,
+        "label": "FiveStars",
+        "href": "",
+        "caseStudy": false,
         "source": "FiveStars_36.jpg",
         "sourceHash": "32f9c79dc0569f7e",
         "type": "image",
@@ -3422,9 +3384,9 @@
       },
       {
         "id": "wall-sign-standard-mockup-01",
-        "label": "Music: Not Impossible",
-        "href": "/projects/mni",
-        "caseStudy": true,
+        "label": "Wall Sign Standard Mockup",
+        "href": "",
+        "caseStudy": false,
         "source": "Wall-Sign-Standard-Mockup-01.jpg",
         "sourceHash": "5e81090cbe1854a5",
         "type": "image",
@@ -3503,9 +3465,9 @@
       },
       {
         "id": "1-medium",
-        "label": "Microsoft Innovation Hub",
-        "href": "/projects/microsoft-innovation-hub",
-        "caseStudy": true,
+        "label": "1 Medium",
+        "href": "",
+        "caseStudy": false,
         "source": "1-Medium.webp",
         "sourceHash": "4e9bf7c82625a6ef",
         "type": "image",
@@ -3686,9 +3648,9 @@
     "items": [
       {
         "id": "1-medium",
-        "label": "Microsoft Innovation Hub",
-        "href": "/projects/microsoft-innovation-hub",
-        "caseStudy": true,
+        "label": "1 Medium",
+        "href": "",
+        "caseStudy": false,
         "source": "1-Medium.webp",
         "sourceHash": "6cb5ad6d12cdeb0a",
         "type": "image",
