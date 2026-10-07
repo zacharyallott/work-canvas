@@ -6,10 +6,10 @@ It has four interaction versions showing (film strip, cards, fan, universe; maso
 
 | Key | Version | Motion | Figma frame |
 | --- | --- | --- | --- |
-| `a` | Filmstrip: one infinite row, bottom-aligned skyline | Cursor steers the drift: left of centre drifts right, right drifts left, faster toward the edges. Scrolling moves the strip along (down = forward), eased; the faster it moves, the wider the gaps | Frame 46 · `1542:5556` |
+| `a` | Filmstrip: two infinite rows meeting along an even 12px gutter — the upper row's tops form a skyline under the top bar, the lower row hangs below it | Cursor steers the drift of both rows: left of centre drifts right, right drifts left, faster toward the edges; the row the cursor is over runs a little faster (`rowBoost`). Scrolling moves both rows along (down = forward), eased; the faster a row moves, the wider its gaps | Frame 46 · `1542:5556` |
 | `b` | Deck: a pile of four cards that cycles through the whole collection | Each card comes in turned to 0°, ±11.25° or ±22.5°. Pile trails the cursor with a little lag and fans out (parallax) the further the cursor gets from the centre; the further left or right the cursor, the faster new cards come in (none in the middle); new cards fade in on top only as you scroll, one per 250 px; on touch, one per 140 px of swipe, and a flick carries on dealing after the finger lifts, so a faster swipe brings in more | Frame 48 · `1542:5581` |
 | `c` | Masonry: columns drifting upward, each at its own pace | Columns drift on their own and slow on hover; the grid shifts left or right with the cursor; scrolling moves the columns, eased, and the faster a column moves the wider its gaps | Frame 45 · `1542:5489` |
-| `d` | Fan: tiles on lines 11.25° apart out from a point below the bottom centre, like spokes, with an open centre; the tile pointing straight up is upright. Tiles vary in size and shape (each cropped taller or wider than the piece) | The whole fan fades in together. Scrolling turns the fan slowly; the faster it turns, the further the tiles move out from the centre, drawing back in step as it slows. It loops: places passing through the hidden lower half take the next piece. Hovering a tile brings it to the front and slides it outward, with its title in the tile's top-left corner | Frame 54 · `1601:6774` |
+| `d` | Fan: tiles on lines 11.25° apart out from a point below the bottom centre, like spokes, with an open centre — tiles alternating between two circles, an inner and an outer (`rings`); the tile pointing straight up is upright. Tiles vary in size and shape (each cropped taller or wider than the piece) | The whole fan fades in together. Scrolling turns the fan slowly; the faster it turns, the further the tiles move out from the centre, drawing back in step as it slows. It loops: places passing through the hidden lower half take the next piece. Hovering a tile brings it to the front and slides it outward, with its title in the tile's top-left corner | Frame 54 · `1601:6774` |
 | `e` | Universe: a field of tiles in four depth layers running past the view in every direction; no piece shows twice in a view | Nearer layers are larger and move faster (parallax). The cursor steers a sideways drift, slowing while a tile is hovered; scrolling pans the field (vertical and horizontal), eased; on touch the field follows the finger. Tiles fade in layer by layer, front to back. Hovering a tile brings it to the front | Frames `1613:69`, `1613:93` |
 | `f` | Rolodex: one column of cards down the middle (only pieces that open a project), the front card largest and widest and the rest receding behind it above and below, each showing a band beyond the one in front — five cards on desktop, seven on phones; further ones slide on out of frame (no fades) | It moves card by card and locks in. A scroll or swipe (anywhere on the header) brings the next cards up to the front; how far it scrolls sets how many — one for a normal scroll, two or three for a long one, played faster the longer and quicker the scroll — in one flowing move that eases off as each card passes (friction, not a stop), settling and holding a moment on the last. Scrolling while it moves or holds does nothing (a flick's momentum doesn't carry it on); a scroll that keeps going moves on again every 800 px. The cursor sets a pace too: nothing around the middle, faster the nearer an edge (up to about 2 cards a second, each move playing quicker to keep up) — bottom or right moves on, top or left moves back; a scroll takes over from it. The cards lean slightly toward the cursor, the nearer ones more (parallax). With nothing happening it moves on a card every 3.2 s, holding while a card is hovered. Cards fade in from the front outward. Titles sit on each card's visible band | Frame `1615:231` |
 
@@ -39,7 +39,7 @@ src/
     input.js           cursor, touch drag, wheel, page scroll, tap
     ui.js              top bar (star = next version), hover caption, about section, fallback grid
     pull.js            scroll-past-the-end pull back to the work (project view + about section)
-    about.js           about copy: statement, client columns, links
+    about.js           about copy: headline, intro, clients (4 columns of tags), links
     project.js         project view (DOM page) + end-of-page pull
     seo.js             crawlable project links + JSON-LD
     embed.js           YouTube/Vimeo links → embedded players
@@ -66,10 +66,10 @@ Each version has an exported `config` at the top of its file. Shared values (cor
 
 The most useful settings:
 
-- **Filmstrip:** `maxSpeed` (px/s at the edges), `deadZone`, `curve` (how quickly speed builds toward the edges), `response` (lag), `idleSpeed` (drift with no cursor), `hoverSlowdown`.
+- **Filmstrip:** `rowBoost` (how much faster the row under the cursor runs), `topInset` (room kept for the top bar), `rowStagger`, `maxSpeed` (px/s at the edges), `deadZone`, `curve` (how quickly speed builds toward the edges), `response` (lag), `idleSpeed` (drift with no cursor), `hoverSlowdown`.
 - **Deck:** `follow` (how far the pile leans toward the cursor), `followRates` (lag per position), `depth` (parallax per position), `fan` (spread toward the edges), `scrollStep` / `scrollGap` (scroll per card, fastest pace), `swipe` (touch: `step` px per card, `gap` fastest pace, `decay` how quickly a flick's momentum dies — lower deals more, `backlog`), `interval` (seconds before a card comes in on its own; 0 = off), `moveStep` (cursor travel per extra card; 0 = off), `dealDuration`, `heights` (size scale), `slots` (pile shape), `pauseOnHover`, `hoverToFront`.
-- **Fan:** `portraitRing` / `portraitHole` (phones: how low the fan sits, its circle), `tileWidth`, `sizes`, `shapes` (crop taller/wider), `step` (degrees between tiles), `hole` (open centre), `drop` (how far below the view the centre sits), `hoverOut`, `idleSpeed`, `scroll` (`multiplier`, `omega`, `maxLead`), `spread` (speed → radius), `stagger` / `enterDuration` (entrance).
-- **Universe:** `places` / `field` (the sketch's layout), `spacing` (density), `layers` (`pace` and `scale` per depth, back → front), `maxSpeed` / `deadZone` / `curve` / `response` (cursor drift), `idle`, `hoverSlowdown`, `scroll`.
+- **Fan:** `rings` (the two circles, × `hole`), `portraitRing` / `portraitHole` (phones: how low the fan sits, its circle), `tileWidth`, `sizes`, `shapes` (crop taller/wider), `step` (degrees between tiles), `hole` (open centre), `drop` (how far below the view the centre sits), `hoverOut`, `idleSpeed`, `scroll` (`multiplier`, `omega`, `maxLead`), `spread` (speed → radius), `stagger` / `enterDuration` (entrance).
+- **Universe:** `places` / `field` (the sketch's layout), `spacing` (density: lower = more tiles and overlap), `layers` (`pace` and `scale` per depth, back → front), `maxSpeed` / `deadZone` / `curve` / `response` (cursor drift), `idle`, `hoverSlowdown`, `scroll`.
 - **Rolodex:** `zoom` (landscape size), `portraitPeek` / `portraitShape` (phone spacing), `showing` (cards either side: landscape, portrait), `tempo` (long / quick scrolls play faster), `tileWidth` (front card), `maxHeight`, `frontHeight` / `peek` (how far the cards behind show), `depth` (how quickly they shrink), `centerY`, `slots`, `mode` (`lock` card by card, or `smooth`), `move` (`duration`, `hold`, `ease`; multi-card runs: `stretch` per extra card, `runEase`, `friction` at each card), `caseStudiesOnly`, `gesture` (`from` / `perCard` / `max`: px scrolled in the first `window` s → cards; `gap`, `repeat`; touch `swipe`, `swipeFrom`, `swipePerCard`, `swipeCarry`), `cursorPace` (`max` cards/s at the edges, `deadZone` vertical, `deadZoneX` sideways, `curve`, `response`, `resume` after a scroll), `parallax` (`x`, `y` px the front card leans, `response`), `depthFloor` (how small the furthest cards get), `interval` (seconds per card when idle; 0 = off); smooth mode: `scroll`, `spread`.
 - **Speed → spacing** (filmstrip, masonry, fan; rolodex in smooth mode): `spread` in each config, via `src/core/spread.js` — `gain` per px/s (or °/s) above `rest`, capped at `max`, following the speed through a spring. Scroll springs take `maxLead`, which caps both a flick's top speed and how long it runs on after the scroll stops.
 - **Masonry:** `autoplaySpeed`, `hoverSlowdown`, `columnSpeeds`, `shift.max` (how far the grid moves with the cursor; it holds its lean when the cursor leaves), `shift.response` (lag), `shift.mode` (`offset` leans, `drift` keeps travelling like the filmstrip).
@@ -160,8 +160,9 @@ Tiles come out in a fresh random order on every load, with neighbours from diffe
   <div class="wc-seo">
     <h1>Zachary Allott — design &amp; art direction</h1>
     <div data-work-about>
-      <p>{statement}</p>
-      <ul><li>{client}</li>…</ul> ×4           <!-- one list per column -->
+      <p data-about-headline>{headline}</p>      <!-- large line with the star -->
+      <p data-about-intro>{intro}</p>            <!-- short paragraph beside the clients -->
+      <ul><li>{client}</li>…</ul>               <!-- clients, in order; laid out into 4 columns under "Select clients" -->
       <nav><a href="mailto:…">email</a> …</nav>
       <p data-about-copyright>© 2026 Zachary Allott</p>
     </div>
@@ -227,7 +228,7 @@ A copy of Home (same header, same Collection List) with its own SEO title, descr
 
 ### 5. SEO
 
-- Homepage HTML: the `wc-seo` embed (h1, about statement, clients, links). JSON-LD `Person` + `WebSite` in the Home page settings.
+- Homepage HTML: the `wc-seo` embed (h1, about headline + intro, clients, links). JSON-LD `Person` + `WebSite` in the Home page settings.
 - The bundle adds a visually hidden list of links to every case-study page (tabbing to one shows its caption on the canvas; Enter opens it) and JSON-LD: an `ItemList` of the case studies on the homepage, a `CreativeWork` on each project page.
 - Old `/projects/<slug>` pages are retired: add 301 redirects to `/work/<slug>` (case studies) or `/` (the rest), and `/info` → `/about`, in Site settings → Publishing.
 

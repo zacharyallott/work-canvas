@@ -7,23 +7,29 @@ import { Spread, spreadFrom } from '../core/spread.js';
 /**
  * Version A — Horizontal filmstrip (Figma frame 46, node 1542:5556)
  *
- * One row of tiles, 12px gaps, bottom-aligned 12px above the bottom edge so
- * the tops form a skyline. Each tile takes a height from a size scale (no two
- * neighbours the same) and its width follows from the piece's real aspect
- * ratio, so both dimensions vary without cropping. Bleeds off both sides and
- * loops forever.
+ * Two rows of tiles, one above the other, 12px gaps — between the rows too:
+ * the upper row stands on a line and the lower row hangs from a line 12px
+ * below it, so the rows meet along an even gutter and their uneven edges face
+ * out (the upper row's tops form a skyline under the top bar; the lower row's
+ * bottoms reach to 12px above the bottom edge at most). The pieces alternate
+ * between the rows. Each tile takes a height from a size
+ * scale (no two neighbours the same; scaled so both rows fit under the top
+ * bar) and its width follows from the piece's real aspect ratio, so both
+ * dimensions vary without cropping. Each row bleeds off both sides and loops
+ * forever.
  *
- * Motion: the cursor steers the drift. Left of centre → the strip drifts
- * right; right of centre → it drifts left. Speed grows with distance from
- * the centre (small dead zone in the middle). The speed eases toward its
- * target, so there's a little lag. Without a cursor (touch, or pointer
- * outside the header) it drifts slowly left; on touch you can also swipe.
- * Scrolling (wheel / trackpad, or a vertical swipe on touch) moves the strip
- * along too — scroll down to go forward — through a spring, so each scroll
- * eases in and out.
- * The faster the strip moves (drift, scroll or swipe), the wider the gaps
- * between tiles: the extra spacing follows the speed through a spring, so it
- * opens with a slight lag and settles back as the strip slows, like something
+ * Motion: the cursor steers the drift of both rows. Left of centre → they
+ * drift right; right of centre → they drift left. Speed grows with distance
+ * from the centre (small dead zone in the middle) and eases toward its target,
+ * so there's a little lag. The row the cursor is over runs a little faster
+ * than the other (`rowBoost`), so the two slide past each other. Without a
+ * cursor (touch, or pointer outside the header) they drift slowly left; on
+ * touch you can also swipe. Scrolling (wheel / trackpad, or a vertical swipe
+ * on touch) moves both rows along too — scroll down to go forward — through a
+ * spring, so each scroll eases in and out.
+ * The faster a row moves (drift, scroll or swipe), the wider the gaps between
+ * its tiles: the extra spacing follows the speed through a spring, so it
+ * opens with a slight lag and settles back as the row slows, like something
  * with weight. It spreads from the centre of the view, so the middle stays put.
  * Tiles stay flat (no warp or distortion). Hover reveals the title.
  */
@@ -34,9 +40,11 @@ export const config = {
   heights: [158, 210, 270, 330, 405],
   minWidth: 143, // narrower pieces get taller instead (keeps the aspect ratio)
   maxWidth: 570, // wider pieces get shorter instead
-  gap: 12, // CSS px between tiles (fixed, not scaled with the viewport)
+  gap: 12, // CSS px between tiles, and between the two rows (fixed, not scaled with the viewport)
   bottomInset: 12, // CSS px from the bottom edge (fixed)
+  topInset: 48, // design px kept clear for the top bar: the rows (and the size scale) shrink to fit below it
   startOffset: -162,
+  rowStagger: 0.45, // the upper row starts this fraction of a typical tile along, so the rows don't line up
   minScale: 0.55,
   maxScale: 1.35,
   mobileMaxWidth: 1, // max fraction of mount width a tile may take on narrow screens (phones: up to full width, you drag through them)
@@ -49,15 +57,16 @@ export const config = {
   response: 2.2, // how fast the speed follows the cursor (higher = less lag)
   idleSpeed: 24, // px/s leftward drift with no cursor over the header (0 = still)
   hoverSlowdown: 1, // speed multiplier while a tile is hovered (1 = no slowdown)
+  rowBoost: 1.25, // the row the cursor is over drifts this much faster than the other
 
-  // Scroll: wheel / trackpad (either axis) moves the strip; eased by a spring
+  // Scroll: wheel / trackpad (either axis) moves both rows; eased by a spring
   // px of strip per px scrolled; spring pace (1/s, higher = settles sooner after the scroll stops);
   // how far (px) the strip can lag behind the scroll — caps a big flick's speed and how long it runs on.
   // (While scrolling steadily, top speed ≈ omega × maxLead / 2 ≈ 440 px/s.)
   scroll: { multiplier: 0.5, omega: 7, maxLead: 125 },
 
-  // Speed → spacing (spread.js): extra gap (CSS px) per px/s of strip speed above `rest` (the idle drift), capped
-  // at `max`; opens with a lag (`omega`, 1/s) and closes sooner (`closing`) — back to normal before the pace is.
+  // Speed → spacing (spread.js), per row: extra gap (CSS px) per px/s of row speed above `rest` (the idle drift),
+  // capped at `max`; opens with a lag (`omega`, 1/s) and closes sooner (`closing`) — back to normal before the pace is.
   spread: { gain: 0.016, max: 18, rest: 60, omega: 4, closing: 18 },
 
   // Touch swipe (no cursor on touch devices)
@@ -80,18 +89,23 @@ export const config = {
   captionInset: [20, 12],
 };
 
+const ROWS = 2; // [lower, upper]
+
 export default class Filmstrip extends Layout {
   static defaults = config;
   static label = 'Filmstrip';
 
   constructor(engine, cfg) {
     super(engine, cfg);
-    this.offset = 0;
-    this.target = 0;
-    this.drift = -cfg.idleSpeed; // px/s, eased toward the cursor-derived speed
-    this.velocity = 0; // px/s from touch throws
-    this.scrolled = new Spring(cfg.scroll.omega, { maxLead: cfg.scroll.maxLead }); // strip offset from scrolling, eased
-    this.spread = new Spread(cfg.spread); // extra px per gap, following the strip's speed
+    this.velocity = 0; // px/s from touch throws (both rows)
+    this.scrolled = new Spring(cfg.scroll.omega, { maxLead: cfg.scroll.maxLead }); // offset from scrolling, eased (both rows)
+    this.rows = Array.from({ length: ROWS }, () => ({
+      tiles: [],
+      offset: 0,
+      target: 0,
+      drift: -cfg.idleSpeed, // px/s, eased toward the cursor-derived speed
+      spread: new Spread(cfg.spread), // extra px per gap, following this row's speed
+    }));
   }
 
   resize(vp) {
@@ -100,84 +114,107 @@ export default class Filmstrip extends Layout {
     this.s = s;
     this.engine.scale = s;
     this.gapPx = c.gap;
-    this.bottom = vp.height - c.bottomInset;
-    const maxW = Math.min(c.maxWidth * s, vp.width * c.mobileMaxWidth);
-    const minW = Math.min(c.minWidth * s, maxW);
-    const maxH = Math.max(...c.heights) * s;
+    // Both rows fit between the top bar and the bottom inset: scale the size scale down if they wouldn't.
+    const rowRoom = (vp.height - c.topInset * s - c.bottomInset - c.gap) / ROWS;
+    const k = Math.min(1, rowRoom / (Math.max(...c.heights) * s));
+    const maxW = Math.min(c.maxWidth * s * k, vp.width * c.mobileMaxWidth);
+    const minW = Math.min(c.minWidth * s * k, maxW);
+    const maxH = Math.max(...c.heights) * s * k;
+    this.rowHeight = maxH;
 
-    // Enough tiles that the loop never shows a seam (estimate with the smallest tiles).
+    // Each row: every other piece, repeated until the loop never shows a seam (estimated with the smallest tiles).
     const needed = Math.ceil((vp.width + maxW * 3) / (minW + this.gapPx));
-    const count = Math.max(this.items.length, needed);
-    if (count !== this.tiles.length) {
+    const rowItems = Array.from({ length: ROWS }, (_, r) => this.items.filter((_, i) => i % ROWS === r));
+    const counts = rowItems.map((items) => (items.length ? Math.max(items.length, needed) : 0));
+    if (counts.some((n, r) => n !== this.rows[r].tiles.length)) {
       this.tiles.forEach((t) => t.dispose());
-      this.makeTiles(this.repeatItems(count));
+      const all = rowItems.flatMap((items, r) => {
+        const out = [];
+        while (items.length && out.length < counts[r]) out.push(...items);
+        return out.slice(0, counts[r]);
+      });
+      this.makeTiles(all);
+      let i = 0;
+      this.rows.forEach((row, r) => {
+        row.tiles = this.tiles.slice(i, i + counts[r]);
+        i += counts[r];
+      });
     }
 
     // Size each tile: pick a height from the scale, derive the width from the
     // aspect ratio, and if that's too wide/narrow adjust the height instead.
-    const pattern = sizePattern(this.tiles.length, c.heights.length, c.seed);
-    let x = 0;
-    this.tiles.forEach((t, i) => {
-      const { w, h } = fitSize(t.item.aspect, c.heights[pattern[i]] * s, { minW, maxW, maxH });
-      t.w = w;
-      t.h = h;
-      t.baseX = x;
-      x += w + this.gapPx;
+    this.rows.forEach((row, r) => {
+      const pattern = sizePattern(row.tiles.length, c.heights.length, c.seed + r);
+      let x = 0;
+      row.tiles.forEach((t, i) => {
+        const { w, h } = fitSize(t.item.aspect, c.heights[pattern[i]] * s * k, { minW, maxW, maxH });
+        t.w = w;
+        t.h = h;
+        t.baseX = x;
+        x += w + this.gapPx;
+      });
+      row.length = x;
+      // The rows meet along an even gutter: the lower row hangs from a line `gap` below the line the upper row stands on.
+      row.top = vp.height - c.bottomInset - maxH; // lower row: tiles hang from here
+      row.bottom = row.top - c.gap; // upper row: tiles stand on this line
+      row.start = c.startOffset * s - r * c.rowStagger * (x / Math.max(1, row.tiles.length));
     });
-    this.length = x;
     this.margin = maxW + this.gapPx; // wrap margin so tiles leave/enter fully off-screen
   }
 
-  /** Target drift speed (px/s) for the current cursor position. */
-  targetDrift() {
+  /** Target drift speed (px/s) for the current cursor position, for row `r` (0 = lower, 1 = upper). */
+  targetDrift(r) {
     const c = this.config;
-    const { nx, inside } = this.engine.cursor;
+    const { nx, ny, inside } = this.engine.cursor;
     if (!inside) return this.reduced ? 0 : -c.idleSpeed * this.s;
     const mag = Math.max(0, (Math.abs(nx) - c.deadZone) / (1 - c.deadZone));
     const hovering = this.engine.hovered && this.tiles.includes(this.engine.hovered);
+    // The row the cursor is over runs a little faster: above the upper row's line is the upper row.
+    const y = ((ny + 1) / 2) * this.vp.height;
+    const over = y < this.rows[1].bottom + c.gap / 2 ? 1 : 0;
+    const boost = r === over ? c.rowBoost : 1;
     // Cursor left (nx < 0) → positive speed → strip moves right.
-    return -Math.sign(nx) * Math.pow(mag, c.curve) * c.maxSpeed * this.s * (hovering ? c.hoverSlowdown : 1);
+    return -Math.sign(nx) * Math.pow(mag, c.curve) * c.maxSpeed * this.s * boost * (hovering ? c.hoverSlowdown : 1);
   }
 
   update(dt) {
     const c = this.config;
-    this.drift += (this.targetDrift() - this.drift) * (1 - Math.exp(-dt * c.response));
-
-    this.target += (this.drift + this.velocity) * dt;
-    this.velocity *= Math.pow(c.inertia, dt * 60);
-    this.offset += (this.target - this.offset) * (1 - Math.pow(1 - c.ease, dt * 60));
     const scrolled = this.scrolled.update(dt);
-
-    // How fast the strip is actually moving → how much extra gap, eased (the lag gives it weight).
-    const pos = this.offset + scrolled;
-    const extra = this.spread.update(pos, dt, this.reduced);
-
+    this.velocity *= Math.pow(c.inertia, dt * 60);
+    const cx = this.vp.width / 2;
+    const m = this.margin;
     let featured = null;
     let bestD = Infinity;
-    const cx = this.vp.width / 2;
-    const L = this.length;
-    const m = this.margin;
 
-    this.tiles.forEach((t) => {
-      const raw = c.startOffset * this.s + t.baseX + pos;
-      t.x = ((((raw + m) % L) + L) % L) - m; // wrap into [-margin, L - margin)
-    });
-    spreadFrom(this.tiles, 'x', this.gapPx, extra, cx);
+    this.rows.forEach((row, r) => {
+      row.drift += (this.targetDrift(r) - row.drift) * (1 - Math.exp(-dt * c.response));
+      row.target += (row.drift + this.velocity) * dt;
+      row.offset += (row.target - row.offset) * (1 - Math.pow(1 - c.ease, dt * 60));
 
-    this.tiles.forEach((t) => {
-      t.y = this.bottom - t.h;
-      t.z = 0;
-      t.alpha = 1;
-      t.reveal = 1;
+      // How fast the row is actually moving → how much extra gap, eased (the lag gives it weight).
+      const pos = row.offset + scrolled;
+      const extra = row.spread.update(pos, dt, this.reduced);
+      const L = row.length;
+      row.tiles.forEach((t) => {
+        const raw = row.start + t.baseX + pos;
+        t.x = ((((raw + m) % L) + L) % L) - m; // wrap into [-margin, L - margin)
+      });
+      spreadFrom(row.tiles, 'x', this.gapPx, extra, cx);
 
-      const visible = t.x + t.w > 0 && t.x < this.vp.width;
-      const d = Math.abs(t.x + t.w / 2 - cx);
-      if (visible && d < bestD) {
-        bestD = d;
-        featured = t;
-      }
-      t.priority = visible ? this.centerScore(t) : 0;
-      this.applyTransition(t, Math.min(1, Math.max(0, t.x / this.vp.width)));
+      row.tiles.forEach((t) => {
+        t.y = r ? row.bottom - t.h : row.top;
+        t.z = 0;
+        t.alpha = 1;
+        t.reveal = 1;
+        const visible = t.x + t.w > 0 && t.x < this.vp.width;
+        const d = Math.abs(t.x + t.w / 2 - cx) + r; // the lower row wins ties
+        if (visible && d < bestD) {
+          bestD = d;
+          featured = t;
+        }
+        t.priority = visible ? this.centerScore(t) : 0;
+        this.applyTransition(t, Math.min(1, Math.max(0, t.x / this.vp.width)));
+      });
     });
 
     // "featured" only steers video priority now (no caption without hover).
@@ -186,7 +223,7 @@ export default class Filmstrip extends Layout {
     if (this.engine.hovered && this.tiles.includes(this.engine.hovered)) this.engine.hovered.priority = 3;
   }
 
-  /** Scroll down (or right) = forward: the strip moves left. */
+  /** Scroll down (or right) = forward: both rows move left. */
   onWheel({ dx, dy }) {
     this.scrolled.push(-(dy + dx) * this.config.scroll.multiplier);
   }
@@ -194,7 +231,7 @@ export default class Filmstrip extends Layout {
   // Touch swipe only — on desktop the cursor steers. A vertical swipe works like scrolling (up = forward).
   onDrag({ dx, dy }) {
     if (!this.engine.touch) return;
-    this.target += (dx + dy) * this.config.dragMultiplier;
+    for (const row of this.rows) row.target += (dx + dy) * this.config.dragMultiplier;
     this.velocity = 0;
   }
 
@@ -203,9 +240,10 @@ export default class Filmstrip extends Layout {
     this.velocity = (vx + vy) * this.config.dragMultiplier * this.config.throw;
   }
 
-  /** Keyboard focus: glide the nearest copy of the item to the centre. */
+  /** Keyboard focus: glide the nearest copy of the item to the centre (its row only). */
   focusItem(item) {
     const tile = this.tileForItem(item) ?? this.tiles.find((t) => t.item === item);
-    if (tile) this.target += this.vp.width / 2 - (tile.x + tile.w / 2);
+    const row = tile && this.rows.find((r) => r.tiles.includes(tile));
+    if (row) row.target += this.vp.width / 2 - (tile.x + tile.w / 2);
   }
 }

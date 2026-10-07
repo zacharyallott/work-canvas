@@ -4,17 +4,23 @@ import zaIconLarge from '../ui/za-icon-large.svg';
  * About section (Figma frame 49, node 1542:5601). Shown when the tagline is
  * clicked: the images fade out and this fades in.
  *
+ * Layout: the headline (large, with the star), then a row of the intro (a
+ * short paragraph) and the selected clients in four columns of tags, then the
+ * footer links and ©.
+ *
  * The copy below is the fallback. On the site it comes from an element with
- * `data-work-about` in the Webflow page (visually hidden), so the statement,
- * clients and links are in the page's HTML for search engines and editable
- * in Webflow. Read from it:
- *   the first <p>                  → statement
- *   each <ul> (outside a <nav>)    → a client column
+ * `data-work-about` in the Webflow page (visually hidden), so the copy, clients
+ * and links are in the page's HTML for search engines and editable in
+ * Webflow. Read from it:
+ *   [data-about-headline]          → headline (else the fallback below)
+ *   [data-about-intro], else the first other <p> → intro paragraph
+ *   each <li> in a <ul> (outside a <nav>) → a client, in order (laid out into CLIENT_COLUMNS)
  *   each <a href>                  → a footer link
  *   [data-about-copyright]         → copyright line (without the ©)
  */
 export const ABOUT = {
-  statement:
+  headline: 'design & direction made to move brands, culture, humans, categories, & expectations forward.',
+  intro:
     'An interdisciplinary design practice for deepening and expanding brand connections with conceptually driven solutions that are at once simple, functional & emotional.',
   clients: [
     ['SRAM', 'Cannondale', 'GT Bikes', 'Aspen Snowmass', 'BOA'],
@@ -32,6 +38,9 @@ export const ABOUT = {
   copyright: `${new Date().getFullYear()} Zachary Allott`,
 };
 
+const CLIENT_COLUMNS = 4; // the first starts with the "Select clients" label and a blank line
+const CLIENTS_LABEL = 'Select clients';
+
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 const clean = (s) => String(s ?? '').replace(/\s+/g, ' ').trim();
 
@@ -39,7 +48,10 @@ const clean = (s) => String(s ?? '').replace(/\s+/g, ' ').trim();
 export function aboutData() {
   const src = document.querySelector('[data-work-about]');
   if (!src) return ABOUT;
-  const statement = clean(src.querySelector('p:not([data-about-copyright])')?.textContent) || ABOUT.statement;
+  const headline = clean(src.querySelector('[data-about-headline]')?.textContent) || ABOUT.headline;
+  const intro =
+    clean((src.querySelector('[data-about-intro]') ?? src.querySelector('p:not([data-about-copyright]):not([data-about-headline])'))?.textContent) ||
+    ABOUT.intro;
   const clients = [...src.querySelectorAll('ul')]
     .filter((ul) => !ul.closest('nav'))
     .map((ul) => [...ul.querySelectorAll('li')].map((li) => clean(li.textContent)).filter(Boolean))
@@ -51,19 +63,46 @@ export function aboutData() {
   src.setAttribute('aria-hidden', 'true');
   src.inert = true;
   return {
-    statement,
+    headline,
+    intro,
     clients: clients.length ? clients : ABOUT.clients,
     links: links.length ? links : ABOUT.links,
     copyright,
   };
 }
 
+/** All the clients laid out into CLIENT_COLUMNS columns, top to bottom then across; the first column's top two
+ *  rows are taken by the label and a blank line, so it holds two fewer. */
+function clientColumns(clients) {
+  const all = clients.flat();
+  const rows = Math.ceil((all.length + 2) / CLIENT_COLUMNS);
+  const cols = [];
+  let i = 0;
+  for (let c = 0; c < CLIENT_COLUMNS && i < all.length; c++) {
+    const take = c === 0 ? rows - 2 : rows;
+    cols.push(all.slice(i, i + take));
+    i += take;
+  }
+  return cols;
+}
+
 export function aboutMarkup() {
   const ABOUT = aboutData();
+  const cols = clientColumns(ABOUT.clients);
   return `
-    <p class="wc-about-statement">${esc(ABOUT.statement)}<img src="${zaIconLarge}" alt="" width="36" height="36"></p>
-    <div class="wc-about-clients" aria-label="Selected clients">
-      ${ABOUT.clients.map((col) => `<ul>${col.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>`).join('')}
+    <p class="wc-about-statement">${esc(ABOUT.headline)}<img src="${zaIconLarge}" alt="" width="36" height="36"></p>
+    <div class="wc-about-row">
+      <p class="wc-about-intro">${esc(ABOUT.intro)}</p>
+      <div class="wc-about-clients" role="group" aria-label="${CLIENTS_LABEL}">
+        ${cols
+          .map(
+            (col, c) =>
+              `<ul>${c === 0 ? `<li class="wc-about-label" aria-hidden="true">${CLIENTS_LABEL}</li><li class="wc-about-gap" aria-hidden="true"></li>` : ''}${col
+                .map((name) => `<li>${esc(name)}</li>`)
+                .join('')}</ul>`,
+          )
+          .join('')}
+      </div>
     </div>
     <div class="wc-about-footer">
       <nav class="wc-about-links" aria-label="Contact">

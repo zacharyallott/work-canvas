@@ -9,13 +9,14 @@ import { sizePattern } from '../core/sizing.js';
  *
  * The tiles fan out around one point centred just below the bottom of the view (`drop`), like
  * spokes: each tile stands on its own line out from that point, the middle of
- * its bottom edge `hole` px out (a gap in the middle), turned with the line —
+ * its bottom edge on one of two circles around it (`rings` × `hole`: a gap in
+ * the middle, the tiles alternating in and out), turned with the line —
  * so a tile pointing straight up is upright, and they lean further the further
  * round they are. Each line is 11.25° on from the one before, so 32 tiles make
  * the full circle (the lower half is below the fold). Tiles are around 400 design px wide — each picks a size
- * from a scale, never the same as its neighbour — and a shape: the piece's own
- * aspect ratio stretched taller or wider (cropped to fit), so the fan mixes
- * tall, square-ish and wide frames. Later (more clockwise) tiles lie on top,
+ * from a scale, never the same as its neighbour — at the piece's own aspect
+ * ratio, uncropped (`shapes` can stretch them taller or wider, cropped to fit).
+ * Later (more clockwise) tiles lie on top,
  * like a hand of cards.
  *
  * It's a loop: the circle has 32 places, and as the fan turns, the place
@@ -36,14 +37,15 @@ export const config = {
   // Layout (design px at the 1280×794 artboard; scaled by mount height)
   tileWidth: 400,
   // Size variety: each tile's width is tileWidth × one of these (seeded, never the same as its neighbour).
-  sizes: [0.5, 0.64, 0.8, 0.96, 1.12, 1.3],
-  // Shape variety: each tile is cropped to the piece's own aspect ratio × one of these (seeded separately), so
-  // pieces of the same ratio still come out tall, square-ish or wide. Then held within min/maxAspect.
-  shapes: [0.55, 0.75, 1, 1.3],
+  sizes: [0.7, 0.82, 0.94, 1.06, 1.18, 1.3],
+  minEdge: 160, // design px: a tile's shorter side is at least this (very wide or tall pieces grow to it)
+  // Shape: each tile is the piece's own aspect ratio × one of these (seeded separately), then held within
+  // min/maxAspect. [1] with no limits = every piece at its native aspect ratio, uncropped.
+  shapes: [1],
   seed: 11, // change to reshuffle the sizes and shapes
   step: 11.25, // degrees between neighbouring tiles (360 / 11.25 = 32 places)
-  minAspect: 0.6, // never taller than this
-  maxAspect: 2.2, // never wider than this
+  minAspect: 0, // never taller than this (0 = no limit)
+  maxAspect: Infinity, // never wider than this (Infinity = no limit)
   minScale: 0.55,
   maxScale: 1.05,
   // Sharpness: a tile never shows its image bigger than the loaded texture (maxTextureEdge, e.g. 1280 px) covers
@@ -52,6 +54,9 @@ export const config = {
   mobileMaxWidth: 0.55, // tile width never exceeds this fraction of the view width (phones)
   seam: 180, // degrees: where places leave/join the loop — a tile pointing straight down is wholly below the fold
   hole: 640, // design px each tile sits out from the centre point at rest (a gap in the middle; the speed spread adds to it)
+  // Two circles: each tile sits on one, at `hole` × one of these — never the same as its neighbour, so they
+  // alternate — the inner tighter than `hole`, the outer well beyond it, so the fan is layered in and out.
+  rings: [0.72, 1.32],
   drop: 360, // design px the centre point sits below the bottom edge of the view
   // Portrait screens (phones): the open centre's top edge (at rest) sits this far down the view, which sets where
   // the centre point is (lower = the arc of tiles and its centre further down).
@@ -113,6 +118,7 @@ export default class Fan extends Layout {
     }
     const base = Math.min(c.tileWidth * s, vp.width * c.mobileMaxWidth);
     const pattern = sizePattern(this.tiles.length, c.sizes.length, c.seed);
+    const ringOf = sizePattern(this.tiles.length, c.rings.length, c.seed + 3);
     const shapes = sizePattern(this.tiles.length, c.shapes.length, c.seed + 7);
     const texEdge = (this.engine.options.maxTextureEdge ?? 1280) / c.sharpDensity; // CSS px the texture's longest edge covers
     this.tiles.forEach((t, i) => {
@@ -121,7 +127,10 @@ export default class Fan extends Layout {
       // The part of the texture a cover crop to this shape shows (CSS px at sharpDensity) caps the width.
       const texW = real >= 1 ? texEdge : texEdge * real;
       const shown = aspect < real ? (texW / real) * aspect : texW;
-      t.w = Math.min(base * c.sizes[pattern[i]], shown);
+      t.ring = c.rings[ringOf[i]];
+      // Width from the size scale, grown if the shorter side would come out under minEdge; then the sharpness cap.
+      const minW = c.minEdge * this.s * Math.max(1, aspect);
+      t.w = Math.min(Math.max(base * c.sizes[pattern[i]], minW), shown);
       t.h = t.w / aspect;
     });
     const portrait = vp.width < vp.height;
@@ -136,7 +145,7 @@ export default class Fan extends Layout {
     this.angle += this.velocity * dt;
     this.velocity *= Math.pow(c.inertia, dt * 60);
     const turn = this.angle + this.scrolled.update(dt);
-    const out = (this.hole + this.spread.update(turn, dt, this.reduced)) * this.s; // resting gap + speed spread
+    const spread = this.spread.update(turn, dt, this.reduced); // design px the speed adds to every ring
 
     const n = this.tiles.length;
     const period = n * c.step; // ≥ 360: with more pieces than places, some wait in the hidden half
@@ -172,7 +181,9 @@ export default class Fan extends Layout {
       const cos = Math.cos(phi);
       const sin = Math.sin(phi);
       // Radial: the tile stands on the line at angle phi (clockwise from straight up), the middle of its bottom
-      // edge `out` px from the pivot, so its centre is half its height further along the same line.
+      // edge `out` px from the pivot — its own ring, plus the speed spread — so its centre is half its height further
+      // along the same line.
+      const out = (this.hole * (t.ring ?? 1) + spread) * this.s;
       const [ux, uy] = [sin, -cos]; // unit vector along the line, outward
       t.restX = px + ux * (out + t.h / 2); // where it sits without the hover slide (for pick)
       t.restY = py + uy * (out + t.h / 2);

@@ -43,16 +43,23 @@ const CSS = `
 .wc-arrow-glyph.is-next{top:-17px}
 .wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}
 .wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}
-/* About (Figma frame 49): bottom-anchored statement + client columns. */
-.wc-about{position:absolute;left:0;right:0;bottom:0;translate:0 var(--wc-pull-lift,0px);box-sizing:border-box;max-height:calc(100% - 44px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:0 23px 18px;display:flex;flex-direction:column;gap:32px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}
+/* About (Figma frame 49, 1542:5601): bottom-anchored headline, then the intro + client columns, then the footer. The
+   section blends with difference (like the top bar), so colours are written inverted against the #f2f2f2 page:
+   #939393 → #5f5f5f grey text; tags #101010 on #e2e2e2 text → #e2e2e2 tags with near-black text. */
+.wc-about{position:absolute;left:0;right:0;bottom:0;translate:0 var(--wc-pull-lift,0px);box-sizing:border-box;max-height:calc(100% - 44px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:0 23px 24px;display:flex;flex-direction:column;gap:48px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}
 .wc-root.is-about .wc-about{opacity:var(--wc-pull-fade,1);visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}
 .wc-about .wc-w{display:inline-block}
-.wc-about-statement{margin:0 0 clamp(24px,8vh,64px);max-width:22.84em;font-size:clamp(22px,min(3.75vw,6.2vh),48px);line-height:1.25;letter-spacing:.02em;font-weight:500}
+.wc-about-statement{margin:0 0 48px;max-width:24.6em;font-size:clamp(22px,min(3.75vw,6.2vh),48px);line-height:1.25;letter-spacing:.02em;font-weight:500} /* 96px to the row (the section's 48 + 48) */
 .wc-about-statement img{display:inline-block;width:.72em;height:.72em;margin-left:.3em;vertical-align:baseline} /* Cassette cap height: sits on the baseline, tops out with the capitals */
-.wc-about-clients{display:flex;justify-content:space-between;gap:16px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:400;font-size:10px;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}
-.wc-about-clients ul{list-style:none;margin:0;padding:0;flex:0 1 155px;min-width:0}
-.wc-about-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;line-height:1;font-weight:400}
-.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:400;letter-spacing:.02em}
+.wc-about-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.wc-about-intro{margin:0;flex:0 1 263px;min-width:0;font-size:16px;line-height:1.25;font-weight:400;color:#939393}
+.wc-about-clients{display:contents} /* its columns share the row's even spacing with the intro */
+.wc-about-clients ul{list-style:none;margin:0;padding:0;flex:0 1 165px;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:400;font-size:10px;line-height:1;letter-spacing:.02em;text-transform:uppercase} /* type matches the project service tags */
+.wc-about-clients li{padding:3px 6px;border-radius:3px;background:#101010;color:#e2e2e2;white-space:nowrap} /* a tag, like the project services */
+.wc-about-clients li.wc-about-label{background:none;color:inherit}
+.wc-about-clients li.wc-about-gap{background:none;height:10px}
+.wc-about-footer{display:flex;align-items:center;justify-content:space-between;line-height:1;font-weight:500}
+.wc-about-links{display:flex;gap:16px;font-size:12px;font-weight:500;letter-spacing:.02em}
 .wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}
 /* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */
 .wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}
@@ -74,7 +81,7 @@ const CSS = `
 .wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}
 @supports (height:100svh){.wc-root{height:100svh}}
 .wc-about::-webkit-scrollbar{display:none}
-@media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:32px}.wc-about-clients{flex-wrap:wrap;justify-content:flex-start;row-gap:14px}.wc-about-clients ul{flex:0 0 calc(50% - 8px)}.wc-about-footer{margin-top:4px}}
+@media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-row{flex-wrap:wrap;justify-content:flex-start;row-gap:16px}.wc-about-intro{flex:0 0 100%}.wc-about-clients ul{flex:0 0 calc(50% - 8px)}}
 `;
 
 let styleInjected = false;
@@ -200,7 +207,7 @@ export class UI {
     this.about.setAttribute('aria-hidden', String(!open));
 
     const words = this.about.querySelectorAll('.wc-about-statement .wc-w');
-    const columns = this.about.querySelectorAll('.wc-about-clients ul');
+    const columns = this.about.querySelectorAll('.wc-about-intro, .wc-about-clients ul');
     const footer = this.about.querySelector('.wc-about-footer');
     this.aboutTl?.kill();
     if (!open) return;
@@ -305,13 +312,19 @@ export class UI {
       const rot = shown.rect.rotation || 0;
       const capH = this.captionH || 14;
       if (shown.captionAt === 'top-left') {
-        // Fixed in the tile's own frame (fan): inside its top-left corner, turned with the tile.
-        const lx = -w / 2 + inset[0];
-        const ly = -h / 2 + inset[1];
+        // Fixed in the tile's own frame (fan): inside its top-left corner, turned with the tile — or its bottom-left
+        // corner when the top of the tile runs off the top of the view (or under the top bar), so it stays readable.
         const cos = Math.cos(rot);
         const sin = Math.sin(rot);
-        const cx = x + w / 2 + lx * cos - ly * sin;
-        const cy = y + h / 2 + lx * sin + ly * cos;
+        const lx = -w / 2 + inset[0];
+        const capW = this.captionW || 0;
+        const at = (ly) => [x + w / 2 + lx * cos - ly * sin, y + h / 2 + lx * sin + ly * cos];
+        // Highest point of the caption box (its four corners) when its top-left sits at (lx, ly) in the tile.
+        const top = (ly) => Math.min(...[[0, 0], [capW, 0], [0, capH], [capW, capH]].map(([dx, dy]) => y + h / 2 + (lx + dx) * sin + (ly + dy) * cos));
+        const clear = 36; // below the top bar
+        const lyTop = -h / 2 + inset[1];
+        const ly = top(lyTop) < clear ? h / 2 - inset[1] - capH : lyTop;
+        const [cx, cy] = at(ly);
         this.caption.style.transform = `translate3d(${cx.toFixed(1)}px, ${cy.toFixed(1)}px, 0) rotate(${rot.toFixed(4)}rad)`;
       } else if (!rot) {
         const cx = Math.round(x + inset[0]);

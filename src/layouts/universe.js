@@ -44,7 +44,7 @@ export const config = {
     [1538, 515, 435], [1250, 2065, 435], [1199, 1042, 250],
   ],
   start: { x: -1605, y: -1081 }, // where the view first sits over the field (the desktop frame)
-  spacing: 0.64, // the places (and the field) are drawn this much closer together than the sketch — denser; tiles keep their size
+  spacing: 0.85, // the places (and the field) are drawn at this fraction of the sketch's spacing (lower = denser, more overlap); tiles keep their size
   // Four layers, back → front: how fast each moves (× the field's motion) — the nearer, the faster — and how big
   // its tiles are.
   layers: { pace: [0.5, 0.8, 1.1, 1.45], scale: [0.8, 0.92, 1.03, 1.14] },
