@@ -7,3 +7,4 @@ media/pipeline.log
 .claude/
 media/.cache-projects/
 media/projects-pipeline.log
+media/.cache-about.json

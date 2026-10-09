@@ -1,0 +1,80 @@
+{
+  "items": [
+    {
+      "id": "ggr-07-imagery-00",
+      "label": "Gogoro",
+      "href": "",
+      "caseStudy": false,
+      "source": "GGR_07_Imagery_00.jpg",
+      "sourceHash": "3ba7c14d61863d35",
+      "type": "image",
+      "width": 2500,
+      "height": 1596,
+      "images": {
+        "sm": {
+          "src": "media/about/ggr-07-imagery-00-sm.webp",
+          "width": 480,
+          "height": 306,
+          "bytes": 3290
+        },
+        "md": {
+          "src": "media/about/ggr-07-imagery-00-md.webp",
+          "width": 1280,
+          "height": 817,
+          "bytes": 19552
+        },
+        "lg": {
+          "src": "media/about/ggr-07-imagery-00-lg.webp",
+          "width": 2048,
+          "height": 1307,
+          "bytes": 42014
+        }
+      },
+      "poster": {
+        "src": "media/about/ggr-07-imagery-00-sm.webp",
+        "width": 480,
+        "height": 306,
+        "bytes": 3290
+      },
+      "aspect": 1.5664
+    },
+    {
+      "id": "ua-wi20-ua-huaihai-store-01",
+      "label": "Under Armour",
+      "href": "",
+      "caseStudy": false,
+      "source": "UA_WI20_UA_HuaiHai_Store_01.jpg",
+      "sourceHash": "80a95f0a0b399864",
+      "type": "image",
+      "width": 1920,
+      "height": 1080,
+      "images": {
+        "sm": {
+          "src": "media/about/ua-wi20-ua-huaihai-store-01-sm.webp",
+          "width": 480,
+          "height": 270,
+          "bytes": 15054
+        },
+        "md": {
+          "src": "media/about/ua-wi20-ua-huaihai-store-01-md.webp",
+          "width": 1280,
+          "height": 720,
+          "bytes": 104440
+        },
+        "lg": {
+          "src": "media/about/ua-wi20-ua-huaihai-store-01-lg.webp",
+          "width": 1920,
+          "height": 1080,
+          "bytes": 230372
+        }
+      },
+      "poster": {
+        "src": "media/about/ua-wi20-ua-huaihai-store-01-sm.webp",
+        "width": 480,
+        "height": 270,
+        "bytes": 15054
+      },
+      "aspect": 1.7778
+    }
+  ]
+}

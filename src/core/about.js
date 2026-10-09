@@ -1,4 +1,5 @@
 import zaIconLarge from '../ui/za-icon-large.svg';
+import aboutMedia from '../../media/about-work.json';
 
 /**
  * About section (Figma frame 49, node 1542:5601). Shown when the tagline is
@@ -27,7 +28,7 @@ export const ABOUT = {
     ['The James Brand', 'Nixon', 'Smith Optics', 'Burton'],
     ['Autodesk', 'Microsoft', 'Xbox', 'Dialpad'],
     ['Electronic Arts', 'Gogoro', 'Surfline'],
-    ['Under Armour', 'Adidas', 'Mattel', 'Dexcom'],
+    ['Under Armour', 'Adidas', 'Mattel', 'Dexcom', 'Bonnell'],
   ],
   // Same links as the current site's info page.
   links: [
@@ -41,8 +42,47 @@ export const ABOUT = {
 const CLIENT_COLUMNS = 4; // the first starts with the "Select clients" label and a blank line
 const CLIENTS_LABEL = 'Select clients';
 
+// Hovering a client's tag shows their work from the showcase: the pieces whose project title contains the
+// client's name as a word, or one of these other names (lower case) when the project goes by something else.
+const CLIENT_WORK = {
+  'smith optics': ['smith'],
+  autodesk: ['tinkercad'],
+  dexcom: ['stelo'],
+};
+
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 const clean = (s) => String(s ?? '').replace(/\s+/g, ' ').trim();
+
+/**
+ * Work that only shows on the about section (when its client's tag is hovered), never on the homepage: the files
+ * loose in the top level of 2026_SiteCompilation, built by `npm run media:about` and served from `base` (the
+ * mount's data-media-base). Same shape as the CMS items.
+ */
+export function aboutOnlyWork(base) {
+  const url = (src) => new URL(src, base).href;
+  return aboutMedia.items.map((m) => ({
+    title: m.label,
+    type: m.type,
+    aspect: m.aspect,
+    poster: url(m.poster.src),
+    images: m.type === 'image' ? Object.values(m.images).map((l) => ({ src: url(l.src), width: l.width })) : [],
+    sources: (m.sources ?? []).map((s) => ({ src: url(s.src), type: s.type })),
+  }));
+}
+
+/** A client's showcase pieces (one per image/video, in order). */
+export function clientWork(name, items) {
+  const client = clean(name).toLowerCase();
+  const keys = [client, ...(CLIENT_WORK[client] ?? [])].map((k) => new RegExp(`\\b${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`));
+  const seen = new Set();
+  return items.filter((item) => {
+    const title = String(item.title ?? '').toLowerCase();
+    const src = item.poster || item.images?.[0]?.src;
+    if (!src || seen.has(src) || !keys.some((k) => k.test(title))) return false;
+    seen.add(src);
+    return true;
+  });
+}
 
 /** The about copy: from the page's [data-work-about] element when there is one, else ABOUT. */
 export function aboutData() {

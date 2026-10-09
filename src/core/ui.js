@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 import zaIcon from '../ui/za-icon.svg';
 import { aboutMarkup } from './about.js';
+import { AboutPeek } from './about-peek.js';
 import { EASE } from './motion.js';
 import { ProjectView } from './project.js';
 import { Pull } from './pull.js';
@@ -56,8 +57,17 @@ const CSS = `
 .wc-about-clients{display:contents} /* its columns share the row's even spacing with the intro */
 .wc-about-clients ul{list-style:none;margin:0;padding:0;flex:0 1 165px;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:400;font-size:10px;line-height:1;letter-spacing:.02em;text-transform:uppercase} /* type matches the project service tags */
 .wc-about-clients li{padding:3px 6px;border-radius:3px;background:#101010;color:#e2e2e2;white-space:nowrap} /* a tag, like the project services */
+.wc-about-clients li.has-work{transition:background-color .12s linear,color .12s linear}
+@media (hover:hover){.wc-about-clients li.has-work:hover{background:#e2e2e2;color:#101010}} /* a client with work to show, hovered: inverted (shows as a near-black tag with grey text) */
 .wc-about-clients li.wc-about-label{background:none;color:inherit}
 .wc-about-clients li.wc-about-gap{background:none;height:10px}
+/* Hovering a client's tag: one of their pieces as a card above the copy (about-peek.js). Behind the section, so the copy blends over it. */
+.wc-about-peek{position:absolute;inset:0;overflow:hidden;pointer-events:none;visibility:hidden}
+.wc-root.is-about .wc-about-peek{visibility:visible}
+.wc-about-card{position:absolute;border-radius:4px;overflow:hidden;background:#e2e2e2}
+.wc-about-card img,.wc-about-card video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}
+.wc-about-card video{opacity:0}
+.wc-about-card video.is-playing{opacity:1}
 .wc-about-footer{display:flex;align-items:center;justify-content:space-between;line-height:1;font-weight:500}
 .wc-about-links{display:flex;gap:16px;font-size:12px;font-weight:500;letter-spacing:.02em}
 .wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}
@@ -95,7 +105,7 @@ function injectStyles() {
 }
 
 export class UI {
-  constructor(mount, { layouts, current, onAbout, onHome, tagline, hint, aboutHref = '/about' }) {
+  constructor(mount, { layouts, current, onAbout, onHome, tagline, hint, aboutHref = '/about', items = [] }) {
     injectStyles();
     this.mount = mount;
     this.layouts = layouts;
@@ -121,6 +131,7 @@ export class UI {
     this.tagline = this.root.querySelector('.wc-tagline');
     this.about = this.root.querySelector('.wc-about');
     splitWords(this.about.querySelector('.wc-about-statement'));
+    this.peek = new AboutPeek(this, items);
     // Scrolling on at the bottom of the about section pulls back to the work, like the end of a project page.
     this.aboutOpen = false;
     this.aboutPull = new Pull({
@@ -210,7 +221,7 @@ export class UI {
     const columns = this.about.querySelectorAll('.wc-about-intro, .wc-about-clients ul');
     const footer = this.about.querySelector('.wc-about-footer');
     this.aboutTl?.kill();
-    if (!open) return;
+    if (!open) return this.peek.clear();
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     gsap.set([...words, ...columns, footer].filter(Boolean), { opacity: 0 });
 
@@ -225,7 +236,7 @@ export class UI {
       lastMid = mid;
     });
 
-    this.aboutTl = gsap.timeline({ delay: 0.2, defaults: { ease: EASE.fade } }); // images are fading out meanwhile
+    this.aboutTl = gsap.timeline({ delay: 0.5, defaults: { ease: EASE.fade } }); // images are fading out meanwhile
     lines.forEach((line, i) => this.aboutTl.to(line, { opacity: 1, duration: 0.45 }, reduced ? 0 : i * 0.07));
     this.aboutTl
       .to(columns, { opacity: 1, duration: 0.3, stagger: reduced ? 0 : 0.07 }, reduced ? 0 : '-=0.2')
@@ -393,6 +404,7 @@ export class UI {
 
   destroy() {
     this.project?.destroy();
+    this.peek?.destroy();
     this.root.remove();
     this.fallback?.remove();
   }

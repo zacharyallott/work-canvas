@@ -6,6 +6,7 @@ import { readItems, ensureAspects } from './data.js';
 import { MediaManager } from './media.js';
 import { Input } from './input.js';
 import { UI, hideLinkLists } from './ui.js';
+import { aboutOnlyWork } from './about.js';
 import { vertexShader, fragmentShader } from './shaders.js';
 import { projectNav, workListJsonLd, projectJsonLd } from './seo.js';
 
@@ -92,6 +93,7 @@ export class WorkCanvas {
       onHome: () => (this.canCycle ? this.nextLayout() : this.projectOpen ? this.closeProject() : this.toggleAbout(false)),
       tagline: this.options.tagline,
       hint: this.options.hint,
+      items: [...this.items, ...aboutOnlyWork(mount.dataset.mediaBase || document.baseURI)], // hovering a client on the about section shows their work
     });
     this.ui.setAbout(false);
     this.ui.project.onEnd = () => this.closeProject(); // pulled past the end of the page

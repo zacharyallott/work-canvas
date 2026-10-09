@@ -40,6 +40,7 @@ src/
     ui.js              top bar (star = next version), hover caption, about section, fallback grid
     pull.js            scroll-past-the-end pull back to the work (project view + about section)
     about.js           about copy: headline, intro, clients (4 columns of tags), links
+    about-peek.js      about: hovering a client's tag shows one of their showcase pieces as a card above the copy
     project.js         project view (DOM page) + end-of-page pull
     seo.js             crawlable project links + JSON-LD
     embed.js           YouTube/Vimeo links → embedded players
@@ -88,6 +89,8 @@ Motion follows one vocabulary (`src/core/motion.js`): things that travel acceler
 4. Check `http://localhost:5173`, then release (below) and add or update the project in the Webflow CMS: upload the `-lg.webp` (or `-poster.webp` for a video) to Image 1/2, and paste the release's MP4 URL into "Image N video".
 
 The originals are only ever read. Output goes to `public/media/`.
+
+**About-only pieces** (shown when a client's tag is hovered on the about section, never on the homepage): put them loose in the top level of `2026_SiteCompilation` (not in a folder), give the client a `media/projects.json` line whose label contains the client's name (e.g. `^GGR_` → Gogoro), run `npm run media:about` (→ `public/media/about/` + `media/about-work.json`, which the bundle reads) and release.
 
 ## Media pipeline
 
@@ -162,7 +165,9 @@ Tiles come out in a fresh random order on every load, with neighbours from diffe
     <div data-work-about>
       <p data-about-headline>{headline}</p>      <!-- large line with the star -->
       <p data-about-intro>{intro}</p>            <!-- short paragraph beside the clients -->
-      <ul><li>{client}</li>…</ul>               <!-- clients, in order; laid out into 4 columns under "Select clients" -->
+      <ul><li>{client}</li>…</ul>               <!-- clients, in order; laid out into 4 columns under "Select clients".
+                                                   Hovering one shows a project of theirs whose title contains the name
+                                                   (other names: CLIENT_WORK in src/core/about.js) -->
       <nav><a href="mailto:…">email</a> …</nav>
       <p data-about-copyright>© 2026 Zachary Allott</p>
     </div>
