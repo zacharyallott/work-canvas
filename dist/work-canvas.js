@@ -14342,6 +14342,7 @@ var Dh = class {
 		});
 	}
 	async setLayout(e, { initial: t = !1, swap: n = !1 } = {}) {
+		if (this.projectPage) return void location.assign(this.options.homePath);
 		if (t || (this.aboutOpen && this.toggleAbout(!1), this.projectOpen && this.closeProject({ cycle: !1 })), this.switching || e === this.layoutKey || !this.renderer) return;
 		let r = this.layoutDefs.find((t) => t.key === e);
 		if (r) {
@@ -15426,6 +15427,7 @@ var eg = {
 		y: -1081
 	},
 	spacing: .85,
+	portraitSpacing: .68,
 	layers: {
 		pace: [
 			.5,
@@ -15495,7 +15497,9 @@ var eg = {
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.height / Np.height));
 		this.s = n, this.engine.scale = n;
-		let r = t.places.length, i = this.items, a = Math.min(t.tileWidth * n, e.width * t.mobileMaxWidth), o = t.spacing * n, s = a * Math.max(...t.layers.scale) / t.minAspect, c = Math.max(1, Math.ceil(i.length / r)), l = t.field.height * o - s < e.height ? 2 : 1, u = r * c * l;
+		let r = t.places.length, i = this.items, a = Math.min(t.tileWidth * n, e.width * t.mobileMaxWidth);
+		this.spacing = e.width < e.height ? t.portraitSpacing ?? t.spacing : t.spacing;
+		let o = this.spacing * n, s = a * Math.max(...t.layers.scale) / t.minAspect, c = Math.max(1, Math.ceil(i.length / r)), l = t.field.height * o - s < e.height ? 2 : 1, u = r * c * l;
 		u !== this.tiles.length && (this.tiles.forEach((e) => e.dispose()), this.makeTiles(Array.from({ length: u }, (e, t) => i[t < i.length ? t : t % r % i.length])));
 		let d = Vh(r, t.layers.pace.length, t.seed);
 		this.period = {
@@ -15535,7 +15539,7 @@ var eg = {
 		this.drift.x += (o.x - this.drift.x) * s, this.drift.y += (o.y - this.drift.y) * s, this.pan.x += (this.drift.x * this.slow + this.velocity.x) * e, this.pan.y += (this.drift.y * this.slow + this.velocity.y) * e;
 		let c = t.inertia ** (e * 60);
 		this.velocity.x *= c, this.velocity.y *= c;
-		let l = t.start.x * t.spacing * this.s + this.pan.x + this.scrolled.x.update(e), u = t.start.y * t.spacing * this.s + this.pan.y + this.scrolled.y.update(e), { x: d, y: f } = this.period, { x: p, y: m } = this.margin, h = (e, t, n) => ((e + n) % t + t) % t - n, g = null, _ = 0;
+		let l = t.start.x * this.spacing * this.s + this.pan.x + this.scrolled.x.update(e), u = t.start.y * this.spacing * this.s + this.pan.y + this.scrolled.y.update(e), { x: d, y: f } = this.period, { x: p, y: m } = this.margin, h = (e, t, n) => ((e + n) % t + t) % t - n, g = null, _ = 0;
 		this.tiles.forEach((e, n) => {
 			let a = h(e.fx + l * e.pace, d, p), o = h(e.fy + u * e.pace, f, m);
 			e.x = a - e.w / 2, e.y = o - e.h / 2, e.z = e.layer * 1e3 + n, e.rotation = 0, e.alpha = 1, e.reveal = 1, e.priority = e.x + e.w > 0 && e.x < r && e.y + e.h > 0 && e.y < i ? this.centerScore(e) : 0, e.priority > _ && (_ = e.priority, g = e), this.applyTransition(e, 1 - e.layer / (t.layers.pace.length - 1));
