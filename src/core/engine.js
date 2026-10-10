@@ -344,6 +344,8 @@ export class WorkCanvas {
   // ─── Layouts ───────────────────────────────────────────────────────────────
   /** `swap: true` replaces the current version without its leave fade (used while the canvas is hidden). */
   async setLayout(key, { initial = false, swap = false } = {}) {
+    // A project's own page carries only that project, so the versions would fill up with it: go to the homepage.
+    if (this.projectPage) return void location.assign(this.options.homePath);
     if (!initial) {
       // Switching always brings the images back (the first load keeps /about open).
       if (this.aboutOpen) this.toggleAbout(false);

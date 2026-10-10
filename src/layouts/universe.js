@@ -45,6 +45,7 @@ export const config = {
   ],
   start: { x: -1605, y: -1081 }, // where the view first sits over the field (the desktop frame)
   spacing: 0.85, // the places (and the field) are drawn at this fraction of the sketch's spacing (lower = denser, more overlap); tiles keep their size
+  portraitSpacing: 0.68, // portrait screens (phones): `spacing` there — their tiles are capped smaller (mobileMaxWidth), so a little tighter
   // Four layers, back → front: how fast each moves (× the field's motion) — the nearer, the faster — and how big
   // its tiles are.
   layers: { pace: [0.5, 0.8, 1.1, 1.45], scale: [0.8, 0.92, 1.03, 1.14] },
@@ -105,7 +106,8 @@ export default class Universe extends Layout {
     const n = c.places.length;
     const items = this.items;
     const base = Math.min(c.tileWidth * s, vp.width * c.mobileMaxWidth);
-    const d = c.spacing * s; // design px of the field → CSS px on screen
+    this.spacing = vp.width < vp.height ? c.portraitSpacing ?? c.spacing : c.spacing;
+    const d = this.spacing * s; // design px of the field → CSS px on screen
     // Repeats: side by side, enough for every piece to have a place; a second row only if the view is taller than
     // one field can cover once the tiles wrap (very tall screens).
     const tallest = (base * Math.max(...c.layers.scale)) / c.minAspect;
@@ -166,8 +168,8 @@ export default class Universe extends Layout {
     const keep = Math.pow(c.inertia, dt * 60);
     this.velocity.x *= keep;
     this.velocity.y *= keep;
-    const ox = c.start.x * c.spacing * this.s + this.pan.x + this.scrolled.x.update(dt);
-    const oy = c.start.y * c.spacing * this.s + this.pan.y + this.scrolled.y.update(dt);
+    const ox = c.start.x * this.spacing * this.s + this.pan.x + this.scrolled.x.update(dt);
+    const oy = c.start.y * this.spacing * this.s + this.pan.y + this.scrolled.y.update(dt);
 
     const { x: Px, y: Py } = this.period;
     const { x: mx, y: my } = this.margin;
