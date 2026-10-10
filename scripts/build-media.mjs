@@ -268,6 +268,7 @@ async function main() {
   console.log(`Source: ${srcDir}\nFound ${entries.length} files\n`);
 
   const seenHashes = new Map(); // hash → first filename (duplicate detection)
+  const usedIds = new Set(); // same name, different type (Dialpad-Allott-03.jpg + .mp4): the second gets its extension
   const items = [];
   const problems = [];
 
@@ -298,7 +299,9 @@ async function main() {
     }
     seenHashes.set(hash, name);
 
-    const id = slugify(name);
+    let id = slugify(name);
+    if (usedIds.has(id)) id = `${id}-${ext.slice(1)}`;
+    usedIds.add(id);
     const project = projects.projects.find((p) => new RegExp(p.match, 'i').test(name));
     const base = {
       id,
