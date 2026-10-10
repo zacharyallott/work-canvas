@@ -55,6 +55,7 @@
     "MIH-Allott-02.mp4":       { "start": 0, "duration": 12 },
     "Stelo-Site-Scroll.mp4": { "start": 0, "duration": 23 },
     "Dialpad-Allott-Web-Comp-01.mp4": { "start": 0, "duration": 22 },
+    "Dialpad-Allott-00.mp4": { "start": 0, "duration": 20.1 },
     "Dialpad-Allott-15.mp4": { "start": 0, "duration": 21 },
     "Dialpad-Allott-17.mp4": { "start": 0, "duration": 23.1 },
     "Nixon-Push-Allott-01.mp4": { "start": 0, "duration": 12, "crop": "1920:820:0:130" }

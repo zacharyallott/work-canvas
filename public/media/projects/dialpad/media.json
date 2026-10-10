@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-10T00:00:22.306Z",
+  "generated": "2026-10-10T06:20:12.662Z",
   "count": 14,
   "images": 4,
   "videos": 10,
@@ -10,28 +10,28 @@
       "href": "/projects/dialpad",
       "caseStudy": true,
       "source": "Dialpad-Allott-00.mp4",
-      "sourceHash": "8f6e006d9722846b",
+      "sourceHash": "a74231679a2b533c",
       "type": "video",
       "width": 1080,
       "height": 842,
-      "duration": 12,
-      "sourceDuration": 30,
+      "duration": 20.02,
+      "sourceDuration": 20.02,
       "poster": {
         "src": "media/projects/dialpad/dialpad-allott-00-poster.webp",
         "width": 1080,
         "height": 842,
-        "bytes": 2796
+        "bytes": 2714
       },
       "sources": [
         {
           "src": "media/projects/dialpad/dialpad-allott-00.webm",
           "type": "video/webm; codecs=\"av01.0.05M.08\"",
-          "bytes": 37111
+          "bytes": 62656
         },
         {
           "src": "media/projects/dialpad/dialpad-allott-00.mp4",
           "type": "video/mp4",
-          "bytes": 88167
+          "bytes": 148009
         }
       ],
       "aspect": 1.2827
