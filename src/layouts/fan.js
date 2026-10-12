@@ -53,7 +53,7 @@ export const config = {
   sharpDensity: 2,
   mobileMaxWidth: 0.55, // tile width never exceeds this fraction of the view width (phones)
   seam: 180, // degrees: where places leave/join the loop — a tile pointing straight down is wholly below the fold
-  hole: 640, // design px each tile sits out from the centre point at rest (a gap in the middle; the speed spread adds to it)
+  hole: 740, // design px each tile sits out from the centre point at rest (a gap in the middle; the speed spread adds to it); landscape — portrait uses portraitHole
   // Two circles: each tile sits on one, at `hole` × one of these — never the same as its neighbour, so they
   // alternate — the inner tighter than `hole`, the outer well beyond it, so the fan is layered in and out.
   rings: [0.72, 1.32],
