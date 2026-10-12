@@ -40,6 +40,7 @@ const CSS = `
 .wc-project-item{position:relative;width:73.5%;border-radius:4px;overflow:hidden;background:#e2e2e2}
 .wc-project-item.is-loaded{background:none} /* the placeholder grey would otherwise show as a hairline at antialiased edges */
 .wc-project-item:nth-child(4n+2){width:100%}
+.wc-project-item.is-tall:nth-child(4n+2){width:73.5%} /* taller than square: never full width (it would run far past the screen) */
 .wc-project-item:nth-child(4n+3){width:51.8%}
 .wc-project-item img{display:block;width:100%;height:auto}
 .wc-project-item video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -65,7 +66,7 @@ const CSS = `
   .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}
   .wc-project-info{position:static;grid-row:1;margin-bottom:24px}
   .wc-project-media{grid-column:1;grid-row:2}
-  .wc-project-item,.wc-project-item:nth-child(n){width:100%}
+  .wc-project-item,.wc-project-item:nth-child(n),.wc-project-item.is-tall:nth-child(n){width:100%}
 }
 `;
 
@@ -132,14 +133,14 @@ function embedItem(it, projectTitle) {
       ? `<img src="${esc(it.src)}"${own && it.srcset ? ` srcset="${esc(it.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ''} alt="" ${it.hero ? 'decoding="sync"' : 'loading="lazy" decoding="async"'}${own ? '' : ' data-no-fit'}>`
       : '';
     const frame = `<iframe data-src="${esc(it.embed.loopSrc)}" data-provider="${it.embed.provider}" title="${esc(title)}" tabindex="-1" allow="autoplay; encrypted-media; picture-in-picture"></iframe>`;
-    return `<li class="wc-project-item is-embed is-loop${it.hero ? ' is-hero' : ''}" style="aspect-ratio:${ratio};--ar:${ar.toFixed(4)}">${poster}${frame}</li>`;
+    return `<li class="wc-project-item is-embed is-loop${it.hero ? ' is-hero' : ''}${ratio < 1 ? ' is-tall' : ''}" style="aspect-ratio:${ratio};--ar:${ar.toFixed(4)}">${poster}${frame}</li>`;
   }
   const inner = it.src
     ? `<button type="button" class="wc-embed" data-src="${esc(autoplaySrc(it.embed))}" data-title="${esc(title)}" aria-label="Play video: ${esc(projectTitle)}">` +
       `<img src="${esc(it.src)}"${own && it.srcset ? ` srcset="${esc(it.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ''} alt="" ${it.hero ? 'decoding="sync"' : 'loading="lazy" decoding="async"'}${own ? '' : ' data-no-fit'}>` +
       `<span class="wc-embed-play" aria-hidden="true"></span></button>`
     : playerFrame(it.embed.src, title).outerHTML.replace('<iframe', '<iframe loading="lazy"');
-  return `<li class="wc-project-item is-embed${it.hero ? ' is-hero' : ''}" style="aspect-ratio:${ratio}">${inner}</li>`;
+  return `<li class="wc-project-item is-embed${it.hero ? ' is-hero' : ''}${ratio < 1 ? ' is-tall' : ''}" style="aspect-ratio:${ratio}">${inner}</li>`;
 }
 
 export class ProjectView {
@@ -238,7 +239,7 @@ export class ProjectView {
             const ratio = ` style="aspect-ratio:${it.aspect ? it.aspect.toFixed(4) : '1.5'}"`;
             const img = `<img crossorigin="anonymous" src="${esc(it.src)}"${it.srcset ? ` srcset="${esc(it.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ''} alt="${esc(it.alt)}" ${it.hero ? 'decoding="sync"' : 'loading="lazy" decoding="async"'}>`;
             const video = it.type === 'video' && it.video ? `<video src="${esc(it.video)}" crossorigin="anonymous" muted loop playsinline preload="metadata"></video>` : '';
-            return `<li class="wc-project-item${it.hero ? ' is-hero' : ''}"${ratio}>${img}${video}</li>`;
+            return `<li class="wc-project-item${it.hero ? ' is-hero' : ''}${it.aspect < 1 ? ' is-tall' : ''}"${ratio}>${img}${video}</li>`;
           })
           .join('')}
       </ul>`;
@@ -248,7 +249,10 @@ export class ProjectView {
       const item = img.closest('.wc-project-item');
       const fit = () => {
         if (!img.naturalWidth) return;
-        if (!img.hasAttribute('data-no-fit')) item.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`;
+        if (!img.hasAttribute('data-no-fit')) {
+          item.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`;
+          item.classList.toggle('is-tall', img.naturalWidth < img.naturalHeight); // taller than square: never full width
+        }
         item.classList.add('is-loaded');
       };
       if (img.complete) fit();
