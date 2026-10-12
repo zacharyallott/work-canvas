@@ -15165,7 +15165,7 @@ var Zh = {
 	sharpDensity: 2,
 	mobileMaxWidth: .55,
 	seam: 180,
-	hole: 640,
+	hole: 740,
 	rings: [.72, 1.32],
 	drop: 360,
 	portraitRing: .72,
