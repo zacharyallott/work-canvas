@@ -13264,7 +13264,17 @@ var Vm = class {
 				t,
 				n.maxEdge || this.maxTextureEdge
 			])).catch(() => {
-				e.loading.delete(t), e.failed.add(t), console.warn(`[work-canvas] failed to load ${n.src}`);
+				e.loading.delete(t);
+				let r = e.images.at(-1);
+				if (n.edge && r && r.src !== n.src) {
+					e.images[t] = {
+						...r,
+						maxEdge: n.edge,
+						edge: n.edge
+					}, this.enqueue(e, t);
+					return;
+				}
+				e.failed.add(t), console.warn(`[work-canvas] failed to load ${n.src}`);
 			}).finally(() => {
 				this.inFlight--, this.pump();
 			});
@@ -13690,7 +13700,9 @@ var ih = {
 			opacity: "0"
 		}), mi.set(o, { rotation: this.pickAngle() });
 		let c = document.createElement("img");
-		if (c.alt = "", c.decoding = "async", c.src = oh(e, a * (window.devicePixelRatio || 1)), o.appendChild(c), e.type === "video" && e.sources?.length && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+		c.alt = "", c.decoding = "async", c.src = oh(e, a * (window.devicePixelRatio || 1));
+		let l = e.images?.at(-1)?.src;
+		if (l && l !== c.src && c.addEventListener("error", () => c.src = l, { once: !0 }), o.appendChild(c), e.type === "video" && e.sources?.length && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
 			let t = document.createElement("video");
 			Object.assign(t, {
 				muted: !0,
@@ -13704,19 +13716,19 @@ var ih = {
 			}), t.addEventListener("playing", () => t.classList.add("is-playing"), { once: !0 }), o.appendChild(t);
 		}
 		this.el.appendChild(o);
-		let l = {
+		let u = {
 			el: o,
 			tween: null
 		};
-		this.cards.push(l);
-		let u = () => {
-			if (o.isConnected) for (l.tween = mi.to(o, {
+		this.cards.push(u);
+		let d = () => {
+			if (o.isConnected) for (u.tween = mi.to(o, {
 				opacity: 1,
 				duration: t.dealDuration,
 				ease: "none"
 			}); this.cards.length > t.max;) this.drop(this.cards.shift(), t.dealDuration);
 		};
-		c.complete ? u() : (c.addEventListener("load", u, { once: !0 }), c.addEventListener("error", u, { once: !0 }));
+		c.complete ? d() : (c.addEventListener("load", d, { once: !0 }), c.addEventListener("error", d, { once: !0 }));
 	}
 	drop(e, t) {
 		e.tween?.kill(), mi.to(e.el, {
@@ -13906,7 +13918,7 @@ var vh = class {
 			let t = e.closest(".wc-project-item"), n = () => {
 				e.naturalWidth && (e.hasAttribute("data-no-fit") || (t.style.aspectRatio = `${e.naturalWidth} / ${e.naturalHeight}`, t.classList.toggle("is-tall", e.naturalWidth < e.naturalHeight)), t.classList.add("is-loaded"));
 			};
-			e.complete && n(), e.addEventListener("load", n);
+			e.complete && n(), e.addEventListener("load", n), e.addEventListener("error", () => e.hasAttribute("srcset") && e.removeAttribute("srcset"), { once: !0 });
 		}), this.el.querySelectorAll("video").forEach((e) => {
 			e.muted = !0, this.io.observe(e);
 		}), this.el.querySelectorAll(".is-loop iframe").forEach((e) => this.loopIO.observe(e)), this.layoutInfo();
