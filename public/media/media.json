@@ -1,8 +1,8 @@
 {
-  "generated": "2026-10-10T06:20:01.492Z",
-  "count": 53,
-  "images": 38,
-  "videos": 15,
+  "generated": "2026-10-16T19:12:21.004Z",
+  "count": 52,
+  "images": 36,
+  "videos": 16,
   "items": [
     {
       "id": "00-header-header-image-01",
@@ -805,44 +805,6 @@
       "aspect": 1
     },
     {
-      "id": "fivestars-36",
-      "label": "Otis Mountain Get Down",
-      "href": "/projects/otis-mountain-get-down",
-      "caseStudy": true,
-      "source": "FiveStars_36.jpg",
-      "sourceHash": "32f9c79dc0569f7e",
-      "type": "image",
-      "width": 3600,
-      "height": 2401,
-      "images": {
-        "sm": {
-          "src": "media/fivestars-36-sm.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 13100
-        },
-        "md": {
-          "src": "media/fivestars-36-md.webp",
-          "width": 1280,
-          "height": 854,
-          "bytes": 115480
-        },
-        "lg": {
-          "src": "media/fivestars-36-lg.webp",
-          "width": 2048,
-          "height": 1366,
-          "bytes": 498160
-        }
-      },
-      "poster": {
-        "src": "media/fivestars-36-sm.webp",
-        "width": 480,
-        "height": 320,
-        "bytes": 13100
-      },
-      "aspect": 1.4994
-    },
-    {
       "id": "gt-dealerbook",
       "label": "GT Bikes",
       "href": "/projects/gt-bikes",
@@ -1377,44 +1339,6 @@
       "caseStudy": true
     },
     {
-      "id": "otis-allott-01",
-      "label": "Otis Mountain Get Down",
-      "href": "/projects/otis-mountain-get-down",
-      "source": "Otis-Allott-01.jpg",
-      "sourceHash": "93e3b47fc3610253",
-      "type": "image",
-      "width": 3600,
-      "height": 2401,
-      "images": {
-        "sm": {
-          "src": "media/otis-allott-01-sm.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 19864
-        },
-        "md": {
-          "src": "media/otis-allott-01-md.webp",
-          "width": 1280,
-          "height": 854,
-          "bytes": 149866
-        },
-        "lg": {
-          "src": "media/otis-allott-01-lg.webp",
-          "width": 2048,
-          "height": 1366,
-          "bytes": 400454
-        }
-      },
-      "poster": {
-        "src": "media/otis-allott-01-sm.webp",
-        "width": 480,
-        "height": 320,
-        "bytes": 19864
-      },
-      "aspect": 1.4994,
-      "caseStudy": true
-    },
-    {
       "id": "otis-allott-02",
       "label": "Otis Mountain Get Down",
       "href": "/projects/otis-mountain-get-down",
@@ -1453,37 +1377,69 @@
       "caseStudy": true
     },
     {
-      "id": "otis-identity-allott-13",
+      "id": "otis-allott-06",
       "label": "Otis Mountain Get Down",
       "href": "/projects/otis-mountain-get-down",
       "caseStudy": true,
-      "source": "Otis-Identity-Allott-13.jpg",
+      "source": "Otis-Allott-06.mp4",
+      "sourceHash": "da06caf6c32c2b10",
+      "type": "video",
+      "width": 1080,
+      "height": 798,
+      "duration": 12,
+      "sourceDuration": 15.02,
+      "poster": {
+        "src": "media/otis-allott-06-poster.webp",
+        "width": 1080,
+        "height": 798,
+        "bytes": 55084
+      },
+      "sources": [
+        {
+          "src": "media/otis-allott-06.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 1323489
+        },
+        {
+          "src": "media/otis-allott-06.mp4",
+          "type": "video/mp4",
+          "bytes": 1536598
+        }
+      ],
+      "aspect": 1.3534
+    },
+    {
+      "id": "otis-allott-17",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "caseStudy": true,
+      "source": "Otis-Allott-17.jpg",
       "sourceHash": "d196dccd88c7813f",
       "type": "image",
       "width": 3840,
       "height": 2160,
       "images": {
         "sm": {
-          "src": "media/otis-identity-allott-13-sm.webp",
+          "src": "media/otis-allott-17-sm.webp",
           "width": 480,
           "height": 270,
           "bytes": 12886
         },
         "md": {
-          "src": "media/otis-identity-allott-13-md.webp",
+          "src": "media/otis-allott-17-md.webp",
           "width": 1280,
           "height": 720,
           "bytes": 82684
         },
         "lg": {
-          "src": "media/otis-identity-allott-13-lg.webp",
+          "src": "media/otis-allott-17-lg.webp",
           "width": 2048,
           "height": 1152,
           "bytes": 277920
         }
       },
       "poster": {
-        "src": "media/otis-identity-allott-13-sm.webp",
+        "src": "media/otis-allott-17-sm.webp",
         "width": 480,
         "height": 270,
         "bytes": 12886
