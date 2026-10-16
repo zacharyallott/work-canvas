@@ -79,6 +79,28 @@ function canPlay(type) {
   return probe.canPlayType(type) !== '';
 }
 
+const AV1 = 'video/webm; codecs="av01.0.05M.08"';
+let av1;
+/**
+ * Whether to use the AV1 WebMs (about 40% smaller than the MP4s): only where AV1 decodes in hardware
+ * (`powerEfficient`) — decoding several videos at once in software costs more battery and CPU than the bytes save.
+ */
+export function prefersAv1() {
+  av1 ??= (async () => {
+    if (!canPlay(AV1) || !navigator.mediaCapabilities) return false;
+    try {
+      const info = await navigator.mediaCapabilities.decodingInfo({
+        type: 'file',
+        video: { contentType: AV1, width: 1080, height: 1080, bitrate: 3e6, framerate: 30 },
+      });
+      return Boolean(info.supported && info.powerEfficient);
+    } catch {
+      return false;
+    }
+  })();
+  return av1;
+}
+
 export class MediaItem {
   constructor(data, manager) {
     Object.assign(this, data);
@@ -138,7 +160,13 @@ export class MediaItem {
   }
 
   get maxLevel() {
-    return this.type === 'video' ? 0 : Math.max(0, Math.min(LEVELS.length, this.images.length) - 1);
+    if (this.type === 'video') return 0;
+    const top = Math.max(0, Math.min(LEVELS.length, this.images.length) - 1);
+    // No bigger than the texture keeps: the first level that already covers maxTextureEdge (or is as big as the
+    // picture gets) is the last one needed.
+    const need = Math.min(this.manager.maxTextureEdge, Math.max(...this.images.map((l) => l.edge || 0)));
+    const covers = this.images.findIndex((l, i) => i <= top && l.edge >= need);
+    return covers >= 0 ? covers : top;
   }
 
   setTexture(tex, width, height) {
@@ -175,7 +203,8 @@ export class MediaManager {
     this.queue = []; // pending [item, level]
     this.uploads = []; // [item, img, level, maxEdge] waiting for the GPU
 
-    this.av1 = canPlay('video/webm; codecs="av01.0.05M.08"');
+    this.av1 = false;
+    prefersAv1().then((ok) => (this.av1 = ok)); // settled long before the first video is created
   }
 
   add(data) {

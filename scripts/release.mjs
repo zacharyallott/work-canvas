@@ -5,8 +5,9 @@
  *   npm run release -- 0.2.0
  *
  * 1. sets package.json "version"
- * 2. builds dist/work-canvas.js
- * 3. commits dist/ + package.json and creates tag v0.2.0
+ * 2. refreshes media/webflow-assets.json (CMS images → their smaller repo copies; see build-webflow-map.mjs)
+ * 3. builds dist/work-canvas.js
+ * 4. commits dist/ + package.json + the map and creates tag v0.2.0
  *
  * It does NOT push. Push yourself when you're happy:
  *   git push && git push origin v0.2.0
@@ -36,8 +37,9 @@ const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 pkg.version = version;
 fs.writeFileSync('package.json', `${JSON.stringify(pkg, null, 2)}\n`);
 
+sh('npm run media:map');
 sh('npm run build');
-sh('git add package.json dist');
+sh('git add package.json dist media/webflow-assets.json');
 sh(`git commit -m "release v${version}"`);
 sh(`git tag v${version}`);
 

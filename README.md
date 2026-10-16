@@ -149,7 +149,7 @@ Collection **Projects** (URL slug `work`):
 | Image 1 video | Link | optional MP4 URL; plays in place of Image 1 |
 | Image 2 | Image | tile 2 (poster when Image 2 video is set) |
 | Image 2 video | Link | optional MP4 URL; plays in place of Image 2 |
-| Image 3–20 (+ video) | Image / Link | the project view's gallery (usually the project's folder) |
+| Image 3–28 (+ video) | Image / Link | the project view's gallery (usually the project's folder; 28 is Webflow's limit — 60 fields per collection) |
 | Homepage tiles | Plain text | which Image slots are homepage tiles, e.g. `1, 2, 5, 14` (empty = Image 1 and 2). A gallery piece that should also be a tile is just listed; a tile that isn't in the project's folder goes in a free slot and is listed |
 
 **Video links:** an "Image N video" field takes either an MP4 URL (a muted loop in place of the image) or a **YouTube / Vimeo link** (an embedded player with sound in the project view). For a YouTube/Vimeo link the slot's image is the thumbnail shown with a play button until pressed (optional: without one, YouTube's own thumbnail is used, and Vimeo shows its player straight away). The player only loads when someone presses play. In Image 1/2 the homepage tile shows the image; the player appears in the project view. Add `#autoplay` to the end of the link (e.g. `https://vimeo.com/123456#autoplay`) to have it play **muted and looping with no controls or title** instead, like the MP4 loops: it loads as it scrolls into view, fades in over the thumbnail once it's actually playing, and pauses when scrolled away. YouTube can't hide its title bar through settings any more, so the player is made taller than the video and the title bar and logo fall outside the slot, clipped by its edges. YouTube Shorts links (`youtube.com/shorts/…`) get a vertical 9:16 slot.
@@ -216,7 +216,7 @@ Every case study also has its own page, so each project can be found and shared 
       <h1 class="work-title">{Project title}</h1>
       <p class="work-description">{Short description}</p>
       <p class="work-services">{Services}</p>
-      <div class="work-media">                           <!-- display:none: Slug, case-study marker, Image 1–20, videos -->
+      <div class="work-media">                           <!-- display:none: Slug, case-study marker, Image 1–28, videos -->
         …
       </div>
     </div>
@@ -251,6 +251,8 @@ When you release, bump the version on all three, and `data-media-base` on each `
 ## Behaviour notes
 
 - **Loading:** the header fades in once most thumbnails are on the GPU. If WebGL isn't available, a static poster grid shows instead. Aspect ratios are read from each image's header bytes, so layout doesn't wait for full downloads.
+- **Image sizes:** Webflow keeps CMS images at full size only, so `media/webflow-assets.json` (built by `npm run media:map`, which the release runs) matches each one by content to the pipeline's own copies. Tiles load the 480 px copy first and the 1280 px one when shown large, never the full-size file (textures stop at 1280 px); the project view gets all three as a `srcset`, so phones load the 1280 px copy. CMS images added since the last release keep the full-size file until the next one (pass their URLs to `npm run media:map` if they aren't published yet).
+- **Video:** every MP4 from this repo has an AV1 WebM beside it (about 40% smaller). It's used only where AV1 decodes in hardware (`navigator.mediaCapabilities` → `powerEfficient`); everywhere else plays the MP4.
 - **Images:** the smallest variant loads first, then larger ones when a tile is drawn large or hovered. Anything bigger than `maxTextureEdge` (1280px, 1024px on mobile) is downscaled before it reaches the GPU, so large CMS uploads are safe. Big textures not used for 8 s are released.
 - **Video:** a poster first. The `<video>` loads only when its tile is on screen, and only the top-N by priority play (hovered, then nearest the centre). Off-screen videos pause. On touch devices and with `prefers-reduced-motion`, only the tile nearest the centre plays.
 - **Scrolling:** the wheel / trackpad over the header drives the layouts (the page is just the header, so nothing else scrolls; `data-wheel="page"` hands vertical wheel back to the page). Filmstrip and masonry follow scroll through a critically damped spring (`src/core/spring.js`, `scroll.omega` / `scroll.multiplier` in each config) so each scroll eases in and out; in masonry each column moves at its own pace (`columnSpeeds`, for the drift too) through its own spring, so the columns pull apart and settle one after another; the deck deals a card per `scrollStep` px, no faster than one per `scrollGap` s. On touch a swipe in any direction does the same (the canvas has `touch-action: none`). Pinch-zoom is left alone.

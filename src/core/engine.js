@@ -190,7 +190,7 @@ export class WorkCanvas {
     const cases = [...new Map(this.mediaItems.filter((i) => i.caseStudy && i.slug).map((i) => [i.slug, i])).values()];
     if (this.projectPage) {
       const item = cases[0];
-      if (item) projectJsonLd(item.project, location.href, [item.poster, ...(item.project.gallery ?? []).map((g) => g.src)]);
+      if (item) projectJsonLd(item.project, location.href, [item.images.at(-1)?.src || item.poster, ...(item.project.gallery ?? []).map((g) => g.src)]); // the full-size image, not the thumbnail
       return;
     }
     if (!cases.length) return;

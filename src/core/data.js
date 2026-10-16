@@ -19,7 +19,7 @@
  *     <div class="work-video-2"></div>
  *     <div class="work-slug">boa</div>                     for ?project= links
  *     <div class="work-tiles">1, 2, 5</div>                optional: which slots are homepage tiles
- *     <img class="work-image-3"> … <img class="work-image-20">  project view gallery
+ *     <img class="work-image-3"> … <img class="work-image-28">  project view gallery
  *     <div class="work-video-3"> … (optional MP4 per gallery slot)
  *   </div>
  *
@@ -33,6 +33,7 @@
  * every project's second).
  */
 import { parseEmbed } from './embed.js';
+import { repoLevels, srcsetOf, webmFor } from './media-index.js';
 
 const VIDEO_EXT = /\.(mp4|webm|mov|m4v)(\?|#|$)/i;
 
@@ -63,12 +64,13 @@ const singleImageLevels = (src) => [
 
 const bool = (v) => /^(true|1|yes|on)$/i.test(String(v ?? '').trim());
 /** "1, 2, 14" → [1, 2, 14] (valid, unique slot numbers in order); [] when empty. */
-const slotList = (v) => [...new Set(String(v ?? '').match(/\d+/g)?.map(Number) ?? [])].filter((n) => n >= 1 && n <= 20);
-const GALLERY_MAX = 20; // highest Image N slot read for the project view
+const slotList = (v) => [...new Set(String(v ?? '').match(/\d+/g)?.map(Number) ?? [])].filter((n) => n >= 1 && n <= GALLERY_MAX);
+const GALLERY_MAX = 28; // highest Image N slot read for the project view (Webflow allows 60 fields per collection, so 28 is the most)
 
 export function readItems(mount) {
   const selector = mount.dataset.items || '.work-item';
-  const base = mount.dataset.mediaBase || document.baseURI;
+  const mediaBase = mount.dataset.mediaBase || '';
+  const base = mediaBase || document.baseURI;
   const perProject = parseInt(mount.dataset.perProject, 10) || 2;
   const resolve = (url) => (url && url.trim() ? new URL(url.trim(), base).href : '');
 
@@ -114,8 +116,9 @@ export function readItems(mount) {
         project.gallery.push({
           type: embed ? 'embed' : video ? 'video' : 'image',
           src: image || embed?.thumb || '',
-          srcset: image ? img?.getAttribute('srcset') || '' : '',
+          srcset: image ? img?.getAttribute('srcset') || srcsetOf(repoLevels(image, mediaBase)) : '',
           video,
+          webm: webmFor(video, mediaBase),
           embed,
           alt: img?.getAttribute('alt') || project.title,
           hash: img?.dataset.hash || '', // content hash (local mock only; on Webflow the asset id does this job)
@@ -134,10 +137,12 @@ export function readItems(mount) {
         const embed = parseEmbed(link);
         const video = embed ? '' : link;
         if (!image && !video) continue;
-        // Webflow's responsive variants (…-p-500, -p-1080, …) become the texture levels when present.
-        const levels = img ? srcsetLevels(parseSrcset(img.getAttribute('srcset'), resolve)) : [];
+        // Webflow's responsive variants (…-p-500, -p-1080, …) become the texture levels when present; else the
+        // pipeline's own 480 / 1280 px copies of the image, so a thumbnail never costs the full-size file.
+        let levels = img ? srcsetLevels(parseSrcset(img.getAttribute('srcset'), resolve)) : [];
+        if (!levels.length && !video) levels = repoLevels(image, mediaBase) ?? [];
         const media = video
-          ? { type: 'video', poster: levels[0]?.src || image, images: [], sources: videoSources(video, resolve(attr(`video-${n}-webm`))) }
+          ? { type: 'video', poster: levels[0]?.src || image, images: [], sources: videoSources(video, resolve(attr(`video-${n}-webm`)) || webmFor(video, mediaBase)) }
           : { type: 'image', poster: levels[0]?.src || image, images: levels.length ? levels : singleImageLevels(image), sources: [] };
         (slots[rank++] ||= []).push({ ...project, ...media, project: shared, slot: n, embed, hash: img?.dataset.hash || '', aspect: parseFloat(attr(`aspect-${n}`)) || 0 });
       }

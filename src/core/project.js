@@ -2,6 +2,7 @@ import gsap from 'gsap';
 import { EASE } from './motion.js';
 import { autoplaySrc, commandLoop, listenLoop, isPlayingMessage } from './embed.js';
 import { Pull, PULL_CONFIG } from './pull.js';
+import { prefersAv1 } from './media.js';
 
 /**
  * Project view (Figma frame 50, node 1553:6590).
@@ -145,6 +146,8 @@ function embedItem(it, projectTitle) {
 
 export class ProjectView {
   constructor(uiRoot, { onEnd } = {}) {
+    this.av1 = false;
+    prefersAv1().then((ok) => (this.av1 = ok)); // the AV1 WebM where it decodes in hardware, else the MP4
     if (!injected) {
       injected = true;
       const style = document.createElement('style');
@@ -209,7 +212,8 @@ export class ProjectView {
     const heroSrc = hero ? hero.bestSrc : '';
     const items = [];
     if (hero) {
-      items.push({ type: hero.embed ? 'embed' : hero.type, src: heroSrc, srcset: hero.srcset, video: hero.embed ? '' : hero.sources?.at(-1)?.src, embed: hero.embed, poster: hero.poster, hash: hero.hash, aspect: hero.aspect, alt: project.title, hero: true });
+      const webm = hero.sources?.find((s) => s.type.includes('webm'))?.src;
+      items.push({ type: hero.embed ? 'embed' : hero.type, src: heroSrc, srcset: hero.srcset, video: hero.embed ? '' : hero.sources?.at(-1)?.src, webm, embed: hero.embed, poster: hero.poster, hash: hero.hash, aspect: hero.aspect, alt: project.title, hero: true });
     }
     // No picture twice: skip gallery entries that match the hero or an earlier entry.
     const kept = items.map(idsOf);
@@ -238,7 +242,8 @@ export class ProjectView {
             // Known ratio up front (hero); otherwise a 3:2 placeholder until the image reports its size.
             const ratio = ` style="aspect-ratio:${it.aspect ? it.aspect.toFixed(4) : '1.5'}"`;
             const img = `<img crossorigin="anonymous" src="${esc(it.src)}"${it.srcset ? ` srcset="${esc(it.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ''} alt="${esc(it.alt)}" ${it.hero ? 'decoding="sync"' : 'loading="lazy" decoding="async"'}>`;
-            const video = it.type === 'video' && it.video ? `<video src="${esc(it.video)}" crossorigin="anonymous" muted loop playsinline preload="metadata"></video>` : '';
+            const webm = it.webm && this.av1 ? `<source src="${esc(it.webm)}" type='video/webm; codecs="av01.0.05M.08"'>` : '';
+            const video = it.type === 'video' && it.video ? `<video crossorigin="anonymous" muted loop playsinline preload="metadata">${webm}<source src="${esc(it.video)}" type="video/mp4"></video>` : '';
             return `<li class="wc-project-item${it.hero ? ' is-hero' : ''}${it.aspect < 1 ? ' is-tall' : ''}"${ratio}>${img}${video}</li>`;
           })
           .join('')}
@@ -324,6 +329,7 @@ export class ProjectView {
       this.io.unobserve(v);
       v.pause();
       v.removeAttribute('src');
+      v.querySelectorAll('source').forEach((s) => s.remove());
       v.load();
     });
     this.el.querySelectorAll('.is-loop iframe').forEach((f) => this.loopIO.unobserve(f)); // removing them stops the players
