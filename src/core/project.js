@@ -262,6 +262,8 @@ export class ProjectView {
       };
       if (img.complete) fit();
       img.addEventListener('load', fit); // again if srcset swaps in another size
+      // A smaller copy that won't load: fall back to the full-size src.
+      img.addEventListener('error', () => img.hasAttribute('srcset') && img.removeAttribute('srcset'), { once: true });
     });
     this.el.querySelectorAll('video').forEach((v) => {
       v.muted = true;

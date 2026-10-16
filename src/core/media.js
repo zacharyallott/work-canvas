@@ -236,6 +236,13 @@ export class MediaManager {
         .then((img) => this.uploads.push([item, img, level, spec.maxEdge || this.maxTextureEdge]))
         .catch(() => {
           item.loading.delete(level);
+          const last = item.images.at(-1);
+          if (spec.edge && last && last.src !== spec.src) {
+            // A smaller copy that won't load: use the full-size file instead, shrunk to this level's size.
+            item.images[level] = { ...last, maxEdge: spec.edge, edge: spec.edge };
+            this.enqueue(item, level);
+            return;
+          }
           item.failed.add(level); // don't retry every frame
           console.warn(`[work-canvas] failed to load ${spec.src}`);
         })

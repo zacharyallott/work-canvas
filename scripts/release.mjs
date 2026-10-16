@@ -8,9 +8,10 @@
  * 2. refreshes media/webflow-assets.json (CMS images → their smaller repo copies; see build-webflow-map.mjs)
  * 3. builds dist/work-canvas.js
  * 4. commits dist/ + package.json + the map and creates tag v0.2.0
+ * 5. commits the files the site loads to the `cdn` branch (scripts/publish-cdn.mjs) — Webflow loads them from there
  *
  * It does NOT push. Push yourself when you're happy:
- *   git push && git push origin v0.2.0
+ *   git push && git push origin v0.2.0 && git push origin cdn
  */
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -46,10 +47,14 @@ sh(`git tag v${version}`);
 const repo = out('git remote get-url origin 2>/dev/null || echo "github.com/zacharyallott/work-canvas"')
   .replace(/^.*github\.com[:/]/, '')
   .replace(/\.git$/, '');
-const base = `https://cdn.jsdelivr.net/gh/${repo}@v${version}`;
+// jsDelivr serves a GitHub repo only up to 50 MB per version and this repo is larger, so the site loads its files
+// from a small commit on the `cdn` branch instead, by its full hash (short hashes 404).
+sh('node scripts/publish-cdn.mjs');
+const cdn = out('git rev-parse refs/heads/cdn');
+const base = `https://cdn.jsdelivr.net/gh/${repo}@${cdn}`;
 console.log(`
 Tagged v${version}. Next:
-  git push && git push origin v${version}
+  git push && git push origin v${version} && git push origin cdn
 
 Webflow (page footer code):
   <script type="module" src="${base}/dist/work-canvas.js"></script>

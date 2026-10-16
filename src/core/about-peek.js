@@ -102,6 +102,8 @@ export class AboutPeek {
     img.alt = '';
     img.decoding = 'async';
     img.src = pictureFor(item, w * (window.devicePixelRatio || 1));
+    const full = item.images?.at(-1)?.src;
+    if (full && full !== img.src) img.addEventListener('error', () => (img.src = full), { once: true }); // a smaller copy that won't load
     el.appendChild(img);
     // Videos play in the card (muted, looping) over their poster, unless motion is reduced.
     if (item.type === 'video' && item.sources?.length && !matchMedia('(prefers-reduced-motion: reduce)').matches) {

@@ -243,10 +243,10 @@ A copy of Home (same header, same Collection List) with its own SEO title, descr
 Page settings → Custom code → Before `</body>` tag, on Home, About and the Projects template:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@v0.4.3/dist/work-canvas.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zacharyallott/work-canvas@<cdn commit hash>/dist/work-canvas.js"></script>
 ```
 
-When you release, bump the version on all three, and `data-media-base` on each `#work-canvas`.
+When you release, point all three at the URLs the release script prints — the script and `data-media-base` on each `#work-canvas` both use the `cdn` branch commit's **full hash**. jsDelivr serves a GitHub repo only up to 50 MB per version and this repo is larger (files under a version get refused: "Package size exceeded"), so each release also commits just what the site loads — the bundle, the 480 / 1280 px image copies and the about-only pieces, ~12 MB — to the `cdn` branch (`scripts/publish-cdn.mjs`). Push it with the tag: `git push origin cdn`.
 
 ## Behaviour notes
 
