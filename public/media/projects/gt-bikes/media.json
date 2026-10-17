@@ -1,8 +1,8 @@
 {
-  "generated": "2026-09-25T03:15:08.839Z",
-  "count": 6,
+  "generated": "2026-10-17T16:18:50.433Z",
+  "count": 5,
   "images": 4,
-  "videos": 2,
+  "videos": 1,
   "items": [
     {
       "id": "1-large-tall",
@@ -44,9 +44,9 @@
     },
     {
       "id": "1-medium",
-      "label": "1 Medium",
-      "href": "",
-      "caseStudy": false,
+      "label": "Microsoft Innovation Hub",
+      "href": "/projects/microsoft-innovation-hub",
+      "caseStudy": true,
       "source": "1-Medium.webp",
       "sourceHash": "4e9bf7c82625a6ef",
       "type": "image",
@@ -149,38 +149,6 @@
         }
       ],
       "aspect": 1.5
-    },
-    {
-      "id": "gt-refreshmotion-inout",
-      "label": "GT Bikes",
-      "href": "/projects/gt-bikes",
-      "caseStudy": true,
-      "source": "GT-RefreshMotion-InOut.mov",
-      "sourceHash": "998e38d87a6c1ea6",
-      "type": "video",
-      "width": 1080,
-      "height": 608,
-      "duration": 5.03,
-      "sourceDuration": 5.03,
-      "poster": {
-        "src": "media/projects/gt-bikes/gt-refreshmotion-inout-poster.webp",
-        "width": 1080,
-        "height": 608,
-        "bytes": 2154
-      },
-      "sources": [
-        {
-          "src": "media/projects/gt-bikes/gt-refreshmotion-inout.webm",
-          "type": "video/webm; codecs=\"av01.0.05M.08\"",
-          "bytes": 26901
-        },
-        {
-          "src": "media/projects/gt-bikes/gt-refreshmotion-inout.mp4",
-          "type": "video/mp4",
-          "bytes": 30075
-        }
-      ],
-      "aspect": 1.7763
     },
     {
       "id": "header-image-01",

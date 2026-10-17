@@ -1,7 +1,7 @@
 {
-  "generated": "2026-10-01T18:19:30.408Z",
-  "count": 10,
-  "images": 10,
+  "generated": "2026-10-17T16:18:43.033Z",
+  "count": 9,
+  "images": 9,
   "videos": 0,
   "items": [
     {
@@ -193,44 +193,6 @@
         "bytes": 12982
       },
       "aspect": 1.4993
-    },
-    {
-      "id": "burton-zebs-allott-07",
-      "label": "Burton Zebs",
-      "href": "",
-      "caseStudy": true,
-      "source": "Burton-Zebs-Allott-07.jpg",
-      "sourceHash": "42198f6c27047564",
-      "type": "image",
-      "width": 1800,
-      "height": 1200,
-      "images": {
-        "sm": {
-          "src": "media/projects/burton-zebs/burton-zebs-allott-07-sm.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 30110
-        },
-        "md": {
-          "src": "media/projects/burton-zebs/burton-zebs-allott-07-md.webp",
-          "width": 1280,
-          "height": 853,
-          "bytes": 262378
-        },
-        "lg": {
-          "src": "media/projects/burton-zebs/burton-zebs-allott-07-lg.webp",
-          "width": 1800,
-          "height": 1200,
-          "bytes": 555566
-        }
-      },
-      "poster": {
-        "src": "media/projects/burton-zebs/burton-zebs-allott-07-sm.webp",
-        "width": 480,
-        "height": 320,
-        "bytes": 30110
-      },
-      "aspect": 1.5
     },
     {
       "id": "burton-zebs-allott-08",

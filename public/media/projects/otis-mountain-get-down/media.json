@@ -1,7 +1,7 @@
 {
-  "generated": "2026-10-17T00:16:37.345Z",
-  "count": 23,
-  "images": 19,
+  "generated": "2026-10-17T16:18:50.105Z",
+  "count": 20,
+  "images": 16,
   "videos": 4,
   "items": [
     {
@@ -263,44 +263,6 @@
         "bytes": 31228
       },
       "aspect": 1.4997
-    },
-    {
-      "id": "otis-allott-07-webp",
-      "label": "Otis Mountain Get Down",
-      "href": "/projects/otis-mountain-get-down",
-      "caseStudy": true,
-      "source": "Otis-Allott-07.webp",
-      "sourceHash": "ff39e141866fa48d",
-      "type": "image",
-      "width": 2400,
-      "height": 1600,
-      "images": {
-        "sm": {
-          "src": "media/projects/otis-mountain-get-down/otis-allott-07-webp-sm.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 34702
-        },
-        "md": {
-          "src": "media/projects/otis-mountain-get-down/otis-allott-07-webp-md.webp",
-          "width": 1280,
-          "height": 853,
-          "bytes": 142194
-        },
-        "lg": {
-          "src": "media/projects/otis-mountain-get-down/otis-allott-07-webp-lg.webp",
-          "width": 2048,
-          "height": 1365,
-          "bytes": 247788
-        }
-      },
-      "poster": {
-        "src": "media/projects/otis-mountain-get-down/otis-allott-07-webp-sm.webp",
-        "width": 480,
-        "height": 320,
-        "bytes": 34702
-      },
-      "aspect": 1.5
     },
     {
       "id": "otis-allott-08",
@@ -703,44 +665,6 @@
       "aspect": 0.7503
     },
     {
-      "id": "otis-allott-19",
-      "label": "Otis Mountain Get Down",
-      "href": "/projects/otis-mountain-get-down",
-      "caseStudy": true,
-      "source": "Otis-Allott-19.webp",
-      "sourceHash": "4dc64df44970dcea",
-      "type": "image",
-      "width": 562,
-      "height": 749,
-      "images": {
-        "sm": {
-          "src": "media/projects/otis-mountain-get-down/otis-allott-19-sm.webp",
-          "width": 360,
-          "height": 480,
-          "bytes": 28474
-        },
-        "md": {
-          "src": "media/projects/otis-mountain-get-down/otis-allott-19-md.webp",
-          "width": 562,
-          "height": 749,
-          "bytes": 67570
-        },
-        "lg": {
-          "src": "media/projects/otis-mountain-get-down/otis-allott-19-lg.webp",
-          "width": 562,
-          "height": 749,
-          "bytes": 69508
-        }
-      },
-      "poster": {
-        "src": "media/projects/otis-mountain-get-down/otis-allott-19-sm.webp",
-        "width": 360,
-        "height": 480,
-        "bytes": 28474
-      },
-      "aspect": 0.7503
-    },
-    {
       "id": "otis-allott-20",
       "label": "Otis Mountain Get Down",
       "href": "/projects/otis-mountain-get-down",
@@ -777,44 +701,6 @@
         "bytes": 29922
       },
       "aspect": 0.8159
-    },
-    {
-      "id": "otis-allott-22",
-      "label": "Otis Mountain Get Down",
-      "href": "/projects/otis-mountain-get-down",
-      "caseStudy": true,
-      "source": "Otis-Allott-22.webp",
-      "sourceHash": "42bd493f0915c40c",
-      "type": "image",
-      "width": 1824,
-      "height": 1050,
-      "images": {
-        "sm": {
-          "src": "media/projects/otis-mountain-get-down/otis-allott-22-sm.webp",
-          "width": 480,
-          "height": 276,
-          "bytes": 8110
-        },
-        "md": {
-          "src": "media/projects/otis-mountain-get-down/otis-allott-22-md.webp",
-          "width": 1280,
-          "height": 737,
-          "bytes": 50288
-        },
-        "lg": {
-          "src": "media/projects/otis-mountain-get-down/otis-allott-22-lg.webp",
-          "width": 1824,
-          "height": 1050,
-          "bytes": 202382
-        }
-      },
-      "poster": {
-        "src": "media/projects/otis-mountain-get-down/otis-allott-22-sm.webp",
-        "width": 480,
-        "height": 276,
-        "bytes": 8110
-      },
-      "aspect": 1.7371
     },
     {
       "id": "otis-allott-23",

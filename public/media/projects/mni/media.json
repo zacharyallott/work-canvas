@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-25T03:15:03.050Z",
+  "generated": "2026-10-17T16:18:50.297Z",
   "count": 5,
   "images": 4,
   "videos": 1,
@@ -152,9 +152,9 @@
     },
     {
       "id": "wall-sign-standard-mockup-01",
-      "label": "Wall Sign Standard Mockup",
-      "href": "",
-      "caseStudy": false,
+      "label": "Music: Not Impossible",
+      "href": "/projects/mni",
+      "caseStudy": true,
       "source": "Wall-Sign-Standard-Mockup-01.jpg",
       "sourceHash": "5e81090cbe1854a5",
       "type": "image",

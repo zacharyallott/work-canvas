@@ -1,14 +1,14 @@
 {
-  "generated": "2026-09-25T03:15:14.102Z",
+  "generated": "2026-10-17T16:18:50.574Z",
   "count": 5,
   "images": 3,
   "videos": 2,
   "items": [
     {
       "id": "1-medium",
-      "label": "1 Medium",
-      "href": "",
-      "caseStudy": false,
+      "label": "Microsoft Innovation Hub",
+      "href": "/projects/microsoft-innovation-hub",
+      "caseStudy": true,
       "source": "1-Medium.webp",
       "sourceHash": "6cb5ad6d12cdeb0a",
       "type": "image",

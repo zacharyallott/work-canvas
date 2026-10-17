@@ -39,6 +39,82 @@
       "aspect": 1.5664
     },
     {
+      "id": "microsoft-teams-busad-allott",
+      "label": "Microsoft Teams",
+      "href": "/projects/microsoft-teams",
+      "caseStudy": false,
+      "source": "Microsoft-Teams-BusAd-Allott.jpg",
+      "sourceHash": "36324f605ec0d0dd",
+      "type": "image",
+      "width": 2400,
+      "height": 1600,
+      "images": {
+        "sm": {
+          "src": "media/about/microsoft-teams-busad-allott-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 14100
+        },
+        "md": {
+          "src": "media/about/microsoft-teams-busad-allott-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 81392
+        },
+        "lg": {
+          "src": "media/about/microsoft-teams-busad-allott-lg.webp",
+          "width": 2048,
+          "height": 1365,
+          "bytes": 172140
+        }
+      },
+      "poster": {
+        "src": "media/about/microsoft-teams-busad-allott-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 14100
+      },
+      "aspect": 1.5
+    },
+    {
+      "id": "sram-xplr-allott-101",
+      "label": "SRAM XPLR",
+      "href": "",
+      "caseStudy": false,
+      "source": "SRAM-XPLR-Allott-101.jpeg",
+      "sourceHash": "39eadb0499b11a49",
+      "type": "image",
+      "width": 1440,
+      "height": 955,
+      "images": {
+        "sm": {
+          "src": "media/about/sram-xplr-allott-101-sm.webp",
+          "width": 480,
+          "height": 318,
+          "bytes": 38200
+        },
+        "md": {
+          "src": "media/about/sram-xplr-allott-101-md.webp",
+          "width": 1280,
+          "height": 849,
+          "bytes": 365248
+        },
+        "lg": {
+          "src": "media/about/sram-xplr-allott-101-lg.webp",
+          "width": 1440,
+          "height": 955,
+          "bytes": 508194
+        }
+      },
+      "poster": {
+        "src": "media/about/sram-xplr-allott-101-sm.webp",
+        "width": 480,
+        "height": 318,
+        "bytes": 38200
+      },
+      "aspect": 1.5079
+    },
+    {
       "id": "ua-wi20-ua-huaihai-store-01",
       "label": "Under Armour",
       "href": "",

@@ -1,7 +1,7 @@
 {
-  "generated": "2026-10-04T17:50:03.609Z",
-  "count": 9,
-  "images": 9,
+  "generated": "2026-10-17T16:18:43.157Z",
+  "count": 7,
+  "images": 7,
   "videos": 0,
   "items": [
     {
@@ -41,44 +41,6 @@
         "bytes": 23510
       },
       "aspect": 0.8007
-    },
-    {
-      "id": "bonnell-new-1",
-      "label": "bonnell new",
-      "href": "",
-      "caseStudy": false,
-      "source": "bonnell_new_1.jpg",
-      "sourceHash": "1aa36b792d135715",
-      "type": "image",
-      "width": 1000,
-      "height": 1000,
-      "images": {
-        "sm": {
-          "src": "media/projects/bonnell/bonnell-new-1-sm.webp",
-          "width": 480,
-          "height": 480,
-          "bytes": 24464
-        },
-        "md": {
-          "src": "media/projects/bonnell/bonnell-new-1-md.webp",
-          "width": 1000,
-          "height": 1000,
-          "bytes": 73906
-        },
-        "lg": {
-          "src": "media/projects/bonnell/bonnell-new-1-lg.webp",
-          "width": 1000,
-          "height": 1000,
-          "bytes": 81084
-        }
-      },
-      "poster": {
-        "src": "media/projects/bonnell/bonnell-new-1-sm.webp",
-        "width": 480,
-        "height": 480,
-        "bytes": 24464
-      },
-      "aspect": 1
     },
     {
       "id": "bonnell-allott-01",
@@ -269,44 +231,6 @@
         "bytes": 7474
       },
       "aspect": 1.391
-    },
-    {
-      "id": "bonnell-allott-05",
-      "label": "Bonnell",
-      "href": "",
-      "caseStudy": true,
-      "source": "Bonnell-Allott-05.jpg",
-      "sourceHash": "004c806f26652654",
-      "type": "image",
-      "width": 1600,
-      "height": 1600,
-      "images": {
-        "sm": {
-          "src": "media/projects/bonnell/bonnell-allott-05-sm.webp",
-          "width": 480,
-          "height": 480,
-          "bytes": 16596
-        },
-        "md": {
-          "src": "media/projects/bonnell/bonnell-allott-05-md.webp",
-          "width": 1280,
-          "height": 1280,
-          "bytes": 116322
-        },
-        "lg": {
-          "src": "media/projects/bonnell/bonnell-allott-05-lg.webp",
-          "width": 1600,
-          "height": 1600,
-          "bytes": 210252
-        }
-      },
-      "poster": {
-        "src": "media/projects/bonnell/bonnell-allott-05-sm.webp",
-        "width": 480,
-        "height": 480,
-        "bytes": 16596
-      },
-      "aspect": 1
     },
     {
       "id": "bonnell-icon",

@@ -1,8 +1,8 @@
 {
-  "generated": "2026-10-17T00:16:33.101Z",
-  "count": 53,
-  "images": 36,
-  "videos": 17,
+  "generated": "2026-10-17T16:18:42.539Z",
+  "count": 45,
+  "images": 29,
+  "videos": 16,
   "items": [
     {
       "id": "00-header-header-image-01",
@@ -111,82 +111,6 @@
         }
       ],
       "aspect": 1.5042
-    },
-    {
-      "id": "07-image-module-1-large",
-      "label": "The James Brand",
-      "href": "/projects/the-james-brand",
-      "caseStudy": true,
-      "source": "07-Image-Module_1-Large.webp",
-      "sourceHash": "406d1e0d3e715dca",
-      "type": "image",
-      "width": 1956,
-      "height": 1304,
-      "images": {
-        "sm": {
-          "src": "media/07-image-module-1-large-sm.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 19584
-        },
-        "md": {
-          "src": "media/07-image-module-1-large-md.webp",
-          "width": 1280,
-          "height": 853,
-          "bytes": 108474
-        },
-        "lg": {
-          "src": "media/07-image-module-1-large-lg.webp",
-          "width": 1956,
-          "height": 1304,
-          "bytes": 215938
-        }
-      },
-      "poster": {
-        "src": "media/07-image-module-1-large-sm.webp",
-        "width": 480,
-        "height": 320,
-        "bytes": 19584
-      },
-      "aspect": 1.5
-    },
-    {
-      "id": "19-caha-brandstory",
-      "label": "Caha",
-      "href": "",
-      "caseStudy": false,
-      "source": "19_CAHA_BrandStory.jpg",
-      "sourceHash": "60c85da9ab3a6ce1",
-      "type": "image",
-      "width": 2000,
-      "height": 1500,
-      "images": {
-        "sm": {
-          "src": "media/19-caha-brandstory-sm.webp",
-          "width": 480,
-          "height": 360,
-          "bytes": 21398
-        },
-        "md": {
-          "src": "media/19-caha-brandstory-md.webp",
-          "width": 1280,
-          "height": 960,
-          "bytes": 100842
-        },
-        "lg": {
-          "src": "media/19-caha-brandstory-lg.webp",
-          "width": 2000,
-          "height": 1500,
-          "bytes": 219734
-        }
-      },
-      "poster": {
-        "src": "media/19-caha-brandstory-sm.webp",
-        "width": 480,
-        "height": 360,
-        "bytes": 21398
-      },
-      "aspect": 1.3333
     },
     {
       "id": "20-tosdal-identity-cover",
@@ -449,44 +373,6 @@
       "caseStudy": true
     },
     {
-      "id": "burton-zebs-allott-05",
-      "label": "Burton Zebs",
-      "href": "",
-      "caseStudy": true,
-      "source": "Burton-Zebs-Allott-05.jpg",
-      "sourceHash": "963e6a5ad685d4b3",
-      "type": "image",
-      "width": 2000,
-      "height": 1334,
-      "images": {
-        "sm": {
-          "src": "media/burton-zebs-allott-05-sm.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 12982
-        },
-        "md": {
-          "src": "media/burton-zebs-allott-05-md.webp",
-          "width": 1280,
-          "height": 854,
-          "bytes": 73404
-        },
-        "lg": {
-          "src": "media/burton-zebs-allott-05-lg.webp",
-          "width": 2000,
-          "height": 1334,
-          "bytes": 185996
-        }
-      },
-      "poster": {
-        "src": "media/burton-zebs-allott-05-sm.webp",
-        "width": 480,
-        "height": 320,
-        "bytes": 12982
-      },
-      "aspect": 1.4993
-    },
-    {
       "id": "cinco-brand-site-allott-10",
       "label": "Cinco Design",
       "href": "/projects/cinco-design",
@@ -555,6 +441,38 @@
       ],
       "aspect": 1.5,
       "caseStudy": true
+    },
+    {
+      "id": "cinco5-projection-loop-4x5",
+      "label": "Cinco5 Projection Loop 4x5",
+      "href": "",
+      "caseStudy": false,
+      "source": "Cinco5_Projection_Loop_4x5.mp4",
+      "sourceHash": "0a489d72925cae5e",
+      "type": "video",
+      "width": 864,
+      "height": 1080,
+      "duration": 10.1,
+      "sourceDuration": 10.1,
+      "poster": {
+        "src": "media/cinco5-projection-loop-4x5-poster.webp",
+        "width": 864,
+        "height": 1080,
+        "bytes": 16080
+      },
+      "sources": [
+        {
+          "src": "media/cinco5-projection-loop-4x5.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 1017092
+        },
+        {
+          "src": "media/cinco5-projection-loop-4x5.mp4",
+          "type": "video/mp4",
+          "bytes": 1084941
+        }
+      ],
+      "aspect": 0.8
     },
     {
       "id": "counterspace-allott-03",
@@ -671,38 +589,6 @@
       "aspect": 0.6667
     },
     {
-      "id": "ctrl-alt-delete-can",
-      "label": "Misc",
-      "href": "",
-      "caseStudy": false,
-      "source": "ctrl-alt-delete-can.mp4",
-      "sourceHash": "cdc9ee31f931f788",
-      "type": "video",
-      "width": 1080,
-      "height": 842,
-      "duration": 12,
-      "sourceDuration": 30,
-      "poster": {
-        "src": "media/ctrl-alt-delete-can-poster.webp",
-        "width": 1080,
-        "height": 842,
-        "bytes": 11540
-      },
-      "sources": [
-        {
-          "src": "media/ctrl-alt-delete-can.webm",
-          "type": "video/webm; codecs=\"av01.0.05M.08\"",
-          "bytes": 212597
-        },
-        {
-          "src": "media/ctrl-alt-delete-can.mp4",
-          "type": "video/mp4",
-          "bytes": 302838
-        }
-      ],
-      "aspect": 1.2827
-    },
-    {
       "id": "dialpad-allott-00",
       "label": "Dialpad",
       "href": "/projects/dialpad",
@@ -735,42 +621,68 @@
       "aspect": 1.2827
     },
     {
-      "id": "dialpad-allott-03",
+      "id": "dialpad-allott-06",
       "label": "Dialpad",
       "href": "/projects/dialpad",
-      "source": "Dialpad-Allott-03.webp",
-      "sourceHash": "dac32924bdcfc5d3",
-      "type": "image",
-      "width": 2400,
-      "height": 1600,
-      "images": {
-        "sm": {
-          "src": "media/dialpad-allott-03-sm.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 10020
-        },
-        "md": {
-          "src": "media/dialpad-allott-03-md.webp",
-          "width": 1280,
-          "height": 853,
-          "bytes": 85126
-        },
-        "lg": {
-          "src": "media/dialpad-allott-03-lg.webp",
-          "width": 2048,
-          "height": 1365,
-          "bytes": 170620
-        }
-      },
+      "caseStudy": true,
+      "source": "Dialpad-Allott-06.mp4",
+      "sourceHash": "e413aaa9e55b7f0f",
+      "type": "video",
+      "width": 1080,
+      "height": 698,
+      "duration": 2.5,
+      "sourceDuration": 2.5,
       "poster": {
-        "src": "media/dialpad-allott-03-sm.webp",
-        "width": 480,
-        "height": 320,
-        "bytes": 10020
+        "src": "media/dialpad-allott-06-poster.webp",
+        "width": 1080,
+        "height": 698,
+        "bytes": 27138
       },
-      "aspect": 1.5,
-      "caseStudy": true
+      "sources": [
+        {
+          "src": "media/dialpad-allott-06.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 110290
+        },
+        {
+          "src": "media/dialpad-allott-06.mp4",
+          "type": "video/mp4",
+          "bytes": 210007
+        }
+      ],
+      "aspect": 1.5473
+    },
+    {
+      "id": "dialpad-allott-18",
+      "label": "Dialpad",
+      "href": "/projects/dialpad",
+      "caseStudy": true,
+      "source": "Dialpad-Allott-18.mp4",
+      "sourceHash": "d16949edcf50ada5",
+      "type": "video",
+      "width": 1080,
+      "height": 720,
+      "duration": 12,
+      "sourceDuration": 20.02,
+      "poster": {
+        "src": "media/dialpad-allott-18-poster.webp",
+        "width": 1080,
+        "height": 720,
+        "bytes": 34694
+      },
+      "sources": [
+        {
+          "src": "media/dialpad-allott-18.webm",
+          "type": "video/webm; codecs=\"av01.0.05M.08\"",
+          "bytes": 495094
+        },
+        {
+          "src": "media/dialpad-allott-18.mp4",
+          "type": "video/mp4",
+          "bytes": 589719
+        }
+      ],
+      "aspect": 1.5
     },
     {
       "id": "dialpad-allott-logo-comp-01",
@@ -907,38 +819,6 @@
       "aspect": 1.2273
     },
     {
-      "id": "koya-allott-01",
-      "label": "Koya",
-      "href": "/projects/koya",
-      "source": "Koya-Allott-01.mp4",
-      "sourceHash": "fef377d22b1e614d",
-      "type": "video",
-      "width": 1080,
-      "height": 608,
-      "duration": 12,
-      "sourceDuration": 18.95,
-      "poster": {
-        "src": "media/koya-allott-01-poster.webp",
-        "width": 1080,
-        "height": 608,
-        "bytes": 6348
-      },
-      "sources": [
-        {
-          "src": "media/koya-allott-01.webm",
-          "type": "video/webm; codecs=\"av01.0.05M.08\"",
-          "bytes": 229607
-        },
-        {
-          "src": "media/koya-allott-01.mp4",
-          "type": "video/mp4",
-          "bytes": 740794
-        }
-      ],
-      "aspect": 1.7763,
-      "caseStudy": false
-    },
-    {
       "id": "koya-allott-02",
       "label": "Koya",
       "href": "/projects/koya",
@@ -972,82 +852,6 @@
         "width": 480,
         "height": 320,
         "bytes": 8776
-      },
-      "aspect": 1.5,
-      "caseStudy": false
-    },
-    {
-      "id": "microsoft-teams-bus",
-      "label": "Microsoft Teams",
-      "href": "/projects/microsoft-teams",
-      "source": "Microsoft-Teams-Bus.jpg",
-      "sourceHash": "5d61b353ce5ce44f",
-      "type": "image",
-      "width": 2400,
-      "height": 1600,
-      "images": {
-        "sm": {
-          "src": "media/microsoft-teams-bus-sm.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 30450
-        },
-        "md": {
-          "src": "media/microsoft-teams-bus-md.webp",
-          "width": 1280,
-          "height": 853,
-          "bytes": 216012
-        },
-        "lg": {
-          "src": "media/microsoft-teams-bus-lg.webp",
-          "width": 2048,
-          "height": 1365,
-          "bytes": 477322
-        }
-      },
-      "poster": {
-        "src": "media/microsoft-teams-bus-sm.webp",
-        "width": 480,
-        "height": 320,
-        "bytes": 30450
-      },
-      "aspect": 1.5,
-      "caseStudy": false
-    },
-    {
-      "id": "microsoft-teams-busad-allott",
-      "label": "Microsoft Teams",
-      "href": "/projects/microsoft-teams",
-      "source": "Microsoft-Teams-BusAd-Allott.jpg",
-      "sourceHash": "36324f605ec0d0dd",
-      "type": "image",
-      "width": 2400,
-      "height": 1600,
-      "images": {
-        "sm": {
-          "src": "media/microsoft-teams-busad-allott-sm.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 14100
-        },
-        "md": {
-          "src": "media/microsoft-teams-busad-allott-md.webp",
-          "width": 1280,
-          "height": 853,
-          "bytes": 81392
-        },
-        "lg": {
-          "src": "media/microsoft-teams-busad-allott-lg.webp",
-          "width": 2048,
-          "height": 1365,
-          "bytes": 172140
-        }
-      },
-      "poster": {
-        "src": "media/microsoft-teams-busad-allott-sm.webp",
-        "width": 480,
-        "height": 320,
-        "bytes": 14100
       },
       "aspect": 1.5,
       "caseStudy": false
@@ -1088,70 +892,6 @@
         "bytes": 7062
       },
       "aspect": 1.5,
-      "caseStudy": true
-    },
-    {
-      "id": "mih-allott-02",
-      "label": "Microsoft Innovation Hub",
-      "href": "/projects/microsoft-innovation-hub",
-      "source": "MIH-Allott-02.mp4",
-      "sourceHash": "872766149dd0dfef",
-      "type": "video",
-      "width": 1080,
-      "height": 720,
-      "duration": 12,
-      "sourceDuration": 45.05,
-      "poster": {
-        "src": "media/mih-allott-02-poster.webp",
-        "width": 1080,
-        "height": 720,
-        "bytes": 19734
-      },
-      "sources": [
-        {
-          "src": "media/mih-allott-02.webm",
-          "type": "video/webm; codecs=\"av01.0.05M.08\"",
-          "bytes": 596351
-        },
-        {
-          "src": "media/mih-allott-02.mp4",
-          "type": "video/mp4",
-          "bytes": 780489
-        }
-      ],
-      "aspect": 1.5,
-      "caseStudy": true
-    },
-    {
-      "id": "mni-allott-01",
-      "label": "Music: Not Impossible",
-      "href": "/projects/mni",
-      "source": "MNI-Allott-01.mp4",
-      "sourceHash": "c73250b60e9bf55b",
-      "type": "video",
-      "width": 1080,
-      "height": 742,
-      "duration": 12,
-      "sourceDuration": 59.99,
-      "poster": {
-        "src": "media/mni-allott-01-poster.webp",
-        "width": 1080,
-        "height": 742,
-        "bytes": 39090
-      },
-      "sources": [
-        {
-          "src": "media/mni-allott-01.webm",
-          "type": "video/webm; codecs=\"av01.0.05M.08\"",
-          "bytes": 1125421
-        },
-        {
-          "src": "media/mni-allott-01.mp4",
-          "type": "video/mp4",
-          "bytes": 1503452
-        }
-      ],
-      "aspect": 1.4555,
       "caseStudy": true
     },
     {
@@ -1298,7 +1038,7 @@
         }
       ],
       "aspect": 2.3377,
-      "caseStudy": true
+      "caseStudy": false
     },
     {
       "id": "nixon-push-allott-02",
@@ -1336,7 +1076,7 @@
         "bytes": 7136
       },
       "aspect": 1.6667,
-      "caseStudy": true
+      "caseStudy": false
     },
     {
       "id": "otis-allott-02",
@@ -1552,44 +1292,6 @@
         "bytes": 10004
       },
       "aspect": 1.6687,
-      "caseStudy": false
-    },
-    {
-      "id": "sram-xplr-allott-101",
-      "label": "SRAM XPLR",
-      "href": "",
-      "source": "SRAM-XPLR-Allott-101.jpeg",
-      "sourceHash": "39eadb0499b11a49",
-      "type": "image",
-      "width": 1440,
-      "height": 955,
-      "images": {
-        "sm": {
-          "src": "media/sram-xplr-allott-101-sm.webp",
-          "width": 480,
-          "height": 318,
-          "bytes": 38200
-        },
-        "md": {
-          "src": "media/sram-xplr-allott-101-md.webp",
-          "width": 1280,
-          "height": 849,
-          "bytes": 365248
-        },
-        "lg": {
-          "src": "media/sram-xplr-allott-101-lg.webp",
-          "width": 1440,
-          "height": 955,
-          "bytes": 508194
-        }
-      },
-      "poster": {
-        "src": "media/sram-xplr-allott-101-sm.webp",
-        "width": 480,
-        "height": 318,
-        "bytes": 38200
-      },
-      "aspect": 1.5079,
       "caseStudy": false
     },
     {
