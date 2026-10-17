@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-17T16:18:42.539Z",
+  "generated": "2026-10-17T16:20:51.354Z",
   "count": 45,
   "images": 29,
   "videos": 16,
@@ -444,9 +444,9 @@
     },
     {
       "id": "cinco5-projection-loop-4x5",
-      "label": "Cinco5 Projection Loop 4x5",
-      "href": "",
-      "caseStudy": false,
+      "label": "Cinco Design",
+      "href": "/projects/cinco-design",
+      "caseStudy": true,
       "source": "Cinco5_Projection_Loop_4x5.mp4",
       "sourceHash": "0a489d72925cae5e",
       "type": "video",

@@ -4,7 +4,7 @@
     { "match": "^Bonnell-",             "label": "Bonnell",                   "href": "", "caseStudy": true },
     { "match": "^BOA-",                 "label": "BOA Performfit Wrap",       "href": "/projects/boa", "caseStudy": true },
     { "match": "^Burton-Zebs",          "label": "Burton Zebs",               "href": "", "caseStudy": true },
-    { "match": "^Cinco-",               "label": "Cinco Design",              "href": "/projects/cinco-design", "caseStudy": true },
+    { "match": "^Cinco",               "label": "Cinco Design",              "href": "/projects/cinco-design", "caseStudy": true },
     { "match": "^Dialpad-",             "label": "Dialpad",                   "href": "/projects/dialpad", "caseStudy": true },
     { "match": "^GT-",                  "label": "GT Bikes",                  "href": "/projects/gt-bikes", "caseStudy": true },
     { "match": "^Koya-",                "label": "Koya",                      "href": "/projects/koya", "caseStudy": false },
