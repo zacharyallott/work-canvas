@@ -38,9 +38,9 @@ const CSS = `
 .wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}
 .wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}
 /* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */
-.wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden}
+.wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden;translate:0 .105em} /* puts the turned glyph's tip on the text baseline (measured: centred, it ends ~1.7px above at 16px) */
 .wc-arrow-track{position:absolute;left:0;top:0;width:17px;height:17px}
-.wc-arrow-glyph{position:absolute;left:0;top:0;width:17px;height:17px;line-height:17px;text-align:center;transform:rotate(90deg)}
+.wc-arrow-glyph{position:absolute;left:0;top:0;width:17px;height:17px;line-height:17px;text-align:center;transform:rotate(90deg);-webkit-text-stroke:.35px currentColor} /* a touch heavier than the font's 500 (there's no bolder Cassette file) */
 .wc-arrow-glyph.is-next{top:-17px}
 .wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}
 .wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}
@@ -59,7 +59,7 @@ const CSS = `
 .wc-about-clients li{padding:3px 6px;border-radius:3px;background:#101010;color:#e2e2e2;white-space:nowrap} /* a tag, like the project services */
 .wc-about-clients li.has-work{transition:background-color .12s linear,color .12s linear}
 @media (hover:hover){.wc-about-clients li.has-work:hover{background:#e2e2e2;color:#101010}} /* a client with work to show, hovered: inverted (shows as a near-black tag with grey text) */
-.wc-about-clients li.wc-about-label{background:none;color:inherit}
+.wc-about-clients li.wc-about-label{padding:3px 0;background:none;color:inherit} /* plain text, flush with the column (keeps the tag row height so the rows line up) */
 .wc-about-clients li.wc-about-gap{background:none;height:10px}
 /* Hovering a client's tag: one of their pieces as a card above the copy (about-peek.js). Behind the section, so the copy blends over it. */
 .wc-about-peek{position:absolute;inset:0;overflow:hidden;pointer-events:none;visibility:hidden}
@@ -69,7 +69,7 @@ const CSS = `
 .wc-about-card video{opacity:0}
 .wc-about-card video.is-playing{opacity:1}
 .wc-about-footer{display:flex;align-items:center;justify-content:space-between;line-height:1;font-weight:500}
-.wc-about-links{display:flex;gap:16px;font-size:12px;font-weight:500;letter-spacing:.02em}
+.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:500;letter-spacing:.02em} /* same size as the tagline */
 .wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}
 /* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */
 .wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}
@@ -85,13 +85,13 @@ const CSS = `
 .wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 12px;border-radius:4px;overflow:hidden;background:#e2e2e2}
 .wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}
 /* Paragraphs avoid orphans and ragged endings; headings get evenly balanced lines. */
-.wc-ui p{text-wrap:pretty}
-.wc-ui h1,.wc-ui h2,.wc-ui h3{text-wrap:balance}
+.wc-ui p{text-wrap:pretty} /* paragraphs: no lone last word */
+.wc-ui h1,.wc-ui h2,.wc-ui h3,.wc-ui h4,.wc-ui h5,.wc-ui h6,.wc-ui .wc-about-statement{text-wrap:balance} /* headlines (the about headline is a <p>): even lines */
 .wc-seo{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
 .wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}
 @supports (height:100svh){.wc-root{height:100svh}}
 .wc-about::-webkit-scrollbar{display:none}
-@media (max-width:600px){.wc-tagline{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-row{flex-wrap:wrap;justify-content:flex-start;row-gap:16px}.wc-about-intro{flex:0 0 100%}.wc-about-clients ul{flex:0 0 calc(50% - 8px)}}
+@media (max-width:600px){.wc-tagline,.wc-about-links{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-row{flex-wrap:wrap;justify-content:flex-start;row-gap:16px}.wc-about-intro{flex:0 0 100%;margin-bottom:12px}.wc-about-clients ul{flex:0 0 calc(50% - 8px)}}
 `;
 
 let styleInjected = false;

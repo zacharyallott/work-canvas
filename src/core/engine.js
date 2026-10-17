@@ -476,12 +476,15 @@ export class WorkCanvas {
   async openProject(tile, { push = true, morph = true } = {}) {
     const item = tile?.item;
     const project = item?.project;
-    if (!project || !item.caseStudy || this.openTile || this.projectOpen) return false;
+    if (!project || !item.caseStudy || this.openTile || this.projectOpen || this.opening) return false;
     if (this.aboutOpen) this.toggleAbout(false, { fromHistory: true }); // the project gets its own history entry
 
     const view = this.ui.project;
     const hero = { type: item.type, bestSrc: item.bestSrc, srcset: item.srcset, sources: item.sources, poster: item.poster, hash: item.hash, embed: item.embed, aspect: item.aspect, alt: project.title };
-    await preload(hero.bestSrc); // cached already, so the DOM copy appears without a flash
+    // A second tap while the image loads (easy on a phone) would open the project twice — two history entries, so
+    // leaving it went Back to the other one and reopened it.
+    this.opening = true;
+    await preload(hero.bestSrc).finally(() => (this.opening = false)); // cached already, so the DOM copy appears without a flash
 
     // A tile partly behind others (cards, fan, rolodex, universe) waits for them to fade before it moves: judged
     // now, while a hovered tile is still raised to the front by its layout.
@@ -572,7 +575,9 @@ export class WorkCanvas {
   pushProjectState(slug) {
     if (!slug) return;
     const url = new URL(this.projectUrl(slug), location.href);
-    history.pushState({ ...(history.state || {}), wcProject: slug }, '', url);
+    // One project entry above the work at most, so leaving a project (Back) always lands on the work.
+    const write = history.state?.wcProject ? 'replaceState' : 'pushState';
+    history[write]({ ...(history.state || {}), wcProject: slug }, '', url);
     const project = this.mediaItems.find((i) => i.project?.slug === slug)?.project;
     if (project) document.title = `${project.title} — ${this.options.siteName}`;
   }

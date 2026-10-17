@@ -2,7 +2,7 @@
 
 Immersive WebGL work header for zacharyallott.com. It's a standalone ES module (Three.js and GSAP bundled) that mounts into a `<div>` on a Webflow page and reads its content from the page's **Projects** Collection List, so the Webflow CMS stays the source of truth. The first two images of each project become tiles.
 
-It has four interaction versions showing (film strip, cards, fan, universe; masonry and rolodex are parked — their code stays in `src/layouts/`, restore them in `src/main.js`). Every load of the page opens a random one — never the one seen last (remembered per browser) — leaving a project view comes back to the next one, and clicking the star in the top-left moves on to the next (hovering it turns it 45°):
+It has three interaction versions showing (film strip, cards, universe; masonry, fan and rolodex are parked — their code stays in `src/layouts/`, restore them in `src/main.js`). Every load of the page opens a random one — never the one seen last (remembered per browser) — leaving a project view comes back to the next one, and clicking the star in the top-left moves on to the next (hovering it turns it 45°):
 
 | Key | Version | Motion | Figma frame |
 | --- | --- | --- | --- |

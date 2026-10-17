@@ -33,7 +33,7 @@ const CSS = `
 .wc-project-scroll{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:clamp(200px,26vw,285px) minmax(0,1fr);column-gap:clamp(24px,4.2vw,53px);padding:52px 15px 12px 19px;box-sizing:border-box;-webkit-user-select:text;user-select:text;outline:none}
 .wc-project-info{grid-column:1;grid-row:1;align-self:start;position:sticky;top:var(--wc-info-top,60vh);display:flex;flex-direction:column;gap:7px;color:#000}
 .wc-project-title{margin:0;font-size:16px;line-height:1;font-weight:500}
-.wc-project-desc{margin:0;max-width:271px;font-size:16px;line-height:1.1;font-weight:400;letter-spacing:.02em;color:#5f5f5f}
+.wc-project-desc{margin:0;max-width:271px;font-size:16px;line-height:1.25;font-weight:400;letter-spacing:.02em;color:#5f5f5f}
 .wc-project-services{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-size:10px;line-height:1;letter-spacing:.02em;text-transform:uppercase;font-weight:400}
 .wc-project-services li{padding:3px 6px;border-radius:3px;background:#e2e2e2;white-space:nowrap} /* each service as a tag (Figma 1553:6616, a touch roomier) */
 .wc-project-desc+.wc-project-services{margin-top:41px}
@@ -65,7 +65,7 @@ const CSS = `
 .wc-project-info{will-change:opacity}
 @media (max-width:700px){
   .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}
-  .wc-project-info{position:static;grid-row:1;margin-bottom:24px}
+  .wc-project-info{position:static;grid-row:1;margin-bottom:24px;padding-top:33vh} /* room above the title + description on phones */
   .wc-project-media{grid-column:1;grid-row:2}
   .wc-project-item,.wc-project-item:nth-child(n),.wc-project-item.is-tall:nth-child(n){width:100%}
 }
