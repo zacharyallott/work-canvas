@@ -1,9 +1,47 @@
 {
-  "generated": "2026-10-17T16:18:51.647Z",
-  "count": 4,
-  "images": 4,
+  "generated": "2026-10-21T17:16:33.430Z",
+  "count": 5,
+  "images": 5,
   "videos": 0,
   "items": [
+    {
+      "id": "aspen-asc-summercampaign-ph2-bikeparkad02-social",
+      "label": "Aspen Snowmass",
+      "href": "",
+      "caseStudy": false,
+      "source": "Aspen-ASC-SummerCampaign-Ph2-BikeParkAd02-Social.jpg",
+      "sourceHash": "fd7e5760228af95f",
+      "type": "image",
+      "width": 2160,
+      "height": 2160,
+      "images": {
+        "sm": {
+          "src": "media/about/aspen-asc-summercampaign-ph2-bikeparkad02-social-sm.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 37142
+        },
+        "md": {
+          "src": "media/about/aspen-asc-summercampaign-ph2-bikeparkad02-social-md.webp",
+          "width": 1280,
+          "height": 1280,
+          "bytes": 233808
+        },
+        "lg": {
+          "src": "media/about/aspen-asc-summercampaign-ph2-bikeparkad02-social-lg.webp",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 598702
+        }
+      },
+      "poster": {
+        "src": "media/about/aspen-asc-summercampaign-ph2-bikeparkad02-social-sm.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 37142
+      },
+      "aspect": 1
+    },
     {
       "id": "ggr-07-imagery-00",
       "label": "Gogoro",
