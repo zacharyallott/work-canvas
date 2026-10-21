@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-21T17:14:47.508Z",
+  "generated": "2026-10-21T17:34:07.391Z",
   "count": 20,
   "images": 16,
   "videos": 4,
@@ -270,7 +270,7 @@
       "href": "/projects/otis-mountain-get-down",
       "caseStudy": true,
       "source": "Otis-Allott-08.mp4",
-      "sourceHash": "dd9a4bb197df6d64",
+      "sourceHash": "f62a96cbd4961fe1",
       "type": "video",
       "width": 720,
       "height": 1080,
@@ -280,18 +280,18 @@
         "src": "media/projects/otis-mountain-get-down/otis-allott-08-poster.webp",
         "width": 720,
         "height": 1080,
-        "bytes": 24170
+        "bytes": 22470
       },
       "sources": [
         {
           "src": "media/projects/otis-mountain-get-down/otis-allott-08.webm",
           "type": "video/webm; codecs=\"av01.0.05M.08\"",
-          "bytes": 317847
+          "bytes": 295987
         },
         {
           "src": "media/projects/otis-mountain-get-down/otis-allott-08.mp4",
           "type": "video/mp4",
-          "bytes": 572489
+          "bytes": 457726
         }
       ],
       "aspect": 0.6667
