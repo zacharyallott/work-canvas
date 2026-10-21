@@ -1,5 +1,6 @@
 import gsap from 'gsap';
 import { clientWork } from './about.js';
+import { track } from './analytics.js';
 
 /**
  * About: hovering a client's tag shows one of their showcase pieces as a card
@@ -45,9 +46,12 @@ export class AboutPeek {
       if (!work.length) return;
       li.classList.add('has-work'); // only these react to hover
       let next = 0;
+      let tracked = false;
       li.addEventListener('pointerenter', (e) => {
         if (e.pointerType === 'touch') return;
         this.deal(work[next]);
+        if (!tracked) track('client_hover', { client: li.textContent.trim() }); // once per client per page
+        tracked = true;
         next = (next + 1) % work.length;
       });
       li.addEventListener('pointerleave', () => this.leave());

@@ -7,6 +7,7 @@ import { MediaManager } from './media.js';
 import { Input } from './input.js';
 import { UI, hideLinkLists } from './ui.js';
 import { aboutOnlyWork } from './about.js';
+import { track, trackContactClicks } from './analytics.js';
 import { vertexShader, fragmentShader } from './shaders.js';
 import { projectNav, workListJsonLd, projectJsonLd } from './seo.js';
 
@@ -96,7 +97,12 @@ export class WorkCanvas {
       items: [...this.items, ...aboutOnlyWork(mount.dataset.mediaBase || document.baseURI)], // hovering a client on the about section shows their work
     });
     this.ui.setAbout(false);
-    this.ui.project.onEnd = () => this.closeProject(); // pulled past the end of the page
+    this.ui.project.onEnd = () => {
+      // pulled past the end of the page
+      track('project_complete', { project: this.openSlug, project_title: this.openTitle });
+      this.closeProject();
+    };
+    trackContactClicks();
     this.ui.onAboutEnd = () => this.toggleAbout(false); // pulled past the bottom of the about section
     this._onKey = (e) => {
       if (e.key !== 'Escape') return;
@@ -142,7 +148,7 @@ export class WorkCanvas {
         location.replace(this.options.homePath); // no project view for this piece: show the work instead
         return this;
       }
-      await this.openProject({ item }, { push: false, morph: false });
+      await this.openProject({ item }, { push: false, morph: false, source: 'page' });
       return this;
     }
 
@@ -152,7 +158,7 @@ export class WorkCanvas {
 
     // Deep link to a project on the homepage (e.g. an old ?project=<slug> link).
     const slug = this.slugFromLocation();
-    if (slug && this.openProjectBySlug(slug, { push: false })) this.replaceUrl(this.projectUrl(slug));
+    if (slug && this.openProjectBySlug(slug, { push: false, source: 'url' })) this.replaceUrl(this.projectUrl(slug));
     return this;
   }
 
@@ -209,8 +215,8 @@ export class WorkCanvas {
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return; // new tab/window: let the link work
         e.preventDefault();
         const tile = this.layout?.tileForItem(item);
-        if (tile?.onScreen) this.openProject(tile);
-        else this.openProjectBySlug(item.slug, { push: true });
+        if (tile?.onScreen) this.openProject(tile, { source: 'link' });
+        else this.openProjectBySlug(item.slug, { push: true, source: 'link' });
       });
     });
     this.mount.appendChild(nav);
@@ -370,10 +376,16 @@ export class WorkCanvas {
     }
     this.layoutKey = key;
     this.layout = new def.Layout(this, { ...def.Layout.defaults, ...def.config });
+    track('layout_view', { layout: this.layoutName });
     this.media.maxVideos = this.layout.config.maxVideos ?? this.options.maxVideos;
     this.layout.resize(this.viewport);
     await this.layout.enter({ initial });
     this.switching = false;
+  }
+
+  /** The current homepage version's name for analytics: filmstrip, deck, universe… */
+  get layoutName() {
+    return this.layout?.constructor.label?.toLowerCase().replace(/\s+/g, '-') || null;
   }
 
   get canCycle() {
@@ -473,7 +485,7 @@ export class WorkCanvas {
    * page takes over (same image, same place) and the rest of it fades in.
    * Pushes ?project=<slug> so the browser Back button returns to the work.
    */
-  async openProject(tile, { push = true, morph = true } = {}) {
+  async openProject(tile, { push = true, morph = true, source = 'tile' } = {}) {
     const item = tile?.item;
     const project = item?.project;
     if (!project || !item.caseStudy || this.openTile || this.projectOpen || this.opening) return false;
@@ -490,6 +502,9 @@ export class WorkCanvas {
     // now, while a hovered tile is still raised to the front by its layout.
     const covered = morph && tile.rect ? this.isCovered(tile) : false;
     this.projectOpen = true;
+    this.openSlug = project.slug;
+    this.openTitle = project.title;
+    if (source) track('project_open', { project: project.slug, project_title: project.title, opened_from: source, layout: this.projectPage ? null : this.layoutName });
     this.hovered = null;
     this.mount.classList.remove('is-hovering-tile');
     view.render(project, hero);
@@ -621,7 +636,7 @@ export class WorkCanvas {
     // Browser Back/Forward between the work, a project and the about section.
     this._onPopState = (e) => {
       const slug = e.state?.wcProject || this.slugFromLocation();
-      if (slug && !this.projectOpen) this.openProjectBySlug(slug, { push: false });
+      if (slug && !this.projectOpen) this.openProjectBySlug(slug, { push: false, source: null }); // not a new open: GA's page view covers it
       else if (!slug && this.projectOpen) this.closeProject({ fromHistory: true });
       const about = this.isAboutPath();
       if (about && !this.aboutOpen) this.toggleAbout(true, { push: false });
