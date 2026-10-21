@@ -122,10 +122,17 @@ export default class Filmstrip extends Layout {
     const maxH = Math.max(...c.heights) * s * k;
     this.rowHeight = maxH;
 
-    // Each row: every other piece, repeated until the loop never shows a seam (estimated with the smallest tiles).
-    const needed = Math.ceil((vp.width + maxW * 3) / (minW + this.gapPx));
+    // Each row: every other piece. It loops, so it must reach past both sides of the view. One pass of its pieces
+    // nearly always does; when it doesn't (few pieces, very wide screens) it repeats them in whole passes — never a
+    // partial one, which put a piece's copy right beside it where the loop joins (the same piece twice on screen).
     const rowItems = Array.from({ length: ROWS }, (_, r) => this.items.filter((_, i) => i % ROWS === r));
-    const counts = rowItems.map((items) => (items.length ? Math.max(items.length, needed) : 0));
+    const reach = vp.width + 2 * (maxW + this.gapPx);
+    const counts = rowItems.map((items, r) => {
+      if (!items.length) return 0;
+      const pattern = sizePattern(items.length, c.heights.length, c.seed + r);
+      const pass = items.reduce((x, item, i) => x + fitSize(item.aspect, c.heights[pattern[i]] * s * k, { minW, maxW, maxH }).w + this.gapPx, 0);
+      return items.length * Math.max(1, Math.ceil(reach / pass));
+    });
     if (counts.some((n, r) => n !== this.rows[r].tiles.length)) {
       this.tiles.forEach((t) => t.dispose());
       const all = rowItems.flatMap((items, r) => {

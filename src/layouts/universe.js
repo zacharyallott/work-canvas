@@ -8,13 +8,14 @@ import { sizePattern } from '../core/sizing.js';
  *
  * A field of tiles that runs well past the view in every direction. The
  * positions are the sketch's 28 places across a 4269 × 2605 design-px field,
- * repeated side by side as many times as the collection needs (one piece per
- * place) and wrapped both ways, so it never runs out. No image shows twice in
- * a view: each piece has one place, and if the collection is too small to
- * fill every repeat, a place reuses the piece from the same place in the
- * first repeat — a whole field width away, in the same layer, so the two
- * copies move together and never meet on screen. Tiles are 400 design px wide with their
- * height from the piece's real aspect ratio.
+ * repeated side by side as many times as the collection (and the screen) needs
+ * and wrapped both ways, so it never runs out. No image shows twice in a view:
+ * if the collection is too small to fill every repeat, a place reuses the
+ * piece from the same place in the first repeat (a whole field away, so the
+ * two rarely meet), and a tile coming into view whose piece is already on
+ * screen (wide or tall screens see more than one field) takes the piece that's
+ * been off screen longest, before it's drawn. Tiles are 400 design px wide
+ * with their height from the piece's real aspect ratio.
  *
  * Depth: each place belongs to one of four layers, back to front. A layer's
  * tiles are drawn above the layers behind it, get a little larger the nearer
@@ -96,6 +97,8 @@ export default class Universe extends Layout {
     const spring = () => new Spring(cfg.scroll.omega, { maxLead: cfg.scroll.maxLead });
     this.scrolled = { x: spring(), y: spring() };
     this.slow = 1;
+    this.frame = 0;
+    this.seenAt = new Map(); // piece → the frame it was last on screen
   }
 
   resize(vp) {
@@ -108,38 +111,50 @@ export default class Universe extends Layout {
     const base = Math.min(c.tileWidth * s, vp.width * c.mobileMaxWidth);
     this.spacing = vp.width < vp.height ? c.portraitSpacing ?? c.spacing : c.spacing;
     const d = this.spacing * s; // design px of the field → CSS px on screen
-    // Repeats: side by side, enough for every piece to have a place; a second row only if the view is taller than
-    // one field can cover once the tiles wrap (very tall screens).
-    const tallest = (base * Math.max(...c.layers.scale)) / c.minAspect;
-    const kx = Math.max(1, Math.ceil(items.length / n));
-    const ky = c.field.height * d - tallest < vp.height ? 2 : 1;
+    // Repeats: side by side, enough for every piece to have a place; and in both directions, enough that the view
+    // plus a tile fits inside them, so a tile only ever wraps round off screen.
+    const widest = base * Math.max(...c.layers.scale);
+    const tallest = widest / c.minAspect;
+    const kx = Math.max(1, Math.ceil(items.length / n), Math.ceil((vp.width + widest + 2) / (c.field.width * d)));
+    const ky = Math.max(1, Math.ceil((vp.height + tallest + 2) / (c.field.height * d)));
     const count = n * kx * ky;
     if (count !== this.tiles.length) {
       this.tiles.forEach((t) => t.dispose());
       // One piece per place; past the end of the collection, reuse the piece at the same place in the first
-      // repeat (a whole field away, same layer, same pace) so a repeat never shares a view with its original.
+      // repeat (a whole field away, same layer, same pace), the farthest a copy can be from its original.
       this.makeTiles(Array.from({ length: count }, (_, i) => items[i < items.length ? i : (i % n) % items.length]));
     }
+    this.tiles.forEach((t) => (t.inView = false)); // re-check every tile on screen for repeats (see update)
     const layerOf = sizePattern(n, c.layers.pace.length, c.seed); // per place, so each repeat keeps the same depth
     this.period = { x: c.field.width * kx * d, y: c.field.height * ky * d };
-    let maxW = 0;
-    let maxH = 0;
     this.tiles.forEach((t, i) => {
       const p = i % n;
       const copy = Math.floor(i / n);
       const [left, top, h] = c.places[p];
       t.layer = layerOf[p];
       t.pace = c.layers.pace[t.layer];
-      const aspect = Math.min(c.maxAspect, Math.max(c.minAspect, t.item.aspect || 1));
       t.w = base * c.layers.scale[t.layer];
-      t.h = t.w / aspect;
+      this.fit(t);
       // Centre in the field (design px → CSS px), in its repeat.
       t.fx = (left + 200 + (copy % kx) * c.field.width) * d;
       t.fy = (top + h / 2 + Math.floor(copy / kx) * c.field.height) * d;
-      maxW = Math.max(maxW, t.w);
-      maxH = Math.max(maxH, t.h);
     });
-    this.margin = { x: maxW, y: maxH }; // tiles wrap once they're fully off screen
+    this.margin = { x: widest / 2 + 1, y: tallest / 2 + 1 }; // tiles wrap once they're fully off screen
+  }
+
+  /** A tile's height from its piece's aspect ratio (its width is its layer's). */
+  fit(t) {
+    const c = this.config;
+    t.h = t.w / Math.min(c.maxAspect, Math.max(c.minAspect, t.item.aspect || 1));
+  }
+
+  /** Puts `item` on tile `t` (off screen, or coming into view and not drawn yet), keeping the tile's centre. */
+  give(t, item) {
+    const cy = t.y + t.h / 2;
+    t.item = item;
+    if (!item.ready) t.texReady = 0; // fade in once it loads, rather than pop
+    this.fit(t);
+    t.y = cy - t.h / 2;
   }
 
   /** Target sideways drift (px/s) for the current cursor position. */
@@ -177,17 +192,41 @@ export default class Universe extends Layout {
     let featured = null;
     let bestScore = 0;
 
+    // Where every tile is, and which pieces are already on screen.
+    const shown = new Set();
+    const entering = [];
+    for (const t of this.tiles) {
+      t.x = wrap(t.fx + ox * t.pace, Px, mx) - t.w / 2;
+      t.y = wrap(t.fy + oy * t.pace, Py, my) - t.h / 2;
+      const inView = t.x + t.w > 0 && t.x < width && t.y + t.h > 0 && t.y < height;
+      if (inView && !t.inView) entering.push(t);
+      else if (inView) shown.add(t.item);
+      t.inView = inView;
+    }
+    // A tile coming into view whose piece is already on screen takes the piece that's been off screen longest
+    // (none free: more tiles in view than pieces, so it keeps its own). This frame is its first drawn, so the swap
+    // is never seen.
+    this.frame++;
+    for (const t of entering) {
+      if (shown.has(t.item)) {
+        let free = null;
+        let freeAt = Infinity;
+        for (const item of this.items) {
+          const at = this.seenAt.get(item) ?? -1;
+          if (!shown.has(item) && at < freeAt) [free, freeAt] = [item, at];
+        }
+        if (free) this.give(t, free);
+      }
+      shown.add(t.item);
+    }
+    for (const item of shown) this.seenAt.set(item, this.frame);
+
     this.tiles.forEach((t, i) => {
-      const cx = wrap(t.fx + ox * t.pace, Px, mx);
-      const cy = wrap(t.fy + oy * t.pace, Py, my);
-      t.x = cx - t.w / 2;
-      t.y = cy - t.h / 2;
       t.z = t.layer * 1000 + i; // back → front
       t.rotation = 0;
       t.alpha = 1;
       t.reveal = 1;
-      const visible = t.x + t.w > 0 && t.x < width && t.y + t.h > 0 && t.y < height;
-      t.priority = visible ? this.centerScore(t) : 0;
+      t.priority = t.inView ? this.centerScore(t) : 0;
       if (t.priority > bestScore) {
         bestScore = t.priority;
         featured = t;
@@ -229,8 +268,18 @@ export default class Universe extends Layout {
 
   /** Keyboard focus: glide the nearest copy of the item to the middle of the view. */
   focusItem(item) {
-    const tile = this.tileForItem(item) ?? this.tiles.find((t) => t.item === item);
-    if (!tile) return;
+    let tile = this.tileForItem(item);
+    if (!tile) {
+      // Every tile that had it has taken another piece: give it to the off-screen tile nearest the view whose own
+      // piece another tile also has (so no piece loses its last tile).
+      const { width, height } = this.vp;
+      const far = (t) => Math.hypot(t.x + t.w / 2 - width / 2, t.y + t.h / 2 - height / 2);
+      const holders = new Map();
+      for (const t of this.tiles) holders.set(t.item, (holders.get(t.item) ?? 0) + 1);
+      tile = this.tiles.filter((t) => !t.inView && holders.get(t.item) > 1).sort((a, b) => far(a) - far(b))[0];
+      if (!tile) return;
+      this.give(tile, item);
+    }
     // Straight to the spring targets (not push(): a focus jump may be longer than the scroll's maxLead).
     this.scrolled.x.target += (this.vp.width / 2 - (tile.x + tile.w / 2)) / tile.pace;
     this.scrolled.y.target += (this.vp.height / 2 - (tile.y + tile.h / 2)) / tile.pace;
