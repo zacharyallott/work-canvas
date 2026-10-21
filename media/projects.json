@@ -30,6 +30,7 @@
     { "match": "CAHA", "label": "Caha", "href": "", "caseStudy": false },
     { "match": "(^|_)UA_", "label": "Under Armour", "href": "", "caseStudy": false },
     { "match": "^GGR_", "label": "Gogoro", "href": "", "caseStudy": false },
+    { "match": "^Aspen", "label": "Aspen Snowmass", "href": "", "caseStudy": false },
     { "match": "Tosdal",                "label": "Tosdal APC",                "href": "/projects/tosdal-law", "caseStudy": false }
   ],
   "caseStudies": {
