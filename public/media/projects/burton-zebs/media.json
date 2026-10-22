@@ -1,7 +1,7 @@
 {
-  "generated": "2026-10-19T17:35:42.028Z",
-  "count": 11,
-  "images": 11,
+  "generated": "2026-10-22T23:10:42.580Z",
+  "count": 15,
+  "images": 15,
   "videos": 0,
   "items": [
     {
@@ -79,6 +79,44 @@
         "bytes": 13732
       },
       "aspect": 1.5
+    },
+    {
+      "id": "1791792809953",
+      "label": "1791792809953",
+      "href": "",
+      "caseStudy": false,
+      "source": "1791792809953.jpeg",
+      "sourceHash": "150b29cdbe64dd3f",
+      "type": "image",
+      "width": 1280,
+      "height": 853,
+      "images": {
+        "sm": {
+          "src": "media/projects/burton-zebs/1791792809953-sm.webp",
+          "width": 480,
+          "height": 320,
+          "bytes": 23890
+        },
+        "md": {
+          "src": "media/projects/burton-zebs/1791792809953-md.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 124356
+        },
+        "lg": {
+          "src": "media/projects/burton-zebs/1791792809953-lg.webp",
+          "width": 1280,
+          "height": 853,
+          "bytes": 133486
+        }
+      },
+      "poster": {
+        "src": "media/projects/burton-zebs/1791792809953-sm.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 23890
+      },
+      "aspect": 1.5006
     },
     {
       "id": "burton-zebs-allott-01",
@@ -421,6 +459,120 @@
         "bytes": 24654
       },
       "aspect": 0.6672
+    },
+    {
+      "id": "zebclosettour-munich2026-blotto-05406",
+      "label": "ZebClosetTour Munich2026 Blotto",
+      "href": "",
+      "caseStudy": false,
+      "source": "ZebClosetTour_Munich2026_Blotto_05406.jpg",
+      "sourceHash": "b7d17c1c86360c43",
+      "type": "image",
+      "width": 1067,
+      "height": 1600,
+      "images": {
+        "sm": {
+          "src": "media/projects/burton-zebs/zebclosettour-munich2026-blotto-05406-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 22708
+        },
+        "md": {
+          "src": "media/projects/burton-zebs/zebclosettour-munich2026-blotto-05406-md.webp",
+          "width": 854,
+          "height": 1280,
+          "bytes": 146140
+        },
+        "lg": {
+          "src": "media/projects/burton-zebs/zebclosettour-munich2026-blotto-05406-lg.webp",
+          "width": 1067,
+          "height": 1600,
+          "bytes": 224994
+        }
+      },
+      "poster": {
+        "src": "media/projects/burton-zebs/zebclosettour-munich2026-blotto-05406-sm.webp",
+        "width": 320,
+        "height": 480,
+        "bytes": 22708
+      },
+      "aspect": 0.6669
+    },
+    {
+      "id": "zebclosettour-munich2026-blotto-05409",
+      "label": "ZebClosetTour Munich2026 Blotto",
+      "href": "",
+      "caseStudy": false,
+      "source": "ZebClosetTour_Munich2026_Blotto_05409.jpg",
+      "sourceHash": "581df7e75d2b0b88",
+      "type": "image",
+      "width": 1067,
+      "height": 1600,
+      "images": {
+        "sm": {
+          "src": "media/projects/burton-zebs/zebclosettour-munich2026-blotto-05409-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 25480
+        },
+        "md": {
+          "src": "media/projects/burton-zebs/zebclosettour-munich2026-blotto-05409-md.webp",
+          "width": 854,
+          "height": 1280,
+          "bytes": 159014
+        },
+        "lg": {
+          "src": "media/projects/burton-zebs/zebclosettour-munich2026-blotto-05409-lg.webp",
+          "width": 1067,
+          "height": 1600,
+          "bytes": 247000
+        }
+      },
+      "poster": {
+        "src": "media/projects/burton-zebs/zebclosettour-munich2026-blotto-05409-sm.webp",
+        "width": 320,
+        "height": 480,
+        "bytes": 25480
+      },
+      "aspect": 0.6669
+    },
+    {
+      "id": "zebclosettour-munich2026-blotto-05413",
+      "label": "ZebClosetTour Munich2026 Blotto",
+      "href": "",
+      "caseStudy": false,
+      "source": "ZebClosetTour_Munich2026_Blotto_05413.jpg",
+      "sourceHash": "6b83289290f47624",
+      "type": "image",
+      "width": 1067,
+      "height": 1600,
+      "images": {
+        "sm": {
+          "src": "media/projects/burton-zebs/zebclosettour-munich2026-blotto-05413-sm.webp",
+          "width": 320,
+          "height": 480,
+          "bytes": 21978
+        },
+        "md": {
+          "src": "media/projects/burton-zebs/zebclosettour-munich2026-blotto-05413-md.webp",
+          "width": 854,
+          "height": 1280,
+          "bytes": 146198
+        },
+        "lg": {
+          "src": "media/projects/burton-zebs/zebclosettour-munich2026-blotto-05413-lg.webp",
+          "width": 1067,
+          "height": 1600,
+          "bytes": 231658
+        }
+      },
+      "poster": {
+        "src": "media/projects/burton-zebs/zebclosettour-munich2026-blotto-05413-sm.webp",
+        "width": 320,
+        "height": 480,
+        "bytes": 21978
+      },
+      "aspect": 0.6669
     }
   ]
 }
