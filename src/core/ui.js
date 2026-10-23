@@ -78,6 +78,9 @@ const CSS = `
 .wc-link-track>span.is-next{left:-1em}
 .wc-about-links a:focus-visible{outline:1px solid currentColor;outline-offset:3px}
 .wc-about-copy{margin:0;font-size:16px}
+/* Email: after a click the link reads "copied" in place of "email →" (laid over it, so the link keeps its width and the others stay put). */
+.wc-copy{position:relative}
+.wc-copy-done{position:absolute;left:0;top:0;opacity:0;white-space:nowrap;pointer-events:none}
 .wc-caption{position:absolute;left:0;top:0;transform-origin:0 0;font-size:12px;font-weight:400;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}
 .wc-caption-inner{display:block;transform:translateY(110%)}
 .wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}
@@ -155,6 +158,7 @@ export class UI {
       a.addEventListener('pointerenter', loop);
       a.addEventListener('focus', loop);
     });
+    this.about.querySelectorAll('.wc-about-links a[href^="mailto:"]').forEach((a) => copyOnClick(a));
     this.arrowTrack = this.root.querySelector('.wc-arrow-track');
 
     // Tagline: hover loops the arrow; click toggles the about section.
@@ -414,6 +418,60 @@ export class UI {
  * Wraps each word of an element's text in <span class="wc-w"> (an inline
  * image, like the star, counts as a word) so they can animate one by one.
  */
+/**
+ * Email link: a click copies the address and the link reads "copied" for a moment, instead of opening a mail app
+ * (which still opens with a modifier key, or if copying isn't possible). The mailto: stays for crawlers.
+ */
+function copyOnClick(a) {
+  const address = decodeURIComponent(a.getAttribute('href').replace(/^mailto:/i, '').split('?')[0]);
+  const label = document.createElement('span'); // "email →"
+  label.append(...a.childNodes);
+  const done = document.createElement('span');
+  done.className = 'wc-copy-done';
+  done.setAttribute('aria-live', 'polite');
+  a.classList.add('wc-copy');
+  a.append(label, done);
+  let hide;
+  const show = (copied) => {
+    const duration = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.2;
+    if (copied) done.textContent = 'copied';
+    gsap.to(label, { opacity: copied ? 0 : 1, duration, ease: 'none', overwrite: true });
+    gsap.to(done, { opacity: copied ? 1 : 0, duration, ease: 'none', overwrite: true, onComplete: copied ? null : () => (done.textContent = '') });
+  };
+  a.addEventListener('click', async (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // let the mail app open
+    e.preventDefault();
+    if (!(await copyText(address))) return void (location.href = a.href);
+    show(true);
+    clearTimeout(hide);
+    hide = setTimeout(() => show(false), 1600);
+  });
+}
+
+/** Copies text to the clipboard; false if the browser won't. */
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    // older browsers / no permission: the textarea route
+  }
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly', '');
+  ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none';
+  document.body.append(ta);
+  ta.select();
+  let ok = false;
+  try {
+    ok = document.execCommand('copy');
+  } catch {
+    ok = false;
+  }
+  ta.remove();
+  return ok;
+}
+
 function splitWords(el) {
   if (!el) return;
   const walk = (node) => {
