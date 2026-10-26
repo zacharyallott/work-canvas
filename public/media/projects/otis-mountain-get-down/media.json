@@ -1,7 +1,7 @@
 {
-  "generated": "2026-10-21T17:34:07.391Z",
-  "count": 20,
-  "images": 16,
+  "generated": "2026-10-26T23:24:31.484Z",
+  "count": 21,
+  "images": 17,
   "videos": 4,
   "items": [
     {
@@ -739,6 +739,44 @@
         "bytes": 15824
       },
       "aspect": 1.7778
+    },
+    {
+      "id": "otis2023-selects-r1-9379-3",
+      "label": "Otis Mountain Get Down",
+      "href": "/projects/otis-mountain-get-down",
+      "caseStudy": true,
+      "source": "Otis2023_Selects_R1-9379 3.webp",
+      "sourceHash": "5470af83b0aae5f0",
+      "type": "image",
+      "width": 2880,
+      "height": 2058,
+      "images": {
+        "sm": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-sm.webp",
+          "width": 480,
+          "height": 343,
+          "bytes": 6940
+        },
+        "md": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-md.webp",
+          "width": 1280,
+          "height": 915,
+          "bytes": 64922
+        },
+        "lg": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-lg.webp",
+          "width": 2048,
+          "height": 1463,
+          "bytes": 178272
+        }
+      },
+      "poster": {
+        "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-sm.webp",
+        "width": 480,
+        "height": 343,
+        "bytes": 6940
+      },
+      "aspect": 1.3994
     }
   ]
 }

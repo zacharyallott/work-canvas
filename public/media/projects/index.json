@@ -837,44 +837,6 @@
     "folder": "04_Bonnell",
     "items": [
       {
-        "id": "902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351",
-        "label": "902 MA Aime a8f6e924 1e53 4b7d 9fbd ff2071e55351",
-        "href": "",
-        "caseStudy": false,
-        "source": "902_MA_Aime_a8f6e924-1e53-4b7d-9fbd-ff2071e55351.webp",
-        "sourceHash": "01ce439f7a6cfc3a",
-        "type": "image",
-        "width": 663,
-        "height": 828,
-        "images": {
-          "sm": {
-            "src": "media/projects/bonnell/902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351-sm.webp",
-            "width": 384,
-            "height": 480,
-            "bytes": 23510
-          },
-          "md": {
-            "src": "media/projects/bonnell/902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351-md.webp",
-            "width": 663,
-            "height": 828,
-            "bytes": 71748
-          },
-          "lg": {
-            "src": "media/projects/bonnell/902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351-lg.webp",
-            "width": 663,
-            "height": 828,
-            "bytes": 76158
-          }
-        },
-        "poster": {
-          "src": "media/projects/bonnell/902-ma-aime-a8f6e924-1e53-4b7d-9fbd-ff2071e55351-sm.webp",
-          "width": 384,
-          "height": 480,
-          "bytes": 23510
-        },
-        "aspect": 0.8007
-      },
-      {
         "id": "bonnell-allott-01",
         "label": "Bonnell",
         "href": "",
@@ -1065,42 +1027,80 @@
         "aspect": 1.391
       },
       {
-        "id": "bonnell-icon",
+        "id": "bonnell-allott-05",
         "label": "Bonnell",
         "href": "",
         "caseStudy": true,
-        "source": "Bonnell-Icon.webp",
+        "source": "Bonnell-Allott-05.webp",
         "sourceHash": "da51b3d2800b3161",
         "type": "image",
         "width": 1080,
         "height": 1080,
         "images": {
           "sm": {
-            "src": "media/projects/bonnell/bonnell-icon-sm.webp",
+            "src": "media/projects/bonnell/bonnell-allott-05-sm.webp",
             "width": 480,
             "height": 480,
             "bytes": 7700
           },
           "md": {
-            "src": "media/projects/bonnell/bonnell-icon-md.webp",
+            "src": "media/projects/bonnell/bonnell-allott-05-md.webp",
             "width": 1080,
             "height": 1080,
             "bytes": 26542
           },
           "lg": {
-            "src": "media/projects/bonnell/bonnell-icon-lg.webp",
+            "src": "media/projects/bonnell/bonnell-allott-05-lg.webp",
             "width": 1080,
             "height": 1080,
             "bytes": 27212
           }
         },
         "poster": {
-          "src": "media/projects/bonnell/bonnell-icon-sm.webp",
+          "src": "media/projects/bonnell/bonnell-allott-05-sm.webp",
           "width": 480,
           "height": 480,
           "bytes": 7700
         },
         "aspect": 1
+      },
+      {
+        "id": "bonnell-allott-06",
+        "label": "Bonnell",
+        "href": "",
+        "caseStudy": true,
+        "source": "Bonnell-Allott-06.webp",
+        "sourceHash": "01ce439f7a6cfc3a",
+        "type": "image",
+        "width": 663,
+        "height": 828,
+        "images": {
+          "sm": {
+            "src": "media/projects/bonnell/bonnell-allott-06-sm.webp",
+            "width": 384,
+            "height": 480,
+            "bytes": 23510
+          },
+          "md": {
+            "src": "media/projects/bonnell/bonnell-allott-06-md.webp",
+            "width": 663,
+            "height": 828,
+            "bytes": 71748
+          },
+          "lg": {
+            "src": "media/projects/bonnell/bonnell-allott-06-lg.webp",
+            "width": 663,
+            "height": 828,
+            "bytes": 76158
+          }
+        },
+        "poster": {
+          "src": "media/projects/bonnell/bonnell-allott-06-sm.webp",
+          "width": 384,
+          "height": 480,
+          "bytes": 23510
+        },
+        "aspect": 0.8007
       }
     ]
   },
@@ -3557,6 +3557,44 @@
           "bytes": 15824
         },
         "aspect": 1.7778
+      },
+      {
+        "id": "otis2023-selects-r1-9379-3",
+        "label": "Otis Mountain Get Down",
+        "href": "/projects/otis-mountain-get-down",
+        "caseStudy": true,
+        "source": "Otis2023_Selects_R1-9379 3.webp",
+        "sourceHash": "5470af83b0aae5f0",
+        "type": "image",
+        "width": 2880,
+        "height": 2058,
+        "images": {
+          "sm": {
+            "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-sm.webp",
+            "width": 480,
+            "height": 343,
+            "bytes": 6940
+          },
+          "md": {
+            "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-md.webp",
+            "width": 1280,
+            "height": 915,
+            "bytes": 64922
+          },
+          "lg": {
+            "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-lg.webp",
+            "width": 2048,
+            "height": 1463,
+            "bytes": 178272
+          }
+        },
+        "poster": {
+          "src": "media/projects/otis-mountain-get-down/otis2023-selects-r1-9379-3-sm.webp",
+          "width": 480,
+          "height": 343,
+          "bytes": 6940
+        },
+        "aspect": 1.3994
       }
     ]
   },

@@ -13,7 +13,7 @@
     { "match": "^Microsoft-Teams",      "label": "Microsoft Teams",           "href": "/projects/microsoft-teams", "caseStudy": false },
     { "match": "^Nixon[-_]Dork",        "label": "Nixon: The Dork",           "href": "/projects/nixon-the-dork", "caseStudy": true },
     { "match": "^Nixon-Push",           "label": "Nixon: Push Forward",       "href": "/projects/nixon-push-forward", "caseStudy": false },
-    { "match": "^Otis-",                "label": "Otis Mountain Get Down",    "href": "/projects/otis-mountain-get-down", "caseStudy": true },
+    { "match": "^Otis",                "label": "Otis Mountain Get Down",    "href": "/projects/otis-mountain-get-down", "caseStudy": true },
     { "match": "^SMI_KOR",              "label": "Smith",                     "href": "/projects/smith-mag", "caseStudy": false },
     { "match": "^SRAM-XPLR",            "label": "SRAM XPLR",                 "href": "", "caseStudy": false },
     { "match": "^Stelo-",               "label": "Stelo",                     "href": "/projects/stelo", "caseStudy": true },
