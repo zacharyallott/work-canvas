@@ -308,10 +308,20 @@ export class WorkCanvas {
       location.assign(this.options.aboutPath); // a project's own page has no work behind it
       return;
     }
-    if (open && this.projectOpen) this.closeProject({ fromHistory: true });
+    if (open && this.projectOpen) {
+      // From a project: the about section takes the project's place in the history (a project opened here) or
+      // the work's address goes back first (landed on the project), so leaving it — star, Back — goes to the
+      // work, not back into the project.
+      const entry = history.state?.wcProject;
+      this.closeProject({ fromHistory: true });
+      if (push && entry) {
+        history.replaceState({ ...history.state, wcProject: undefined, wcAbout: true }, '', new URL(this.options.aboutPath, location.href));
+        push = false;
+      } else if (push) this.replaceUrl(this.options.homePath);
+    }
     this.aboutOpen = open;
     if (open) {
-      if (push && !this.isAboutPath()) history.pushState({ ...(history.state || {}), wcAbout: true }, '', new URL(this.options.aboutPath, location.href));
+      if (push && !this.isAboutPath()) history.pushState({ ...(history.state || {}), wcProject: undefined, wcAbout: true }, '', new URL(this.options.aboutPath, location.href));
       document.title = `About — ${this.options.siteName}`;
     } else {
       document.title = this._homeTitle;

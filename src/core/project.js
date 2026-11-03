@@ -3,6 +3,7 @@ import { EASE } from './motion.js';
 import { autoplaySrc, commandLoop, listenLoop, isPlayingMessage } from './embed.js';
 import { Pull, PULL_CONFIG } from './pull.js';
 import { prefersAv1 } from './media.js';
+import { splitWords, lines } from './text.js';
 
 /**
  * Project view (Figma frame 50, node 1553:6590).
@@ -11,6 +12,9 @@ import { prefersAv1 } from './media.js';
  * and services pinned bottom-left, and a right-aligned column of the
  * project's images/videos (the clicked showcase piece first, then CMS
  * Image 3 onward) in a rhythm of widths.
+ *
+ * As the view opens, the title and description dissolve in line by line, then the service tags one by one
+ * (`INFO_IN`, like the about section).
  *
  * Plain DOM (not WebGL) so the images are real <img>/<video> elements —
  * selectable, accessible and lazy-loaded. Each image after the first opens
@@ -77,6 +81,8 @@ const CSS = `
 const INFO_BOTTOM = 12; // info block's distance from the bottom of the view, px
 /** Images opening out as they scroll in: the frame starts `inset` in from the top and left and grows out from the
  *  bottom-right corner to full size. */
+// The info block coming in: the title, then each line of the description, then the service tags. Opacity only.
+const INFO_IN = { delay: 0.05, line: 0.45, lineStep: 0.07, tag: 0.3, tagStep: 0.05, tagsAfter: 0.2 };
 const EXPAND_IN = { inset: '12%', duration: 0.9, fade: 0.35, trigger: '0px 0px -8% 0px', waitForLoad: 1.2 };
 
 let injected = false;
@@ -286,6 +292,7 @@ export class ProjectView {
       this.io.observe(v);
     });
     this.el.querySelectorAll('.is-loop iframe').forEach((f) => this.loopIO.observe(f));
+    splitWords(this.scroll.querySelector('.wc-project-desc'));
     this.layoutInfo();
   }
 
@@ -327,6 +334,7 @@ export class ProjectView {
 
   /** Called once the view is visible: the info and the rest of the images dissolve in around the hero. */
   reveal({ reduced = false } = {}) {
+    this.infoTl?.kill();
     this.el.setAttribute('aria-hidden', 'false');
     const info = this.el.querySelector('.wc-project-info');
     const pending = this.el.querySelectorAll('.wc-project-item.is-pending');
@@ -335,10 +343,24 @@ export class ProjectView {
       pending.forEach((item) => item.classList.remove('is-pending'));
       gsap.fromTo([info, ...pending].filter(Boolean), { opacity: 0 }, { opacity: 1, duration: EXPAND_IN.fade, ease: EASE.fade, clearProps: 'opacity' });
     } else {
-      if (info) gsap.fromTo(info, { opacity: 0 }, { opacity: 1, duration: EXPAND_IN.fade, ease: EASE.fade, clearProps: 'opacity' });
+      if (info) this.infoTl = this.infoIn(info);
       pending.forEach((item) => this.inIO.observe(item));
     }
     this.scroll.focus({ preventScroll: true });
+  }
+
+  /** The title and each line of the description dissolve in one after another, then the service tags. */
+  infoIn(info) {
+    const title = info.querySelector('.wc-project-title');
+    const words = [...info.querySelectorAll('.wc-project-desc .wc-w')];
+    const tags = [...info.querySelectorAll('.wc-project-services li')];
+    const steps = [[title].filter(Boolean), ...lines(words)];
+    const c = INFO_IN;
+    gsap.set([...steps.flat(), ...tags], { opacity: 0 });
+    const tl = gsap.timeline({ delay: c.delay, defaults: { ease: EASE.fade } });
+    steps.forEach((line, i) => tl.to(line, { opacity: 1, duration: c.line }, i * c.lineStep));
+    if (tags.length) tl.to(tags, { opacity: 1, duration: c.tag, stagger: c.tagStep }, `-=${c.tagsAfter}`);
+    return tl;
   }
 
   /** An image scrolling into view opens out: its frame grows from its bottom-right corner to full size over the
@@ -373,6 +395,7 @@ export class ProjectView {
   }
 
   clear() {
+    this.infoTl?.kill();
     this.resetPull();
     this.inIO.disconnect();
     gsap.killTweensOf(this.el.querySelectorAll('.wc-project-item'));
