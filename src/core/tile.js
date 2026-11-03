@@ -59,7 +59,32 @@ export class Tile {
   }
 
   sync(dt, viewport, hoverCfg) {
-    const { x, y, w, h } = this.rect;
+    // Ease hover + texture fade.
+    const k = 1 - Math.exp(-dt * (hoverCfg?.speed ?? 8));
+    const hovered = this.engine.hovered === this;
+    this.hover += ((hovered ? 1 : 0) - this.hover) * k;
+    this.texReady += ((this.item.ready ? 1 : 0) - this.texReady) * (1 - Math.exp(-dt * 6));
+
+    // Hover expansion (tiles with a project view): the frame grows `expand` px per side around its centre while
+    // the picture keeps its size on screen, so the frame opens up to show more of it. At rest the picture is
+    // cropped in by as much (it's sized to cover the fully grown frame). Not on touch screens (no hover to open it).
+    let { x, y, w, h } = this.rect;
+    const e = this.engine;
+    const grow = this.override || e.reducedMotion || e.touch || !this.item.caseStudy ? 0 : hoverCfg?.expand ?? 0;
+    let fill = 0;
+    if (grow > 0) {
+      const tex = this.item.texSize;
+      const cover = (cw, ch) => Math.max(cw / tex.x, ch / tex.y);
+      const full = cover(w + grow * 2, h + grow * 2);
+      const g = grow * this.hover;
+      x -= g;
+      y -= g;
+      w += g * 2;
+      h += g * 2;
+      fill = full / cover(w, h) - 1;
+    }
+    this.drawn = { x, y, w, h }; // what's on screen (the open transition starts from it)
+
     const margin = Math.max(viewport.width, viewport.height) * 0.25;
     this.onScreen =
       this.alpha > 0.001 &&
@@ -76,13 +101,8 @@ export class Tile {
     this.mesh.position.set(x + w / 2, -(y + h / 2), 0);
     this.mesh.scale.set(w, h, 1);
     this.mesh.rotation.z = -(this.override ? this.override.rotation ?? 0 : this.rotation); // clockwise on screen
-    this.mesh.renderOrder = opening === this && this.engine.openRaised ? 10000 : this.z; // depth test is off; order = stacking
-
-    // Ease hover + texture fade.
-    const k = 1 - Math.exp(-dt * (hoverCfg?.speed ?? 8));
-    const hovered = this.engine.hovered === this;
-    this.hover += ((hovered ? 1 : 0) - this.hover) * k;
-    this.texReady += ((this.item.ready ? 1 : 0) - this.texReady) * (1 - Math.exp(-dt * 6));
+    // Depth test is off; order = stacking. A hovered tile that grows sits above its neighbours while hovered.
+    this.mesh.renderOrder = opening === this && this.engine.openRaised ? 10000 : this.z + (hovered && grow > 0 ? 1e6 : 0);
 
     const u = this.uniforms;
     u.uSize.value.set(w, h);
@@ -95,7 +115,7 @@ export class Tile {
     u.uReveal.value = this.reveal;
     u.uGray.value = this.gray;
     const hoverZoom = this.engine.reducedMotion ? 0 : this.hover * (hoverCfg?.zoom ?? 0);
-    u.uZoom.value = this.zoom + hoverZoom;
+    u.uZoom.value = this.zoom + hoverZoom + fill;
 
     // Media requests: pick an image level from the drawn size in device px.
     const devicePx = Math.max(w, h) * this.engine.dpr;

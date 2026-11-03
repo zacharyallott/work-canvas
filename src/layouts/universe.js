@@ -74,7 +74,7 @@ export const config = {
   throw: 0.9,
   inertia: 0.94, // momentum kept per 1/60 s
 
-  hover: { zoom: 0, speed: 7 },
+  hover: { zoom: 0, speed: 7, expand: 8 }, // expand: px per side a project tile's frame opens up on hover (tile.js)
   maxVideos: 4,
 
   // Entrance: layer by layer, front to back, each dissolving in place.

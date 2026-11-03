@@ -76,7 +76,7 @@ export const config = {
   ease: 0.12, // position smoothing per 1/60 s
 
   // Hover only brings in the title (zoom 0 = the image doesn't move)
-  hover: { zoom: 0, speed: 7 },
+  hover: { zoom: 0, speed: 7, expand: 8 }, // expand: px per side a project tile's frame opens up on hover (tile.js)
 
   // Media
   maxVideos: 4,

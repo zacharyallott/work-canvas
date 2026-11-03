@@ -30,7 +30,8 @@ import { sizePattern, fitSize } from '../core/sizing.js';
  * then faster the further left or right it goes (`cursorPace`). Hovering
  * doesn't hold it (the fanned pile often reaches the edges); bring the cursor
  * back to the middle to stop. (`moveStep` and `interval` can bring back dealing from cursor
- * travel and on a timer; both are off.) The pile's order stays as dealt.
+ * travel and on a timer; both are off.) Hovering a card that's behind brings it to the top of the
+ * pile, where it stays (`hoverToFront`).
  */
 export const config = {
   // Size scale (design px): each card picks one of these heights; width = height × aspect.
@@ -73,9 +74,9 @@ export const config = {
   angles: [0, 11.25, -11.25, 22.5, -22.5], // each card comes in turned to one of these (degrees; never the same twice in a row)
   dealEase: 'none',
   pauseOnHover: true,
-  hoverToFront: false, // true = hovering a card brings it to the top of the pile
+  hoverToFront: true, // hovering a card that's behind brings it to the top of the pile (it stays there)
 
-  hover: { zoom: 0, speed: 7 }, // hover only brings in the title (the image doesn't move)
+  hover: { zoom: 0, speed: 7, expand: 8 }, // expand: px per side a project card's frame opens up on hover (tile.js)
   maxVideos: 4,
 
   easing: 'none',

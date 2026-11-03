@@ -524,7 +524,7 @@ export class WorkCanvas {
     }
     this.openTile = tile;
     this.openRaised = !covered; // drawn above everything once it moves (see Tile.sync)
-    const from = { ...tile.rect, radius: this.radius };
+    const from = { ...tile.rect, ...tile.drawn, radius: this.radius }; // from the frame as drawn (a hovered tile is grown)
     tile.override = from;
     const duration = this.options.openDuration;
     const fade = this.options.openFade ?? 0.4;
