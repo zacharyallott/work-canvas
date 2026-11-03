@@ -22,7 +22,10 @@ const CSS = `
 /* Full visible screen: svh leaves out the mobile browser toolbars (100vh would slide under them). */
 .wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);height:100vh;isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}
 .wc-root.is-dragging{cursor:grabbing}
-.wc-root.is-hovering-tile{cursor:pointer}
+.wc-root.is-hovering-tile{cursor:none} /* the dot stands in for the cursor over a project that opens */
+/* Over a project that opens on click, the cursor is a dot (blends with difference, like the caption, so it reads
+   on any picture). Mouse only: touch has no cursor. */
+.wc-dot{position:absolute;left:0;top:0;z-index:3;width:var(--wc-dot-size,10px);height:var(--wc-dot-size,10px);margin:calc(var(--wc-dot-size,10px) / -2) 0 0 calc(var(--wc-dot-size,10px) / -2);border-radius:50%;background:#f2f2f2;mix-blend-mode:difference;pointer-events:none;opacity:0;will-change:transform}
 .wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear;touch-action:none} /* swipes in any direction drive the layouts */
 .wc-root.is-ready .wc-canvas{opacity:1}
 /* Leaving the about section: the work only starts to fade back once the about copy has gone (no cross-fade). */
@@ -126,11 +129,13 @@ export class UI {
         </a>
       </div>
       <div class="wc-caption" aria-hidden="true"><span class="wc-caption-inner"></span></div>
+      <div class="wc-dot" aria-hidden="true"></div>
       <section class="wc-about" id="${aboutId}" aria-label="About" data-wc-no-input>${aboutMarkup()}</section>
       ${hint ? `<div class="wc-hint" aria-hidden="true">${hint}</div>` : ''}
     `;
     this.caption = this.root.querySelector('.wc-caption');
     this.captionInner = this.root.querySelector('.wc-caption-inner');
+    this.bindDot();
     this.icon = this.root.querySelector('.wc-icon');
     this.tagline = this.root.querySelector('.wc-tagline');
     this.about = this.root.querySelector('.wc-about');
@@ -276,6 +281,29 @@ export class UI {
     this.mount.insertBefore(this.fallback, this.root); // below the top bar
   }
 
+  /** The dot cursor follows the mouse (straight from the pointer events, so it keeps up with it). */
+  bindDot() {
+    this.dot = this.root.querySelector('.wc-dot');
+    this.dotOn = false;
+    const x = gsap.quickSetter(this.dot, 'x', 'px');
+    const y = gsap.quickSetter(this.dot, 'y', 'px');
+    gsap.set(this.dot, { scale: 0 });
+    this._onDotMove = (e) => {
+      if (e.pointerType === 'touch') return;
+      const r = this.mount.getBoundingClientRect();
+      x(e.clientX - r.left);
+      y(e.clientY - r.top);
+    };
+    this.mount.addEventListener('pointermove', this._onDotMove, { passive: true });
+  }
+
+  /** Shows the dot in place of the cursor (over a project that opens) or puts the cursor back. */
+  setDot(on) {
+    if (on === this.dotOn) return;
+    this.dotOn = on;
+    gsap.to(this.dot, { scale: on ? 1 : 0, opacity: on ? 1 : 0, duration: on ? 0.2 : 0.15, ease: EASE.out, overwrite: 'auto' });
+  }
+
   /**
    * Caption for the hovered tile: the project title and "  ↓". The engine only
    * passes tiles whose project has a case study (CMS switch). Bottom-left inside the tile,
@@ -399,6 +427,7 @@ export class UI {
   }
 
   destroy() {
+    this.mount.removeEventListener('pointermove', this._onDotMove);
     this.project?.destroy();
     this.peek?.destroy();
     this.root.remove();

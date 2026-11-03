@@ -338,7 +338,7 @@ export class WorkCanvas {
     if (open) {
       this.hovered = null;
       this.tapped = null;
-      this.mount.classList.remove('is-hovering-tile');
+      this.setHoverCursor(false);
       this._aboutTimer = setTimeout(() => this.updateRunning(), 650);
     } else {
       this.updateRunning();
@@ -484,9 +484,15 @@ export class WorkCanvas {
     }
     if (next !== this.hovered) {
       this.hovered = next;
-      // Pointer cursor only where a click does something: case-study projects.
-      this.mount.classList.toggle('is-hovering-tile', Boolean(next?.item.caseStudy && next.item.project));
+      // The dot cursor only where a click does something: case-study projects.
+      this.setHoverCursor(Boolean(next?.item.caseStudy && next.item.project));
     }
+  }
+
+  /** Over a project that opens on click, the cursor becomes a dot (ui.js). */
+  setHoverCursor(on) {
+    this.mount.classList.toggle('is-hovering-tile', on);
+    this.ui?.setDot(on);
   }
 
   // ─── Project view ──────────────────────────────────────────────────────────
@@ -517,7 +523,7 @@ export class WorkCanvas {
     this.openTitle = project.title;
     if (source) track('project_open', { project: project.slug, project_title: project.title, opened_from: source, layout: this.projectPage ? null : this.layoutName });
     this.hovered = null;
-    this.mount.classList.remove('is-hovering-tile');
+    this.setHoverCursor(false);
     view.render(project, hero);
     const target = view.heroRect();
     if (push) this.pushProjectState(project.slug);
