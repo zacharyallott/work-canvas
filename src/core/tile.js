@@ -45,6 +45,7 @@ export class Tile {
     // clone() copies uniform values but textures/vectors must be unique per tile
     this.uniforms = this.material.uniforms;
     this.uniforms.uSize.value = new THREE.Vector2(100, 100);
+    this.uniforms.uShift.value = new THREE.Vector2(0, 0);
     this.uniforms.uTexSize.value = item.texSize;
 
     this.mesh = new THREE.Mesh(engine.geometry, this.material);
@@ -68,21 +69,31 @@ export class Tile {
     // Hover expansion (tiles with a project view): the frame grows `expand` px per side around its centre while
     // the picture keeps its size on screen, so the frame opens up to show more of it. At rest the picture is
     // cropped in by as much (it's sized to cover the fully grown frame). Not on touch screens (no hover to open it).
+    // `expandDir` ('up' / 'down', set by the layout): the frame grows out to the sides and that way only (the other
+    // edge stays put), `expand` px each way; without it, every way.
     let { x, y, w, h } = this.rect;
     const e = this.engine;
     const grow = this.override || e.reducedMotion || e.touch || !this.item.caseStudy ? 0 : hoverCfg?.expand ?? 0;
     let fill = 0;
+    let shiftY = 0;
     if (grow > 0) {
+      const dir = this.expandDir;
       const tex = this.item.texSize;
       const cover = (cw, ch) => Math.max(cw / tex.x, ch / tex.y);
-      const full = cover(w + grow * 2, h + grow * 2);
+      const tall = dir ? grow : grow * 2; // the frame's full extra height
+      const full = cover(w + grow * 2, h + tall);
       const g = grow * this.hover;
       x -= g;
-      y -= g;
+      if (dir !== 'down') y -= g;
       w += g * 2;
-      h += g * 2;
+      h += dir ? g : g * 2;
       fill = full / cover(w, h) - 1;
+      // Growing one way only, the picture stays centred on the fully grown frame: off this frame's centre, that way,
+      // by half the height still to come (frame uv, y up).
+      const ahead = (tall - (h - this.rect.h)) / 2 / h;
+      if (dir) shiftY = dir === 'down' ? -ahead : ahead;
     }
+    this.uniforms.uShift.value.set(0, shiftY);
     this.drawn = { x, y, w, h }; // what's on screen (the open transition starts from it)
 
     const margin = Math.max(viewport.width, viewport.height) * 0.25;
@@ -101,8 +112,9 @@ export class Tile {
     this.mesh.position.set(x + w / 2, -(y + h / 2), 0);
     this.mesh.scale.set(w, h, 1);
     this.mesh.rotation.z = -(this.override ? this.override.rotation ?? 0 : this.rotation); // clockwise on screen
-    // Depth test is off; order = stacking. A hovered tile that grows sits above its neighbours while hovered.
-    this.mesh.renderOrder = opening === this && this.engine.openRaised ? 10000 : this.z + (hovered && grow > 0 ? 1e6 : 0);
+    // Depth test is off; order = stacking. A hovered tile that grows sits above its neighbours while hovered (or while
+    // its layout says it's the raised one: `lifted`, e.g. the universe's raise delay).
+    this.mesh.renderOrder = opening === this && this.engine.openRaised ? 10000 : this.z + ((this.lifted ?? hovered) && grow > 0 ? 1e6 : 0);
 
     const u = this.uniforms;
     u.uSize.value.set(w, h);

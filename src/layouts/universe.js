@@ -2,6 +2,7 @@ import { Layout } from '../core/layout.js';
 import { ARTBOARD } from '../core/defaults.js';
 import { Spring } from '../core/spring.js';
 import { sizePattern } from '../core/sizing.js';
+import { placeApart } from '../core/arrange.js';
 
 /**
  * Version E — Universe (Figma frames 1613:69 desktop, 1613:93 full grid)
@@ -9,13 +10,14 @@ import { sizePattern } from '../core/sizing.js';
  * A field of tiles that runs well past the view in every direction. The
  * positions are the sketch's 28 places across a 4269 × 2605 design-px field,
  * repeated side by side as many times as the collection (and the screen) needs
- * and wrapped both ways, so it never runs out. No image shows twice in a view:
- * if the collection is too small to fill every repeat, a place reuses the
- * piece from the same place in the first repeat (a whole field away, so the
- * two rarely meet), and a tile coming into view whose piece is already on
- * screen (wide or tall screens see more than one field) takes the piece that's
- * been off screen longest, before it's drawn. Tiles are 400 design px wide
- * with their height from the piece's real aspect ratio.
+ * and wrapped both ways, so it never runs out. Every piece gets a place (then
+ * copies fill the rest), each project's pieces placed as far apart in the
+ * field as they can be (arrange.js), so the same project doesn't turn up close
+ * together. No image shows twice in a view: a tile coming into view whose
+ * piece is already on screen (wide or tall screens see more than one field)
+ * takes a piece from a project that isn't on screen, the one off screen
+ * longest, before it's drawn. Tiles are 400 design px wide with their height
+ * from the piece's real aspect ratio.
  *
  * Depth: each place belongs to one of four layers, back to front. A layer's
  * tiles are drawn above the layers behind it, get a little larger the nearer
@@ -49,7 +51,7 @@ export const config = {
   portraitSpacing: 0.68, // portrait screens (phones): `spacing` there — their tiles are capped smaller (mobileMaxWidth), so a little tighter
   // Four layers, back → front: how fast each moves (× the field's motion) — the nearer, the faster — and how big
   // its tiles are.
-  layers: { pace: [0.5, 0.8, 1.1, 1.45], scale: [0.8, 0.92, 1.03, 1.14] },
+  layers: { pace: [0.5, 0.8, 1.1, 1.45], scale: [0.88, 0.96, 1.05, 1.14] },
   seed: 5, // shuffles which place belongs to which layer
   minAspect: 0.75, // taller than this gets cropped
   maxAspect: 1.8, // wider than this gets cropped
@@ -74,7 +76,8 @@ export const config = {
   throw: 0.9,
   inertia: 0.94, // momentum kept per 1/60 s
 
-  hover: { zoom: 0, speed: 7, expand: 8 }, // expand: px per side a project tile's frame opens up on hover (tile.js)
+  hover: { zoom: 0, speed: 7, expand: 8 },
+  raiseDelay: 0.14, // s a newly hovered tile waits before coming to the front, so the last title has slid out first (ui.js: 0.12 s) // expand: px per side a project tile's frame opens up on hover (tile.js)
   maxVideos: 4,
 
   // Entrance: layer by layer, front to back, each dissolving in place.
@@ -84,6 +87,8 @@ export const config = {
   leaveDuration: 0.25,
   captionInset: [20, 12],
 };
+
+const KEY = (item) => item.slug || item.title; // a piece's project
 
 export default class Universe extends Layout {
   static defaults = config;
@@ -99,6 +104,10 @@ export default class Universe extends Layout {
     this.slow = 1;
     this.frame = 0;
     this.seenAt = new Map(); // piece → the frame it was last on screen
+    this.clock = 0; // s, for the raise delay
+    this.raised = null; // the tile drawn above every layer
+    this.raiseFor = null;
+    this.raiseAt = 0;
   }
 
   resize(vp) {
@@ -120,9 +129,16 @@ export default class Universe extends Layout {
     const count = n * kx * ky;
     if (count !== this.tiles.length) {
       this.tiles.forEach((t) => t.dispose());
-      // One piece per place; past the end of the collection, reuse the piece at the same place in the first
-      // repeat (a whole field away, same layer, same pace), the farthest a copy can be from its original.
-      this.makeTiles(Array.from({ length: count }, (_, i) => items[i < items.length ? i : (i % n) % items.length]));
+      // Every piece gets a place (then copies fill the rest), each project's pieces as far apart in the field as
+      // they can be (arrange.js) — so pieces from the same project don't turn up close together.
+      const slots = Array.from({ length: count }, (_, i) => {
+        const [left, top, h] = c.places[i % n];
+        const copy = Math.floor(i / n);
+        return { x: left + 200 + (copy % kx) * c.field.width, y: top + h / 2 + Math.floor(copy / kx) * c.field.height };
+      });
+      const enough = Math.hypot(vp.width, vp.height) / d; // a screen apart is far enough (design px)
+      const pick = placeApart(slots, items, KEY, { x: c.field.width * kx, y: c.field.height * ky }, enough);
+      this.makeTiles(pick.map((i) => items[i]));
     }
     this.tiles.forEach((t) => (t.inView = false)); // re-check every tile on screen for repeats (see update)
     const layerOf = sizePattern(n, c.layers.pace.length, c.seed); // per place, so each repeat keeps the same depth
@@ -209,11 +225,14 @@ export default class Universe extends Layout {
     this.frame++;
     for (const t of entering) {
       if (shown.has(t.item)) {
+        // Prefer a project that isn't on screen; among those, the piece off screen longest.
+        const projects = new Set([...shown].map(KEY));
         let free = null;
-        let freeAt = Infinity;
+        let freeScore = null;
         for (const item of this.items) {
-          const at = this.seenAt.get(item) ?? -1;
-          if (!shown.has(item) && at < freeAt) [free, freeAt] = [item, at];
+          if (shown.has(item)) continue;
+          const score = [projects.has(KEY(item)) ? 0 : 1, -(this.seenAt.get(item) ?? -1)];
+          if (!freeScore || score[0] > freeScore[0] || (score[0] === freeScore[0] && score[1] > freeScore[1])) [free, freeScore] = [item, score];
         }
         if (free) this.give(t, free);
       }
@@ -236,10 +255,19 @@ export default class Universe extends Layout {
 
     this.featured = featured;
     if (featured) featured.priority = 2;
-    if (hovering) {
-      e.hovered.priority = 3;
-      e.hovered.z = 100000; // a hovered tile comes to the front, above every layer
+    if (hovering) e.hovered.priority = 3;
+    // The tile on top of every layer: the hovered one — but when it takes over from another, only once that one's
+    // title has slid out (`raiseDelay`); shifting the stacking straight away played the old title over the new tile.
+    this.clock += dt;
+    const raise = hovering ? e.hovered : null;
+    if (raise !== this.raiseFor) {
+      this.raiseFor = raise;
+      this.raiseAt = this.raised && this.tiles.includes(this.raised) ? this.clock + c.raiseDelay : this.clock;
     }
+    if (this.clock >= this.raiseAt) this.raised = this.raiseFor;
+    if (this.raised && !this.tiles.includes(this.raised)) this.raised = null;
+    this.tiles.forEach((t) => (t.lifted = t === this.raised)); // tile.js draws a growing hovered tile on top by this
+    if (this.raised) this.raised.z = 100000;
   }
 
   /** Scroll down = the field moves up; horizontal scroll moves it across. */

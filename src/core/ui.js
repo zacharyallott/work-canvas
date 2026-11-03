@@ -81,7 +81,7 @@ const CSS = `
 /* Email: after a click the link reads "copied" in place of "email →" (laid over it, so the link keeps its width and the others stay put). */
 .wc-copy{position:relative}
 .wc-copy-done{position:absolute;left:0;top:0;opacity:0;white-space:nowrap;pointer-events:none}
-.wc-caption{position:absolute;left:0;top:0;transform-origin:0 0;font-size:12px;font-weight:400;line-height:1.15;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}
+.wc-caption{position:absolute;left:0;top:0;transform-origin:0 0;font-size:16px;font-weight:500;letter-spacing:0;line-height:1.3;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}
 .wc-caption-inner{display:block;transform:translateY(110%)}
 .wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}
 .wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .4s linear;cursor:auto}
@@ -323,7 +323,7 @@ export class UI {
     const shown = s.shown;
     this.caption.style.visibility = shown ? 'visible' : 'hidden';
     if (shown) {
-      const { x, y, w, h } = shown.rect;
+      const { x, y, w, h } = shown.drawn ?? shown.rect; // the frame as drawn (a hovered project tile opens up)
       const rot = shown.rect.rotation || 0;
       const capH = this.captionH || 14;
       if (shown.captionAt === 'top-left') {

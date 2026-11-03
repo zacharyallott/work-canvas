@@ -13,7 +13,9 @@ import { prefersAv1 } from './media.js';
  * Image 3 onward) in a rhythm of widths.
  *
  * Plain DOM (not WebGL) so the images are real <img>/<video> elements —
- * selectable, accessible and lazy-loaded.
+ * selectable, accessible and lazy-loaded. Each image after the first opens
+ * out as it scrolls into view: its frame grows from its bottom-right corner to
+ * full size while the picture stays still (`EXPAND_IN`), once it has loaded.
  *
  * The end of the page leads back to the work. The scroll stops on the last
  * image and holds there briefly (a fling ends there). Scrolling on — a fresh
@@ -61,6 +63,7 @@ const CSS = `
    player's own title bar / logo land in those bands, outside the slot (clipped). */
 .wc-project-item.is-loop{--wc-loop-crop:calc(64px + 3cqw)}
 .wc-project-item.is-loop iframe.is-on{opacity:1}
+.wc-project-item.is-pending{opacity:0} /* waiting to scroll into view (then its frame opens out) */
 .wc-project-media{will-change:opacity,translate}
 .wc-project-info{will-change:opacity}
 @media (max-width:700px){
@@ -72,6 +75,9 @@ const CSS = `
 `;
 
 const INFO_BOTTOM = 12; // info block's distance from the bottom of the view, px
+/** Images opening out as they scroll in: the frame starts `inset` in from the top and left and grows out from the
+ *  bottom-right corner to full size. */
+const EXPAND_IN = { inset: '12%', duration: 0.9, fade: 0.35, trigger: '0px 0px -8% 0px', waitForLoad: 1.2 };
 
 let injected = false;
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
@@ -134,14 +140,14 @@ function embedItem(it, projectTitle) {
       ? `<img src="${esc(it.src)}"${own && it.srcset ? ` srcset="${esc(it.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ''} alt="" ${it.hero ? 'decoding="sync"' : 'loading="lazy" decoding="async"'}${own ? '' : ' data-no-fit'}>`
       : '';
     const frame = `<iframe data-src="${esc(it.embed.loopSrc)}" data-provider="${it.embed.provider}" title="${esc(title)}" tabindex="-1" allow="autoplay; encrypted-media; picture-in-picture"></iframe>`;
-    return `<li class="wc-project-item is-embed is-loop${it.hero ? ' is-hero' : ''}${ratio < 1 ? ' is-tall' : ''}" style="aspect-ratio:${ratio};--ar:${ar.toFixed(4)}">${poster}${frame}</li>`;
+    return `<li class="wc-project-item is-embed is-loop${it.hero ? ' is-hero' : ' is-pending'}${ratio < 1 ? ' is-tall' : ''}" style="aspect-ratio:${ratio};--ar:${ar.toFixed(4)}">${poster}${frame}</li>`;
   }
   const inner = it.src
     ? `<button type="button" class="wc-embed" data-src="${esc(autoplaySrc(it.embed))}" data-title="${esc(title)}" aria-label="Play video: ${esc(projectTitle)}">` +
       `<img src="${esc(it.src)}"${own && it.srcset ? ` srcset="${esc(it.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ''} alt="" ${it.hero ? 'decoding="sync"' : 'loading="lazy" decoding="async"'}${own ? '' : ' data-no-fit'}>` +
       `<span class="wc-embed-play" aria-hidden="true"></span></button>`
     : playerFrame(it.embed.src, title).outerHTML.replace('<iframe', '<iframe loading="lazy"');
-  return `<li class="wc-project-item is-embed${it.hero ? ' is-hero' : ''}${ratio < 1 ? ' is-tall' : ''}" style="aspect-ratio:${ratio}">${inner}</li>`;
+  return `<li class="wc-project-item is-embed${it.hero ? ' is-hero' : ' is-pending'}${ratio < 1 ? ' is-tall' : ''}" style="aspect-ratio:${ratio}">${inner}</li>`;
 }
 
 export class ProjectView {
@@ -196,6 +202,16 @@ export class ProjectView {
         }),
       { root: this.scroll, rootMargin: '200px 0px', threshold: 0 },
     );
+    // Images opening out as they scroll in (started by reveal(), once the page has taken over from the tile).
+    this.inIO = new IntersectionObserver(
+      (entries) =>
+        entries.forEach(({ target, isIntersecting }) => {
+          if (!isIntersecting) return;
+          this.inIO.unobserve(target);
+          this.expandIn(target);
+        }),
+      { root: this.scroll, rootMargin: EXPAND_IN.trigger, threshold: 0 },
+    );
     this._onMessage = (e) => {
       if (!isPlayingMessage(e)) return;
       this.el.querySelectorAll('.is-loop iframe:not(.is-on)').forEach((f) => f.contentWindow === e.source && f.classList.add('is-on'));
@@ -244,7 +260,7 @@ export class ProjectView {
             const img = `<img crossorigin="anonymous" src="${esc(it.src)}"${it.srcset ? ` srcset="${esc(it.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ''} alt="${esc(it.alt)}" ${it.hero ? 'decoding="sync"' : 'loading="lazy" decoding="async"'}>`;
             const webm = it.webm && this.av1 ? `<source src="${esc(it.webm)}" type='video/webm; codecs="av01.0.05M.08"'>` : '';
             const video = it.type === 'video' && it.video ? `<video crossorigin="anonymous" muted loop playsinline preload="metadata">${webm}<source src="${esc(it.video)}" type="video/mp4"></video>` : '';
-            return `<li class="wc-project-item${it.hero ? ' is-hero' : ''}${it.aspect < 1 ? ' is-tall' : ''}"${ratio}>${img}${video}</li>`;
+            return `<li class="wc-project-item${it.hero ? ' is-hero' : ' is-pending'}${it.aspect < 1 ? ' is-tall' : ''}"${ratio}>${img}${video}</li>`;
           })
           .join('')}
       </ul>`;
@@ -312,9 +328,40 @@ export class ProjectView {
   /** Called once the view is visible: the info and the rest of the images dissolve in around the hero. */
   reveal({ reduced = false } = {}) {
     this.el.setAttribute('aria-hidden', 'false');
-    const rest = this.el.querySelectorAll('.wc-project-info, .wc-project-item:not(.is-hero)');
-    gsap.fromTo(rest, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: EASE.fade, stagger: reduced ? 0 : 0.05, clearProps: 'opacity' });
+    const info = this.el.querySelector('.wc-project-info');
+    const pending = this.el.querySelectorAll('.wc-project-item.is-pending');
+    if (reduced) {
+      // No opening out: everything dissolves in at once, as before.
+      pending.forEach((item) => item.classList.remove('is-pending'));
+      gsap.fromTo([info, ...pending].filter(Boolean), { opacity: 0 }, { opacity: 1, duration: EXPAND_IN.fade, ease: EASE.fade, clearProps: 'opacity' });
+    } else {
+      if (info) gsap.fromTo(info, { opacity: 0 }, { opacity: 1, duration: EXPAND_IN.fade, ease: EASE.fade, clearProps: 'opacity' });
+      pending.forEach((item) => this.inIO.observe(item));
+    }
     this.scroll.focus({ preventScroll: true });
+  }
+
+  /** An image scrolling into view opens out: its frame grows from its bottom-right corner to full size over the
+   *  still picture, and fades in. Waits for the image to load (up to `waitForLoad` s) so it never opens on the grey. */
+  expandIn(item) {
+    const img = item.querySelector('img');
+    let started = false;
+    const go = () => {
+      if (started || !item.isConnected) return;
+      started = true;
+      item.classList.remove('is-pending');
+      const { inset, duration, fade } = EXPAND_IN;
+      gsap.fromTo(item, { opacity: 0 }, { opacity: 1, duration: fade, ease: EASE.fade, clearProps: 'opacity' });
+      gsap.fromTo(
+        item,
+        { clipPath: `inset(${inset} 0% 0% ${inset} round 4px)` }, // anchored at the bottom-right corner
+        { clipPath: 'inset(0% 0% 0% 0% round 4px)', duration, ease: EASE.out, clearProps: 'clipPath' },
+      );
+    };
+    if (!img || (img.complete && img.naturalWidth)) return go();
+    img.addEventListener('load', go, { once: true });
+    img.addEventListener('error', go, { once: true });
+    setTimeout(go, EXPAND_IN.waitForLoad * 1000);
   }
 
   hide() {
@@ -327,6 +374,8 @@ export class ProjectView {
 
   clear() {
     this.resetPull();
+    this.inIO.disconnect();
+    gsap.killTweensOf(this.el.querySelectorAll('.wc-project-item'));
     this.el.querySelectorAll('video').forEach((v) => {
       this.io.unobserve(v);
       v.pause();

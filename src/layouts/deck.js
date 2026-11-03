@@ -31,12 +31,12 @@ import { sizePattern, fitSize } from '../core/sizing.js';
  * doesn't hold it (the fanned pile often reaches the edges); bring the cursor
  * back to the middle to stop. (`moveStep` and `interval` can bring back dealing from cursor
  * travel and on a timer; both are off.) Hovering a card that's behind brings it to the top of the
- * pile, where it stays (`hoverToFront`).
+ * pile, where it stays (`hoverToFront`) — only cards with a project view.
  */
 export const config = {
   // Size scale (design px): each card picks one of these heights; width = height × aspect.
-  heights: [220, 300, 380, 460, 560],
-  minWidth: 200, // narrower cards get taller instead (keeps the aspect ratio)
+  heights: [260, 320, 390, 460, 560],
+  minWidth: 230, // narrower cards get taller instead (keeps the aspect ratio)
   maxWidth: 620, // wider cards get shorter instead
   seed: 3, // change to reshuffle which card gets which size
   // The four card positions, offset from the pile centre in design px (from Figma).
@@ -74,7 +74,7 @@ export const config = {
   angles: [0, 11.25, -11.25, 22.5, -22.5], // each card comes in turned to one of these (degrees; never the same twice in a row)
   dealEase: 'none',
   pauseOnHover: true,
-  hoverToFront: true, // hovering a card that's behind brings it to the top of the pile (it stays there)
+  hoverToFront: true, // hovering a card that's behind brings it to the top of the pile (it stays there); project cards only
 
   hover: { zoom: 0, speed: 7, expand: 8 }, // expand: px per side a project card's frame opens up on hover (tile.js)
   maxVideos: 4,
@@ -160,8 +160,8 @@ export default class Deck extends Layout {
       a.y += (ty * depth + slot.y * this.k * fan - a.y) * r;
     });
 
-    // Hovering a card that isn't on top brings it to the front (it doesn't move).
-    if (hovered && c.hoverToFront) {
+    // Hovering a card that isn't on top brings it to the front (it doesn't move) — only cards with a project view.
+    if (hovered && c.hoverToFront && hovered.item.caseStudy) {
       const k = this.slotTile.indexOf(hovered.index);
       if (k >= 0 && this.slotStamp[k] !== this.stamp) this.slotStamp[k] = ++this.stamp;
     }
@@ -289,13 +289,19 @@ export default class Deck extends Layout {
     if (n <= filled) return; // every card is already showing
     this.finishFade();
 
-    let to = tileIndex ?? this.next;
-    for (let guard = 0; this.slotTile.includes(to) && guard < n; guard++) to = (to + 1) % n;
-    if (tileIndex == null) this.next = (to + 1) % n;
-
     const empty = this.fillOrder.find((k) => this.slotTile[k] < 0);
     const oldest = this.slotStamp.indexOf(Math.min(...this.slotStamp.filter((_, k) => this.slotTile[k] >= 0)));
     const slot = empty ?? oldest;
+
+    // The next card in order that isn't showing — and, dealing in order, isn't from a project still in the pile (a
+    // hovered card can stay on top a long while); a skipped card comes round again next time.
+    const key = (ti) => this.tiles[ti].item.slug || this.tiles[ti].item.title;
+    const staying = new Set(this.slotTile.filter((ti, k) => ti >= 0 && k !== slot).map(key));
+    const free = (ti, apart) => !this.slotTile.includes(ti) && !(apart && staying.has(key(ti)));
+    let to = tileIndex ?? this.next;
+    const apart = tileIndex == null && this.tiles.some((_, ti) => free(ti, true));
+    for (let guard = 0; !free(to, apart) && guard < n; guard++) to = (to + 1) % n;
+    if (tileIndex == null) this.next = (to + 1) % n;
     const from = this.slotTile[slot];
     this.fading = { slot, from, fromStamp: this.slotStamp[slot], to, p: 0 };
     this.slotTile[slot] = to;

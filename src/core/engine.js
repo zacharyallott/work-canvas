@@ -266,6 +266,7 @@ export class WorkCanvas {
         uDpr: { value: 1 },
         uBase: { value: new THREE.Color(this.options.placeholder).convertLinearToSRGB() },
         uZoom: { value: 0 },
+        uShift: { value: new THREE.Vector2(0, 0) },
         uGray: { value: 0 },
         uAlpha: { value: 1 },
         uReveal: { value: 1 },

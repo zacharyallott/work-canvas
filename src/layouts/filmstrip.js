@@ -37,8 +37,8 @@ export const config = {
   // Layout (design px at the 1280×794 artboard; scaled by mount height)
   // Size scale: each tile picks one of these heights (seeded, never the same as
   // its neighbour). Width = height × the image's aspect ratio.
-  heights: [158, 210, 270, 330, 405],
-  minWidth: 143, // narrower pieces get taller instead (keeps the aspect ratio)
+  heights: [185, 225, 275, 330, 405],
+  minWidth: 165, // narrower pieces get taller instead (keeps the aspect ratio)
   maxWidth: 570, // wider pieces get shorter instead
   gap: 12, // CSS px between tiles, and between the two rows (fixed, not scaled with the viewport)
   bottomInset: 12, // CSS px from the bottom edge (fixed)
@@ -76,7 +76,7 @@ export const config = {
   ease: 0.12, // position smoothing per 1/60 s
 
   // Hover only brings in the title (zoom 0 = the image doesn't move)
-  hover: { zoom: 0, speed: 7, expand: 8 }, // expand: px per side a project tile's frame opens up on hover (tile.js)
+  hover: { zoom: 0, speed: 7, expand: 8 }, // a project tile's frame opens up on hover: 8px out to each side and away from the rows' gutter (up in the upper row, down in the lower; tile.js); its neighbours make room
 
   // Media
   maxVideos: 4,
@@ -207,9 +207,21 @@ export default class Filmstrip extends Layout {
         t.x = ((((raw + m) % L) + L) % L) - m; // wrap into [-margin, L - margin)
       });
       spreadFrom(row.tiles, 'x', this.gapPx, extra, cx);
+      // A project tile opening up on hover (tile.js) grows `expand` px to each side: the tiles to its left and right
+      // move over by as much, so the gaps stay even.
+      const grow = this.reduced || this.engine.touch ? 0 : c.hover.expand ?? 0;
+      if (grow) {
+        for (const j of row.tiles) {
+          const push = j.item.caseStudy ? grow * j.hover : 0;
+          if (push < 0.01) continue;
+          const mid = j.x + j.w / 2;
+          for (const t of row.tiles) if (t !== j) t.x += t.x + t.w / 2 < mid ? -push : push;
+        }
+      }
 
       row.tiles.forEach((t) => {
         t.y = r ? row.bottom - t.h : row.top;
+        t.expandDir = r ? 'up' : 'down'; // opening up on hover: away from the gutter between the rows
         t.z = 0;
         t.alpha = 1;
         t.reveal = 1;

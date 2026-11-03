@@ -28,6 +28,7 @@ export const fragmentShader = /* glsl */ `
   uniform vec3 uBase;       // placeholder colour
 
   uniform float uZoom;      // extra texture zoom (0 = cover)
+  uniform vec2 uShift;      // where the picture's centre sits off the frame's (frame uv; y up) — a frame growing to one side
   uniform float uGray;      // 0..1 desaturation
   uniform float uAlpha;
   uniform float uReveal;    // 0..1 wipe from the bottom
@@ -46,7 +47,7 @@ export const fragmentShader = /* glsl */ `
     float planeA = uSize.x / max(uSize.y, 1.0);
     float texA = uTexSize.x / max(uTexSize.y, 1.0);
     vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);
-    vec2 tuv = (uv - 0.5) * cover / (1.0 + uZoom) + 0.5;
+    vec2 tuv = (uv - 0.5 - uShift) * cover / (1.0 + uZoom) + 0.5;
 
     vec3 col = mix(uBase, texture2D(uTex, tuv).rgb, uTexReady);
     col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);
