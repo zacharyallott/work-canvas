@@ -85,7 +85,7 @@ const CSS = `
 /* Email: after a click the link reads "copied" in place of "email →" (laid over it, so the link keeps its width and the others stay put). */
 .wc-copy{position:relative}
 .wc-copy-done{position:absolute;left:0;top:0;opacity:0;white-space:nowrap;pointer-events:none}
-.wc-caption{position:absolute;left:0;top:0;transform-origin:0 0;font-size:16px;font-weight:500;letter-spacing:0;line-height:1.3;white-space:pre;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}
+.wc-caption{position:absolute;left:0;top:0;transform-origin:0 0;font-size:16px;font-weight:500;letter-spacing:0;line-height:1.3;text-wrap:balance;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}
 .wc-caption-inner{display:block;transform:translateY(110%)}
 .wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}
 .wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .4s linear;cursor:auto}
@@ -307,7 +307,8 @@ export class UI {
   /**
    * Caption for the hovered tile: the project title and "  ↓". The engine only
    * passes tiles whose project has a case study (CMS switch). Bottom-left inside the tile,
-   * `inset` px from its edges. It slides up into view through a mask when a
+   * `inset` px from its edges; a title too wide for the tile wraps onto a second line (the arrow stays with the
+   * last word). It slides up into view through a mask when a
    * tile is hovered and out when the pointer leaves; the position tracks the
    * tile every frame.
    */
@@ -325,7 +326,8 @@ export class UI {
       tl.add(() => {
         s.shown = tile;
         if (tile) {
-          inner.textContent = `${tile.item.title}  ↓`;
+          inner.textContent = `${tile.item.title}\u00a0\u00a0↓`;
+          this.caption.style.maxWidth = `${Math.round(tile.rect.w - inset[0] * 2)}px`;
           this.captionH = this.caption.offsetHeight; // measured once per text change, not per frame
           this.captionW = this.caption.offsetWidth;
         }

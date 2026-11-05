@@ -51,7 +51,7 @@ export const config = {
   portraitSpacing: 0.68, // portrait screens (phones): `spacing` there — their tiles are capped smaller (mobileMaxWidth), so a little tighter
   // Four layers, back → front: how fast each moves (× the field's motion) — the nearer, the faster — and how big
   // its tiles are.
-  layers: { pace: [0.5, 0.8, 1.1, 1.45], scale: [0.88, 0.96, 1.05, 1.14] },
+  layers: { pace: [0.5, 0.8, 1.1, 1.45], scale: [0.96, 1.0, 1.07, 1.14] },
   seed: 5, // shuffles which place belongs to which layer
   minAspect: 0.75, // taller than this gets cropped
   maxAspect: 1.8, // wider than this gets cropped

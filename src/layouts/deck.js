@@ -35,8 +35,8 @@ import { sizePattern, fitSize } from '../core/sizing.js';
  */
 export const config = {
   // Size scale (design px): each card picks one of these heights; width = height × aspect.
-  heights: [260, 320, 390, 460, 560],
-  minWidth: 230, // narrower cards get taller instead (keeps the aspect ratio)
+  heights: [300, 350, 410, 470, 560],
+  minWidth: 270, // narrower cards get taller instead (keeps the aspect ratio)
   maxWidth: 620, // wider cards get shorter instead
   seed: 3, // change to reshuffle which card gets which size
   // The four card positions, offset from the pile centre in design px (from Figma).
