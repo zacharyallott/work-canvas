@@ -2,6 +2,7 @@ import gsap from 'gsap';
 import zaIcon from '../ui/za-icon.svg';
 import { aboutMarkup } from './about.js';
 import { AboutPeek } from './about-peek.js';
+import { BlurBackdrop } from './blur-backdrop.js';
 import { EASE } from './motion.js';
 import { ProjectView } from './project.js';
 import { Pull } from './pull.js';
@@ -22,6 +23,9 @@ const CSS = `
 /* Full visible screen: svh leaves out the mobile browser toolbars (100vh would slide under them). */
 .wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);height:100vh;isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}
 .wc-root.is-dragging{cursor:grabbing}
+/* About: the hovered client's picture, blurred across the page (blur-backdrop.js). Below everything else, above the root's own background (its isolation keeps it in there). */
+.wc-backdrop{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.wc-backdrop img{position:absolute;display:block;max-width:none;object-fit:cover;will-change:opacity}
 .wc-root.is-hovering-tile{cursor:none} /* the dot stands in for the cursor over a project that opens */
 /* Over a project that opens on click, the cursor is a dot (blends with difference, like the caption, so it reads
    on any picture). Mouse only: touch has no cursor. */
@@ -69,6 +73,7 @@ const CSS = `
 .wc-about-peek{position:absolute;inset:0;overflow:hidden;pointer-events:none;visibility:hidden}
 .wc-root.is-about .wc-about-peek{visibility:visible}
 .wc-about-card{position:absolute;border-radius:4px;overflow:hidden;background:#e2e2e2}
+.wc-about-card.is-loaded{background:none} /* the placeholder grey would otherwise show as a dotted hairline along a turned card's antialiased edges */
 .wc-about-card img,.wc-about-card video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}
 .wc-about-card video{opacity:0}
 .wc-about-card video.is-playing{opacity:1}
@@ -140,6 +145,7 @@ export class UI {
     this.tagline = this.root.querySelector('.wc-tagline');
     this.about = this.root.querySelector('.wc-about');
     splitWords(this.about.querySelector('.wc-about-statement'));
+    this.backdrop = new BlurBackdrop(mount);
     this.peek = new AboutPeek(this, items);
     // Scrolling on at the bottom of the about section pulls back to the work, like the end of a project page.
     this.aboutOpen = false;
@@ -432,6 +438,7 @@ export class UI {
     this.mount.removeEventListener('pointermove', this._onDotMove);
     this.project?.destroy();
     this.peek?.destroy();
+    this.backdrop?.destroy();
     this.root.remove();
     this.fallback?.remove();
   }

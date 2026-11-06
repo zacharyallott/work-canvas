@@ -489,10 +489,11 @@ export class WorkCanvas {
     }
   }
 
-  /** Over a project that opens on click, the cursor becomes a dot (ui.js). */
+  /** Over a project that opens on click, the cursor becomes a dot (ui.js). A touch screen has no cursor. */
   setHoverCursor(on) {
-    this.mount.classList.toggle('is-hovering-tile', on);
-    this.ui?.setDot(on);
+    const dot = on && !this.touch;
+    this.mount.classList.toggle('is-hovering-tile', dot);
+    this.ui?.setDot(dot);
   }
 
   // ─── Project view ──────────────────────────────────────────────────────────

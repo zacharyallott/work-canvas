@@ -14,6 +14,8 @@ import { track } from './analytics.js';
  *
  * The card sits behind the about section in the DOM, so the headline (which
  * blends with difference) stays legible where it crosses the card.
+ *
+ * Behind the card, the page takes on the same picture (blur-backdrop.js).
  */
 export const config = {
   angles: [0, 11.25, -11.25, 22.5, -22.5], // degrees, as the deck
@@ -88,6 +90,7 @@ export class AboutPeek {
   deal(item) {
     const c = this.config;
     clearTimeout(this.clearTimer);
+    this.ui.backdrop.set(item);
     const a = this.area();
     const aspect = item.aspect || 1.5;
     let h = Math.min(a.h * c.fill, c.maxHeight);
@@ -134,6 +137,9 @@ export class AboutPeek {
       // Past the limit, the oldest card fades out as the new one fades in.
       while (this.cards.length > c.max) this.drop(this.cards.shift(), c.dealDuration);
     };
+    const loaded = () => el.classList.add('is-loaded');
+    if (img.complete && img.naturalWidth) loaded();
+    else img.addEventListener('load', loaded, { once: true });
     if (img.complete) show();
     else {
       img.addEventListener('load', show, { once: true });
@@ -154,6 +160,7 @@ export class AboutPeek {
 
   clear(duration = this.config.clearDuration) {
     clearTimeout(this.clearTimer);
+    this.ui.backdrop.set(null);
     this.cards.forEach((card) => this.drop(card, duration));
     this.cards = [];
   }
