@@ -8,6 +8,7 @@ import { Input } from './input.js';
 import { UI, hideLinkLists } from './ui.js';
 import { aboutOnlyWork } from './about.js';
 import { track, trackContactClicks } from './analytics.js';
+import { Tilt } from './tilt.js';
 import { vertexShader, fragmentShader } from './shaders.js';
 import { projectNav, workListJsonLd, projectJsonLd } from './seo.js';
 
@@ -420,6 +421,7 @@ export class WorkCanvas {
     const dt = Math.min(deltaMs / 1000, 1 / 20);
     this.time += dt;
 
+    this.tiltInput?.update(dt);
     this.updateHover();
     this.media.beginFrame();
 
@@ -455,6 +457,16 @@ export class WorkCanvas {
     hits.sort((a, b) => b.object.renderOrder - a.object.renderOrder);
     const hit = hits[0];
     return { tile: hit.object.userData.tile, uv: hit.uv };
+  }
+
+  /**
+   * Phone tilt for layouts (tilt.js): x/y in -1..1, `active` once readings come in. Touch screens only (there's no
+   * cursor), and still with reduced motion.
+   */
+  get tilt() {
+    const t = this.tiltInput;
+    if (!t?.active || this.reducedMotion) return { x: 0, y: 0, active: false };
+    return { x: t.x, y: t.y, active: true };
   }
 
   /**
@@ -637,6 +649,8 @@ export class WorkCanvas {
   bindInput() {
     const wheel = this.mount.dataset.wheel || this.options.wheel;
     this.input = new Input(this.mount, { clickSlop: this.options.clickSlop, wheel });
+    // Touch screens steer with the phone's tilt instead of a cursor (only once the work is showing: iOS asks first).
+    if (this.touch && !this.projectPage) this.tiltInput = new Tilt(this.mount, { canAsk: () => !this.aboutOpen && !this.projectOpen });
     const busy = () => this.switching || this.openTile || this.projectOpen || this.aboutOpen || !this.layout;
     this.input
       .on('drag', (e) => !busy() && this.layout.onDrag?.(e))
@@ -733,6 +747,7 @@ export class WorkCanvas {
     this._reducedQuery.removeEventListener?.('change', this._onReducedChange);
     this._focusHandlers?.forEach((off) => off());
     this.input?.destroy();
+    this.tiltInput?.destroy();
     this.layout?.dispose();
     this.media?.dispose();
     this.geometry?.dispose();

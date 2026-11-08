@@ -23,7 +23,8 @@ import { Spread, spreadFrom } from '../core/spread.js';
  * from the centre (small dead zone in the middle) and eases toward its target,
  * so there's a little lag. The row the cursor is over runs a little faster
  * than the other (`rowBoost`), so the two slide past each other. Without a
- * cursor (touch, or pointer outside the header) they drift slowly left; on
+ * cursor (touch, or pointer outside the header) they drift slowly left — on a
+ * phone, tipping it right or left runs the strip that way instead (tilt.js); on
  * touch you can also swipe. Scrolling (wheel / trackpad, or a vertical swipe
  * on touch) moves both rows along too — scroll down to go forward — through a
  * spring, so each scroll eases in and out.
@@ -58,6 +59,7 @@ export const config = {
   idleSpeed: 24, // px/s leftward drift with no cursor over the header (0 = still)
   hoverSlowdown: 1, // speed multiplier while a tile is hovered (1 = no slowdown)
   rowBoost: 1.25, // the row the cursor is over drifts this much faster than the other
+  tiltSpeed: 150, // px/s with the phone tipped fully right (→) or left (←); along `curve`, like the cursor
 
   // Scroll: wheel / trackpad (either axis) moves both rows; eased by a spring
   // px of strip per px scrolled; spring pace (1/s, higher = settles sooner after the scroll stops);
@@ -173,6 +175,8 @@ export default class Filmstrip extends Layout {
   targetDrift(r) {
     const c = this.config;
     const { nx, ny, inside } = this.engine.cursor;
+    const tilt = this.engine.tilt;
+    if (!inside && tilt.active && tilt.x) return Math.sign(tilt.x) * Math.pow(Math.abs(tilt.x), c.curve) * c.tiltSpeed * this.s; // tipped right → runs right
     if (!inside) return this.reduced ? 0 : -c.idleSpeed * this.s;
     const mag = Math.max(0, (Math.abs(nx) - c.deadZone) / (1 - c.deadZone));
     const hovering = this.engine.hovered && this.tiles.includes(this.engine.hovered);

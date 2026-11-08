@@ -30,7 +30,8 @@ import { placeApart } from '../core/arrange.js';
  * pans the field: vertical scroll moves it up and down, horizontal scroll
  * across, eased through springs like the other versions. On touch the finger
  * drags the field in any direction and a flick carries on. With nothing
- * happening it drifts slowly. On load the tiles fade in layer by layer, front
+ * happening it drifts slowly. On a phone, tipping it shifts the field the way
+ * it's tipped, the nearer layers further (`tiltShift`, tilt.js). On load the tiles fade in layer by layer, front
  * to back. Hovering a tile brings it to the front, with its title.
  */
 export const config = {
@@ -66,6 +67,7 @@ export const config = {
   response: 2, // how fast the drift follows the cursor (higher = less lag)
   idle: { x: -8, y: -3 }, // px/s drift with no cursor over the header
   hoverSlowdown: 0.15, // drift multiplier while a tile is hovered (so it's easy to click)
+  tiltShift: { x: 70, y: 50 }, // px (pace 1) the field shifts with the phone tipped fully; each layer by its pace
   hoverEase: 3,
 
   // Scroll: wheel / trackpad pans the field, eased by a spring per axis (see spring.js: maxLead caps a flick's
@@ -199,8 +201,9 @@ export default class Universe extends Layout {
     const keep = Math.pow(c.inertia, dt * 60);
     this.velocity.x *= keep;
     this.velocity.y *= keep;
-    const ox = c.start.x * this.spacing * this.s + this.pan.x + this.scrolled.x.update(dt);
-    const oy = c.start.y * this.spacing * this.s + this.pan.y + this.scrolled.y.update(dt);
+    const tilt = e.tilt; // tipped right / top raised → the field slides right / down
+    const ox = c.start.x * this.spacing * this.s + this.pan.x + this.scrolled.x.update(dt) + tilt.x * c.tiltShift.x * this.s;
+    const oy = c.start.y * this.spacing * this.s + this.pan.y + this.scrolled.y.update(dt) + tilt.y * c.tiltShift.y * this.s;
 
     const { x: Px, y: Py } = this.period;
     const { x: mx, y: my } = this.margin;
