@@ -14578,9 +14578,51 @@ function Lh(e) {
 	for (let { el: t } of e) (t.matches("a[href]") || t.querySelector("a[href]")) && (t.closest("[data-work-list]") ?? t).classList.add("wc-sr");
 }
 //#endregion
-//#region src/core/shaders.js
-var Rh = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }\n", zh = "\n  uniform sampler2D uTex;\n  uniform float uTexReady;  // 0 → placeholder colour, 1 → texture (tweened for a fade-in)\n  uniform vec2 uTexSize;    // texture px (only the ratio matters)\n  uniform vec2 uSize;       // tile CSS px\n  uniform float uRadius;    // corner radius, CSS px\n  uniform float uDpr;\n  uniform vec3 uBase;       // placeholder colour\n\n  uniform float uZoom;      // extra texture zoom (0 = cover)\n  uniform vec2 uShift;      // where the picture's centre sits off the frame's (frame uv; y up) — a frame growing to one side\n  uniform float uGray;      // 0..1 desaturation\n  uniform float uAlpha;\n  uniform float uReveal;    // 0..1 wipe from the bottom\n\n  varying vec2 vUv;\n\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n\n  void main() {\n    vec2 uv = vUv;\n\n    // object-fit: cover (+ optional zoom around the centre)\n    float planeA = uSize.x / max(uSize.y, 1.0);\n    float texA = uTexSize.x / max(uTexSize.y, 1.0);\n    vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);\n    vec2 tuv = (uv - 0.5 - uShift) * cover / (1.0 + uZoom) + 0.5;\n\n    vec3 col = mix(uBase, texture2D(uTex, tuv).rgb, uTexReady);\n    col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);\n\n    // rounded corners, ~1 device px of antialiasing\n    float d = sdRoundBox((uv - 0.5) * uSize, uSize * 0.5, uRadius);\n    float aa = 0.75 / uDpr;\n    float mask = 1.0 - smoothstep(-aa, aa, d);\n\n    // reveal wipe (uv.y = 0 at the bottom edge)\n    float reveal = uReveal >= 1.0 ? 1.0 : step(uv.y, uReveal);\n\n    gl_FragColor = vec4(col, uAlpha * mask * reveal);\n  }\n", Bh = (e) => e ? new URL(e, location.href).href : void 0;
-function Vh(e, t) {
+//#region src/core/tilt.js
+var Rh = {
+	range: 22,
+	deadZone: .08,
+	smoothing: 8,
+	recenter: .12
+}, zh = class {
+	constructor(e, { canAsk: t = () => !0, config: n = Rh } = {}) {
+		this.config = n, this.x = 0, this.y = 0, this.active = !1, this.raw = null, this.base = null, this.el = e, this.canAsk = t, window.DeviceOrientationEvent !== void 0 && (this.listen(), typeof DeviceOrientationEvent.requestPermission == "function" && (this._ask = () => {
+			this.canAsk() && (e.removeEventListener("touchend", this._ask), DeviceOrientationEvent.requestPermission().catch(() => {}));
+		}, e.addEventListener("touchend", this._ask, { passive: !0 })));
+	}
+	listen() {
+		this._onOrient = (e) => {
+			if (e.beta == null || e.gamma == null) return;
+			let t = screen.orientation?.angle ?? window.orientation ?? 0, { beta: n, gamma: r } = e, [i, a] = {
+				0: [r, n],
+				90: [n, -r],
+				180: [-r, -n],
+				270: [-n, r],
+				"-90": [-n, r]
+			}[t] ?? [r, n];
+			this.raw = {
+				x: i,
+				y: a
+			};
+		}, window.addEventListener("deviceorientation", this._onOrient);
+	}
+	update(e) {
+		let t = this.config;
+		if (!this.raw) return;
+		this.base || (this.base = { ...this.raw });
+		let n = (e) => ((e + 180) % 360 + 360) % 360 - 180, r = 1 - Math.exp(-e * t.recenter);
+		this.base.x += n(this.raw.x - this.base.x) * r, this.base.y += n(this.raw.y - this.base.y) * r;
+		let i = (e) => {
+			let r = Math.max(-1, Math.min(1, n(e) / t.range)), i = Math.max(0, (Math.abs(r) - t.deadZone) / (1 - t.deadZone));
+			return Math.sign(r) * i;
+		}, a = 1 - Math.exp(-e * t.smoothing);
+		this.x += (i(this.raw.x - this.base.x) - this.x) * a, this.y += (i(this.raw.y - this.base.y) - this.y) * a, this.active = !0;
+	}
+	destroy() {
+		this._ask && this.el.removeEventListener("touchend", this._ask), this._onOrient && window.removeEventListener("deviceorientation", this._onOrient);
+	}
+}, Bh = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }\n", Vh = "\n  uniform sampler2D uTex;\n  uniform float uTexReady;  // 0 → placeholder colour, 1 → texture (tweened for a fade-in)\n  uniform vec2 uTexSize;    // texture px (only the ratio matters)\n  uniform vec2 uSize;       // tile CSS px\n  uniform float uRadius;    // corner radius, CSS px\n  uniform float uDpr;\n  uniform vec3 uBase;       // placeholder colour\n\n  uniform float uZoom;      // extra texture zoom (0 = cover)\n  uniform vec2 uShift;      // where the picture's centre sits off the frame's (frame uv; y up) — a frame growing to one side\n  uniform float uGray;      // 0..1 desaturation\n  uniform float uAlpha;\n  uniform float uReveal;    // 0..1 wipe from the bottom\n\n  varying vec2 vUv;\n\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n\n  void main() {\n    vec2 uv = vUv;\n\n    // object-fit: cover (+ optional zoom around the centre)\n    float planeA = uSize.x / max(uSize.y, 1.0);\n    float texA = uTexSize.x / max(uTexSize.y, 1.0);\n    vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);\n    vec2 tuv = (uv - 0.5 - uShift) * cover / (1.0 + uZoom) + 0.5;\n\n    vec3 col = mix(uBase, texture2D(uTex, tuv).rgb, uTexReady);\n    col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);\n\n    // rounded corners, ~1 device px of antialiasing\n    float d = sdRoundBox((uv - 0.5) * uSize, uSize * 0.5, uRadius);\n    float aa = 0.75 / uDpr;\n    float mask = 1.0 - smoothstep(-aa, aa, d);\n\n    // reveal wipe (uv.y = 0 at the bottom edge)\n    float reveal = uReveal >= 1.0 ? 1.0 : step(uv.y, uReveal);\n\n    gl_FragColor = vec4(col, uAlpha * mask * reveal);\n  }\n", Hh = (e) => e ? new URL(e, location.href).href : void 0;
+function Uh(e, t) {
 	let n = document.createElement("nav");
 	n.className = "wc-sr", n.setAttribute("aria-label", "Projects");
 	let r = document.createElement("ul"), i = e.map((e) => {
@@ -14595,54 +14637,54 @@ function Vh(e, t) {
 		links: i
 	};
 }
-function Hh(e, t, n) {
+function Wh(e, t, n) {
 	let r = (e.services || "").split(/\s*(?:,|→|\n)\s*/).filter(Boolean);
 	return {
 		"@type": "CreativeWork",
 		name: e.title,
 		url: t,
 		description: e.description || void 0,
-		image: n.filter(Boolean).map(Bh),
+		image: n.filter(Boolean).map(Hh),
 		keywords: r.length ? r.join(", ") : void 0,
 		creator: {
 			"@type": "Person",
 			name: "Zachary Allott",
-			url: Bh("/")
+			url: Hh("/")
 		}
 	};
 }
-function Uh(e) {
+function Gh(e) {
 	let t = document.head.querySelector("script[data-wc-seo]");
 	t || (t = document.createElement("script"), t.type = "application/ld+json", t.dataset.wcSeo = "", document.head.appendChild(t)), t.textContent = JSON.stringify({
 		"@context": "https://schema.org",
 		...e
 	});
 }
-function Wh(e, t, n) {
-	Uh({
+function Kh(e, t, n) {
+	Gh({
 		"@type": "ItemList",
 		name: "Selected work",
 		itemListElement: e.map((e, r) => ({
 			"@type": "ListItem",
 			position: r + 1,
-			url: Bh(t(e.slug)),
-			item: Hh(e, Bh(t(e.slug)), [n(e)])
+			url: Hh(t(e.slug)),
+			item: Wh(e, Hh(t(e.slug)), [n(e)])
 		}))
 	});
 }
-function Gh(e, t, n) {
-	Uh(Hh(e, Bh(t), n));
+function qh(e, t, n) {
+	Gh(Wh(e, Hh(t), n));
 }
 //#endregion
 //#region src/core/engine.js
-function Kh(e) {
+function Jh(e) {
 	return new Promise((t) => {
 		if (!e) return t();
 		let n = new Image();
 		n.crossOrigin = "anonymous", n.onload = n.onerror = () => t(), n.src = e;
 	});
 }
-var qh = class {
+var Yh = class {
 	constructor(e, t = {}) {
 		this.mount = e, this.options = {
 			...Mp,
@@ -14659,7 +14701,7 @@ var qh = class {
 		if (e.classList.add("wc-root"), this.items = km(e), !this.items.length) return console.warn("[work-canvas] no .work-item elements found — nothing to render."), this;
 		await jm(this.items), Lh(this.items), this.projectPage = !!this.pathSlug() && new Set(this.items.map((e) => e.slug)).size === 1, this._homeTitle = this.isHomePath() ? document.title : this.options.homeTitle;
 		let t = this.layoutDefs.map((e) => e.key), n = t.includes(this.options.layout) ? this.options.layout : t[0];
-		this.options.rotate && (n = (this.options.rotate === "next" ? Zh(t) : Qh(t)) ?? n), this.ui = new Ph(e, {
+		this.options.rotate && (n = (this.options.rotate === "next" ? $h(t) : eg(t)) ?? n), this.ui = new Ph(e, {
 			layouts: this.layoutDefs,
 			current: n,
 			aboutHref: this.options.aboutPath,
@@ -14722,11 +14764,11 @@ var qh = class {
 		let e = [...new Map(this.mediaItems.filter((e) => e.caseStudy && e.slug).map((e) => [e.slug, e])).values()];
 		if (this.projectPage) {
 			let t = e[0];
-			t && Gh(t.project, location.href, [t.images.at(-1)?.src || t.poster, ...(t.project.gallery ?? []).map((e) => e.src)]);
+			t && qh(t.project, location.href, [t.images.at(-1)?.src || t.poster, ...(t.project.gallery ?? []).map((e) => e.src)]);
 			return;
 		}
 		if (!e.length) return;
-		let { nav: t, links: n } = Vh(e.map((e) => e.project), (e) => this.projectUrl(e));
+		let { nav: t, links: n } = Uh(e.map((e) => e.project), (e) => this.projectUrl(e));
 		n.forEach(({ a: t }, n) => {
 			let r = e[n];
 			t.addEventListener("focus", () => {
@@ -14740,7 +14782,7 @@ var qh = class {
 					source: "link"
 				});
 			});
-		}), this.mount.appendChild(t), this.seoNav = t, Wh(e.map((e) => e.project), (e) => this.projectUrl(e), (t) => e.find((e) => e.project === t)?.poster);
+		}), this.mount.appendChild(t), this.seoNav = t, Kh(e.map((e) => e.project), (e) => this.projectUrl(e), (t) => e.find((e) => e.project === t)?.poster);
 	}
 	createRenderer() {
 		let e = new jp({
@@ -14756,8 +14798,8 @@ var qh = class {
 			226,
 			255
 		]), 1, 1), this.emptyTexture.needsUpdate = !0, this.baseMaterial = new ml({
-			vertexShader: Rh,
-			fragmentShader: zh,
+			vertexShader: Bh,
+			fragmentShader: Vh,
 			transparent: !0,
 			depthTest: !1,
 			depthWrite: !1,
@@ -14821,7 +14863,7 @@ var qh = class {
 		if (t || (this.aboutOpen && this.toggleAbout(!1), this.projectOpen && this.closeProject({ cycle: !1 })), this.switching || e === this.layoutKey || !this.renderer) return;
 		let r = this.layoutDefs.find((t) => t.key === e);
 		if (r) {
-			if (this.switching = !0, this.ui?.setActive(e), $h(e), this.options.syncUrl) {
+			if (this.switching = !0, this.ui?.setActive(e), tg(e), this.options.syncUrl) {
 				let t = new URL(location.href);
 				t.searchParams.set("v", e), history.replaceState(history.state, "", t);
 			}
@@ -14847,7 +14889,7 @@ var qh = class {
 	}
 	tick(e, t) {
 		let n = Math.min(t / 1e3, 1 / 20);
-		this.time += n, this.updateHover(), this.media.beginFrame();
+		this.time += n, this.tiltInput?.update(n), this.updateHover(), this.media.beginFrame();
 		let r = this.layout;
 		if (r) {
 			r.update(n, this.time);
@@ -14872,6 +14914,18 @@ var qh = class {
 		return {
 			tile: a.object.userData.tile,
 			uv: a.uv
+		};
+	}
+	get tilt() {
+		let e = this.tiltInput;
+		return !e?.active || this.reducedMotion ? {
+			x: 0,
+			y: 0,
+			active: !1
+		} : {
+			x: e.x,
+			y: e.y,
+			active: !0
 		};
 	}
 	get cursor() {
@@ -14914,7 +14968,7 @@ var qh = class {
 			aspect: i.aspect,
 			alt: a.title
 		};
-		this.opening = !0, await Kh(s.bestSrc).finally(() => this.opening = !1);
+		this.opening = !0, await Jh(s.bestSrc).finally(() => this.opening = !1);
 		let c = n && e.rect ? this.isCovered(e) : !1;
 		this.projectOpen = !0, this.openSlug = a.slug, this.openTitle = a.title, r && sh("project_open", {
 			project: a.slug,
@@ -15003,7 +15057,7 @@ var qh = class {
 		this.input = new Km(this.mount, {
 			clickSlop: this.options.clickSlop,
 			wheel: e
-		});
+		}), this.touch && !this.projectPage && (this.tiltInput = new zh(this.mount, { canAsk: () => !this.aboutOpen && !this.projectOpen }));
 		let t = () => this.switching || this.openTile || this.projectOpen || this.aboutOpen || !this.layout;
 		this.input.on("drag", (e) => !t() && this.layout.onDrag?.(e)).on("release", (e) => !t() && this.layout.onRelease?.(e)).on("wheel", (e) => !t() && this.layout.onWheel?.(e)).on("scroll", (e) => !t() && this.inView && this.layout.onScroll?.(e)).on("tap", ({ x: e, y: n, event: r }) => {
 			if (t()) return;
@@ -15053,35 +15107,35 @@ var qh = class {
 		}), this.camera.updateProjectionMatrix(), this.isMobile = matchMedia("(pointer: coarse)").matches || window.innerWidth < 768, this.touch = !matchMedia("(hover: hover) and (pointer: fine)").matches, this.layout?.resize(this.viewport), this.projectOpen && this.ui?.project.layoutInfo();
 	}
 	destroy() {
-		this.stop(), K.killTweensOf(this), this.resizeObserver?.disconnect(), this.intersection?.disconnect(), document.removeEventListener("visibilitychange", this._onVisibility), document.removeEventListener("keydown", this._onKey), clearTimeout(this._aboutTimer), window.removeEventListener("pageshow", this._onPageShow), window.removeEventListener("popstate", this._onPopState), this.seoNav?.remove(), clearTimeout(this._projectTimer), this._reducedQuery.removeEventListener?.("change", this._onReducedChange), this._focusHandlers?.forEach((e) => e()), this.input?.destroy(), this.layout?.dispose(), this.media?.dispose(), this.geometry?.dispose(), this.baseMaterial?.dispose(), this.emptyTexture?.dispose(), this.renderer && (this.renderer.dispose(), this.renderer.forceContextLoss(), this.renderer.domElement.remove()), this.ui?.destroy(), this.mount.classList.remove("wc-root", "is-ready", "is-fallback", "is-hovering-tile", "is-dragging");
+		this.stop(), K.killTweensOf(this), this.resizeObserver?.disconnect(), this.intersection?.disconnect(), document.removeEventListener("visibilitychange", this._onVisibility), document.removeEventListener("keydown", this._onKey), clearTimeout(this._aboutTimer), window.removeEventListener("pageshow", this._onPageShow), window.removeEventListener("popstate", this._onPopState), this.seoNav?.remove(), clearTimeout(this._projectTimer), this._reducedQuery.removeEventListener?.("change", this._onReducedChange), this._focusHandlers?.forEach((e) => e()), this.input?.destroy(), this.tiltInput?.destroy(), this.layout?.dispose(), this.media?.dispose(), this.geometry?.dispose(), this.baseMaterial?.dispose(), this.emptyTexture?.dispose(), this.renderer && (this.renderer.dispose(), this.renderer.forceContextLoss(), this.renderer.domElement.remove()), this.ui?.destroy(), this.mount.classList.remove("wc-root", "is-ready", "is-fallback", "is-hovering-tile", "is-dragging");
 	}
-}, Jh = "work-canvas:last-version", Yh = /(?:^|;)wc-last=([^;]*)/;
-function Xh() {
+}, Xh = "work-canvas:last-version", Zh = /(?:^|;)wc-last=([^;]*)/;
+function Qh() {
 	try {
-		let e = localStorage.getItem(Jh);
+		let e = localStorage.getItem(Xh);
 		if (e) return e;
 	} catch {}
-	return Yh.exec(window.name || "")?.[1] ?? null;
-}
-function Zh(e) {
-	let t = e.indexOf(Xh());
-	return t >= 0 ? e[(t + 1) % e.length] : null;
-}
-function Qh(e) {
-	let t = Xh(), n = e.length > 1 ? e.filter((e) => e !== t) : e;
-	return n[Math.floor(Math.random() * n.length)] ?? null;
+	return Zh.exec(window.name || "")?.[1] ?? null;
 }
 function $h(e) {
+	let t = e.indexOf(Qh());
+	return t >= 0 ? e[(t + 1) % e.length] : null;
+}
+function eg(e) {
+	let t = Qh(), n = e.length > 1 ? e.filter((e) => e !== t) : e;
+	return n[Math.floor(Math.random() * n.length)] ?? null;
+}
+function tg(e) {
 	try {
-		localStorage.setItem(Jh, e);
+		localStorage.setItem(Xh, e);
 	} catch {}
 	try {
-		window.name = `${(window.name || "").replace(new RegExp(Yh.source, "g"), "")};wc-last=${e}`;
+		window.name = `${(window.name || "").replace(new RegExp(Zh.source, "g"), "")};wc-last=${e}`;
 	} catch {}
 }
 //#endregion
 //#region src/core/tile.js
-var eg = class {
+var ng = class {
 	constructor(e, t, n = 0) {
 		this.engine = e, this.item = t, this.index = n, this.x = 0, this.y = 0, this.w = 100, this.h = 100, this.z = 0, this.rotation = 0, this.alpha = 1, this.reveal = 1, this.gray = 0, this.zoom = 0, this.priority = 0, this.interactive = !0, this.hover = 0, this.texReady = 0, this.onScreen = !1, this.override = null, this.material = e.baseMaterial.clone(), this.uniforms = this.material.uniforms, this.uniforms.uSize.value = new Y(100, 100), this.uniforms.uShift.value = new Y(0, 0), this.uniforms.uTexSize.value = t.texSize, this.mesh = new Gc(e.geometry, this.material), this.mesh.frustumCulled = !1, this.mesh.userData.tile = this, e.scene.add(this.mesh);
 	}
@@ -15121,36 +15175,36 @@ var eg = class {
 };
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/typeof.js
-function tg(e) {
+function rg(e) {
 	"@babel/helpers - typeof";
-	return tg = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
+	return rg = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
 		return typeof e;
 	} : function(e) {
 		return e && typeof Symbol == "function" && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
-	}, tg(e);
+	}, rg(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/toPrimitive.js
-function ng(e, t) {
-	if (tg(e) != "object" || !e) return e;
+function ig(e, t) {
+	if (rg(e) != "object" || !e) return e;
 	var n = e[Symbol.toPrimitive];
 	if (n !== void 0) {
 		var r = n.call(e, t || "default");
-		if (tg(r) != "object") return r;
+		if (rg(r) != "object") return r;
 		throw TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return (t === "string" ? String : Number)(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/toPropertyKey.js
-function rg(e) {
-	var t = ng(e, "string");
-	return tg(t) == "symbol" ? t : t + "";
+function ag(e) {
+	var t = ig(e, "string");
+	return rg(t) == "symbol" ? t : t + "";
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/defineProperty.js
-function ig(e, t, n) {
-	return (t = rg(t)) in e ? Object.defineProperty(e, t, {
+function og(e, t, n) {
+	return (t = ag(t)) in e ? Object.defineProperty(e, t, {
 		value: n,
 		enumerable: !0,
 		configurable: !0,
@@ -15159,7 +15213,7 @@ function ig(e, t, n) {
 }
 //#endregion
 //#region src/core/layout.js
-var ag = (e) => Math.min(1, Math.max(0, e)), og = class {
+var sg = (e) => Math.min(1, Math.max(0, e)), cg = class {
 	constructor(e, t) {
 		this.engine = e, this.config = t, this.tiles = [], this.featured = null, this.progress = 0, this.introEase = K.parseEase(t.easing ?? "none");
 	}
@@ -15173,7 +15227,7 @@ var ag = (e) => Math.min(1, Math.max(0, e)), og = class {
 		return this.engine.reducedMotion;
 	}
 	makeTiles(e) {
-		return this.tiles = e.map((e, t) => new eg(this.engine, e, t)), this.tiles;
+		return this.tiles = e.map((e, t) => new ng(this.engine, e, t)), this.tiles;
 	}
 	repeatItems(e) {
 		let t = [];
@@ -15182,7 +15236,7 @@ var ag = (e) => Math.min(1, Math.max(0, e)), og = class {
 	}
 	tileProgress(e) {
 		let t = this.leaving || this.reduced ? 0 : this.config.stagger ?? .3;
-		return this.introEase(ag(this.progress * (1 + t) - e * t));
+		return this.introEase(sg(this.progress * (1 + t) - e * t));
 	}
 	applyTransition(e, t) {
 		let n = this.tileProgress(t);
@@ -15226,7 +15280,7 @@ var ag = (e) => Math.min(1, Math.max(0, e)), og = class {
 	}
 	centerScore(e) {
 		let t = (e.x + e.w / 2 - this.vp.width / 2) / this.vp.width, n = (e.y + e.h / 2 - this.vp.height / 2) / this.vp.height;
-		return ag(1 - Math.hypot(t, n)) * .99 + .01;
+		return sg(1 - Math.hypot(t, n)) * .99 + .01;
 	}
 	resize() {}
 	update() {}
@@ -15234,10 +15288,10 @@ var ag = (e) => Math.min(1, Math.max(0, e)), og = class {
 		K.killTweensOf(this), this.fadeCanvas(1), this.tiles.forEach((e) => e.dispose()), this.tiles = [];
 	}
 };
-ig(og, "defaults", {});
+og(cg, "defaults", {});
 //#endregion
 //#region src/core/sizing.js
-function sg(e, t, n = 1) {
+function lg(e, t, n = 1) {
 	let r = n * 2654435769, i = () => {
 		r = r + 1831565813 | 0;
 		let e = Math.imul(r ^ r >>> 15, 1 | r);
@@ -15252,7 +15306,7 @@ function sg(e, t, n = 1) {
 	}
 	return a;
 }
-function cg(e, t, { minW: n, maxW: r, maxH: i }) {
+function ug(e, t, { minW: n, maxW: r, maxH: i }) {
 	let a = t, o = a * e;
 	return o > r && ([o, a] = [r, r / e]), o < n && ([o, a] = [n, n / e]), a > i && (a = i), {
 		w: o,
@@ -15261,7 +15315,7 @@ function cg(e, t, { minW: n, maxW: r, maxH: i }) {
 }
 //#endregion
 //#region src/core/spring.js
-var lg = class {
+var dg = class {
 	constructor(e = 6, { maxLead: t = Infinity } = {}) {
 		this.omega = e, this.maxLead = t, this.x = 0, this.v = 0, this.target = 0;
 	}
@@ -15273,9 +15327,9 @@ var lg = class {
 		for (let e = 0; e < n; e++) this.v += (t * t * (this.target - this.x) - 2 * t * this.v) * r, this.x += this.v * r;
 		return this.x;
 	}
-}, ug = class {
+}, fg = class {
 	constructor(e) {
-		this.config = e, this.spring = new lg(e.omega), this.last = null, this.speed = 0;
+		this.config = e, this.spring = new dg(e.omega), this.last = null, this.speed = 0;
 	}
 	update(e, t, n = !1) {
 		let r = this.config;
@@ -15284,7 +15338,7 @@ var lg = class {
 		return this.spring.target = i, this.spring.omega = i < this.spring.x ? r.closing ?? r.omega : r.omega, Math.max(0, this.spring.update(t));
 	}
 };
-function dg(e, t, n, r, i) {
+function pg(e, t, n, r, i) {
 	if (!(r > .05) || !e.length) return;
 	let a = t === "x" ? "w" : "h", o = (e) => e[a] + n, s = e.findIndex((e) => e[t] <= i && i < e[t] + o(e));
 	if (s < 0) return;
@@ -15296,7 +15350,7 @@ function dg(e, t, n, r, i) {
 }
 //#endregion
 //#region src/layouts/filmstrip.js
-var fg = {
+var mg = {
 	heights: [
 		215,
 		250,
@@ -15322,6 +15376,7 @@ var fg = {
 	idleSpeed: 24,
 	hoverSlowdown: 1,
 	rowBoost: 1.25,
+	tiltSpeed: 150,
 	scroll: {
 		multiplier: .5,
 		omega: 7,
@@ -15349,24 +15404,24 @@ var fg = {
 	enterDuration: .8,
 	leaveDuration: .25,
 	captionInset: [20, 12]
-}, pg = 2, mg = class extends og {
+}, hg = 2, gg = class extends cg {
 	constructor(e, t) {
-		super(e, t), this.velocity = 0, this.scrolled = new lg(t.scroll.omega, { maxLead: t.scroll.maxLead }), this.rows = Array.from({ length: pg }, () => ({
+		super(e, t), this.velocity = 0, this.scrolled = new dg(t.scroll.omega, { maxLead: t.scroll.maxLead }), this.rows = Array.from({ length: hg }, () => ({
 			tiles: [],
 			offset: 0,
 			target: 0,
 			drift: -t.idleSpeed,
-			spread: new ug(t.spread)
+			spread: new fg(t.spread)
 		}));
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.height / Np.height));
 		this.s = n, this.engine.scale = n, this.gapPx = t.gap;
-		let r = (e.height - t.topInset * n - t.bottomInset - t.gap) / pg, i = Math.min(1, r / (Math.max(...t.heights) * n)), a = Math.min(t.maxWidth * n * i, e.width * t.mobileMaxWidth), o = Math.min(t.minWidth * n * i, a), s = Math.max(...t.heights) * n * i;
+		let r = (e.height - t.topInset * n - t.bottomInset - t.gap) / hg, i = Math.min(1, r / (Math.max(...t.heights) * n)), a = Math.min(t.maxWidth * n * i, e.width * t.mobileMaxWidth), o = Math.min(t.minWidth * n * i, a), s = Math.max(...t.heights) * n * i;
 		this.rowHeight = s;
-		let c = Array.from({ length: pg }, (e, t) => this.items.filter((e, n) => n % pg === t)), l = e.width + 2 * (a + this.gapPx), u = c.map((e, r) => {
+		let c = Array.from({ length: hg }, (e, t) => this.items.filter((e, n) => n % hg === t)), l = e.width + 2 * (a + this.gapPx), u = c.map((e, r) => {
 			if (!e.length) return 0;
-			let c = sg(e.length, t.heights.length, t.seed + r), u = e.reduce((e, r, l) => e + cg(r.aspect, t.heights[c[l]] * n * i, {
+			let c = lg(e.length, t.heights.length, t.seed + r), u = e.reduce((e, r, l) => e + ug(r.aspect, t.heights[c[l]] * n * i, {
 				minW: o,
 				maxW: a,
 				maxH: s
@@ -15387,9 +15442,9 @@ var fg = {
 			});
 		}
 		this.rows.forEach((r, c) => {
-			let l = sg(r.tiles.length, t.heights.length, t.seed + c), u = 0;
+			let l = lg(r.tiles.length, t.heights.length, t.seed + c), u = 0;
 			r.tiles.forEach((e, r) => {
-				let { w: c, h: d } = cg(e.item.aspect, t.heights[l[r]] * n * i, {
+				let { w: c, h: d } = ug(e.item.aspect, t.heights[l[r]] * n * i, {
 					minW: o,
 					maxW: a,
 					maxH: s
@@ -15399,10 +15454,11 @@ var fg = {
 		}), this.margin = a + this.gapPx;
 	}
 	targetDrift(e) {
-		let t = this.config, { nx: n, ny: r, inside: i } = this.engine.cursor;
+		let t = this.config, { nx: n, ny: r, inside: i } = this.engine.cursor, a = this.engine.tilt;
+		if (!i && a.active && a.x) return Math.sign(a.x) * Math.abs(a.x) ** +t.curve * t.tiltSpeed * this.s;
 		if (!i) return this.reduced ? 0 : -t.idleSpeed * this.s;
-		let a = Math.max(0, (Math.abs(n) - t.deadZone) / (1 - t.deadZone)), o = this.engine.hovered && this.tiles.includes(this.engine.hovered), s = e === +((r + 1) / 2 * this.vp.height < this.rows[1].bottom + t.gap / 2) ? t.rowBoost : 1;
-		return -Math.sign(n) * a ** +t.curve * t.maxSpeed * this.s * s * (o ? t.hoverSlowdown : 1);
+		let o = Math.max(0, (Math.abs(n) - t.deadZone) / (1 - t.deadZone)), s = this.engine.hovered && this.tiles.includes(this.engine.hovered), c = e === +((r + 1) / 2 * this.vp.height < this.rows[1].bottom + t.gap / 2) ? t.rowBoost : 1;
+		return -Math.sign(n) * o ** +t.curve * t.maxSpeed * this.s * c * (s ? t.hoverSlowdown : 1);
 	}
 	update(e) {
 		let t = this.config, n = this.scrolled.update(e);
@@ -15413,7 +15469,7 @@ var fg = {
 			let l = s.offset + n, u = s.spread.update(l, e, this.reduced), d = s.length;
 			s.tiles.forEach((e) => {
 				e.x = ((s.start + e.baseX + l + i) % d + d) % d - i;
-			}), dg(s.tiles, "x", this.gapPx, u, r);
+			}), pg(s.tiles, "x", this.gapPx, u, r);
 			let f = this.reduced || this.engine.touch ? 0 : t.hover.expand ?? 0;
 			if (f) for (let e of s.tiles) {
 				let t = e.item.caseStudy ? f * e.hover : 0;
@@ -15445,10 +15501,10 @@ var fg = {
 		n && (n.target += this.vp.width / 2 - (t.x + t.w / 2));
 	}
 };
-ig(mg, "defaults", fg), ig(mg, "label", "Filmstrip");
+og(gg, "defaults", mg), og(gg, "label", "Filmstrip");
 //#endregion
 //#region src/layouts/deck.js
-var hg = {
+var _g = {
 	heights: [
 		300,
 		350,
@@ -15500,6 +15556,7 @@ var hg = {
 		.65
 	],
 	fan: .8,
+	tiltFollow: .8,
 	interval: 0,
 	moveStep: 0,
 	cursorPace: {
@@ -15538,7 +15595,7 @@ var hg = {
 	enterDuration: .7,
 	leaveDuration: .25,
 	captionInset: [16, 12]
-}, gg = class extends og {
+}, vg = class extends cg {
 	constructor(e, t) {
 		super(e, t), this.makeTiles(this.items);
 		let n = this.tiles.length;
@@ -15554,9 +15611,9 @@ var hg = {
 		this.s = n, this.engine.scale = n;
 		let r = Math.min(t.maxWidth * n, e.width * t.mobileMaxWidth), i = Math.min(t.minWidth * n, r);
 		this.k = r / t.maxWidth;
-		let a = Math.max(...t.heights) * this.k, o = sg(this.tiles.length, t.heights.length, t.seed);
+		let a = Math.max(...t.heights) * this.k, o = lg(this.tiles.length, t.heights.length, t.seed);
 		this.tiles.forEach((e, n) => {
-			let { w: s, h: c } = cg(e.item.aspect, t.heights[o[n]] * this.k, {
+			let { w: s, h: c } = ug(e.item.aspect, t.heights[o[n]] * this.k, {
 				minW: i,
 				maxW: r,
 				maxH: a
@@ -15565,51 +15622,51 @@ var hg = {
 		});
 	}
 	update(e) {
-		let t = this.config, n = this.engine, { width: r, height: i } = this.vp, { nx: a, ny: o, inside: s } = n.cursor, c = n.hovered && this.tiles.includes(n.hovered) ? n.hovered : null, l = s && !this.reduced, u = l ? r / 2 * a * t.follow : 0, d = l ? i / 2 * o * t.follow : 0, f = l ? t.fan * Math.min(1, Math.hypot(a, o)) : 0;
+		let t = this.config, n = this.engine, { width: r, height: i } = this.vp, { nx: a, ny: o, inside: s } = n.cursor, c = n.hovered && this.tiles.includes(n.hovered) ? n.hovered : null, l = n.tilt, u = !s && l.active, [d, f] = u ? [l.x * t.tiltFollow, l.y * t.tiltFollow] : [a, o], p = (s || u) && !this.reduced, m = p ? r / 2 * d * t.follow : 0, h = p ? i / 2 * f * t.follow : 0, g = p ? t.fan * Math.min(1, Math.hypot(d, f)) : 0;
 		if (this.anchors.forEach((n, r) => {
 			let i = 1 - Math.exp(-e * t.followRates[r % t.followRates.length]), a = t.depth[r % t.depth.length], o = t.slots[r];
-			n.x += (u * a + o.x * this.k * f - n.x) * i, n.y += (d * a + o.y * this.k * f - n.y) * i;
+			n.x += (m * a + o.x * this.k * g - n.x) * i, n.y += (h * a + o.y * this.k * g - n.y) * i;
 		}), c && t.hoverToFront && c.item.caseStudy) {
 			let e = this.slotTile.indexOf(c.index);
 			e >= 0 && this.slotStamp[e] !== this.stamp && (this.slotStamp[e] = ++this.stamp);
 		}
-		let p = t.pauseOnHover && c || this.reduced || this.progress < 1, m = n.input?.pointer, h = t.moveStep;
-		h > 0 && s && m ? (this.lastPointer && !p && (this.travel += Math.hypot(m.x - this.lastPointer.x, m.y - this.lastPointer.y)), this.lastPointer = {
-			x: m.x,
-			y: m.y
+		let _ = t.pauseOnHover && c || this.reduced || this.progress < 1, v = n.input?.pointer, y = t.moveStep;
+		y > 0 && s && v ? (this.lastPointer && !_ && (this.travel += Math.hypot(v.x - this.lastPointer.x, v.y - this.lastPointer.y)), this.lastPointer = {
+			x: v.x,
+			y: v.y
 		}) : (this.lastPointer = null, this.travel = 0);
-		let g = !1;
-		for (let e = 0; h > 0 && this.travel >= h && e < t.maxPerFrame; e++) this.travel -= h, this.deal(), g = !0;
-		this.travel = Math.min(this.travel, h * 2);
-		let _ = t.cursorPace;
-		if (_?.max > 0 && s && !n.touch && !this.reduced && this.progress >= 1) {
-			let t = Math.max(0, (Math.abs(a) - _.deadZone) / (1 - _.deadZone));
-			this.paced = Math.min(1, this.paced + t ** +_.curve * _.max * e), this.paced >= 1 && !g && (this.paced = 0, this.deal(), g = !0);
+		let b = !1;
+		for (let e = 0; y > 0 && this.travel >= y && e < t.maxPerFrame; e++) this.travel -= y, this.deal(), b = !0;
+		this.travel = Math.min(this.travel, y * 2);
+		let x = t.cursorPace;
+		if (x?.max > 0 && s && !n.touch && !this.reduced && this.progress >= 1) {
+			let t = Math.max(0, (Math.abs(a) - x.deadZone) / (1 - x.deadZone));
+			this.paced = Math.min(1, this.paced + t ** +x.curve * x.max * e), this.paced >= 1 && !b && (this.paced = 0, this.deal(), b = !0);
 		}
-		let v = this.swiping ? t.swipe.step : t.scrollStep;
-		this.fling && (this.scrollTravel += this.fling * e, this.fling *= Math.exp(-t.swipe.decay * e), this.fling < 40 && (this.fling = 0)), this.sinceScrollDeal += e, this.progress >= 1 && this.scrollTravel >= v && this.sinceScrollDeal >= (this.swiping ? t.swipe.gap : t.scrollGap) && (this.scrollTravel -= v, this.sinceScrollDeal = 0, this.deal(), g = !0), this.scrollTravel = Math.min(this.scrollTravel, v * (this.swiping ? t.swipe.backlog : 2)), p || (this.timer += e), g ? this.timer = 0 : t.interval > 0 && this.timer >= t.interval && (this.timer = 0, this.deal());
-		let y = r / 2, b = i / 2, x = (e, n) => {
+		let S = this.swiping ? t.swipe.step : t.scrollStep;
+		this.fling && (this.scrollTravel += this.fling * e, this.fling *= Math.exp(-t.swipe.decay * e), this.fling < 40 && (this.fling = 0)), this.sinceScrollDeal += e, this.progress >= 1 && this.scrollTravel >= S && this.sinceScrollDeal >= (this.swiping ? t.swipe.gap : t.scrollGap) && (this.scrollTravel -= S, this.sinceScrollDeal = 0, this.deal(), b = !0), this.scrollTravel = Math.min(this.scrollTravel, S * (this.swiping ? t.swipe.backlog : 2)), _ || (this.timer += e), b ? this.timer = 0 : t.interval > 0 && this.timer >= t.interval && (this.timer = 0, this.deal());
+		let C = r / 2, w = i / 2, T = (e, n) => {
 			let r = t.slots[n], i = this.anchors[n];
-			e.w = e.baseW, e.h = e.baseH, e.x = y + i.x + r.x * this.k - e.w / 2, e.y = b + i.y + r.y * this.k - e.h / 2, e.rotation = (e.cardAngle || 0) * Math.PI / 180, e.pivot = {
+			e.w = e.baseW, e.h = e.baseH, e.x = C + i.x + r.x * this.k - e.w / 2, e.y = w + i.y + r.y * this.k - e.h / 2, e.rotation = (e.cardAngle || 0) * Math.PI / 180, e.pivot = {
 				x: e.x + e.w / 2,
 				y: e.y - e.h / 2
 			};
 		};
 		for (let e of this.tiles) e.alpha = 0, e.interactive = !1, e.rotation = 0, e.reveal = 1, e.gray = 0, e.zoom = 0, e.priority = 0;
-		let S = this.slotTile.filter((e) => e >= 0).length, C = this.slotStamp.filter((e, t) => this.slotTile[t] >= 0).sort((e, t) => t - e), w = null;
+		let E = this.slotTile.filter((e) => e >= 0).length, D = this.slotStamp.filter((e, t) => this.slotTile[t] >= 0).sort((e, t) => t - e), O = null;
 		this.slotTile.forEach((e, t) => {
 			if (e < 0) return;
 			let n = this.tiles[e];
-			x(n, t), n.z = this.slotStamp[t], n.alpha = this.fading?.to === e ? this.fading.p : 1, n.interactive = !0;
-			let r = C.indexOf(this.slotStamp[t]);
-			n.priority = 1 - r * .2, r === 0 && (w = n), this.applyTransition(n, Math.max(0, Math.min(1, (S - 1 - r) / Math.max(1, S))));
+			T(n, t), n.z = this.slotStamp[t], n.alpha = this.fading?.to === e ? this.fading.p : 1, n.interactive = !0;
+			let r = D.indexOf(this.slotStamp[t]);
+			n.priority = 1 - r * .2, r === 0 && (O = n), this.applyTransition(n, Math.max(0, Math.min(1, (E - 1 - r) / Math.max(1, E))));
 		});
-		let T = this.fading;
-		if (T && T.from >= 0 && T.from !== T.to && !this.slotTile.includes(T.from)) {
-			let e = this.tiles[T.from];
-			x(e, T.slot), e.z = T.fromStamp, e.alpha = 1 - T.p;
+		let k = this.fading;
+		if (k && k.from >= 0 && k.from !== k.to && !this.slotTile.includes(k.from)) {
+			let e = this.tiles[k.from];
+			T(e, k.slot), e.z = k.fromStamp, e.alpha = 1 - k.p;
 		}
-		this.featured = w, w && (w.priority = 3);
+		this.featured = O, O && (O.priority = 3);
 	}
 	pickAngle() {
 		let e = this.config.angles ?? [0], t;
@@ -15663,10 +15720,10 @@ var hg = {
 		this.finishFade(), super.dispose();
 	}
 };
-ig(gg, "defaults", hg), ig(gg, "label", "Deck");
+og(vg, "defaults", _g), og(vg, "label", "Deck");
 //#endregion
 //#region src/layouts/universe.js
-var _g = {
+var yg = {
 	tileWidth: 400,
 	field: {
 		width: 4269,
@@ -15849,6 +15906,10 @@ var _g = {
 		y: -3
 	},
 	hoverSlowdown: .15,
+	tiltShift: {
+		x: 70,
+		y: 50
+	},
 	hoverEase: 3,
 	scroll: {
 		multiplier: .4,
@@ -15870,7 +15931,7 @@ var _g = {
 	enterDuration: 1.4,
 	leaveDuration: .25,
 	captionInset: [20, 12]
-}, vg = (e) => e.slug || e.title, yg = class extends og {
+}, bg = (e) => e.slug || e.title, xg = class extends cg {
 	constructor(e, t) {
 		super(e, t), this.pan = {
 			x: 0,
@@ -15882,7 +15943,7 @@ var _g = {
 			x: 0,
 			y: 0
 		};
-		let n = () => new lg(t.scroll.omega, { maxLead: t.scroll.maxLead });
+		let n = () => new dg(t.scroll.omega, { maxLead: t.scroll.maxLead });
 		this.scrolled = {
 			x: n(),
 			y: n()
@@ -15902,14 +15963,14 @@ var _g = {
 					x: i + 200 + s % l * t.field.width,
 					y: a + o / 2 + Math.floor(s / l) * t.field.height
 				};
-			}), a = Math.hypot(e.width, e.height) / o, s = xm(n, i, vg, {
+			}), a = Math.hypot(e.width, e.height) / o, s = xm(n, i, bg, {
 				x: t.field.width * l,
 				y: t.field.height * u
 			}, a);
 			this.makeTiles(s.map((e) => i[e]));
 		}
 		this.tiles.forEach((e) => e.inView = !1);
-		let f = sg(r, t.layers.pace.length, t.seed);
+		let f = lg(r, t.layers.pace.length, t.seed);
 		this.period = {
 			x: t.field.width * l * o,
 			y: t.field.height * u * o
@@ -15951,31 +16012,31 @@ var _g = {
 		this.drift.x += (o.x - this.drift.x) * s, this.drift.y += (o.y - this.drift.y) * s, this.pan.x += (this.drift.x * this.slow + this.velocity.x) * e, this.pan.y += (this.drift.y * this.slow + this.velocity.y) * e;
 		let c = t.inertia ** (e * 60);
 		this.velocity.x *= c, this.velocity.y *= c;
-		let l = t.start.x * this.spacing * this.s + this.pan.x + this.scrolled.x.update(e), u = t.start.y * this.spacing * this.s + this.pan.y + this.scrolled.y.update(e), { x: d, y: f } = this.period, { x: p, y: m } = this.margin, h = (e, t, n) => ((e + n) % t + t) % t - n, g = null, _ = 0, v = /* @__PURE__ */ new Set(), y = [];
+		let l = n.tilt, u = t.start.x * this.spacing * this.s + this.pan.x + this.scrolled.x.update(e) + l.x * t.tiltShift.x * this.s, d = t.start.y * this.spacing * this.s + this.pan.y + this.scrolled.y.update(e) + l.y * t.tiltShift.y * this.s, { x: f, y: p } = this.period, { x: m, y: h } = this.margin, g = (e, t, n) => ((e + n) % t + t) % t - n, _ = null, v = 0, y = /* @__PURE__ */ new Set(), b = [];
 		for (let e of this.tiles) {
-			e.x = h(e.fx + l * e.pace, d, p) - e.w / 2, e.y = h(e.fy + u * e.pace, f, m) - e.h / 2;
+			e.x = g(e.fx + u * e.pace, f, m) - e.w / 2, e.y = g(e.fy + d * e.pace, p, h) - e.h / 2;
 			let t = e.x + e.w > 0 && e.x < r && e.y + e.h > 0 && e.y < i;
-			t && !e.inView ? y.push(e) : t && v.add(e.item), e.inView = t;
+			t && !e.inView ? b.push(e) : t && y.add(e.item), e.inView = t;
 		}
 		this.frame++;
-		for (let e of y) {
-			if (v.has(e.item)) {
-				let t = new Set([...v].map(vg)), n = null, r = null;
+		for (let e of b) {
+			if (y.has(e.item)) {
+				let t = new Set([...y].map(bg)), n = null, r = null;
 				for (let e of this.items) {
-					if (v.has(e)) continue;
-					let i = [+!t.has(vg(e)), -(this.seenAt.get(e) ?? -1)];
+					if (y.has(e)) continue;
+					let i = [+!t.has(bg(e)), -(this.seenAt.get(e) ?? -1)];
 					(!r || i[0] > r[0] || i[0] === r[0] && i[1] > r[1]) && ([n, r] = [e, i]);
 				}
 				n && this.give(e, n);
 			}
-			v.add(e.item);
+			y.add(e.item);
 		}
-		for (let e of v) this.seenAt.set(e, this.frame);
+		for (let e of y) this.seenAt.set(e, this.frame);
 		this.tiles.forEach((e, n) => {
-			e.z = e.layer * 1e3 + n, e.rotation = 0, e.alpha = 1, e.reveal = 1, e.priority = e.inView ? this.centerScore(e) : 0, e.priority > _ && (_ = e.priority, g = e), this.applyTransition(e, 1 - e.layer / (t.layers.pace.length - 1));
-		}), this.featured = g, g && (g.priority = 2), a && (n.hovered.priority = 3), this.clock += e;
-		let b = a ? n.hovered : null;
-		b !== this.raiseFor && (this.raiseFor = b, this.raiseAt = this.raised && this.tiles.includes(this.raised) ? this.clock + t.raiseDelay : this.clock), this.clock >= this.raiseAt && (this.raised = this.raiseFor), this.raised && !this.tiles.includes(this.raised) && (this.raised = null), this.tiles.forEach((e) => e.lifted = e === this.raised), this.raised && (this.raised.z = 1e5);
+			e.z = e.layer * 1e3 + n, e.rotation = 0, e.alpha = 1, e.reveal = 1, e.priority = e.inView ? this.centerScore(e) : 0, e.priority > v && (v = e.priority, _ = e), this.applyTransition(e, 1 - e.layer / (t.layers.pace.length - 1));
+		}), this.featured = _, _ && (_.priority = 2), a && (n.hovered.priority = 3), this.clock += e;
+		let x = a ? n.hovered : null;
+		x !== this.raiseFor && (this.raiseFor = x, this.raiseAt = this.raised && this.tiles.includes(this.raised) ? this.clock + t.raiseDelay : this.clock), this.clock >= this.raiseAt && (this.raised = this.raiseFor), this.raised && !this.tiles.includes(this.raised) && (this.raised = null), this.tiles.forEach((e) => e.lifted = e === this.raised), this.raised && (this.raised.z = 1e5);
 	}
 	onWheel({ dx: e, dy: t }) {
 		let n = this.config.scroll.multiplier;
@@ -16002,30 +16063,30 @@ var _g = {
 		this.scrolled.x.target += (this.vp.width / 2 - (t.x + t.w / 2)) / t.pace, this.scrolled.y.target += (this.vp.height / 2 - (t.y + t.h / 2)) / t.pace;
 	}
 };
-ig(yg, "defaults", _g), ig(yg, "label", "Universe");
+og(xg, "defaults", yg), og(xg, "label", "Universe");
 //#endregion
 //#region src/main.js
-var bg = [
+var Sg = [
 	{
 		key: "a",
 		name: "Filmstrip",
-		Layout: mg,
-		config: fg
+		Layout: gg,
+		config: mg
 	},
 	{
 		key: "b",
 		name: "Deck",
-		Layout: gg,
-		config: hg
+		Layout: vg,
+		config: _g
 	},
 	{
 		key: "e",
 		name: "Universe",
-		Layout: yg,
-		config: _g
+		Layout: xg,
+		config: yg
 	}
 ];
-async function xg(e, t = {}) {
+async function Cg(e, t = {}) {
 	if (e.__workCanvas) return e.__workCanvas;
 	let n = e.dataset, r = new URLSearchParams(location.search), i = r.get("v");
 	if (i && !(t.syncUrl ?? n.syncUrl === "true")) {
@@ -16033,7 +16094,7 @@ async function xg(e, t = {}) {
 		let e = new URL(location.href);
 		e.search = r.toString(), history.replaceState(history.state, "", e);
 	}
-	let a = parseInt(t.maxVideos ?? n.maxVideos, 10), o = bg.map((e) => ({
+	let a = parseInt(t.maxVideos ?? n.maxVideos, 10), o = Sg.map((e) => ({
 		...e,
 		config: {
 			...e.config,
@@ -16041,7 +16102,7 @@ async function xg(e, t = {}) {
 		}
 	}));
 	a && o.forEach((e) => e.config.maxVideos = a);
-	let s = new qh(e, {
+	let s = new Yh(e, {
 		layouts: o,
 		layout: t.layout ?? i ?? n.layout ?? "a",
 		rotate: t.rotate ?? ((t.layout ?? i) || n.rotate === "false" ? !1 : n.rotate === "next" ? "next" : "random"),
@@ -16056,14 +16117,14 @@ async function xg(e, t = {}) {
 	});
 	return e.__workCanvas = s, await s.init(), s;
 }
-function Sg() {
-	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => xg(e));
+function wg() {
+	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Cg(e));
 }
 typeof window < "u" && (window.WorkCanvas = {
-	mount: xg,
-	LAYOUTS: bg
-}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", Sg, { once: !0 }) : Sg());
+	mount: Cg,
+	LAYOUTS: Sg
+}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", wg, { once: !0 }) : wg());
 //#endregion
-export { bg as LAYOUTS, qh as WorkCanvas, xg as mount };
+export { Sg as LAYOUTS, Yh as WorkCanvas, Cg as mount };
 
 //# sourceMappingURL=work-canvas.js.map
