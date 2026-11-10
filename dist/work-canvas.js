@@ -14308,16 +14308,24 @@ var Ah = class {
 	destroy() {
 		this.clear(), this.io.disconnect(), this.loopIO.disconnect(), window.removeEventListener("message", this._onMessage), this.el.remove();
 	}
-}, jh = "\n/* Full visible screen: svh leaves out the mobile browser toolbars (100vh would slide under them). */\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);height:100vh;isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n/* About: the hovered client's picture, blurred across the page (blur-backdrop.js). Below everything else, above the root's own background (its isolation keeps it in there). */\n.wc-backdrop{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}\n.wc-backdrop img{position:absolute;display:block;max-width:none;object-fit:cover;will-change:opacity}\n.wc-root.is-hovering-tile{cursor:none} /* the dot stands in for the cursor over a project that opens */\n/* Over a project that opens on click, the cursor is a dot (blends with difference, like the caption, so it reads\n   on any picture). Mouse only: touch has no cursor. */\n.wc-dot{position:absolute;left:0;top:0;z-index:3;width:var(--wc-dot-size,10px);height:var(--wc-dot-size,10px);margin:calc(var(--wc-dot-size,10px) / -2) 0 0 calc(var(--wc-dot-size,10px) / -2);border-radius:50%;background:#f2f2f2;mix-blend-mode:difference;pointer-events:none;opacity:0;will-change:transform}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear;touch-action:none} /* swipes in any direction drive the layouts */\n.wc-root.is-ready .wc-canvas{opacity:1}\n/* Leaving the about section: the work only starts to fade back once the about copy has gone (no cross-fade). */\n.wc-root.is-leaving-about .wc-canvas{transition:opacity .45s linear .45s}\n.wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,400);color:#f2f2f2}\n/* Above everything else (about, project view, caption) so it always blends with what's behind it and stays\n   tappable when project images scroll under it; its own layer keeps Safari blending it against the page. */\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;z-index:2;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference;will-change:transform}\n.wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px);padding:0;border:0;background:none;pointer-events:auto;cursor:pointer}\n.wc-icon:focus-visible{outline:1px solid #f2f2f2;outline-offset:3px}\n.wc-icon img{display:block;width:100%;height:100%;pointer-events:none}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}\n.wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}\n/* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */\n.wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden;translate:0 .105em} /* puts the turned glyph's tip on the text baseline (measured: centred, it ends ~1.7px above at 16px) */\n.wc-arrow-track{position:absolute;left:0;top:0;width:17px;height:17px}\n.wc-arrow-glyph{position:absolute;left:0;top:0;width:17px;height:17px;line-height:17px;text-align:center;transform:rotate(90deg);-webkit-text-stroke:.35px currentColor} /* a touch heavier than the font's 500 (there's no bolder Cassette file) */\n.wc-arrow-glyph.is-next{top:-17px}\n.wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}\n.wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}\n/* About (Figma frame 49, 1542:5601): bottom-anchored headline, then the intro + client columns, then the footer. The\n   section blends with difference (like the top bar), so colours are written inverted against the #f2f2f2 page:\n   #939393 → #5f5f5f grey text; tags #101010 on #e2e2e2 text → #e2e2e2 tags with near-black text. */\n.wc-about{position:absolute;left:0;right:0;bottom:0;translate:0 var(--wc-pull-lift,0px);box-sizing:border-box;max-height:calc(100% - 44px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:0 23px 24px;display:flex;flex-direction:column;gap:48px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}\n.wc-root.is-about .wc-about{opacity:var(--wc-pull-fade,1);visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}\n.wc-about .wc-w{display:inline-block}\n.wc-about-statement{margin:0 0 48px;max-width:24.6em;font-size:clamp(22px,min(3.75vw,6.2vh),48px);line-height:1.25;letter-spacing:.02em;font-weight:500} /* 96px to the row (the section's 48 + 48) */\n.wc-about-statement img{display:inline-block;width:.72em;height:.72em;margin-left:.3em;vertical-align:baseline} /* Cassette cap height: sits on the baseline, tops out with the capitals */\n.wc-about-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}\n.wc-about-intro{margin:0;flex:0 1 263px;min-width:0;font-size:16px;line-height:1.25;font-weight:400;color:#939393}\n.wc-about-clients{display:contents} /* its columns share the row's even spacing with the intro */\n.wc-about-clients ul{list-style:none;margin:0;padding:0;flex:0 1 165px;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:400;font-size:10px;line-height:1;letter-spacing:.02em;text-transform:uppercase} /* type matches the project service tags */\n.wc-about-clients li{padding:3px 6px;border-radius:3px;background:#101010;color:#e2e2e2;white-space:nowrap} /* a tag, like the project services */\n.wc-about-clients li.has-work{transition:background-color .12s linear,color .12s linear}\n@media (hover:hover){.wc-about-clients li.has-work:hover{background:#e2e2e2;color:#101010}} /* a client with work to show, hovered: inverted (shows as a near-black tag with grey text) */\n.wc-about-clients li.wc-about-label{padding:3px 0;background:none;color:inherit} /* plain text, flush with the column (keeps the tag row height so the rows line up) */\n.wc-about-clients li.wc-about-gap{background:none;height:10px}\n/* Hovering a client's tag: one of their pieces as a card above the copy (about-peek.js). Behind the section, so the copy blends over it. */\n.wc-about-peek{position:absolute;inset:0;overflow:hidden;pointer-events:none;visibility:hidden}\n.wc-root.is-about .wc-about-peek{visibility:visible}\n.wc-about-card{position:absolute;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-about-card.is-loaded{background:none} /* the placeholder grey would otherwise show as a dotted hairline along a turned card's antialiased edges */\n.wc-about-card img,.wc-about-card video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}\n.wc-about-card video{opacity:0}\n.wc-about-card video.is-playing{opacity:1}\n.wc-about-footer{display:flex;align-items:center;justify-content:space-between;line-height:1;font-weight:500}\n.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:500;letter-spacing:.02em} /* same size as the tagline */\n.wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}\n/* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */\n.wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}\n.wc-link-track{position:absolute;inset:0}\n.wc-link-track>span{position:absolute;left:0;top:0;width:1em;line-height:1em;text-align:center}\n.wc-link-track>span.is-next{left:-1em}\n.wc-about-links a:focus-visible{outline:1px solid currentColor;outline-offset:3px}\n.wc-about-copy{margin:0;font-size:16px}\n/* Email: after a click the link reads \"copied\" in place of \"email →\" (laid over it, so the link keeps its width and the others stay put). */\n.wc-copy{position:relative}\n.wc-copy-done{position:absolute;left:0;top:0;opacity:0;white-space:nowrap;pointer-events:none}\n.wc-caption{position:absolute;left:0;top:0;transform-origin:0 0;font-size:16px;font-weight:500;letter-spacing:0;line-height:1.3;text-wrap:balance;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .4s linear;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 12px;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n/* Paragraphs avoid orphans and ragged endings; headings get evenly balanced lines. */\n.wc-ui p{text-wrap:pretty} /* paragraphs: no lone last word */\n.wc-ui h1,.wc-ui h2,.wc-ui h3,.wc-ui h4,.wc-ui h5,.wc-ui h6,.wc-ui .wc-about-statement{text-wrap:balance} /* headlines (the about headline is a <p>): even lines */\n.wc-seo{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@supports (height:100svh){.wc-root{height:100svh}}\n.wc-about::-webkit-scrollbar{display:none}\n@media (max-width:600px){.wc-tagline,.wc-about-links{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-row{flex-wrap:wrap;justify-content:flex-start;row-gap:16px}.wc-about-intro{flex:0 0 100%;margin-bottom:12px}.wc-about-clients ul{flex:0 0 calc(50% - 8px)}}\n", Mh = !1;
-function Nh() {
-	if (Mh) return;
-	Mh = !0;
+}, jh = {
+	delay: .15,
+	duration: .45,
+	wordsAt: .12,
+	wordStep: .07,
+	fontWait: 1.2,
+	starTurn: 90,
+	starSpin: .9
+}, Mh = "\n/* Full visible screen: svh leaves out the mobile browser toolbars (100vh would slide under them). */\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);height:100vh;isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n/* About: the hovered client's picture, blurred across the page (blur-backdrop.js). Below everything else, above the root's own background (its isolation keeps it in there). */\n.wc-backdrop{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}\n.wc-backdrop img{position:absolute;display:block;max-width:none;object-fit:cover;will-change:opacity}\n.wc-root.is-hovering-tile{cursor:none} /* the dot stands in for the cursor over a project that opens */\n/* Over a project that opens on click, the cursor is a dot (blends with difference, like the caption, so it reads\n   on any picture). Mouse only: touch has no cursor. */\n.wc-dot{position:absolute;left:0;top:0;z-index:3;width:var(--wc-dot-size,10px);height:var(--wc-dot-size,10px);margin:calc(var(--wc-dot-size,10px) / -2) 0 0 calc(var(--wc-dot-size,10px) / -2);border-radius:50%;background:#f2f2f2;mix-blend-mode:difference;pointer-events:none;opacity:0;will-change:transform}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear;touch-action:none} /* swipes in any direction drive the layouts */\n.wc-root.is-ready .wc-canvas{opacity:1}\n/* Leaving the about section: the work only starts to fade back once the about copy has gone (no cross-fade). */\n.wc-root.is-leaving-about .wc-canvas{transition:opacity .45s linear .45s}\n.wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,400);color:#f2f2f2}\n/* Above everything else (about, project view, caption) so it always blends with what's behind it and stays\n   tappable when project images scroll under it; its own layer keeps Safari blending it against the page. */\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;z-index:2;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference;will-change:transform}\n.wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px);padding:0;border:0;background:none;pointer-events:auto;cursor:pointer}\n.wc-icon:focus-visible{outline:1px solid #f2f2f2;outline-offset:3px}\n.wc-icon img{display:block;width:100%;height:100%;pointer-events:none}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}\n.wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}\n/* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */\n.wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden;translate:0 .105em} /* puts the turned glyph's tip on the text baseline (measured: centred, it ends ~1.7px above at 16px) */\n.wc-arrow-track{position:absolute;left:0;top:0;width:17px;height:17px}\n.wc-arrow-glyph{position:absolute;left:0;top:0;width:17px;height:17px;line-height:17px;text-align:center;transform:rotate(90deg);-webkit-text-stroke:.35px currentColor} /* a touch heavier than the font's 500 (there's no bolder Cassette file) */\n.wc-arrow-glyph.is-next{top:-17px}\n.wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}\n.wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}\n/* About (Figma frame 49, 1542:5601): bottom-anchored headline, then the intro + client columns, then the footer. The\n   section blends with difference (like the top bar), so colours are written inverted against the #f2f2f2 page:\n   #939393 → #5f5f5f grey text; tags #101010 on #e2e2e2 text → #e2e2e2 tags with near-black text. */\n.wc-about{position:absolute;left:0;right:0;bottom:0;translate:0 var(--wc-pull-lift,0px);box-sizing:border-box;max-height:calc(100% - 44px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:0 23px 24px;display:flex;flex-direction:column;gap:48px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}\n.wc-root.is-about .wc-about{opacity:var(--wc-pull-fade,1);visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}\n.wc-about .wc-w{display:inline-block}\n.wc-about-statement{margin:0 0 48px;max-width:24.6em;font-size:clamp(22px,min(3.75vw,6.2vh),48px);line-height:1.25;letter-spacing:.02em;font-weight:500} /* 96px to the row (the section's 48 + 48) */\n.wc-about-statement img{display:inline-block;width:.72em;height:.72em;margin-left:.3em;vertical-align:baseline} /* Cassette cap height: sits on the baseline, tops out with the capitals */\n.wc-about-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}\n.wc-about-intro{margin:0;flex:0 1 263px;min-width:0;font-size:16px;line-height:1.25;font-weight:400;color:#939393}\n.wc-about-clients{display:contents} /* its columns share the row's even spacing with the intro */\n.wc-about-clients ul{list-style:none;margin:0;padding:0;flex:0 1 165px;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:400;font-size:10px;line-height:1;letter-spacing:.02em;text-transform:uppercase} /* type matches the project service tags */\n.wc-about-clients li{padding:3px 6px;border-radius:3px;background:#101010;color:#e2e2e2;white-space:nowrap} /* a tag, like the project services */\n.wc-about-clients li.has-work{transition:background-color .12s linear,color .12s linear}\n@media (hover:hover){.wc-about-clients li.has-work:hover{background:#e2e2e2;color:#101010}} /* a client with work to show, hovered: inverted (shows as a near-black tag with grey text) */\n.wc-about-clients li.wc-about-label{padding:3px 0;background:none;color:inherit} /* plain text, flush with the column (keeps the tag row height so the rows line up) */\n.wc-about-clients li.wc-about-gap{background:none;height:10px}\n/* Hovering a client's tag: one of their pieces as a card above the copy (about-peek.js). Behind the section, so the copy blends over it. */\n.wc-about-peek{position:absolute;inset:0;overflow:hidden;pointer-events:none;visibility:hidden}\n.wc-root.is-about .wc-about-peek{visibility:visible}\n.wc-about-card{position:absolute;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-about-card.is-loaded{background:none} /* the placeholder grey would otherwise show as a dotted hairline along a turned card's antialiased edges */\n.wc-about-card img,.wc-about-card video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}\n.wc-about-card video{opacity:0}\n.wc-about-card video.is-playing{opacity:1}\n.wc-about-footer{display:flex;align-items:center;justify-content:space-between;line-height:1;font-weight:500}\n.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:500;letter-spacing:.02em} /* same size as the tagline */\n.wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}\n/* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */\n.wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}\n.wc-link-track{position:absolute;inset:0}\n.wc-link-track>span{position:absolute;left:0;top:0;width:1em;line-height:1em;text-align:center}\n.wc-link-track>span.is-next{left:-1em}\n.wc-about-links a:focus-visible{outline:1px solid currentColor;outline-offset:3px}\n.wc-about-copy{margin:0;font-size:16px}\n/* Email: after a click the link reads \"copied\" in place of \"email →\" (laid over it, so the link keeps its width and the others stay put). */\n.wc-copy{position:relative}\n.wc-copy-done{position:absolute;left:0;top:0;opacity:0;white-space:nowrap;pointer-events:none}\n.wc-caption{position:absolute;left:0;top:0;transform-origin:0 0;font-size:16px;font-weight:500;letter-spacing:0;line-height:1.3;text-wrap:balance;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .4s linear;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 12px;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n/* Paragraphs avoid orphans and ragged endings; headings get evenly balanced lines. */\n.wc-ui p{text-wrap:pretty} /* paragraphs: no lone last word */\n.wc-ui h1,.wc-ui h2,.wc-ui h3,.wc-ui h4,.wc-ui h5,.wc-ui h6,.wc-ui .wc-about-statement{text-wrap:balance} /* headlines (the about headline is a <p>): even lines */\n.wc-seo{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@supports (height:100svh){.wc-root{height:100svh}}\n.wc-about::-webkit-scrollbar{display:none}\n@media (max-width:600px){.wc-tagline,.wc-about-links{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-row{flex-wrap:wrap;justify-content:flex-start;row-gap:16px}.wc-about-intro{flex:0 0 100%;margin-bottom:12px}.wc-about-clients ul{flex:0 0 calc(50% - 8px)}}\n", Nh = !1;
+function Ph() {
+	if (Nh) return;
+	Nh = !0;
 	let e = document.createElement("style");
-	e.dataset.workCanvas = "", e.textContent = jh, document.head.appendChild(e);
+	e.dataset.workCanvas = "", e.textContent = Mh, document.head.appendChild(e);
 }
-var Ph = class {
+var Fh = class {
 	constructor(e, { layouts: t, current: n, onAbout: r, onHome: i, tagline: a, hint: o, aboutHref: s = "/about", items: c = [] }) {
-		Nh(), this.mount = e, this.layouts = t;
+		Ph(), this.mount = e, this.layouts = t;
 		let l = `wc-about-${Math.random().toString(36).slice(2, 8)}`;
 		this.root = document.createElement("div"), this.root.className = "wc-ui", this.root.innerHTML = `
       <div class="wc-topbar">
@@ -14331,7 +14339,7 @@ var Ph = class {
       <div class="wc-dot" aria-hidden="true"></div>
       <section class="wc-about" id="${l}" aria-label="About" data-wc-no-input>${oh()}</section>
       ${o ? `<div class="wc-hint" aria-hidden="true">${o}</div>` : ""}
-    `, this.caption = this.root.querySelector(".wc-caption"), this.captionInner = this.root.querySelector(".wc-caption-inner"), this.bindDot(), this.icon = this.root.querySelector(".wc-icon"), this.tagline = this.root.querySelector(".wc-tagline"), this.about = this.root.querySelector(".wc-about"), _h(this.about.querySelector(".wc-about-statement")), this.backdrop = new mh(e), this.peek = new dh(this, c), this.aboutOpen = !1, this.aboutPull = new gh({
+    `, this.caption = this.root.querySelector(".wc-caption"), this.captionInner = this.root.querySelector(".wc-caption-inner"), this.bindDot(), this.icon = this.root.querySelector(".wc-icon"), this.tagline = this.root.querySelector(".wc-tagline"), _h(this.tagline.querySelector("span")), this.about = this.root.querySelector(".wc-about"), _h(this.about.querySelector(".wc-about-statement")), this.backdrop = new mh(e), this.peek = new dh(this, c), this.aboutOpen = !1, this.aboutPull = new gh({
 			input: e,
 			scroller: this.about,
 			enabled: () => this.aboutOpen,
@@ -14351,7 +14359,7 @@ var Ph = class {
 				}));
 			};
 			e.addEventListener("pointerenter", r), e.addEventListener("focus", r);
-		}), this.about.querySelectorAll(".wc-about-links a[href^=\"mailto:\"]").forEach((e) => Fh(e)), this.arrowTrack = this.root.querySelector(".wc-arrow-track"), this.tagline.addEventListener("click", (e) => {
+		}), this.about.querySelectorAll(".wc-about-links a[href^=\"mailto:\"]").forEach((e) => Ih(e)), this.arrowTrack = this.root.querySelector(".wc-arrow-track"), this.tagline.addEventListener("click", (e) => {
 			e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1 || (e.preventDefault(), r?.());
 		}), this.tagline.addEventListener("pointerdown", (e) => e.stopPropagation()), this.icon.addEventListener("click", (e) => {
 			e.preventDefault(), i?.();
@@ -14367,7 +14375,37 @@ var Ph = class {
 		this.icon.addEventListener("pointerenter", u), this.icon.addEventListener("focus", u), this.tagline.addEventListener("pointerenter", () => this.loopArrow()), this.tagline.addEventListener("focus", () => this.loopArrow()), this.setActive(n), e.appendChild(this.root), this.project = new Ah(this.root, {}), this.captionState = {
 			target: null,
 			shown: null
-		};
+		}, this.intro();
+	}
+	intro() {
+		let e = jh, t = this.icon.querySelector("img"), n = [...this.tagline.querySelectorAll(".wc-w")], r = [
+			t,
+			...n,
+			this.arrowTrack
+		];
+		K.set(r, { opacity: 0 });
+		let i = matchMedia("(prefers-reduced-motion: reduce)").matches;
+		Promise.race([document.fonts?.ready, new Promise((t) => setTimeout(t, e.fontWait * 1e3))]).then(() => {
+			let a = {
+				opacity: 1,
+				clearProps: "opacity"
+			}, o = K.timeline({
+				delay: e.delay,
+				defaults: {
+					duration: e.duration,
+					ease: cm.fade
+				}
+			});
+			if (i) return void o.to(r, a);
+			o.to(t, a, 0).fromTo(t, { rotation: -e.starTurn }, {
+				rotation: 0,
+				duration: e.starSpin,
+				ease: cm.move
+			}, 0).to(n, {
+				...a,
+				stagger: e.wordStep
+			}, e.wordsAt).to(this.arrowTrack, a, `-=${e.duration - e.wordStep}`), this.introTl = o;
+		});
 	}
 	loopArrow() {
 		if (this.arrowTween?.isActive() || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -14530,10 +14568,10 @@ var Ph = class {
 		}
 	}
 	destroy() {
-		this.mount.removeEventListener("pointermove", this._onDotMove), this.project?.destroy(), this.peek?.destroy(), this.backdrop?.destroy(), this.root.remove(), this.fallback?.remove();
+		this.mount.removeEventListener("pointermove", this._onDotMove), this.project?.destroy(), this.introTl?.kill(), this.peek?.destroy(), this.backdrop?.destroy(), this.root.remove(), this.fallback?.remove();
 	}
 };
-function Fh(e) {
+function Ih(e) {
 	let t = decodeURIComponent(e.getAttribute("href").replace(/^mailto:/i, "").split("?")[0]), n = document.createElement("span");
 	n.append(...e.childNodes);
 	let r = document.createElement("span");
@@ -14555,12 +14593,12 @@ function Fh(e) {
 	};
 	e.addEventListener("click", async (n) => {
 		if (!(n.metaKey || n.ctrlKey || n.shiftKey || n.altKey)) {
-			if (n.preventDefault(), !await Ih(t)) return void (location.href = e.href);
+			if (n.preventDefault(), !await Lh(t)) return void (location.href = e.href);
 			a(!0), clearTimeout(i), i = setTimeout(() => a(!1), 1600);
 		}
 	});
 }
-async function Ih(e) {
+async function Lh(e) {
 	try {
 		return await navigator.clipboard.writeText(e), !0;
 	} catch {}
@@ -14574,55 +14612,13 @@ async function Ih(e) {
 	}
 	return t.remove(), n;
 }
-function Lh(e) {
+function Rh(e) {
 	for (let { el: t } of e) (t.matches("a[href]") || t.querySelector("a[href]")) && (t.closest("[data-work-list]") ?? t).classList.add("wc-sr");
 }
 //#endregion
-//#region src/core/tilt.js
-var Rh = {
-	range: 22,
-	deadZone: .08,
-	smoothing: 8,
-	recenter: .12
-}, zh = class {
-	constructor(e, { canAsk: t = () => !0, config: n = Rh } = {}) {
-		this.config = n, this.x = 0, this.y = 0, this.active = !1, this.raw = null, this.base = null, this.el = e, this.canAsk = t, window.DeviceOrientationEvent !== void 0 && (this.listen(), typeof DeviceOrientationEvent.requestPermission == "function" && (this._ask = () => {
-			this.canAsk() && (e.removeEventListener("touchend", this._ask), DeviceOrientationEvent.requestPermission().catch(() => {}));
-		}, e.addEventListener("touchend", this._ask, { passive: !0 })));
-	}
-	listen() {
-		this._onOrient = (e) => {
-			if (e.beta == null || e.gamma == null) return;
-			let t = screen.orientation?.angle ?? window.orientation ?? 0, { beta: n, gamma: r } = e, [i, a] = {
-				0: [r, n],
-				90: [n, -r],
-				180: [-r, -n],
-				270: [-n, r],
-				"-90": [-n, r]
-			}[t] ?? [r, n];
-			this.raw = {
-				x: i,
-				y: a
-			};
-		}, window.addEventListener("deviceorientation", this._onOrient);
-	}
-	update(e) {
-		let t = this.config;
-		if (!this.raw) return;
-		this.base || (this.base = { ...this.raw });
-		let n = (e) => ((e + 180) % 360 + 360) % 360 - 180, r = 1 - Math.exp(-e * t.recenter);
-		this.base.x += n(this.raw.x - this.base.x) * r, this.base.y += n(this.raw.y - this.base.y) * r;
-		let i = (e) => {
-			let r = Math.max(-1, Math.min(1, n(e) / t.range)), i = Math.max(0, (Math.abs(r) - t.deadZone) / (1 - t.deadZone));
-			return Math.sign(r) * i;
-		}, a = 1 - Math.exp(-e * t.smoothing);
-		this.x += (i(this.raw.x - this.base.x) - this.x) * a, this.y += (i(this.raw.y - this.base.y) - this.y) * a, this.active = !0;
-	}
-	destroy() {
-		this._ask && this.el.removeEventListener("touchend", this._ask), this._onOrient && window.removeEventListener("deviceorientation", this._onOrient);
-	}
-}, Bh = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }\n", Vh = "\n  uniform sampler2D uTex;\n  uniform float uTexReady;  // 0 → placeholder colour, 1 → texture (tweened for a fade-in)\n  uniform vec2 uTexSize;    // texture px (only the ratio matters)\n  uniform vec2 uSize;       // tile CSS px\n  uniform float uRadius;    // corner radius, CSS px\n  uniform float uDpr;\n  uniform vec3 uBase;       // placeholder colour\n\n  uniform float uZoom;      // extra texture zoom (0 = cover)\n  uniform vec2 uShift;      // where the picture's centre sits off the frame's (frame uv; y up) — a frame growing to one side\n  uniform float uGray;      // 0..1 desaturation\n  uniform float uAlpha;\n  uniform float uReveal;    // 0..1 wipe from the bottom\n\n  varying vec2 vUv;\n\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n\n  void main() {\n    vec2 uv = vUv;\n\n    // object-fit: cover (+ optional zoom around the centre)\n    float planeA = uSize.x / max(uSize.y, 1.0);\n    float texA = uTexSize.x / max(uTexSize.y, 1.0);\n    vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);\n    vec2 tuv = (uv - 0.5 - uShift) * cover / (1.0 + uZoom) + 0.5;\n\n    vec3 col = mix(uBase, texture2D(uTex, tuv).rgb, uTexReady);\n    col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);\n\n    // rounded corners, ~1 device px of antialiasing\n    float d = sdRoundBox((uv - 0.5) * uSize, uSize * 0.5, uRadius);\n    float aa = 0.75 / uDpr;\n    float mask = 1.0 - smoothstep(-aa, aa, d);\n\n    // reveal wipe (uv.y = 0 at the bottom edge)\n    float reveal = uReveal >= 1.0 ? 1.0 : step(uv.y, uReveal);\n\n    gl_FragColor = vec4(col, uAlpha * mask * reveal);\n  }\n", Hh = (e) => e ? new URL(e, location.href).href : void 0;
-function Uh(e, t) {
+//#region src/core/shaders.js
+var zh = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }\n", Bh = "\n  uniform sampler2D uTex;\n  uniform float uTexReady;  // 0 → placeholder colour, 1 → texture (tweened for a fade-in)\n  uniform vec2 uTexSize;    // texture px (only the ratio matters)\n  uniform vec2 uSize;       // tile CSS px\n  uniform float uRadius;    // corner radius, CSS px\n  uniform float uDpr;\n  uniform vec3 uBase;       // placeholder colour\n\n  uniform float uZoom;      // extra texture zoom (0 = cover)\n  uniform vec2 uShift;      // where the picture's centre sits off the frame's (frame uv; y up) — a frame growing to one side\n  uniform float uGray;      // 0..1 desaturation\n  uniform float uAlpha;\n  uniform float uReveal;    // 0..1 wipe from the bottom\n\n  varying vec2 vUv;\n\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n\n  void main() {\n    vec2 uv = vUv;\n\n    // object-fit: cover (+ optional zoom around the centre)\n    float planeA = uSize.x / max(uSize.y, 1.0);\n    float texA = uTexSize.x / max(uTexSize.y, 1.0);\n    vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);\n    vec2 tuv = (uv - 0.5 - uShift) * cover / (1.0 + uZoom) + 0.5;\n\n    vec3 col = mix(uBase, texture2D(uTex, tuv).rgb, uTexReady);\n    col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);\n\n    // rounded corners, ~1 device px of antialiasing\n    float d = sdRoundBox((uv - 0.5) * uSize, uSize * 0.5, uRadius);\n    float aa = 0.75 / uDpr;\n    float mask = 1.0 - smoothstep(-aa, aa, d);\n\n    // reveal wipe (uv.y = 0 at the bottom edge)\n    float reveal = uReveal >= 1.0 ? 1.0 : step(uv.y, uReveal);\n\n    gl_FragColor = vec4(col, uAlpha * mask * reveal);\n  }\n", Vh = (e) => e ? new URL(e, location.href).href : void 0;
+function Hh(e, t) {
 	let n = document.createElement("nav");
 	n.className = "wc-sr", n.setAttribute("aria-label", "Projects");
 	let r = document.createElement("ul"), i = e.map((e) => {
@@ -14637,54 +14633,54 @@ function Uh(e, t) {
 		links: i
 	};
 }
-function Wh(e, t, n) {
+function Uh(e, t, n) {
 	let r = (e.services || "").split(/\s*(?:,|→|\n)\s*/).filter(Boolean);
 	return {
 		"@type": "CreativeWork",
 		name: e.title,
 		url: t,
 		description: e.description || void 0,
-		image: n.filter(Boolean).map(Hh),
+		image: n.filter(Boolean).map(Vh),
 		keywords: r.length ? r.join(", ") : void 0,
 		creator: {
 			"@type": "Person",
 			name: "Zachary Allott",
-			url: Hh("/")
+			url: Vh("/")
 		}
 	};
 }
-function Gh(e) {
+function Wh(e) {
 	let t = document.head.querySelector("script[data-wc-seo]");
 	t || (t = document.createElement("script"), t.type = "application/ld+json", t.dataset.wcSeo = "", document.head.appendChild(t)), t.textContent = JSON.stringify({
 		"@context": "https://schema.org",
 		...e
 	});
 }
-function Kh(e, t, n) {
-	Gh({
+function Gh(e, t, n) {
+	Wh({
 		"@type": "ItemList",
 		name: "Selected work",
 		itemListElement: e.map((e, r) => ({
 			"@type": "ListItem",
 			position: r + 1,
-			url: Hh(t(e.slug)),
-			item: Wh(e, Hh(t(e.slug)), [n(e)])
+			url: Vh(t(e.slug)),
+			item: Uh(e, Vh(t(e.slug)), [n(e)])
 		}))
 	});
 }
-function qh(e, t, n) {
-	Gh(Wh(e, Hh(t), n));
+function Kh(e, t, n) {
+	Wh(Uh(e, Vh(t), n));
 }
 //#endregion
 //#region src/core/engine.js
-function Jh(e) {
+function qh(e) {
 	return new Promise((t) => {
 		if (!e) return t();
 		let n = new Image();
 		n.crossOrigin = "anonymous", n.onload = n.onerror = () => t(), n.src = e;
 	});
 }
-var Yh = class {
+var Jh = class {
 	constructor(e, t = {}) {
 		this.mount = e, this.options = {
 			...Mp,
@@ -14699,9 +14695,9 @@ var Yh = class {
 	async init() {
 		let { mount: e } = this;
 		if (e.classList.add("wc-root"), this.items = km(e), !this.items.length) return console.warn("[work-canvas] no .work-item elements found — nothing to render."), this;
-		await jm(this.items), Lh(this.items), this.projectPage = !!this.pathSlug() && new Set(this.items.map((e) => e.slug)).size === 1, this._homeTitle = this.isHomePath() ? document.title : this.options.homeTitle;
+		await jm(this.items), Rh(this.items), this.projectPage = !!this.pathSlug() && new Set(this.items.map((e) => e.slug)).size === 1, this._homeTitle = this.isHomePath() ? document.title : this.options.homeTitle;
 		let t = this.layoutDefs.map((e) => e.key), n = t.includes(this.options.layout) ? this.options.layout : t[0];
-		this.options.rotate && (n = (this.options.rotate === "next" ? $h(t) : eg(t)) ?? n), this.ui = new Ph(e, {
+		this.options.rotate && (n = (this.options.rotate === "next" ? Qh(t) : $h(t)) ?? n), this.ui = new Fh(e, {
 			layouts: this.layoutDefs,
 			current: n,
 			aboutHref: this.options.aboutPath,
@@ -14764,11 +14760,11 @@ var Yh = class {
 		let e = [...new Map(this.mediaItems.filter((e) => e.caseStudy && e.slug).map((e) => [e.slug, e])).values()];
 		if (this.projectPage) {
 			let t = e[0];
-			t && qh(t.project, location.href, [t.images.at(-1)?.src || t.poster, ...(t.project.gallery ?? []).map((e) => e.src)]);
+			t && Kh(t.project, location.href, [t.images.at(-1)?.src || t.poster, ...(t.project.gallery ?? []).map((e) => e.src)]);
 			return;
 		}
 		if (!e.length) return;
-		let { nav: t, links: n } = Uh(e.map((e) => e.project), (e) => this.projectUrl(e));
+		let { nav: t, links: n } = Hh(e.map((e) => e.project), (e) => this.projectUrl(e));
 		n.forEach(({ a: t }, n) => {
 			let r = e[n];
 			t.addEventListener("focus", () => {
@@ -14782,7 +14778,7 @@ var Yh = class {
 					source: "link"
 				});
 			});
-		}), this.mount.appendChild(t), this.seoNav = t, Kh(e.map((e) => e.project), (e) => this.projectUrl(e), (t) => e.find((e) => e.project === t)?.poster);
+		}), this.mount.appendChild(t), this.seoNav = t, Gh(e.map((e) => e.project), (e) => this.projectUrl(e), (t) => e.find((e) => e.project === t)?.poster);
 	}
 	createRenderer() {
 		let e = new jp({
@@ -14798,8 +14794,8 @@ var Yh = class {
 			226,
 			255
 		]), 1, 1), this.emptyTexture.needsUpdate = !0, this.baseMaterial = new ml({
-			vertexShader: Bh,
-			fragmentShader: Vh,
+			vertexShader: zh,
+			fragmentShader: Bh,
 			transparent: !0,
 			depthTest: !1,
 			depthWrite: !1,
@@ -14863,7 +14859,7 @@ var Yh = class {
 		if (t || (this.aboutOpen && this.toggleAbout(!1), this.projectOpen && this.closeProject({ cycle: !1 })), this.switching || e === this.layoutKey || !this.renderer) return;
 		let r = this.layoutDefs.find((t) => t.key === e);
 		if (r) {
-			if (this.switching = !0, this.ui?.setActive(e), tg(e), this.options.syncUrl) {
+			if (this.switching = !0, this.ui?.setActive(e), eg(e), this.options.syncUrl) {
 				let t = new URL(location.href);
 				t.searchParams.set("v", e), history.replaceState(history.state, "", t);
 			}
@@ -14889,7 +14885,7 @@ var Yh = class {
 	}
 	tick(e, t) {
 		let n = Math.min(t / 1e3, 1 / 20);
-		this.time += n, this.tiltInput?.update(n), this.updateHover(), this.media.beginFrame();
+		this.time += n, this.updateHover(), this.media.beginFrame();
 		let r = this.layout;
 		if (r) {
 			r.update(n, this.time);
@@ -14914,18 +14910,6 @@ var Yh = class {
 		return {
 			tile: a.object.userData.tile,
 			uv: a.uv
-		};
-	}
-	get tilt() {
-		let e = this.tiltInput;
-		return !e?.active || this.reducedMotion ? {
-			x: 0,
-			y: 0,
-			active: !1
-		} : {
-			x: e.x,
-			y: e.y,
-			active: !0
 		};
 	}
 	get cursor() {
@@ -14968,7 +14952,7 @@ var Yh = class {
 			aspect: i.aspect,
 			alt: a.title
 		};
-		this.opening = !0, await Jh(s.bestSrc).finally(() => this.opening = !1);
+		this.opening = !0, await qh(s.bestSrc).finally(() => this.opening = !1);
 		let c = n && e.rect ? this.isCovered(e) : !1;
 		this.projectOpen = !0, this.openSlug = a.slug, this.openTitle = a.title, r && sh("project_open", {
 			project: a.slug,
@@ -15057,7 +15041,7 @@ var Yh = class {
 		this.input = new Km(this.mount, {
 			clickSlop: this.options.clickSlop,
 			wheel: e
-		}), this.touch && !this.projectPage && (this.tiltInput = new zh(this.mount, { canAsk: () => !this.aboutOpen && !this.projectOpen }));
+		});
 		let t = () => this.switching || this.openTile || this.projectOpen || this.aboutOpen || !this.layout;
 		this.input.on("drag", (e) => !t() && this.layout.onDrag?.(e)).on("release", (e) => !t() && this.layout.onRelease?.(e)).on("wheel", (e) => !t() && this.layout.onWheel?.(e)).on("scroll", (e) => !t() && this.inView && this.layout.onScroll?.(e)).on("tap", ({ x: e, y: n, event: r }) => {
 			if (t()) return;
@@ -15107,35 +15091,35 @@ var Yh = class {
 		}), this.camera.updateProjectionMatrix(), this.isMobile = matchMedia("(pointer: coarse)").matches || window.innerWidth < 768, this.touch = !matchMedia("(hover: hover) and (pointer: fine)").matches, this.layout?.resize(this.viewport), this.projectOpen && this.ui?.project.layoutInfo();
 	}
 	destroy() {
-		this.stop(), K.killTweensOf(this), this.resizeObserver?.disconnect(), this.intersection?.disconnect(), document.removeEventListener("visibilitychange", this._onVisibility), document.removeEventListener("keydown", this._onKey), clearTimeout(this._aboutTimer), window.removeEventListener("pageshow", this._onPageShow), window.removeEventListener("popstate", this._onPopState), this.seoNav?.remove(), clearTimeout(this._projectTimer), this._reducedQuery.removeEventListener?.("change", this._onReducedChange), this._focusHandlers?.forEach((e) => e()), this.input?.destroy(), this.tiltInput?.destroy(), this.layout?.dispose(), this.media?.dispose(), this.geometry?.dispose(), this.baseMaterial?.dispose(), this.emptyTexture?.dispose(), this.renderer && (this.renderer.dispose(), this.renderer.forceContextLoss(), this.renderer.domElement.remove()), this.ui?.destroy(), this.mount.classList.remove("wc-root", "is-ready", "is-fallback", "is-hovering-tile", "is-dragging");
+		this.stop(), K.killTweensOf(this), this.resizeObserver?.disconnect(), this.intersection?.disconnect(), document.removeEventListener("visibilitychange", this._onVisibility), document.removeEventListener("keydown", this._onKey), clearTimeout(this._aboutTimer), window.removeEventListener("pageshow", this._onPageShow), window.removeEventListener("popstate", this._onPopState), this.seoNav?.remove(), clearTimeout(this._projectTimer), this._reducedQuery.removeEventListener?.("change", this._onReducedChange), this._focusHandlers?.forEach((e) => e()), this.input?.destroy(), this.layout?.dispose(), this.media?.dispose(), this.geometry?.dispose(), this.baseMaterial?.dispose(), this.emptyTexture?.dispose(), this.renderer && (this.renderer.dispose(), this.renderer.forceContextLoss(), this.renderer.domElement.remove()), this.ui?.destroy(), this.mount.classList.remove("wc-root", "is-ready", "is-fallback", "is-hovering-tile", "is-dragging");
 	}
-}, Xh = "work-canvas:last-version", Zh = /(?:^|;)wc-last=([^;]*)/;
-function Qh() {
+}, Yh = "work-canvas:last-version", Xh = /(?:^|;)wc-last=([^;]*)/;
+function Zh() {
 	try {
-		let e = localStorage.getItem(Xh);
+		let e = localStorage.getItem(Yh);
 		if (e) return e;
 	} catch {}
-	return Zh.exec(window.name || "")?.[1] ?? null;
+	return Xh.exec(window.name || "")?.[1] ?? null;
 }
-function $h(e) {
-	let t = e.indexOf(Qh());
+function Qh(e) {
+	let t = e.indexOf(Zh());
 	return t >= 0 ? e[(t + 1) % e.length] : null;
 }
-function eg(e) {
-	let t = Qh(), n = e.length > 1 ? e.filter((e) => e !== t) : e;
+function $h(e) {
+	let t = Zh(), n = e.length > 1 ? e.filter((e) => e !== t) : e;
 	return n[Math.floor(Math.random() * n.length)] ?? null;
 }
-function tg(e) {
+function eg(e) {
 	try {
-		localStorage.setItem(Xh, e);
+		localStorage.setItem(Yh, e);
 	} catch {}
 	try {
-		window.name = `${(window.name || "").replace(new RegExp(Zh.source, "g"), "")};wc-last=${e}`;
+		window.name = `${(window.name || "").replace(new RegExp(Xh.source, "g"), "")};wc-last=${e}`;
 	} catch {}
 }
 //#endregion
 //#region src/core/tile.js
-var ng = class {
+var tg = class {
 	constructor(e, t, n = 0) {
 		this.engine = e, this.item = t, this.index = n, this.x = 0, this.y = 0, this.w = 100, this.h = 100, this.z = 0, this.rotation = 0, this.alpha = 1, this.reveal = 1, this.gray = 0, this.zoom = 0, this.priority = 0, this.interactive = !0, this.hover = 0, this.texReady = 0, this.onScreen = !1, this.override = null, this.material = e.baseMaterial.clone(), this.uniforms = this.material.uniforms, this.uniforms.uSize.value = new Y(100, 100), this.uniforms.uShift.value = new Y(0, 0), this.uniforms.uTexSize.value = t.texSize, this.mesh = new Gc(e.geometry, this.material), this.mesh.frustumCulled = !1, this.mesh.userData.tile = this, e.scene.add(this.mesh);
 	}
@@ -15175,36 +15159,36 @@ var ng = class {
 };
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/typeof.js
-function rg(e) {
+function ng(e) {
 	"@babel/helpers - typeof";
-	return rg = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
+	return ng = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
 		return typeof e;
 	} : function(e) {
 		return e && typeof Symbol == "function" && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
-	}, rg(e);
+	}, ng(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/toPrimitive.js
-function ig(e, t) {
-	if (rg(e) != "object" || !e) return e;
+function rg(e, t) {
+	if (ng(e) != "object" || !e) return e;
 	var n = e[Symbol.toPrimitive];
 	if (n !== void 0) {
 		var r = n.call(e, t || "default");
-		if (rg(r) != "object") return r;
+		if (ng(r) != "object") return r;
 		throw TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return (t === "string" ? String : Number)(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/toPropertyKey.js
-function ag(e) {
-	var t = ig(e, "string");
-	return rg(t) == "symbol" ? t : t + "";
+function ig(e) {
+	var t = rg(e, "string");
+	return ng(t) == "symbol" ? t : t + "";
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/defineProperty.js
-function og(e, t, n) {
-	return (t = ag(t)) in e ? Object.defineProperty(e, t, {
+function ag(e, t, n) {
+	return (t = ig(t)) in e ? Object.defineProperty(e, t, {
 		value: n,
 		enumerable: !0,
 		configurable: !0,
@@ -15213,7 +15197,7 @@ function og(e, t, n) {
 }
 //#endregion
 //#region src/core/layout.js
-var sg = (e) => Math.min(1, Math.max(0, e)), cg = class {
+var og = (e) => Math.min(1, Math.max(0, e)), sg = class {
 	constructor(e, t) {
 		this.engine = e, this.config = t, this.tiles = [], this.featured = null, this.progress = 0, this.introEase = K.parseEase(t.easing ?? "none");
 	}
@@ -15227,7 +15211,7 @@ var sg = (e) => Math.min(1, Math.max(0, e)), cg = class {
 		return this.engine.reducedMotion;
 	}
 	makeTiles(e) {
-		return this.tiles = e.map((e, t) => new ng(this.engine, e, t)), this.tiles;
+		return this.tiles = e.map((e, t) => new tg(this.engine, e, t)), this.tiles;
 	}
 	repeatItems(e) {
 		let t = [];
@@ -15236,7 +15220,7 @@ var sg = (e) => Math.min(1, Math.max(0, e)), cg = class {
 	}
 	tileProgress(e) {
 		let t = this.leaving || this.reduced ? 0 : this.config.stagger ?? .3;
-		return this.introEase(sg(this.progress * (1 + t) - e * t));
+		return this.introEase(og(this.progress * (1 + t) - e * t));
 	}
 	applyTransition(e, t) {
 		let n = this.tileProgress(t);
@@ -15280,7 +15264,7 @@ var sg = (e) => Math.min(1, Math.max(0, e)), cg = class {
 	}
 	centerScore(e) {
 		let t = (e.x + e.w / 2 - this.vp.width / 2) / this.vp.width, n = (e.y + e.h / 2 - this.vp.height / 2) / this.vp.height;
-		return sg(1 - Math.hypot(t, n)) * .99 + .01;
+		return og(1 - Math.hypot(t, n)) * .99 + .01;
 	}
 	resize() {}
 	update() {}
@@ -15288,10 +15272,10 @@ var sg = (e) => Math.min(1, Math.max(0, e)), cg = class {
 		K.killTweensOf(this), this.fadeCanvas(1), this.tiles.forEach((e) => e.dispose()), this.tiles = [];
 	}
 };
-og(cg, "defaults", {});
+ag(sg, "defaults", {});
 //#endregion
 //#region src/core/sizing.js
-function lg(e, t, n = 1) {
+function cg(e, t, n = 1) {
 	let r = n * 2654435769, i = () => {
 		r = r + 1831565813 | 0;
 		let e = Math.imul(r ^ r >>> 15, 1 | r);
@@ -15306,7 +15290,7 @@ function lg(e, t, n = 1) {
 	}
 	return a;
 }
-function ug(e, t, { minW: n, maxW: r, maxH: i }) {
+function lg(e, t, { minW: n, maxW: r, maxH: i }) {
 	let a = t, o = a * e;
 	return o > r && ([o, a] = [r, r / e]), o < n && ([o, a] = [n, n / e]), a > i && (a = i), {
 		w: o,
@@ -15315,7 +15299,7 @@ function ug(e, t, { minW: n, maxW: r, maxH: i }) {
 }
 //#endregion
 //#region src/core/spring.js
-var dg = class {
+var ug = class {
 	constructor(e = 6, { maxLead: t = Infinity } = {}) {
 		this.omega = e, this.maxLead = t, this.x = 0, this.v = 0, this.target = 0;
 	}
@@ -15327,9 +15311,9 @@ var dg = class {
 		for (let e = 0; e < n; e++) this.v += (t * t * (this.target - this.x) - 2 * t * this.v) * r, this.x += this.v * r;
 		return this.x;
 	}
-}, fg = class {
+}, dg = class {
 	constructor(e) {
-		this.config = e, this.spring = new dg(e.omega), this.last = null, this.speed = 0;
+		this.config = e, this.spring = new ug(e.omega), this.last = null, this.speed = 0;
 	}
 	update(e, t, n = !1) {
 		let r = this.config;
@@ -15338,7 +15322,7 @@ var dg = class {
 		return this.spring.target = i, this.spring.omega = i < this.spring.x ? r.closing ?? r.omega : r.omega, Math.max(0, this.spring.update(t));
 	}
 };
-function pg(e, t, n, r, i) {
+function fg(e, t, n, r, i) {
 	if (!(r > .05) || !e.length) return;
 	let a = t === "x" ? "w" : "h", o = (e) => e[a] + n, s = e.findIndex((e) => e[t] <= i && i < e[t] + o(e));
 	if (s < 0) return;
@@ -15350,7 +15334,7 @@ function pg(e, t, n, r, i) {
 }
 //#endregion
 //#region src/layouts/filmstrip.js
-var mg = {
+var pg = {
 	heights: [
 		215,
 		250,
@@ -15369,14 +15353,26 @@ var mg = {
 	maxScale: 1.35,
 	mobileMaxWidth: 1,
 	seed: 7,
-	maxSpeed: 170,
+	vertical: {
+		widths: [
+			.72,
+			.8,
+			.88,
+			.94,
+			1
+		],
+		minHeight: .45,
+		maxHeight: 1.6,
+		inset: 12
+	},
+	maxSpeed: 115,
 	deadZone: .06,
 	curve: 1.7,
 	response: 2.2,
 	idleSpeed: 24,
 	hoverSlowdown: 1,
 	rowBoost: 1.25,
-	tiltSpeed: 150,
+	rowDirections: [-1, 1],
 	scroll: {
 		multiplier: .5,
 		omega: 7,
@@ -15404,92 +15400,104 @@ var mg = {
 	enterDuration: .8,
 	leaveDuration: .25,
 	captionInset: [20, 12]
-}, hg = 2, gg = class extends cg {
+}, mg = 2, hg = class extends sg {
 	constructor(e, t) {
-		super(e, t), this.velocity = 0, this.scrolled = new dg(t.scroll.omega, { maxLead: t.scroll.maxLead }), this.rows = Array.from({ length: hg }, () => ({
-			tiles: [],
-			offset: 0,
-			target: 0,
-			drift: -t.idleSpeed,
-			spread: new fg(t.spread)
-		}));
+		super(e, t), this.velocity = 0, this.scrolled = new ug(t.scroll.omega, { maxLead: t.scroll.maxLead }), this.rows = Array.from({ length: mg }, (e, n) => {
+			let r = t.rowDirections?.[n] ?? 1;
+			return {
+				tiles: [],
+				offset: 0,
+				target: 0,
+				dir: r,
+				drift: -t.idleSpeed * r,
+				spread: new dg(t.spread)
+			};
+		});
 	}
 	resize(e) {
 		let t = this.config, n = Math.min(t.maxScale, Math.max(t.minScale, e.height / Np.height));
 		this.s = n, this.engine.scale = n, this.gapPx = t.gap;
-		let r = (e.height - t.topInset * n - t.bottomInset - t.gap) / hg, i = Math.min(1, r / (Math.max(...t.heights) * n)), a = Math.min(t.maxWidth * n * i, e.width * t.mobileMaxWidth), o = Math.min(t.minWidth * n * i, a), s = Math.max(...t.heights) * n * i;
-		this.rowHeight = s;
-		let c = Array.from({ length: hg }, (e, t) => this.items.filter((e, n) => n % hg === t)), l = e.width + 2 * (a + this.gapPx), u = c.map((e, r) => {
+		let r = this.vertical = !!t.vertical && e.height > e.width, i, a, o;
+		if (r) {
+			let n = t.vertical, r = (e.width - 2 * n.inset - t.gap) / mg, s = r * n.minHeight, c = r * n.maxHeight;
+			a = n.widths.map((e) => e * r), i = (e, t) => {
+				let n = t, i = n / e;
+				return i < s && (n = Math.min(r, s * e), i = n / e), {
+					w: n,
+					h: Math.min(i, c)
+				};
+			}, o = c;
+		} else {
+			let r = (e.height - t.topInset * n - t.bottomInset - t.gap) / mg, s = Math.min(1, r / (Math.max(...t.heights) * n)), c = Math.min(t.maxWidth * n * s, e.width * t.mobileMaxWidth), l = Math.min(t.minWidth * n * s, c), u = Math.max(...t.heights) * n * s;
+			a = t.heights.map((e) => e * n * s), i = (e, t) => lg(e, t, {
+				minW: l,
+				maxW: c,
+				maxH: u
+			}), o = c, this.rowHeight = u;
+		}
+		let s = (e) => r ? e.h : e.w, c = r ? e.height : e.width, l = Array.from({ length: mg }, (e, t) => this.items.filter((e, n) => n % mg === t)), u = c + 2 * (o + this.gapPx), d = l.map((e, n) => {
 			if (!e.length) return 0;
-			let c = lg(e.length, t.heights.length, t.seed + r), u = e.reduce((e, r, l) => e + ug(r.aspect, t.heights[c[l]] * n * i, {
-				minW: o,
-				maxW: a,
-				maxH: s
-			}).w + this.gapPx, 0);
-			return e.length * Math.max(1, Math.ceil(l / u));
+			let r = cg(e.length, a.length, t.seed + n), o = e.reduce((e, t, n) => e + s(i(t.aspect, a[r[n]])) + this.gapPx, 0);
+			return e.length * Math.max(1, Math.ceil(u / o));
 		});
-		if (u.some((e, t) => e !== this.rows[t].tiles.length)) {
+		if (d.some((e, t) => e !== this.rows[t].tiles.length)) {
 			this.tiles.forEach((e) => e.dispose());
-			let e = c.flatMap((e, t) => {
+			let e = l.flatMap((e, t) => {
 				let n = [];
-				for (; e.length && n.length < u[t];) n.push(...e);
-				return n.slice(0, u[t]);
+				for (; e.length && n.length < d[t];) n.push(...e);
+				return n.slice(0, d[t]);
 			});
 			this.makeTiles(e);
 			let t = 0;
 			this.rows.forEach((e, n) => {
-				e.tiles = this.tiles.slice(t, t + u[n]), t += u[n];
+				e.tiles = this.tiles.slice(t, t + d[n]), t += d[n];
 			});
 		}
-		this.rows.forEach((r, c) => {
-			let l = lg(r.tiles.length, t.heights.length, t.seed + c), u = 0;
-			r.tiles.forEach((e, r) => {
-				let { w: c, h: d } = ug(e.item.aspect, t.heights[l[r]] * n * i, {
-					minW: o,
-					maxW: a,
-					maxH: s
-				});
-				e.w = c, e.h = d, e.baseX = u, u += c + this.gapPx;
-			}), r.length = u, r.top = e.height - t.bottomInset - s, r.bottom = r.top - t.gap, r.start = t.startOffset * n - c * t.rowStagger * (u / Math.max(1, r.tiles.length));
-		}), this.margin = a + this.gapPx;
+		this.rows.forEach((o, c) => {
+			let l = cg(o.tiles.length, a.length, t.seed + c), u = 0;
+			o.tiles.forEach((e, t) => {
+				let n = i(e.item.aspect, a[l[t]]);
+				e.w = n.w, e.h = n.h, e.baseX = u, u += s(n) + this.gapPx;
+			}), o.length = u, r || (o.top = e.height - t.bottomInset - this.rowHeight, o.bottom = o.top - t.gap), o.start = t.startOffset * n - c * t.rowStagger * (u / Math.max(1, o.tiles.length));
+		}), this.gutter = e.width / 2, this.margin = o + this.gapPx;
 	}
 	targetDrift(e) {
-		let t = this.config, { nx: n, ny: r, inside: i } = this.engine.cursor, a = this.engine.tilt;
-		if (!i && a.active && a.x) return Math.sign(a.x) * Math.abs(a.x) ** +t.curve * t.tiltSpeed * this.s;
+		let t = this.config, { nx: n, ny: r, inside: i } = this.engine.cursor;
 		if (!i) return this.reduced ? 0 : -t.idleSpeed * this.s;
-		let o = Math.max(0, (Math.abs(n) - t.deadZone) / (1 - t.deadZone)), s = this.engine.hovered && this.tiles.includes(this.engine.hovered), c = e === +((r + 1) / 2 * this.vp.height < this.rows[1].bottom + t.gap / 2) ? t.rowBoost : 1;
-		return -Math.sign(n) * o ** +t.curve * t.maxSpeed * this.s * c * (s ? t.hoverSlowdown : 1);
+		let a = this.vertical ? r : n, o = Math.max(0, (Math.abs(a) - t.deadZone) / (1 - t.deadZone)), s = this.engine.hovered && this.tiles.includes(this.engine.hovered), c = e === (this.vertical ? +((n + 1) / 2 * this.vp.width < this.gutter) : +((r + 1) / 2 * this.vp.height < this.rows[1].bottom + t.gap / 2)) ? t.rowBoost : 1;
+		return -Math.sign(a) * o ** +t.curve * t.maxSpeed * this.s * c * (s ? t.hoverSlowdown : 1);
 	}
 	update(e) {
 		let t = this.config, n = this.scrolled.update(e);
 		this.velocity *= t.inertia ** (e * 60);
-		let r = this.vp.width / 2, i = this.margin, a = null, o = Infinity;
-		this.rows.forEach((s, c) => {
-			s.drift += (this.targetDrift(c) - s.drift) * (1 - Math.exp(-e * t.response)), s.target += (s.drift + this.velocity) * e, s.offset += (s.target - s.offset) * (1 - (1 - t.ease) ** (e * 60));
-			let l = s.offset + n, u = s.spread.update(l, e, this.reduced), d = s.length;
-			s.tiles.forEach((e) => {
-				e.x = ((s.start + e.baseX + l + i) % d + d) % d - i;
-			}), pg(s.tiles, "x", this.gapPx, u, r);
-			let f = this.reduced || this.engine.touch ? 0 : t.hover.expand ?? 0;
-			if (f) for (let e of s.tiles) {
-				let t = e.item.caseStudy ? f * e.hover : 0;
+		let r = this.vertical, i = r ? "y" : "x", a = r ? "h" : "w", o = r ? this.vp.height : this.vp.width, s = o / 2, c = this.margin, l = null, u = Infinity;
+		this.rows.forEach((d, f) => {
+			d.drift += (this.targetDrift(f) * d.dir - d.drift) * (1 - Math.exp(-e * t.response)), d.target += (d.drift + this.velocity * d.dir) * e, d.offset += (d.target - d.offset) * (1 - (1 - t.ease) ** (e * 60));
+			let p = d.offset + n * d.dir, m = d.spread.update(p, e, this.reduced), h = d.length;
+			d.tiles.forEach((e) => {
+				let t = d.start + e.baseX + p;
+				e[i] = ((t + c) % h + h) % h - c;
+			}), fg(d.tiles, i, this.gapPx, m, s);
+			let g = this.reduced || this.engine.touch ? 0 : t.hover.expand ?? 0;
+			if (g) for (let e of d.tiles) {
+				let t = e.item.caseStudy ? g * e.hover : 0;
 				if (t < .01) continue;
-				let n = e.x + e.w / 2;
-				for (let r of s.tiles) r !== e && (r.x += r.x + r.w / 2 < n ? -t : t);
+				let n = e[i] + e[a] / 2;
+				for (let r of d.tiles) r !== e && (r[i] += r[i] + r[a] / 2 < n ? -t : t);
 			}
-			s.tiles.forEach((e) => {
-				e.y = c ? s.bottom - e.h : s.top, e.expandDir = c ? "up" : "down", e.z = 0, e.alpha = 1, e.reveal = 1;
-				let t = e.x + e.w > 0 && e.x < this.vp.width, n = Math.abs(e.x + e.w / 2 - r) + c;
-				t && n < o && (o = n, a = e), e.priority = t ? this.centerScore(e) : 0, this.applyTransition(e, Math.min(1, Math.max(0, e.x / this.vp.width)));
+			d.tiles.forEach((e) => {
+				r ? (e.x = f ? this.gutter - this.gapPx / 2 - e.w : this.gutter + this.gapPx / 2, e.expandDir = null) : (e.y = f ? d.bottom - e.h : d.top, e.expandDir = f ? "up" : "down"), e.z = 0, e.alpha = 1, e.reveal = 1;
+				let t = e[i] + e[a] > 0 && e[i] < o, n = Math.abs(e[i] + e[a] / 2 - s) + f;
+				t && n < u && (u = n, l = e), e.priority = t ? this.centerScore(e) : 0, this.applyTransition(e, Math.min(1, Math.max(0, e[i] / o)));
 			});
-		}), this.featured = a, a && (a.priority = 2), this.engine.hovered && this.tiles.includes(this.engine.hovered) && (this.engine.hovered.priority = 3);
+		}), this.featured = l, l && (l.priority = 2), this.engine.hovered && this.tiles.includes(this.engine.hovered) && (this.engine.hovered.priority = 3);
 	}
 	onWheel({ dx: e, dy: t }) {
 		this.scrolled.push(-(t + e) * this.config.scroll.multiplier);
 	}
 	onDrag({ dx: e, dy: t }) {
 		if (this.engine.touch) {
-			for (let n of this.rows) n.target += (e + t) * this.config.dragMultiplier;
+			for (let n of this.rows) n.target += (e + t) * this.config.dragMultiplier * n.dir;
 			this.velocity = 0;
 		}
 	}
@@ -15498,13 +15506,13 @@ var mg = {
 	}
 	focusItem(e) {
 		let t = this.tileForItem(e) ?? this.tiles.find((t) => t.item === e), n = t && this.rows.find((e) => e.tiles.includes(t));
-		n && (n.target += this.vp.width / 2 - (t.x + t.w / 2));
+		n && (n.target += this.vertical ? this.vp.height / 2 - (t.y + t.h / 2) : this.vp.width / 2 - (t.x + t.w / 2));
 	}
 };
-og(gg, "defaults", mg), og(gg, "label", "Filmstrip");
+ag(hg, "defaults", pg), ag(hg, "label", "Filmstrip");
 //#endregion
 //#region src/layouts/deck.js
-var _g = {
+var gg = {
 	heights: [
 		300,
 		350,
@@ -15556,7 +15564,6 @@ var _g = {
 		.65
 	],
 	fan: .8,
-	tiltFollow: .8,
 	interval: 0,
 	moveStep: 0,
 	cursorPace: {
@@ -15595,7 +15602,7 @@ var _g = {
 	enterDuration: .7,
 	leaveDuration: .25,
 	captionInset: [16, 12]
-}, vg = class extends cg {
+}, _g = class extends sg {
 	constructor(e, t) {
 		super(e, t), this.makeTiles(this.items);
 		let n = this.tiles.length;
@@ -15611,9 +15618,9 @@ var _g = {
 		this.s = n, this.engine.scale = n;
 		let r = Math.min(t.maxWidth * n, e.width * t.mobileMaxWidth), i = Math.min(t.minWidth * n, r);
 		this.k = r / t.maxWidth;
-		let a = Math.max(...t.heights) * this.k, o = lg(this.tiles.length, t.heights.length, t.seed);
+		let a = Math.max(...t.heights) * this.k, o = cg(this.tiles.length, t.heights.length, t.seed);
 		this.tiles.forEach((e, n) => {
-			let { w: s, h: c } = ug(e.item.aspect, t.heights[o[n]] * this.k, {
+			let { w: s, h: c } = lg(e.item.aspect, t.heights[o[n]] * this.k, {
 				minW: i,
 				maxW: r,
 				maxH: a
@@ -15622,51 +15629,51 @@ var _g = {
 		});
 	}
 	update(e) {
-		let t = this.config, n = this.engine, { width: r, height: i } = this.vp, { nx: a, ny: o, inside: s } = n.cursor, c = n.hovered && this.tiles.includes(n.hovered) ? n.hovered : null, l = n.tilt, u = !s && l.active, [d, f] = u ? [l.x * t.tiltFollow, l.y * t.tiltFollow] : [a, o], p = (s || u) && !this.reduced, m = p ? r / 2 * d * t.follow : 0, h = p ? i / 2 * f * t.follow : 0, g = p ? t.fan * Math.min(1, Math.hypot(d, f)) : 0;
+		let t = this.config, n = this.engine, { width: r, height: i } = this.vp, { nx: a, ny: o, inside: s } = n.cursor, c = n.hovered && this.tiles.includes(n.hovered) ? n.hovered : null, l = s && !this.reduced, u = l ? r / 2 * a * t.follow : 0, d = l ? i / 2 * o * t.follow : 0, f = l ? t.fan * Math.min(1, Math.hypot(a, o)) : 0;
 		if (this.anchors.forEach((n, r) => {
 			let i = 1 - Math.exp(-e * t.followRates[r % t.followRates.length]), a = t.depth[r % t.depth.length], o = t.slots[r];
-			n.x += (m * a + o.x * this.k * g - n.x) * i, n.y += (h * a + o.y * this.k * g - n.y) * i;
+			n.x += (u * a + o.x * this.k * f - n.x) * i, n.y += (d * a + o.y * this.k * f - n.y) * i;
 		}), c && t.hoverToFront && c.item.caseStudy) {
 			let e = this.slotTile.indexOf(c.index);
 			e >= 0 && this.slotStamp[e] !== this.stamp && (this.slotStamp[e] = ++this.stamp);
 		}
-		let _ = t.pauseOnHover && c || this.reduced || this.progress < 1, v = n.input?.pointer, y = t.moveStep;
-		y > 0 && s && v ? (this.lastPointer && !_ && (this.travel += Math.hypot(v.x - this.lastPointer.x, v.y - this.lastPointer.y)), this.lastPointer = {
-			x: v.x,
-			y: v.y
+		let p = t.pauseOnHover && c || this.reduced || this.progress < 1, m = n.input?.pointer, h = t.moveStep;
+		h > 0 && s && m ? (this.lastPointer && !p && (this.travel += Math.hypot(m.x - this.lastPointer.x, m.y - this.lastPointer.y)), this.lastPointer = {
+			x: m.x,
+			y: m.y
 		}) : (this.lastPointer = null, this.travel = 0);
-		let b = !1;
-		for (let e = 0; y > 0 && this.travel >= y && e < t.maxPerFrame; e++) this.travel -= y, this.deal(), b = !0;
-		this.travel = Math.min(this.travel, y * 2);
-		let x = t.cursorPace;
-		if (x?.max > 0 && s && !n.touch && !this.reduced && this.progress >= 1) {
-			let t = Math.max(0, (Math.abs(a) - x.deadZone) / (1 - x.deadZone));
-			this.paced = Math.min(1, this.paced + t ** +x.curve * x.max * e), this.paced >= 1 && !b && (this.paced = 0, this.deal(), b = !0);
+		let g = !1;
+		for (let e = 0; h > 0 && this.travel >= h && e < t.maxPerFrame; e++) this.travel -= h, this.deal(), g = !0;
+		this.travel = Math.min(this.travel, h * 2);
+		let _ = t.cursorPace;
+		if (_?.max > 0 && s && !n.touch && !this.reduced && this.progress >= 1) {
+			let t = Math.max(0, (Math.abs(a) - _.deadZone) / (1 - _.deadZone));
+			this.paced = Math.min(1, this.paced + t ** +_.curve * _.max * e), this.paced >= 1 && !g && (this.paced = 0, this.deal(), g = !0);
 		}
-		let S = this.swiping ? t.swipe.step : t.scrollStep;
-		this.fling && (this.scrollTravel += this.fling * e, this.fling *= Math.exp(-t.swipe.decay * e), this.fling < 40 && (this.fling = 0)), this.sinceScrollDeal += e, this.progress >= 1 && this.scrollTravel >= S && this.sinceScrollDeal >= (this.swiping ? t.swipe.gap : t.scrollGap) && (this.scrollTravel -= S, this.sinceScrollDeal = 0, this.deal(), b = !0), this.scrollTravel = Math.min(this.scrollTravel, S * (this.swiping ? t.swipe.backlog : 2)), _ || (this.timer += e), b ? this.timer = 0 : t.interval > 0 && this.timer >= t.interval && (this.timer = 0, this.deal());
-		let C = r / 2, w = i / 2, T = (e, n) => {
+		let v = this.swiping ? t.swipe.step : t.scrollStep;
+		this.fling && (this.scrollTravel += this.fling * e, this.fling *= Math.exp(-t.swipe.decay * e), this.fling < 40 && (this.fling = 0)), this.sinceScrollDeal += e, this.progress >= 1 && this.scrollTravel >= v && this.sinceScrollDeal >= (this.swiping ? t.swipe.gap : t.scrollGap) && (this.scrollTravel -= v, this.sinceScrollDeal = 0, this.deal(), g = !0), this.scrollTravel = Math.min(this.scrollTravel, v * (this.swiping ? t.swipe.backlog : 2)), p || (this.timer += e), g ? this.timer = 0 : t.interval > 0 && this.timer >= t.interval && (this.timer = 0, this.deal());
+		let y = r / 2, b = i / 2, x = (e, n) => {
 			let r = t.slots[n], i = this.anchors[n];
-			e.w = e.baseW, e.h = e.baseH, e.x = C + i.x + r.x * this.k - e.w / 2, e.y = w + i.y + r.y * this.k - e.h / 2, e.rotation = (e.cardAngle || 0) * Math.PI / 180, e.pivot = {
+			e.w = e.baseW, e.h = e.baseH, e.x = y + i.x + r.x * this.k - e.w / 2, e.y = b + i.y + r.y * this.k - e.h / 2, e.rotation = (e.cardAngle || 0) * Math.PI / 180, e.pivot = {
 				x: e.x + e.w / 2,
 				y: e.y - e.h / 2
 			};
 		};
 		for (let e of this.tiles) e.alpha = 0, e.interactive = !1, e.rotation = 0, e.reveal = 1, e.gray = 0, e.zoom = 0, e.priority = 0;
-		let E = this.slotTile.filter((e) => e >= 0).length, D = this.slotStamp.filter((e, t) => this.slotTile[t] >= 0).sort((e, t) => t - e), O = null;
+		let S = this.slotTile.filter((e) => e >= 0).length, C = this.slotStamp.filter((e, t) => this.slotTile[t] >= 0).sort((e, t) => t - e), w = null;
 		this.slotTile.forEach((e, t) => {
 			if (e < 0) return;
 			let n = this.tiles[e];
-			T(n, t), n.z = this.slotStamp[t], n.alpha = this.fading?.to === e ? this.fading.p : 1, n.interactive = !0;
-			let r = D.indexOf(this.slotStamp[t]);
-			n.priority = 1 - r * .2, r === 0 && (O = n), this.applyTransition(n, Math.max(0, Math.min(1, (E - 1 - r) / Math.max(1, E))));
+			x(n, t), n.z = this.slotStamp[t], n.alpha = this.fading?.to === e ? this.fading.p : 1, n.interactive = !0;
+			let r = C.indexOf(this.slotStamp[t]);
+			n.priority = 1 - r * .2, r === 0 && (w = n), this.applyTransition(n, Math.max(0, Math.min(1, (S - 1 - r) / Math.max(1, S))));
 		});
-		let k = this.fading;
-		if (k && k.from >= 0 && k.from !== k.to && !this.slotTile.includes(k.from)) {
-			let e = this.tiles[k.from];
-			T(e, k.slot), e.z = k.fromStamp, e.alpha = 1 - k.p;
+		let T = this.fading;
+		if (T && T.from >= 0 && T.from !== T.to && !this.slotTile.includes(T.from)) {
+			let e = this.tiles[T.from];
+			x(e, T.slot), e.z = T.fromStamp, e.alpha = 1 - T.p;
 		}
-		this.featured = O, O && (O.priority = 3);
+		this.featured = w, w && (w.priority = 3);
 	}
 	pickAngle() {
 		let e = this.config.angles ?? [0], t;
@@ -15720,10 +15727,10 @@ var _g = {
 		this.finishFade(), super.dispose();
 	}
 };
-og(vg, "defaults", _g), og(vg, "label", "Deck");
+ag(_g, "defaults", gg), ag(_g, "label", "Deck");
 //#endregion
 //#region src/layouts/universe.js
-var yg = {
+var vg = {
 	tileWidth: 400,
 	field: {
 		width: 4269,
@@ -15906,10 +15913,6 @@ var yg = {
 		y: -3
 	},
 	hoverSlowdown: .15,
-	tiltShift: {
-		x: 70,
-		y: 50
-	},
 	hoverEase: 3,
 	scroll: {
 		multiplier: .4,
@@ -15931,7 +15934,7 @@ var yg = {
 	enterDuration: 1.4,
 	leaveDuration: .25,
 	captionInset: [20, 12]
-}, bg = (e) => e.slug || e.title, xg = class extends cg {
+}, yg = (e) => e.slug || e.title, bg = class extends sg {
 	constructor(e, t) {
 		super(e, t), this.pan = {
 			x: 0,
@@ -15943,7 +15946,7 @@ var yg = {
 			x: 0,
 			y: 0
 		};
-		let n = () => new dg(t.scroll.omega, { maxLead: t.scroll.maxLead });
+		let n = () => new ug(t.scroll.omega, { maxLead: t.scroll.maxLead });
 		this.scrolled = {
 			x: n(),
 			y: n()
@@ -15963,14 +15966,14 @@ var yg = {
 					x: i + 200 + s % l * t.field.width,
 					y: a + o / 2 + Math.floor(s / l) * t.field.height
 				};
-			}), a = Math.hypot(e.width, e.height) / o, s = xm(n, i, bg, {
+			}), a = Math.hypot(e.width, e.height) / o, s = xm(n, i, yg, {
 				x: t.field.width * l,
 				y: t.field.height * u
 			}, a);
 			this.makeTiles(s.map((e) => i[e]));
 		}
 		this.tiles.forEach((e) => e.inView = !1);
-		let f = lg(r, t.layers.pace.length, t.seed);
+		let f = cg(r, t.layers.pace.length, t.seed);
 		this.period = {
 			x: t.field.width * l * o,
 			y: t.field.height * u * o
@@ -16012,31 +16015,31 @@ var yg = {
 		this.drift.x += (o.x - this.drift.x) * s, this.drift.y += (o.y - this.drift.y) * s, this.pan.x += (this.drift.x * this.slow + this.velocity.x) * e, this.pan.y += (this.drift.y * this.slow + this.velocity.y) * e;
 		let c = t.inertia ** (e * 60);
 		this.velocity.x *= c, this.velocity.y *= c;
-		let l = n.tilt, u = t.start.x * this.spacing * this.s + this.pan.x + this.scrolled.x.update(e) + l.x * t.tiltShift.x * this.s, d = t.start.y * this.spacing * this.s + this.pan.y + this.scrolled.y.update(e) + l.y * t.tiltShift.y * this.s, { x: f, y: p } = this.period, { x: m, y: h } = this.margin, g = (e, t, n) => ((e + n) % t + t) % t - n, _ = null, v = 0, y = /* @__PURE__ */ new Set(), b = [];
+		let l = t.start.x * this.spacing * this.s + this.pan.x + this.scrolled.x.update(e), u = t.start.y * this.spacing * this.s + this.pan.y + this.scrolled.y.update(e), { x: d, y: f } = this.period, { x: p, y: m } = this.margin, h = (e, t, n) => ((e + n) % t + t) % t - n, g = null, _ = 0, v = /* @__PURE__ */ new Set(), y = [];
 		for (let e of this.tiles) {
-			e.x = g(e.fx + u * e.pace, f, m) - e.w / 2, e.y = g(e.fy + d * e.pace, p, h) - e.h / 2;
+			e.x = h(e.fx + l * e.pace, d, p) - e.w / 2, e.y = h(e.fy + u * e.pace, f, m) - e.h / 2;
 			let t = e.x + e.w > 0 && e.x < r && e.y + e.h > 0 && e.y < i;
-			t && !e.inView ? b.push(e) : t && y.add(e.item), e.inView = t;
+			t && !e.inView ? y.push(e) : t && v.add(e.item), e.inView = t;
 		}
 		this.frame++;
-		for (let e of b) {
-			if (y.has(e.item)) {
-				let t = new Set([...y].map(bg)), n = null, r = null;
+		for (let e of y) {
+			if (v.has(e.item)) {
+				let t = new Set([...v].map(yg)), n = null, r = null;
 				for (let e of this.items) {
-					if (y.has(e)) continue;
-					let i = [+!t.has(bg(e)), -(this.seenAt.get(e) ?? -1)];
+					if (v.has(e)) continue;
+					let i = [+!t.has(yg(e)), -(this.seenAt.get(e) ?? -1)];
 					(!r || i[0] > r[0] || i[0] === r[0] && i[1] > r[1]) && ([n, r] = [e, i]);
 				}
 				n && this.give(e, n);
 			}
-			y.add(e.item);
+			v.add(e.item);
 		}
-		for (let e of y) this.seenAt.set(e, this.frame);
+		for (let e of v) this.seenAt.set(e, this.frame);
 		this.tiles.forEach((e, n) => {
-			e.z = e.layer * 1e3 + n, e.rotation = 0, e.alpha = 1, e.reveal = 1, e.priority = e.inView ? this.centerScore(e) : 0, e.priority > v && (v = e.priority, _ = e), this.applyTransition(e, 1 - e.layer / (t.layers.pace.length - 1));
-		}), this.featured = _, _ && (_.priority = 2), a && (n.hovered.priority = 3), this.clock += e;
-		let x = a ? n.hovered : null;
-		x !== this.raiseFor && (this.raiseFor = x, this.raiseAt = this.raised && this.tiles.includes(this.raised) ? this.clock + t.raiseDelay : this.clock), this.clock >= this.raiseAt && (this.raised = this.raiseFor), this.raised && !this.tiles.includes(this.raised) && (this.raised = null), this.tiles.forEach((e) => e.lifted = e === this.raised), this.raised && (this.raised.z = 1e5);
+			e.z = e.layer * 1e3 + n, e.rotation = 0, e.alpha = 1, e.reveal = 1, e.priority = e.inView ? this.centerScore(e) : 0, e.priority > _ && (_ = e.priority, g = e), this.applyTransition(e, 1 - e.layer / (t.layers.pace.length - 1));
+		}), this.featured = g, g && (g.priority = 2), a && (n.hovered.priority = 3), this.clock += e;
+		let b = a ? n.hovered : null;
+		b !== this.raiseFor && (this.raiseFor = b, this.raiseAt = this.raised && this.tiles.includes(this.raised) ? this.clock + t.raiseDelay : this.clock), this.clock >= this.raiseAt && (this.raised = this.raiseFor), this.raised && !this.tiles.includes(this.raised) && (this.raised = null), this.tiles.forEach((e) => e.lifted = e === this.raised), this.raised && (this.raised.z = 1e5);
 	}
 	onWheel({ dx: e, dy: t }) {
 		let n = this.config.scroll.multiplier;
@@ -16063,30 +16066,30 @@ var yg = {
 		this.scrolled.x.target += (this.vp.width / 2 - (t.x + t.w / 2)) / t.pace, this.scrolled.y.target += (this.vp.height / 2 - (t.y + t.h / 2)) / t.pace;
 	}
 };
-og(xg, "defaults", yg), og(xg, "label", "Universe");
+ag(bg, "defaults", vg), ag(bg, "label", "Universe");
 //#endregion
 //#region src/main.js
-var Sg = [
+var xg = [
 	{
 		key: "a",
 		name: "Filmstrip",
-		Layout: gg,
-		config: mg
+		Layout: hg,
+		config: pg
 	},
 	{
 		key: "b",
 		name: "Deck",
-		Layout: vg,
-		config: _g
+		Layout: _g,
+		config: gg
 	},
 	{
 		key: "e",
 		name: "Universe",
-		Layout: xg,
-		config: yg
+		Layout: bg,
+		config: vg
 	}
 ];
-async function Cg(e, t = {}) {
+async function Sg(e, t = {}) {
 	if (e.__workCanvas) return e.__workCanvas;
 	let n = e.dataset, r = new URLSearchParams(location.search), i = r.get("v");
 	if (i && !(t.syncUrl ?? n.syncUrl === "true")) {
@@ -16094,7 +16097,7 @@ async function Cg(e, t = {}) {
 		let e = new URL(location.href);
 		e.search = r.toString(), history.replaceState(history.state, "", e);
 	}
-	let a = parseInt(t.maxVideos ?? n.maxVideos, 10), o = Sg.map((e) => ({
+	let a = parseInt(t.maxVideos ?? n.maxVideos, 10), o = xg.map((e) => ({
 		...e,
 		config: {
 			...e.config,
@@ -16102,7 +16105,7 @@ async function Cg(e, t = {}) {
 		}
 	}));
 	a && o.forEach((e) => e.config.maxVideos = a);
-	let s = new Yh(e, {
+	let s = new Jh(e, {
 		layouts: o,
 		layout: t.layout ?? i ?? n.layout ?? "a",
 		rotate: t.rotate ?? ((t.layout ?? i) || n.rotate === "false" ? !1 : n.rotate === "next" ? "next" : "random"),
@@ -16117,14 +16120,14 @@ async function Cg(e, t = {}) {
 	});
 	return e.__workCanvas = s, await s.init(), s;
 }
-function wg() {
-	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Cg(e));
+function Cg() {
+	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Sg(e));
 }
 typeof window < "u" && (window.WorkCanvas = {
-	mount: Cg,
-	LAYOUTS: Sg
-}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", wg, { once: !0 }) : wg());
+	mount: Sg,
+	LAYOUTS: xg
+}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", Cg, { once: !0 }) : Cg());
 //#endregion
-export { Sg as LAYOUTS, Yh as WorkCanvas, Cg as mount };
+export { xg as LAYOUTS, Jh as WorkCanvas, Sg as mount };
 
 //# sourceMappingURL=work-canvas.js.map
