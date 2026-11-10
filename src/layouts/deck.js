@@ -27,8 +27,7 @@ import { sizePattern, fitSize } from '../core/sizing.js';
  * carries on like scroll momentum after the finger lifts — dealing quickly at
  * first and slowing as it dies away — so a faster swipe brings in more. With a
  * cursor, its distance from the centre sets a pace too: nothing in the middle,
- * then faster the further left or right it goes (`cursorPace`). On a phone the
- * pile follows its tilt the same way, each position by its depth (`tiltFollow`, tilt.js). Hovering
+ * then faster the further left or right it goes (`cursorPace`). Hovering
  * doesn't hold it (the fanned pile often reaches the edges); bring the cursor
  * back to the middle to stop. (`moveStep` and `interval` can bring back dealing from cursor
  * travel and on a timer; both are off.) Hovering a card that's behind brings it to the top of the
@@ -58,7 +57,6 @@ export const config = {
   followRates: [3.5, 2.6, 1.9, 1.4], // per position (1/s; lower = more lag), so the pile trails and the cursor can slip off a card
   depth: [0.9, 1.25, 0.95, 0.65], // per position: how strongly it follows the cursor (parallax; the outer positions stay moderate so the pile stays on screen)
   fan: 0.8, // how far the positions spread from the pile centre with the cursor at an edge (0.8 = offsets up to 1.8×)
-  tiltFollow: 0.8, // on a phone, the pile follows its tilt as it would a cursor at the same spot, by this much
 
   // New cards
   interval: 0, // s without a new card before the next one comes in on its own (0 = off: scroll only)
@@ -148,16 +146,12 @@ export default class Deck extends Layout {
     const { nx, ny, inside } = e.cursor;
     const hovered = e.hovered && this.tiles.includes(e.hovered) ? e.hovered : null;
 
-    // Pile follows the cursor (on a phone, its tilt: tipped right / top raised = a cursor right / below the
-    // centre); each position eases at its own rate so the pile trails.
+    // Pile follows the cursor; each position eases at its own rate so the pile trails.
     // The positions also fan out from the pile centre the further the cursor is from the centre.
-    const tilt = e.tilt;
-    const useTilt = !inside && tilt.active;
-    const [px, py] = useTilt ? [tilt.x * c.tiltFollow, tilt.y * c.tiltFollow] : [nx, ny];
-    const active = (inside || useTilt) && !this.reduced;
-    const tx = active ? px * (width / 2) * c.follow : 0;
-    const ty = active ? py * (height / 2) * c.follow : 0;
-    const fan = active ? c.fan * Math.min(1, Math.hypot(px, py)) : 0;
+    const active = inside && !this.reduced;
+    const tx = active ? nx * (width / 2) * c.follow : 0;
+    const ty = active ? ny * (height / 2) * c.follow : 0;
+    const fan = active ? c.fan * Math.min(1, Math.hypot(nx, ny)) : 0;
     this.anchors.forEach((a, k) => {
       const r = 1 - Math.exp(-dt * c.followRates[k % c.followRates.length]);
       const depth = c.depth[k % c.depth.length];

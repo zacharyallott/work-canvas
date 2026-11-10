@@ -19,6 +19,11 @@ import { splitWords, lines as wordLines } from './text.js';
  * between are gone; the star switches versions now).
  */
 
+// The top bar coming in on page load: s before it starts, each piece's dissolve, when the words start after the
+// star, and the gap between one word and the next; the star also turns into place (degrees, s), the way it turns
+// on hover.
+const INTRO = { delay: 0.15, duration: 0.45, wordsAt: 0.12, wordStep: 0.07, fontWait: 1.2, starTurn: 90, starSpin: 0.9 };
+
 const CSS = `
 /* Full visible screen: svh leaves out the mobile browser toolbars (100vh would slide under them). */
 .wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);height:100vh;isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}
@@ -143,6 +148,7 @@ export class UI {
     this.bindDot();
     this.icon = this.root.querySelector('.wc-icon');
     this.tagline = this.root.querySelector('.wc-tagline');
+    splitWords(this.tagline.querySelector('span')); // the tagline's words, for the intro
     this.about = this.root.querySelector('.wc-about');
     splitWords(this.about.querySelector('.wc-about-statement'));
     this.backdrop = new BlurBackdrop(mount);
@@ -202,6 +208,32 @@ export class UI {
     this.project = new ProjectView(this.root, {});
 
     this.captionState = { target: null, shown: null };
+    this.intro();
+  }
+
+  /**
+   * Page load: the star dissolves in as it turns into place, then the tagline dissolves in word by word, like the
+   * about statement, then its arrow (`INTRO`). Waits for the type to load (up to `fontWait` s) so no word changes
+   * font mid-way.
+   */
+  intro() {
+    const c = INTRO;
+    const star = this.icon.querySelector('img');
+    const words = [...this.tagline.querySelectorAll('.wc-w')];
+    const parts = [star, ...words, this.arrowTrack];
+    gsap.set(parts, { opacity: 0 });
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fonts = Promise.race([document.fonts?.ready, new Promise((r) => setTimeout(r, c.fontWait * 1000))]);
+    fonts.then(() => {
+      const show = { opacity: 1, clearProps: 'opacity' };
+      const tl = gsap.timeline({ delay: c.delay, defaults: { duration: c.duration, ease: EASE.fade } });
+      if (reduced) return void tl.to(parts, show);
+      tl.to(star, show, 0)
+        .fromTo(star, { rotation: -c.starTurn }, { rotation: 0, duration: c.starSpin, ease: EASE.move }, 0) // clockwise, like a hover
+        .to(words, { ...show, stagger: c.wordStep }, c.wordsAt)
+        .to(this.arrowTrack, show, `-=${c.duration - c.wordStep}`); // the arrow follows the last word
+      this.introTl = tl;
+    });
   }
 
   /**
@@ -437,6 +469,7 @@ export class UI {
   destroy() {
     this.mount.removeEventListener('pointermove', this._onDotMove);
     this.project?.destroy();
+    this.introTl?.kill();
     this.peek?.destroy();
     this.backdrop?.destroy();
     this.root.remove();
