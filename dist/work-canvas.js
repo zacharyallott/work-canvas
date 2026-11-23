@@ -12686,8 +12686,8 @@ var jp = class {
 	projectBase: "/work/",
 	homePath: "/",
 	aboutPath: "/about",
-	siteName: "zachary allott",
-	homeTitle: "zachary allott — brand design & art direction",
+	siteName: "Zach Allott",
+	homeTitle: "Zach Allott / Design & direction made to move",
 	openDuration: 1.15,
 	openFade: .5,
 	openEase: "wc-move"
@@ -13751,7 +13751,7 @@ var Wm = class {
 			href: "https://www.are.na/zachary-allott"
 		}
 	],
-	copyright: `${(/* @__PURE__ */ new Date()).getFullYear()} Zachary Allott`
+	copyright: `${(/* @__PURE__ */ new Date()).getFullYear()} Zach Allott`
 }, Zm = 4, Qm = "Select clients", $m = {
 	"smith optics": ["smith"],
 	autodesk: ["tinkercad"],
@@ -14644,7 +14644,7 @@ function Uh(e, t, n) {
 		keywords: r.length ? r.join(", ") : void 0,
 		creator: {
 			"@type": "Person",
-			name: "Zachary Allott",
+			name: "Zach Allott",
 			url: Vh("/")
 		}
 	};
@@ -14842,7 +14842,7 @@ var Jh = class {
 				...history.state || {},
 				wcProject: void 0,
 				wcAbout: !0
-			}, "", new URL(this.options.aboutPath, location.href)), document.title = `About — ${this.options.siteName}`) : (document.title = this._homeTitle, !n && history.state?.wcAbout ? history.back() : !n && this.isAboutPath() && this.replaceUrl(this.options.homePath)), clearTimeout(this._leaveAboutTimer), this.mount.classList.toggle("is-leaving-about", !e), e || (this._leaveAboutTimer = setTimeout(() => this.mount.classList.remove("is-leaving-about"), 1e3)), this.mount.classList.toggle("is-about", e), this.ui?.setAbout(e), clearTimeout(this._aboutTimer), e ? (this.hovered = null, this.tapped = null, this.setHoverCursor(!1), this._aboutTimer = setTimeout(() => this.updateRunning(), 650)) : this.updateRunning();
+			}, "", new URL(this.options.aboutPath, location.href)), document.title = `About / ${this.options.siteName}`) : (document.title = this._homeTitle, !n && history.state?.wcAbout ? history.back() : !n && this.isAboutPath() && this.replaceUrl(this.options.homePath)), clearTimeout(this._leaveAboutTimer), this.mount.classList.toggle("is-leaving-about", !e), e || (this._leaveAboutTimer = setTimeout(() => this.mount.classList.remove("is-leaving-about"), 1e3)), this.mount.classList.toggle("is-about", e), this.ui?.setAbout(e), clearTimeout(this._aboutTimer), e ? (this.hovered = null, this.tapped = null, this.setHoverCursor(!1), this._aboutTimer = setTimeout(() => this.updateRunning(), 650)) : this.updateRunning();
 		}
 	}
 	whenThumbsReady(e = .8, t = 2500) {
@@ -15024,7 +15024,7 @@ var Jh = class {
 			wcProject: e
 		}, "", t);
 		let r = this.mediaItems.find((t) => t.project?.slug === e)?.project;
-		r && (document.title = `${r.title} — ${this.options.siteName}`);
+		r && (document.title = `${r.title} / ${this.options.siteName}`);
 	}
 	replaceUrl(e) {
 		let t = new URL(e, location.href), n = new URLSearchParams(location.search);
