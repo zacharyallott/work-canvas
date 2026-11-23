@@ -82,7 +82,7 @@ const CSS = `
 .wc-about-card img,.wc-about-card video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}
 .wc-about-card video{opacity:0}
 .wc-about-card video.is-playing{opacity:1}
-.wc-about-footer{display:flex;align-items:center;justify-content:space-between;line-height:1;font-weight:500}
+.wc-about-footer{display:flex;align-items:center;justify-content:space-between;margin-top:48px;line-height:1;font-weight:500} /* 96px above the footer (the section's 48 + 48), same as the headline to the row */
 .wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:500;letter-spacing:.02em} /* same size as the tagline */
 .wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}
 /* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */
@@ -108,7 +108,7 @@ const CSS = `
 .wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}
 @supports (height:100svh){.wc-root{height:100svh}}
 .wc-about::-webkit-scrollbar{display:none}
-@media (max-width:600px){.wc-tagline,.wc-about-links{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-row{flex-wrap:wrap;justify-content:flex-start;row-gap:16px}.wc-about-intro{flex:0 0 100%;margin-bottom:12px}.wc-about-clients ul{flex:0 0 calc(50% - 8px)}}
+@media (max-width:600px){.wc-tagline,.wc-about-links{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-row{flex-wrap:wrap;justify-content:flex-start;row-gap:16px}.wc-about-intro{flex:0 0 100%;margin-bottom:12px}.wc-about-footer{margin-top:16px}.wc-about-clients ul{flex:0 0 calc(50% - 8px)}}
 `;
 
 let styleInjected = false;

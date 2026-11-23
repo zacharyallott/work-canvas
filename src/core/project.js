@@ -72,7 +72,7 @@ const CSS = `
 .wc-project-info{will-change:opacity}
 @media (max-width:700px){
   .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}
-  .wc-project-info{position:static;grid-row:1;margin-bottom:24px;padding-top:27vh} /* room above the title + description on phones */
+  .wc-project-info{position:static;grid-row:1;margin-bottom:24px;padding-top:16vh} /* room above the title + description on phones (27vh until v0.7.15) */
   .wc-project-media{grid-column:1;grid-row:2}
   .wc-project-item,.wc-project-item:nth-child(n),.wc-project-item.is-tall:nth-child(n){width:100%}
 }
