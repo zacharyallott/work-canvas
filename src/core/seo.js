@@ -43,7 +43,7 @@ function creativeWork(p, url, images) {
     description: p.description || undefined,
     image: images.filter(Boolean).map(abs),
     keywords: services.length ? services.join(', ') : undefined,
-    creator: { '@type': 'Person', name: 'Zachary Allott', url: abs('/') },
+    creator: { '@type': 'Person', name: 'Zach Allott', url: abs('/') },
   };
 }
 

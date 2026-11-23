@@ -33,8 +33,8 @@ export const DEFAULTS = {
   projectBase: '/work/',
   homePath: '/',
   aboutPath: '/about', // the about section's own page (same header, opens with the about section)
-  siteName: 'zachary allott', // project titles become "<Project> — <siteName>", the about section "About — <siteName>"
-  homeTitle: 'zachary allott — brand design & art direction', // title when returning to the work from /about or a project page
+  siteName: 'Zach Allott', // project titles become "<Project> / <siteName>", the about section "About / <siteName>" (same as the Webflow page titles)
+  homeTitle: 'Zach Allott / Design & direction made to move', // title when returning to the work from /about or a project page
 
   // Transition when opening a project (eases are registered in motion.js)
   openDuration: 1.15, // s for the clicked tile to glide into the project view

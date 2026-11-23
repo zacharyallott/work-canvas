@@ -36,7 +36,7 @@ export const ABOUT = {
     { label: 'linkedin', href: 'https://www.linkedin.com/in/zacharyallott/' },
     { label: 'are.na', href: 'https://www.are.na/zachary-allott' },
   ],
-  copyright: `${new Date().getFullYear()} Zachary Allott`,
+  copyright: `${new Date().getFullYear()} Zach Allott`,
 };
 
 const CLIENT_COLUMNS = 4; // the first starts with the "Select clients" label and a blank line

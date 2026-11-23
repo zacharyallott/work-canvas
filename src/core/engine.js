@@ -322,7 +322,7 @@ export class WorkCanvas {
     this.aboutOpen = open;
     if (open) {
       if (push && !this.isAboutPath()) history.pushState({ ...(history.state || {}), wcProject: undefined, wcAbout: true }, '', new URL(this.options.aboutPath, location.href));
-      document.title = `About — ${this.options.siteName}`;
+      document.title = `About / ${this.options.siteName}`;
     } else {
       document.title = this._homeTitle;
       if (!fromHistory && history.state?.wcAbout) history.back(); // opened here: Back returns to the work
@@ -612,7 +612,7 @@ export class WorkCanvas {
     const write = history.state?.wcProject ? 'replaceState' : 'pushState';
     history[write]({ ...(history.state || {}), wcProject: slug }, '', url);
     const project = this.mediaItems.find((i) => i.project?.slug === slug)?.project;
-    if (project) document.title = `${project.title} — ${this.options.siteName}`;
+    if (project) document.title = `${project.title} / ${this.options.siteName}`;
   }
 
   /** Swaps the address without a new history entry (drops any ?project=). */
