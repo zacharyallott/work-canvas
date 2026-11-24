@@ -104,6 +104,7 @@ const CSS = `
 /* Paragraphs avoid orphans and ragged endings; headings get evenly balanced lines. */
 .wc-ui p{text-wrap:pretty} /* paragraphs: no lone last word */
 .wc-ui h1,.wc-ui h2,.wc-ui h3,.wc-ui h4,.wc-ui h5,.wc-ui h6,.wc-ui .wc-about-statement{text-wrap:balance} /* headlines (the about headline is a <p>): even lines */
+.wc-ui .wc-about-intro,.wc-ui .wc-project-desc{text-wrap:balance} /* info text: even lines (browsers balance up to ~6 lines; longer text wraps normally) */
 .wc-seo{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
 .wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}
 @supports (height:100svh){.wc-root{height:100svh}}
