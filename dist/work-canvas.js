@@ -13703,7 +13703,7 @@ var Wm = class {
 	}
 ] }, Xm = {
 	headline: "design & direction made to move brands, culture, humans, categories, & expectations forward.",
-	intro: "An interdisciplinary design practice for deepening and expanding brand connections with conceptually driven solutions that are at once simple, functional & emotional.",
+	intro: "10+ years designing, directing & building systems for deepening and expanding connections between brands, culture and communities, with conceptually driven solutions that are at once simple, functional & emotional.",
 	clients: [
 		[
 			"SRAM",
