@@ -70,6 +70,10 @@ const CSS = `
 .wc-project-item.is-pending{opacity:0} /* waiting to scroll into view (then its frame opens out) */
 .wc-project-media{will-change:opacity,translate}
 .wc-project-info{will-change:opacity}
+@media (min-width:1081px){
+  .wc-project-scroll{grid-template-columns:clamp(200px,26vw,325px) minmax(0,1fr)}
+  .wc-project-desc{max-width:311px} /* a little wider on large screens (285px column / 271px text below 1081px) */
+}
 @media (max-width:700px){
   .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}
   .wc-project-info{position:static;grid-row:1;margin-bottom:24px;padding-top:16vh} /* room above the title + description on phones (27vh until v0.7.15) */
