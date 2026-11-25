@@ -109,7 +109,7 @@ const CSS = `
 .wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}
 @supports (height:100svh){.wc-root{height:100svh}}
 .wc-about::-webkit-scrollbar{display:none}
-@media (max-width:940px){.wc-about-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 16px}.wc-about-intro{grid-column:1/-1;max-width:max(340px,60%)}} /* stacked: the intro above the client columns, a little past the first two (never under 340px) */
+@media (max-width:1080px){.wc-about-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 16px}.wc-about-intro{grid-column:1/-1;max-width:clamp(340px,75%,560px)}} /* stacked (same breakpoint as the project view's wider text): the intro above the client columns, 3 balanced lines from ~760px wide */
 @media (max-width:600px){.wc-tagline,.wc-about-links{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-row{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:16px}.wc-about-intro{max-width:none;margin-bottom:12px}.wc-about-footer{margin-top:16px}}
 `;
 
