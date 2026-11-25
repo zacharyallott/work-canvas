@@ -36,7 +36,7 @@ export const PROJECT_CONFIG = PULL_CONFIG; // the pull at the end of the page: s
 const CSS = `
 .wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s linear,visibility 0s linear .35s}
 .wc-root.is-project .wc-project{opacity:1;visibility:visible;pointer-events:auto;transition:opacity 0s,visibility 0s}
-.wc-project-scroll{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:clamp(200px,26vw,285px) minmax(0,1fr);column-gap:clamp(24px,4.2vw,53px);padding:52px 15px 12px 19px;box-sizing:border-box;-webkit-user-select:text;user-select:text;outline:none}
+.wc-project-scroll{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:clamp(200px,26vw,285px) minmax(0,1fr);column-gap:24px;padding:52px 15px 12px 19px;box-sizing:border-box;-webkit-user-select:text;user-select:text;outline:none}
 .wc-project-info{grid-column:1;grid-row:1;align-self:start;position:sticky;top:var(--wc-info-top,60vh);display:flex;flex-direction:column;gap:7px;color:#000}
 .wc-project-title{margin:0;font-size:16px;line-height:1;font-weight:500}
 .wc-project-desc{margin:0;max-width:271px;font-size:16px;line-height:1.25;font-weight:400;letter-spacing:.02em;color:#5f5f5f}
@@ -71,8 +71,8 @@ const CSS = `
 .wc-project-media{will-change:opacity,translate}
 .wc-project-info{will-change:opacity}
 @media (min-width:1081px){
-  .wc-project-scroll{grid-template-columns:374px minmax(0,1fr)}
-  .wc-project-desc{max-width:360px} /* wide enough that case-study descriptions stay within 6 lines, so they balance (285px column / 271px text below 1081px) */
+  .wc-project-scroll{grid-template-columns:360px minmax(0,1fr)}
+  .wc-project-desc{max-width:345px} /* the narrowest that keeps every case-study description within 6 lines, so they balance (Bonnell goes to 7 at 340) (285px column / 271px text below 1081px) */
 }
 @media (max-width:700px){
   .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}
