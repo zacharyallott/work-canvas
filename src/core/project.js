@@ -48,7 +48,7 @@ const CSS = `
 .wc-project-item.is-loaded{background:none} /* the placeholder grey would otherwise show as a hairline at antialiased edges */
 .wc-project-item:nth-child(4n+2){width:100%}
 .wc-project-item.is-tall:nth-child(4n+2){width:73.5%} /* taller than square: never full width (it would run far past the screen) */
-.wc-project-item:nth-child(4n+3){width:51.8%}
+.wc-project-item:nth-child(4n+3){width:62%} /* the smallest slot (was 51.8%) */
 .wc-project-item img{display:block;width:100%;height:auto}
 .wc-project-item video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 /* External video (YouTube / Vimeo): thumbnail + play button until pressed, then the player. */
@@ -71,8 +71,8 @@ const CSS = `
 .wc-project-media{will-change:opacity,translate}
 .wc-project-info{will-change:opacity}
 @media (min-width:1081px){
-  .wc-project-scroll{grid-template-columns:clamp(200px,26vw,325px) minmax(0,1fr)}
-  .wc-project-desc{max-width:311px} /* a little wider on large screens (285px column / 271px text below 1081px) */
+  .wc-project-scroll{grid-template-columns:374px minmax(0,1fr)}
+  .wc-project-desc{max-width:360px} /* wide enough that case-study descriptions stay within 6 lines, so they balance (285px column / 271px text below 1081px) */
 }
 @media (max-width:700px){
   .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}
