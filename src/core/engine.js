@@ -83,8 +83,9 @@ export class WorkCanvas {
 
     const keys = this.layoutDefs.map((l) => l.key);
     let initial = keys.includes(this.options.layout) ? this.options.layout : keys[0];
-    // A different version on every load: a random one (never the one seen last), or the next in order.
-    if (this.options.rotate) initial = (this.options.rotate === 'next' ? rotatedLayout(keys) : randomLayout(keys)) ?? initial;
+    // A different version on every load: the next in order (a first visit starts on the first), or a random one
+    // (never the one seen last).
+    if (this.options.rotate) initial = (this.options.rotate === 'next' ? rotatedLayout(keys) ?? keys[0] : randomLayout(keys)) ?? initial;
     this.ui = new UI(mount, {
       layouts: this.layoutDefs,
       current: initial,

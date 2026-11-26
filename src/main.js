@@ -4,8 +4,9 @@
  * Auto-mounts on <div id="work-canvas"> (or any [data-work-canvas]) once the
  * DOM is ready. Options come from data attributes on the mount:
  *
- *   data-rotate="random"       (default) every load opens a random version, never the one seen last;
- *                              "next" = the next one in order; "false" = always open on data-layout
+ *   data-rotate="next"         (default) every load opens the next version in order (universe → deck → film strip →
+ *                              universe…), a first visit starts on the first; "random" = a random one, never the one
+ *                              seen last; "false" = always open on data-layout
  *   data-layout="a|b|d|e"      the version when not rotating (and the fallback)
  *                              (?v=b in the URL opens that version once; it's then dropped from the URL so a refresh rotates on)
  *   data-switcher="false"      the star doesn't cycle versions (it only returns home)
@@ -31,12 +32,14 @@ import Universe, { config as universeConfig } from './layouts/universe.js';
 //   import Fan, { config as fanConfig } from './layouts/fan.js';
 //   import Rolodex, { config as rolodexConfig } from './layouts/rolodex.js';
 
+// Order = the order visitors see them in (page loads, the star and leaving a project all step to the next one).
+// Keys stay as they were so ?v=a|b|e links keep working.
 export const LAYOUTS = [
-  { key: 'a', name: 'Filmstrip', Layout: Filmstrip, config: filmstripConfig },
+  { key: 'e', name: 'Universe', Layout: Universe, config: universeConfig },
   { key: 'b', name: 'Deck', Layout: Deck, config: deckConfig },
+  { key: 'a', name: 'Filmstrip', Layout: Filmstrip, config: filmstripConfig },
   // { key: 'c', name: 'Masonry', Layout: Masonry, config: masonryConfig }, (parked)
   // { key: 'd', name: 'Fan', Layout: Fan, config: fanConfig }, (parked)
-  { key: 'e', name: 'Universe', Layout: Universe, config: universeConfig },
   // { key: 'f', name: 'Rolodex', Layout: Rolodex, config: rolodexConfig }, (parked)
 ];
 
@@ -62,7 +65,7 @@ export async function mount(el, options = {}) {
   const wc = new WorkCanvas(el, {
     layouts,
     layout: options.layout ?? urlLayout ?? d.layout ?? 'a',
-    rotate: options.rotate ?? (options.layout ?? urlLayout ? false : d.rotate === 'false' ? false : d.rotate === 'next' ? 'next' : 'random'),
+    rotate: options.rotate ?? (options.layout ?? urlLayout ? false : d.rotate === 'false' ? false : d.rotate === 'random' ? 'random' : 'next'),
     switcher: options.switcher ?? d.switcher !== 'false',
     syncUrl: options.syncUrl ?? d.syncUrl === 'true',
     tagline: options.tagline ?? d.tagline ?? 'design &amp; direction made to move',
