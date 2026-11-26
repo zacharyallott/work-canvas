@@ -14697,7 +14697,7 @@ var Jh = class {
 		if (e.classList.add("wc-root"), this.items = km(e), !this.items.length) return console.warn("[work-canvas] no .work-item elements found — nothing to render."), this;
 		await jm(this.items), Rh(this.items), this.projectPage = !!this.pathSlug() && new Set(this.items.map((e) => e.slug)).size === 1, this._homeTitle = this.isHomePath() ? document.title : this.options.homeTitle;
 		let t = this.layoutDefs.map((e) => e.key), n = t.includes(this.options.layout) ? this.options.layout : t[0];
-		this.options.rotate && (n = (this.options.rotate === "next" ? Qh(t) : $h(t)) ?? n), this.ui = new Fh(e, {
+		this.options.rotate && (n = (this.options.rotate === "next" ? Qh(t) ?? t[0] : $h(t)) ?? n), this.ui = new Fh(e, {
 			layouts: this.layoutDefs,
 			current: n,
 			aboutHref: this.options.aboutPath,
@@ -16071,10 +16071,10 @@ ag(bg, "defaults", vg), ag(bg, "label", "Universe");
 //#region src/main.js
 var xg = [
 	{
-		key: "a",
-		name: "Filmstrip",
-		Layout: hg,
-		config: pg
+		key: "e",
+		name: "Universe",
+		Layout: bg,
+		config: vg
 	},
 	{
 		key: "b",
@@ -16083,10 +16083,10 @@ var xg = [
 		config: gg
 	},
 	{
-		key: "e",
-		name: "Universe",
-		Layout: bg,
-		config: vg
+		key: "a",
+		name: "Filmstrip",
+		Layout: hg,
+		config: pg
 	}
 ];
 async function Sg(e, t = {}) {
@@ -16108,7 +16108,7 @@ async function Sg(e, t = {}) {
 	let s = new Jh(e, {
 		layouts: o,
 		layout: t.layout ?? i ?? n.layout ?? "a",
-		rotate: t.rotate ?? ((t.layout ?? i) || n.rotate === "false" ? !1 : n.rotate === "next" ? "next" : "random"),
+		rotate: t.rotate ?? ((t.layout ?? i) || n.rotate === "false" ? !1 : n.rotate === "random" ? "random" : "next"),
 		switcher: t.switcher ?? n.switcher !== "false",
 		syncUrl: t.syncUrl ?? n.syncUrl === "true",
 		tagline: t.tagline ?? n.tagline ?? "design &amp; direction made to move",
