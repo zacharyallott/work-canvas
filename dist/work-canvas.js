@@ -13252,15 +13252,25 @@ function zm(e) {
 function Bm(e) {
 	return document.createElement("video").canPlayType(e) !== "";
 }
-var Vm = "video/webm; codecs=\"av01.0.05M.08\"", Hm;
-function Um() {
-	return Hm ?? (Hm = (async () => {
-		if (!Bm(Vm) || !navigator.mediaCapabilities) return !1;
+function Vm(e, t) {
+	if ("requestVideoFrameCallback" in e) {
+		e.requestVideoFrameCallback(() => t());
+		return;
+	}
+	let n = () => {
+		e.readyState < e.HAVE_CURRENT_DATA || e.currentTime <= 0 || (e.removeEventListener("timeupdate", n), t());
+	};
+	e.addEventListener("timeupdate", n), n();
+}
+var Hm = "video/webm; codecs=\"av01.0.05M.08\"", Um;
+function Wm() {
+	return Um ?? (Um = (async () => {
+		if (!Bm(Hm) || !navigator.mediaCapabilities) return !1;
 		try {
 			let e = await navigator.mediaCapabilities.decodingInfo({
 				type: "file",
 				video: {
-					contentType: Vm,
+					contentType: Hm,
 					width: 1080,
 					height: 1080,
 					bitrate: 3e6,
@@ -13271,9 +13281,9 @@ function Um() {
 		} catch {
 			return !1;
 		}
-	})()), Hm;
+	})()), Um;
 }
-var Wm = class {
+var Gm = class {
 	constructor(e, t) {
 		Object.assign(this, e), this.manager = t, this.texture = null, this.texSize = new Y(this.aspect * 100, 100), this.ready = !1, this.textures = [], this.loading = /* @__PURE__ */ new Set(), this.failed = /* @__PURE__ */ new Set(), this.lastWanted = [
 			0,
@@ -13315,12 +13325,12 @@ var Wm = class {
 	dispose() {
 		this.textures.forEach((e) => e?.dispose()), this.textures = [], this.videoTexture?.dispose(), this.video && (this.video.pause(), this.video.removeAttribute("src"), this.video.querySelectorAll("source").forEach((e) => e.remove()), this.video.load(), this.video = null);
 	}
-}, Gm = class {
+}, Km = class {
 	constructor(e, { maxVideos: t = 5, videoPolicy: n = "all", downgradeAfter: r = 8, maxTextureEdge: i = 1280 } = {}) {
-		this.renderer = e, this.maxTextureEdge = i, this.maxVideos = t, this.videoPolicy = n, this.downgradeAfter = r, this.enabled = !0, this.items = [], this.inFlight = 0, this.queue = [], this.uploads = [], this.av1 = !1, Um().then((e) => this.av1 = e);
+		this.renderer = e, this.maxTextureEdge = i, this.maxVideos = t, this.videoPolicy = n, this.downgradeAfter = r, this.enabled = !0, this.items = [], this.inFlight = 0, this.queue = [], this.uploads = [], this.av1 = !1, Wm().then((e) => this.av1 = e);
 	}
 	add(e) {
-		let t = new Wm(e, this);
+		let t = new Gm(e, this);
 		return this.items.push(t), t;
 	}
 	preload() {
@@ -13401,14 +13411,17 @@ var Wm = class {
 			let e = document.createElement("source");
 			e.src = n.src, e.type = n.type, t.appendChild(e);
 		}
+		let n = !1;
 		t.addEventListener("playing", () => {
-			e.videoTexture || (e.videoTexture = new $c(t), e.videoTexture.colorSpace = "", e.videoTexture.minFilter = ji, e.videoTexture.generateMipmaps = !1), e.playing = !0, e.setTexture(e.videoTexture, t.videoWidth, t.videoHeight);
+			e.playing || n || (n = !0, Vm(t, () => {
+				n = !1, e.video === t && (e.videoTexture || (e.videoTexture = new $c(t), e.videoTexture.colorSpace = "", e.videoTexture.minFilter = ji, e.videoTexture.generateMipmaps = !1), e.videoTexture.needsUpdate = !0, this.renderer.initTexture(e.videoTexture), e.playing = !0, e.setTexture(e.videoTexture, t.videoWidth, t.videoHeight));
+			}));
 		}), e.video = t;
 	}
 	dispose() {
 		this.items.forEach((e) => e.dispose()), this.items = [], this.queue = [], this.uploads = [];
 	}
-}, Km = class {
+}, qm = class {
 	constructor(e, { clickSlop: t = 6, wheel: n = "capture" } = {}) {
 		this.el = e, this.clickSlop = t, this.wheelMode = n, this.handlers = {}, this.pointer = {
 			x: 0,
@@ -13510,7 +13523,7 @@ var Wm = class {
 	destroy() {
 		this._unbind?.forEach((e) => e()), this.handlers = {};
 	}
-}, qm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Group'%3e%3cpath%20id='Vector'%20d='M1.77344%201.77486L10.2622%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_2'%20d='M10.2622%201.77486L1.77344%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_3'%20d='M6.01823%200V12'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_4'%20d='M12%206.01921H0'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3c/g%3e%3c/svg%3e", Jm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='36'%20height='36'%20viewBox='0%200%2036%2036'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Group'%3e%3cpath%20id='Vector'%20d='M5.32031%205.32452L30.7866%2030.7908'%20stroke='%23F7F7F7'%20stroke-width='4.5'/%3e%3cpath%20id='Vector_2'%20d='M30.7866%205.32452L5.32031%2030.7908'%20stroke='%23F7F7F7'%20stroke-width='4.5'/%3e%3cpath%20id='Vector_3'%20d='M18.0586%200V36'%20stroke='%23F7F7F7'%20stroke-width='4.5'/%3e%3cpath%20id='Vector_4'%20d='M36%2018.0577H0'%20stroke='%23F7F7F7'%20stroke-width='4.5'/%3e%3c/g%3e%3c/svg%3e", Ym = { items: [
+}, Jm = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Group'%3e%3cpath%20id='Vector'%20d='M1.77344%201.77486L10.2622%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_2'%20d='M10.2622%201.77486L1.77344%2010.2636'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_3'%20d='M6.01823%200V12'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3cpath%20id='Vector_4'%20d='M12%206.01921H0'%20stroke='%23F7F7F7'%20stroke-width='1.5'/%3e%3c/g%3e%3c/svg%3e", Ym = "data:image/svg+xml,%3csvg%20preserveAspectRatio='none'%20overflow='visible'%20style='display:%20block;'%20width='36'%20height='36'%20viewBox='0%200%2036%2036'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Group'%3e%3cpath%20id='Vector'%20d='M5.32031%205.32452L30.7866%2030.7908'%20stroke='%23F7F7F7'%20stroke-width='4.5'/%3e%3cpath%20id='Vector_2'%20d='M30.7866%205.32452L5.32031%2030.7908'%20stroke='%23F7F7F7'%20stroke-width='4.5'/%3e%3cpath%20id='Vector_3'%20d='M18.0586%200V36'%20stroke='%23F7F7F7'%20stroke-width='4.5'/%3e%3cpath%20id='Vector_4'%20d='M36%2018.0577H0'%20stroke='%23F7F7F7'%20stroke-width='4.5'/%3e%3c/g%3e%3c/svg%3e", Xm = { items: [
 	{
 		id: "aspen-asc-summercampaign-ph2-bikeparkad02-social",
 		label: "Aspen Snowmass",
@@ -13701,7 +13714,7 @@ var Wm = class {
 		},
 		aspect: 1.7778
 	}
-] }, Xm = {
+] }, Zm = {
 	headline: "design & direction made to move brands, culture, humans, categories, & expectations forward.",
 	intro: "10+ years designing, directing & building systems for deepening and expanding connections between brands, culture and communities, with conceptually driven solutions that are at once simple, functional & emotional.",
 	clients: [
@@ -13752,14 +13765,14 @@ var Wm = class {
 		}
 	],
 	copyright: `${(/* @__PURE__ */ new Date()).getFullYear()} Zach Allott`
-}, Zm = 4, Qm = "Select clients", $m = {
+}, Qm = 4, $m = "Select clients", eh = {
 	"smith optics": ["smith"],
 	autodesk: ["tinkercad"],
 	dexcom: ["stelo"]
-}, eh = (e) => String(e).replace(/&/g, "&amp;").replace(/</g, "&lt;"), th = (e) => String(e ?? "").replace(/\s+/g, " ").trim();
-function nh(e) {
+}, th = (e) => String(e).replace(/&/g, "&amp;").replace(/</g, "&lt;"), nh = (e) => String(e ?? "").replace(/\s+/g, " ").trim();
+function rh(e) {
 	let t = (t) => new URL(t, e).href;
-	return Ym.items.map((e) => ({
+	return Xm.items.map((e) => ({
 		title: e.label,
 		type: e.type,
 		aspect: e.aspect,
@@ -13774,79 +13787,79 @@ function nh(e) {
 		}))
 	}));
 }
-function rh(e, t) {
-	let n = th(e).toLowerCase(), r = [n, ...$m[n] ?? []].map((e) => RegExp(`\\b${e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`)), i = /* @__PURE__ */ new Set();
+function ih(e, t) {
+	let n = nh(e).toLowerCase(), r = [n, ...eh[n] ?? []].map((e) => RegExp(`\\b${e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`)), i = /* @__PURE__ */ new Set();
 	return t.filter((e) => {
 		let t = String(e.title ?? "").toLowerCase(), n = e.poster || e.images?.[0]?.src;
 		return !n || i.has(n) || !r.some((e) => e.test(t)) ? !1 : (i.add(n), !0);
 	});
 }
-function ih() {
+function ah() {
 	let e = document.querySelector("[data-work-about]");
-	if (!e) return Xm;
-	let t = th(e.querySelector("[data-about-headline]")?.textContent) || Xm.headline, n = th((e.querySelector("[data-about-intro]") ?? e.querySelector("p:not([data-about-copyright]):not([data-about-headline])"))?.textContent) || Xm.intro, r = [...e.querySelectorAll("ul")].filter((e) => !e.closest("nav")).map((e) => [...e.querySelectorAll("li")].map((e) => th(e.textContent)).filter(Boolean)).filter((e) => e.length), i = [...e.querySelectorAll("a[href]")].map((e) => ({
-		label: th(e.textContent),
+	if (!e) return Zm;
+	let t = nh(e.querySelector("[data-about-headline]")?.textContent) || Zm.headline, n = nh((e.querySelector("[data-about-intro]") ?? e.querySelector("p:not([data-about-copyright]):not([data-about-headline])"))?.textContent) || Zm.intro, r = [...e.querySelectorAll("ul")].filter((e) => !e.closest("nav")).map((e) => [...e.querySelectorAll("li")].map((e) => nh(e.textContent)).filter(Boolean)).filter((e) => e.length), i = [...e.querySelectorAll("a[href]")].map((e) => ({
+		label: nh(e.textContent),
 		href: e.getAttribute("href")
-	})), a = th(e.querySelector("[data-about-copyright]")?.textContent).replace(/^©\s*/, "") || Xm.copyright;
+	})), a = nh(e.querySelector("[data-about-copyright]")?.textContent).replace(/^©\s*/, "") || Zm.copyright;
 	return e.setAttribute("aria-hidden", "true"), e.inert = !0, {
 		headline: t,
 		intro: n,
-		clients: r.length ? r : Xm.clients,
-		links: i.length ? i : Xm.links,
+		clients: r.length ? r : Zm.clients,
+		links: i.length ? i : Zm.links,
 		copyright: a
 	};
 }
-function ah(e) {
-	let t = e.flat(), n = Math.ceil((t.length + 2) / Zm), r = [], i = 0;
-	for (let e = 0; e < Zm && i < t.length; e++) {
+function oh(e) {
+	let t = e.flat(), n = Math.ceil((t.length + 2) / Qm), r = [], i = 0;
+	for (let e = 0; e < Qm && i < t.length; e++) {
 		let a = e === 0 ? n - 2 : n;
 		r.push(t.slice(i, i + a)), i += a;
 	}
 	return r;
 }
-function oh() {
-	let e = ih(), t = ah(e.clients);
+function sh() {
+	let e = ah(), t = oh(e.clients);
 	return `
-    <p class="wc-about-statement">${eh(e.headline)}<img src="${Jm}" alt="" width="36" height="36"></p>
+    <p class="wc-about-statement">${th(e.headline)}<img src="${Ym}" alt="" width="36" height="36"></p>
     <div class="wc-about-row">
-      <p class="wc-about-intro">${eh(e.intro)}</p>
-      <div class="wc-about-clients" role="group" aria-label="${Qm}">
-        ${t.map((e, t) => `<ul>${t === 0 ? `<li class="wc-about-label" aria-hidden="true">${Qm}</li><li class="wc-about-gap" aria-hidden="true"></li>` : ""}${e.map((e) => `<li>${eh(e)}</li>`).join("")}</ul>`).join("")}
+      <p class="wc-about-intro">${th(e.intro)}</p>
+      <div class="wc-about-clients" role="group" aria-label="${$m}">
+        ${t.map((e, t) => `<ul>${t === 0 ? `<li class="wc-about-label" aria-hidden="true">${$m}</li><li class="wc-about-gap" aria-hidden="true"></li>` : ""}${e.map((e) => `<li>${th(e)}</li>`).join("")}</ul>`).join("")}
       </div>
     </div>
     <div class="wc-about-footer">
       <nav class="wc-about-links" aria-label="Contact">
         ${e.links.map((e) => {
 		let t = e.href.startsWith("http") ? " target=\"_blank\" rel=\"noopener\"" : "";
-		return `<a href="${eh(e.href)}"${t}>${eh(e.label)} <span class="wc-link-arrow" aria-hidden="true"><span class="wc-link-track"><span>→</span><span class="is-next">→</span></span></span></a>`;
+		return `<a href="${th(e.href)}"${t}>${th(e.label)} <span class="wc-link-arrow" aria-hidden="true"><span class="wc-link-track"><span>→</span><span class="is-next">→</span></span></span></a>`;
 	}).join("")}
       </nav>
-      <p class="wc-about-copy"><span aria-hidden="true">©</span><span class="wc-sr"> ${eh(e.copyright)}</span></p>
+      <p class="wc-about-copy"><span aria-hidden="true">©</span><span class="wc-sr"> ${th(e.copyright)}</span></p>
     </div>`;
 }
 //#endregion
 //#region src/core/analytics.js
-function sh(e, t = {}) {
+function ch(e, t = {}) {
 	if (typeof window.gtag != "function") return;
 	let n = Object.fromEntries(Object.entries(t).filter(([, e]) => e != null && e !== ""));
 	try {
 		window.gtag("event", e, n);
 	} catch {}
 }
-var ch = [
+var lh = [
 	[/^mailto:/i, "email"],
 	[/linkedin\.com/i, "linkedin"],
 	[/are\.na/i, "arena"]
 ];
-function lh() {
+function uh() {
 	document.addEventListener("click", (e) => {
-		let t = e.target.closest?.("a[href]")?.getAttribute("href") || "", n = ch.find(([e]) => e.test(t))?.[1];
-		n && sh("contact_click", { method: n });
+		let t = e.target.closest?.("a[href]")?.getAttribute("href") || "", n = lh.find(([e]) => e.test(t))?.[1];
+		n && ch("contact_click", { method: n });
 	}, { capture: !0 });
 }
 //#endregion
 //#region src/core/about-peek.js
-var uh = {
+var dh = {
 	angles: [
 		0,
 		11.25,
@@ -13865,15 +13878,15 @@ var uh = {
 	maxWidth: .5,
 	x: .62,
 	minRoom: 160
-}, dh = class {
-	constructor(e, t, n = uh) {
+}, fh = class {
+	constructor(e, t, n = dh) {
 		this.ui = e, this.config = n, this.cards = [], this.lastAngle = null, this.el = document.createElement("div"), this.el.className = "wc-about-peek", this.el.setAttribute("aria-hidden", "true"), e.about.before(this.el), e.about.querySelectorAll(".wc-about-clients li:not(.wc-about-label):not(.wc-about-gap)").forEach((e) => {
-			let n = rh(e.textContent, t);
+			let n = ih(e.textContent, t);
 			if (!n.length) return;
 			e.classList.add("has-work");
 			let r = 0, i = !1;
 			e.addEventListener("pointerenter", (t) => {
-				t.pointerType !== "touch" && (this.deal(n[r]), i || sh("client_hover", { client: e.textContent.trim() }), i = !0, r = (r + 1) % n.length);
+				t.pointerType !== "touch" && (this.deal(n[r]), i || ch("client_hover", { client: e.textContent.trim() }), i = !0, r = (r + 1) % n.length);
 			}), e.addEventListener("pointerleave", () => this.leave());
 		});
 	}
@@ -13914,7 +13927,7 @@ var uh = {
 			opacity: "0"
 		}), K.set(o, { rotation: this.pickAngle() });
 		let c = document.createElement("img");
-		c.alt = "", c.decoding = "async", c.src = fh(e, a * (window.devicePixelRatio || 1));
+		c.alt = "", c.decoding = "async", c.src = ph(e, a * (window.devicePixelRatio || 1));
 		let l = e.images?.at(-1)?.src;
 		if (l && l !== c.src && c.addEventListener("error", () => c.src = l, { once: !0 }), o.appendChild(c), e.type === "video" && e.sources?.length && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
 			let t = document.createElement("video");
@@ -13962,27 +13975,27 @@ var uh = {
 		this.clear(0), this.el.remove();
 	}
 };
-function fh(e, t) {
+function ph(e, t) {
 	if (e.type === "video" || !e.images?.length) return e.poster;
 	let n = e.images;
 	return (n.find((e) => e.width && e.width >= t) ?? n[n.length - 1]).src;
 }
 //#endregion
 //#region src/core/blur-backdrop.js
-var ph = {
+var mh = {
 	blur: 200,
 	scale: 1.75,
 	fade: .4,
 	settle: .06
-}, mh = class {
+}, hh = class {
 	constructor(e) {
 		this.el = document.createElement("div"), this.el.className = "wc-backdrop", this.el.setAttribute("aria-hidden", "true"), e.prepend(this.el), this.layers = [], this.shown = null;
 	}
 	set(e) {
-		clearTimeout(this.timer), e !== this.shown && (this.timer = setTimeout(() => this.apply(e), ph.settle * 1e3));
+		clearTimeout(this.timer), e !== this.shown && (this.timer = setTimeout(() => this.apply(e), mh.settle * 1e3));
 	}
 	apply(e) {
-		let { blur: t, scale: n, fade: r } = ph;
+		let { blur: t, scale: n, fade: r } = mh;
 		this.shown = e, this.layers.forEach((e) => K.to(e, {
 			opacity: 0,
 			duration: r,
@@ -14010,7 +14023,7 @@ var ph = {
 	destroy() {
 		clearTimeout(this.timer), K.killTweensOf(this.el.querySelectorAll("img")), this.el.remove();
 	}
-}, hh = {
+}, gh = {
 	pullDistance: .45,
 	gatePause: .15,
 	holdAtEnd: .3,
@@ -14018,8 +14031,8 @@ var ph = {
 	lift: 72,
 	settle: .7,
 	smoothing: 10
-}, gh = class {
-	constructor({ input: e, scroller: t = e, draw: n, onEnd: r, enabled: i = () => !0, config: a = hh }) {
+}, _h = class {
+	constructor({ input: e, scroller: t = e, draw: n, onEnd: r, enabled: i = () => !0, config: a = gh }) {
 		Object.assign(this, {
 			input: e,
 			scroller: t,
@@ -14073,7 +14086,7 @@ var ph = {
 };
 //#endregion
 //#region src/core/text.js
-function _h(e) {
+function vh(e) {
 	if (!e) return;
 	let t = (e) => {
 		for (let n of [...e.childNodes]) if (n.nodeType === Node.TEXT_NODE) {
@@ -14091,7 +14104,7 @@ function _h(e) {
 	};
 	t(e);
 }
-function vh(e) {
+function yh(e) {
 	let t = [], n = null;
 	return e.forEach((e) => {
 		let r = e.offsetTop + e.offsetHeight / 2;
@@ -14100,20 +14113,20 @@ function vh(e) {
 }
 //#endregion
 //#region src/core/project.js
-var yh = "\n.wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s linear,visibility 0s linear .35s}\n.wc-root.is-project .wc-project{opacity:1;visibility:visible;pointer-events:auto;transition:opacity 0s,visibility 0s}\n.wc-project-scroll{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:clamp(200px,26vw,285px) minmax(0,1fr);column-gap:24px;padding:52px 15px 12px 19px;box-sizing:border-box;-webkit-user-select:text;user-select:text;outline:none}\n.wc-project-info{grid-column:1;grid-row:1;align-self:start;position:sticky;top:var(--wc-info-top,60vh);display:flex;flex-direction:column;gap:7px;color:#000}\n.wc-project-title{margin:0;font-size:16px;line-height:1;font-weight:500}\n.wc-project-desc{margin:0;max-width:271px;font-size:16px;line-height:1.25;font-weight:400;letter-spacing:.02em;color:#5f5f5f}\n.wc-project-services{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-size:10px;line-height:1;letter-spacing:.02em;text-transform:uppercase;font-weight:400}\n.wc-project-services li{padding:3px 6px;border-radius:3px;background:#e2e2e2;white-space:nowrap} /* each service as a tag (Figma 1553:6616, a touch roomier) */\n.wc-project-desc+.wc-project-services{margin-top:41px}\n.wc-project-media{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-end;gap:12px;margin:0;padding:0;list-style:none}\n.wc-project-item{position:relative;width:73.5%;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-project-item.is-loaded{background:none} /* the placeholder grey would otherwise show as a hairline at antialiased edges */\n.wc-project-item:nth-child(4n+2){width:100%}\n.wc-project-item.is-tall:nth-child(4n+2){width:73.5%} /* taller than square: never full width (it would run far past the screen) */\n.wc-project-item:nth-child(4n+3){width:62%} /* the smallest slot (was 51.8%) */\n.wc-project-item img{display:block;width:100%;height:auto}\n.wc-project-item video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n/* External video (YouTube / Vimeo): thumbnail + play button until pressed, then the player. */\n.wc-project-item iframe{position:absolute;inset:0;width:100%;height:100%;border:0}\n.wc-embed{appearance:none;position:absolute;inset:0;display:block;width:100%;height:100%;margin:0;padding:0;border:0;background:#111;cursor:pointer}\n.wc-embed img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-embed-play{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:#f2f2f2}\n.wc-embed-play::after{content:\"\";position:absolute;left:22px;top:19px;border-style:solid;border-width:9px 0 9px 14px;border-color:transparent transparent transparent #111}\n.wc-embed:focus-visible{outline:2px solid #111;outline-offset:2px}\n/* #autoplay embeds: a muted loop like the MP4s. Scaled to cover the slot (--ar = the video's aspect), no pointer input,\n   faded in over the thumbnail once the player has loaded. */\n.wc-project-item.is-loop{container-type:size;background:#111}\n.wc-project-item.is-loop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-project-item.is-loop iframe{inset:auto;left:50%;top:50%;width:max(100cqw,calc(100cqh * var(--ar,1.7778)));height:calc(max(100cqh,calc(100cqw / var(--ar,1.7778))) + 2 * var(--wc-loop-crop));translate:-50% -50%;pointer-events:none;opacity:0;transition:opacity .4s linear}\n/* The player is taller than the video by a band top and bottom, so the video sits letterboxed in the middle and the\n   player's own title bar / logo land in those bands, outside the slot (clipped). */\n.wc-project-item.is-loop{--wc-loop-crop:calc(64px + 3cqw)}\n.wc-project-item.is-loop iframe.is-on{opacity:1}\n.wc-project-item.is-pending{opacity:0} /* waiting to scroll into view (then its frame opens out) */\n.wc-project-media{will-change:opacity,translate}\n.wc-project-info{will-change:opacity}\n@media (min-width:1081px){\n  .wc-project-scroll{grid-template-columns:360px minmax(0,1fr)}\n  .wc-project-desc{max-width:345px} /* the narrowest that keeps every case-study description within 6 lines, so they balance (Bonnell goes to 7 at 340) (285px column / 271px text below 1081px) */\n}\n@media (max-width:700px){\n  .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}\n  .wc-project-info{position:static;grid-row:1;margin-bottom:24px;padding-top:16vh} /* room above the title + description on phones (27vh until v0.7.15) */\n  .wc-project-desc{max-width:none} /* full width on phones (271px column on desktop) */\n  .wc-project-media{grid-column:1;grid-row:2}\n  .wc-project-item,.wc-project-item:nth-child(n),.wc-project-item.is-tall:nth-child(n){width:100%}\n}\n", bh = 12, xh = {
+var bh = "\n.wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s linear,visibility 0s linear .35s}\n.wc-root.is-project .wc-project{opacity:1;visibility:visible;pointer-events:auto;transition:opacity 0s,visibility 0s}\n.wc-project-scroll{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:clamp(200px,26vw,285px) minmax(0,1fr);column-gap:24px;padding:52px 15px 12px 19px;box-sizing:border-box;-webkit-user-select:text;user-select:text;outline:none}\n.wc-project-info{grid-column:1;grid-row:1;align-self:start;position:sticky;top:var(--wc-info-top,60vh);display:flex;flex-direction:column;gap:7px;color:#000}\n.wc-project-title{margin:0;font-size:16px;line-height:1;font-weight:500}\n.wc-project-desc{margin:0;max-width:271px;font-size:16px;line-height:1.25;font-weight:400;letter-spacing:.02em;color:#5f5f5f}\n.wc-project-services{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-size:10px;line-height:1;letter-spacing:.02em;text-transform:uppercase;font-weight:400}\n.wc-project-services li{padding:3px 6px;border-radius:3px;background:#e2e2e2;white-space:nowrap} /* each service as a tag (Figma 1553:6616, a touch roomier) */\n.wc-project-desc+.wc-project-services{margin-top:41px}\n.wc-project-media{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:flex-end;gap:12px;margin:0;padding:0;list-style:none}\n.wc-project-item{position:relative;width:73.5%;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-project-item.is-loaded{background:none} /* the placeholder grey would otherwise show as a hairline at antialiased edges */\n.wc-project-item:nth-child(4n+2){width:100%}\n.wc-project-item.is-tall:nth-child(4n+2){width:73.5%} /* taller than square: never full width (it would run far past the screen) */\n.wc-project-item:nth-child(4n+3){width:62%} /* the smallest slot (was 51.8%) */\n.wc-project-item img{display:block;width:100%;height:auto}\n.wc-project-item video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n/* External video (YouTube / Vimeo): thumbnail + play button until pressed, then the player. */\n.wc-project-item iframe{position:absolute;inset:0;width:100%;height:100%;border:0}\n.wc-embed{appearance:none;position:absolute;inset:0;display:block;width:100%;height:100%;margin:0;padding:0;border:0;background:#111;cursor:pointer}\n.wc-embed img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-embed-play{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:#f2f2f2}\n.wc-embed-play::after{content:\"\";position:absolute;left:22px;top:19px;border-style:solid;border-width:9px 0 9px 14px;border-color:transparent transparent transparent #111}\n.wc-embed:focus-visible{outline:2px solid #111;outline-offset:2px}\n/* #autoplay embeds: a muted loop like the MP4s. Scaled to cover the slot (--ar = the video's aspect), no pointer input,\n   faded in over the thumbnail once the player has loaded. */\n.wc-project-item.is-loop{container-type:size;background:#111}\n.wc-project-item.is-loop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}\n.wc-project-item.is-loop iframe{inset:auto;left:50%;top:50%;width:max(100cqw,calc(100cqh * var(--ar,1.7778)));height:calc(max(100cqh,calc(100cqw / var(--ar,1.7778))) + 2 * var(--wc-loop-crop));translate:-50% -50%;pointer-events:none;opacity:0;transition:opacity .4s linear}\n/* The player is taller than the video by a band top and bottom, so the video sits letterboxed in the middle and the\n   player's own title bar / logo land in those bands, outside the slot (clipped). */\n.wc-project-item.is-loop{--wc-loop-crop:calc(64px + 3cqw)}\n.wc-project-item.is-loop iframe.is-on{opacity:1}\n.wc-project-item.is-pending{opacity:0} /* waiting to scroll into view (then its frame opens out) */\n.wc-project-media{will-change:opacity,translate}\n.wc-project-info{will-change:opacity}\n@media (min-width:1081px){\n  .wc-project-scroll{grid-template-columns:360px minmax(0,1fr)}\n  .wc-project-desc{max-width:345px} /* the narrowest that keeps every case-study description within 6 lines, so they balance (Bonnell goes to 7 at 340) (285px column / 271px text below 1081px) */\n}\n@media (max-width:700px){\n  .wc-project-scroll{grid-template-columns:minmax(0,1fr);padding:52px 12px 12px}\n  .wc-project-info{position:static;grid-row:1;margin-bottom:24px;padding-top:16vh} /* room above the title + description on phones (27vh until v0.7.15) */\n  .wc-project-desc{max-width:none} /* full width on phones (271px column on desktop) */\n  .wc-project-media{grid-column:1;grid-row:2}\n  .wc-project-item,.wc-project-item:nth-child(n),.wc-project-item.is-tall:nth-child(n){width:100%}\n}\n", xh = 12, Sh = {
 	delay: .05,
 	line: .45,
 	lineStep: .07,
 	tag: .3,
 	tagStep: .05,
 	tagsAfter: .2
-}, Sh = {
+}, Ch = {
 	inset: "12%",
 	duration: .9,
 	fade: .35,
 	trigger: "0px 0px -8% 0px",
 	waitForLoad: 1.2
-}, Ch = !1, wh = (e) => String(e ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"), Th = (e) => decodeURIComponent(String(e).split(/[?#]/)[0].split("/").pop() || "").replace(/^[0-9a-f]{24}_/, "").replace(/(-p-\d+)?\.[a-z0-9]+$/i, "").replace(/-(sm|md|lg|poster)$/, ""), Eh = (e) => {
+}, wh = !1, Th = (e) => String(e ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"), Eh = (e) => decodeURIComponent(String(e).split(/[?#]/)[0].split("/").pop() || "").replace(/^[0-9a-f]{24}_/, "").replace(/(-p-\d+)?\.[a-z0-9]+$/i, "").replace(/-(sm|md|lg|poster)$/, ""), Dh = (e) => {
 	let t = e.hash ? [`h:${e.hash}`] : [];
 	e.embed && t.push(`e:${e.embed.provider}:${e.embed.id}`);
 	let n = [];
@@ -14123,7 +14136,7 @@ var yh = "\n.wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;po
 		e.video
 	]) {
 		if (!r) continue;
-		n.push(`n:${Th(r)}`);
+		n.push(`n:${Eh(r)}`);
 		let e = String(r).match(/\/([0-9a-f]{24})_/i);
 		e && t.push(`a:${e[1]}`);
 	}
@@ -14131,35 +14144,35 @@ var yh = "\n.wc-project{position:absolute;inset:0;opacity:0;visibility:hidden;po
 		strong: t,
 		weak: n
 	};
-}, Dh = (e, t) => e.strong.some((e) => t.strong.includes(e)) || (!e.strong.length || !t.strong.length) && e.weak.some((e) => t.weak.includes(e));
-function Oh(e, t) {
+}, Oh = (e, t) => e.strong.some((e) => t.strong.includes(e)) || (!e.strong.length || !t.strong.length) && e.weak.some((e) => t.weak.includes(e));
+function kh(e, t) {
 	let n = document.createElement("iframe");
 	return n.src = e, n.title = t, n.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media", n.allowFullscreen = !0, n.referrerPolicy = "strict-origin-when-cross-origin", n;
 }
-function kh(e, t) {
+function Ah(e, t) {
 	let n = e.src && e.src !== e.embed.thumb, r = e.embed.aspect || 16 / 9, i = n && e.aspect ? e.aspect.toFixed(4) : r.toFixed(4), a = `${t} — video`;
 	if (e.embed.autoplay) {
-		let t = e.src ? `<img src="${wh(e.src)}"${n && e.srcset ? ` srcset="${wh(e.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="" ${e.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}${n ? "" : " data-no-fit"}>` : "", o = `<iframe data-src="${wh(e.embed.loopSrc)}" data-provider="${e.embed.provider}" title="${wh(a)}" tabindex="-1" allow="autoplay; encrypted-media; picture-in-picture"></iframe>`;
+		let t = e.src ? `<img src="${Th(e.src)}"${n && e.srcset ? ` srcset="${Th(e.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="" ${e.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}${n ? "" : " data-no-fit"}>` : "", o = `<iframe data-src="${Th(e.embed.loopSrc)}" data-provider="${e.embed.provider}" title="${Th(a)}" tabindex="-1" allow="autoplay; encrypted-media; picture-in-picture"></iframe>`;
 		return `<li class="wc-project-item is-embed is-loop${e.hero ? " is-hero" : " is-pending"}${i < 1 ? " is-tall" : ""}" style="aspect-ratio:${i};--ar:${r.toFixed(4)}">${t}${o}</li>`;
 	}
-	let o = e.src ? `<button type="button" class="wc-embed" data-src="${wh(um(e.embed))}" data-title="${wh(a)}" aria-label="Play video: ${wh(t)}"><img src="${wh(e.src)}"${n && e.srcset ? ` srcset="${wh(e.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="" ${e.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}${n ? "" : " data-no-fit"}><span class="wc-embed-play" aria-hidden="true"></span></button>` : Oh(e.embed.src, a).outerHTML.replace("<iframe", "<iframe loading=\"lazy\"");
+	let o = e.src ? `<button type="button" class="wc-embed" data-src="${Th(um(e.embed))}" data-title="${Th(a)}" aria-label="Play video: ${Th(t)}"><img src="${Th(e.src)}"${n && e.srcset ? ` srcset="${Th(e.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="" ${e.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}${n ? "" : " data-no-fit"}><span class="wc-embed-play" aria-hidden="true"></span></button>` : kh(e.embed.src, a).outerHTML.replace("<iframe", "<iframe loading=\"lazy\"");
 	return `<li class="wc-project-item is-embed${e.hero ? " is-hero" : " is-pending"}${i < 1 ? " is-tall" : ""}" style="aspect-ratio:${i}">${o}</li>`;
 }
-var Ah = class {
+var jh = class {
 	constructor(e, { onEnd: t } = {}) {
-		if (this.av1 = !1, Um().then((e) => this.av1 = e), !Ch) {
-			Ch = !0;
+		if (this.av1 = !1, Wm().then((e) => this.av1 = e), !wh) {
+			wh = !0;
 			let e = document.createElement("style");
-			e.textContent = yh, document.head.appendChild(e);
+			e.textContent = bh, document.head.appendChild(e);
 		}
-		this.el = document.createElement("div"), this.el.className = "wc-project", this.el.dataset.wcNoInput = "", this.el.setAttribute("aria-hidden", "true"), this.el.innerHTML = "<div class=\"wc-project-scroll\" tabindex=\"-1\"></div>", this.scroll = this.el.firstElementChild, e.prepend(this.el), this.onEnd = t, this.puller = new gh({
+		this.el = document.createElement("div"), this.el.className = "wc-project", this.el.dataset.wcNoInput = "", this.el.setAttribute("aria-hidden", "true"), this.el.innerHTML = "<div class=\"wc-project-scroll\" tabindex=\"-1\"></div>", this.scroll = this.el.firstElementChild, e.prepend(this.el), this.onEnd = t, this.puller = new _h({
 			input: this.scroll,
 			enabled: () => !!this.scroll.firstElementChild,
 			draw: (e) => this.drawPull(e),
 			onEnd: () => this.onEnd?.()
 		}), this.scroll.addEventListener("click", (e) => {
 			let t = e.target.closest(".wc-embed");
-			t && t.replaceWith(Oh(t.dataset.src, t.dataset.title));
+			t && t.replaceWith(kh(t.dataset.src, t.dataset.title));
 		}), this.io = new IntersectionObserver((e) => e.forEach((e) => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), {
 			root: this.scroll,
 			threshold: .25
@@ -14175,7 +14188,7 @@ var Ah = class {
 			t && (this.inIO.unobserve(e), this.expandIn(e));
 		}), {
 			root: this.scroll,
-			rootMargin: Sh.trigger,
+			rootMargin: Ch.trigger,
 			threshold: 0
 		}), this._onMessage = (e) => {
 			pm(e) && this.el.querySelectorAll(".is-loop iframe:not(.is-on)").forEach((t) => t.contentWindow === e.source && t.classList.add("is-on"));
@@ -14200,22 +14213,22 @@ var Ah = class {
 				hero: !0
 			});
 		}
-		let i = r.map(Eh);
+		let i = r.map(Dh);
 		for (let t of e.gallery ?? []) {
-			let e = Eh(t);
-			i.some((t) => Dh(t, e)) || (i.push(e), r.push(t));
+			let e = Dh(t);
+			i.some((t) => Oh(t, e)) || (i.push(e), r.push(t));
 		}
 		let a = (e.services || "").split(/\s*(?:,|→|\n)\s*/).map((e) => e.trim()).filter(Boolean);
 		this.scroll.innerHTML = `
       <div class="wc-project-info">
-        <h2 class="wc-project-title">${wh(e.title)}</h2>
-        ${e.description ? `<p class="wc-project-desc">${wh(e.description)}</p>` : ""}
-        ${a.length ? `<ul class="wc-project-services">${a.map((e) => `<li>${wh(e)}</li>`).join("")}</ul>` : ""}
+        <h2 class="wc-project-title">${Th(e.title)}</h2>
+        ${e.description ? `<p class="wc-project-desc">${Th(e.description)}</p>` : ""}
+        ${a.length ? `<ul class="wc-project-services">${a.map((e) => `<li>${Th(e)}</li>`).join("")}</ul>` : ""}
       </div>
-      <ul class="wc-project-media" aria-label="${wh(e.title)} images">
+      <ul class="wc-project-media" aria-label="${Th(e.title)} images">
         ${r.map((t) => {
-			if (t.type === "embed" && t.embed) return kh(t, e.title);
-			let n = ` style="aspect-ratio:${t.aspect ? t.aspect.toFixed(4) : "1.5"}"`, r = `<img crossorigin="anonymous" src="${wh(t.src)}"${t.srcset ? ` srcset="${wh(t.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="${wh(t.alt)}" ${t.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}>`, i = t.webm && this.av1 ? `<source src="${wh(t.webm)}" type='video/webm; codecs="av01.0.05M.08"'>` : "", a = t.type === "video" && t.video ? `<video crossorigin="anonymous" muted loop playsinline preload="metadata">${i}<source src="${wh(t.video)}" type="video/mp4"></video>` : "";
+			if (t.type === "embed" && t.embed) return Ah(t, e.title);
+			let n = ` style="aspect-ratio:${t.aspect ? t.aspect.toFixed(4) : "1.5"}"`, r = `<img crossorigin="anonymous" src="${Th(t.src)}"${t.srcset ? ` srcset="${Th(t.srcset)}" sizes="(max-width:700px) 100vw, 70vw"` : ""} alt="${Th(t.alt)}" ${t.hero ? "decoding=\"sync\"" : "loading=\"lazy\" decoding=\"async\""}>`, i = t.webm && this.av1 ? `<source src="${Th(t.webm)}" type='video/webm; codecs="av01.0.05M.08"'>` : "", a = t.type === "video" && t.video ? `<video crossorigin="anonymous" muted loop playsinline preload="metadata">${i}<source src="${Th(t.video)}" type="video/mp4"></video>` : "";
 			return `<li class="wc-project-item${t.hero ? " is-hero" : " is-pending"}${t.aspect < 1 ? " is-tall" : ""}"${n}>${r}${a}</li>`;
 		}).join("")}
       </ul>`, this.resetPull(), this.scroll.scrollTop = 0, this.el.querySelectorAll(".wc-project-item img").forEach((e) => {
@@ -14225,12 +14238,12 @@ var Ah = class {
 			e.complete && n(), e.addEventListener("load", n), e.addEventListener("error", () => e.hasAttribute("srcset") && e.removeAttribute("srcset"), { once: !0 });
 		}), this.el.querySelectorAll("video").forEach((e) => {
 			e.muted = !0, this.io.observe(e);
-		}), this.el.querySelectorAll(".is-loop iframe").forEach((e) => this.loopIO.observe(e)), _h(this.scroll.querySelector(".wc-project-desc")), this.layoutInfo();
+		}), this.el.querySelectorAll(".is-loop iframe").forEach((e) => this.loopIO.observe(e)), vh(this.scroll.querySelector(".wc-project-desc")), this.layoutInfo();
 	}
 	layoutInfo() {
 		let e = this.el.querySelector(".wc-project-info");
 		if (!e) return;
-		let t = parseFloat(getComputedStyle(this.scroll).paddingTop) || 0, n = this.el.clientHeight - bh - e.offsetHeight - t;
+		let t = parseFloat(getComputedStyle(this.scroll).paddingTop) || 0, n = this.el.clientHeight - xh - e.offsetHeight - t;
 		this.el.style.setProperty("--wc-info-top", `${Math.max(0, n)}px`);
 	}
 	drawPull({ opacity: e, lift: t }) {
@@ -14256,13 +14269,13 @@ var Ah = class {
 		let t = this.el.querySelector(".wc-project-info"), n = this.el.querySelectorAll(".wc-project-item.is-pending");
 		e ? (n.forEach((e) => e.classList.remove("is-pending")), K.fromTo([t, ...n].filter(Boolean), { opacity: 0 }, {
 			opacity: 1,
-			duration: Sh.fade,
+			duration: Ch.fade,
 			ease: cm.fade,
 			clearProps: "opacity"
 		})) : (t && (this.infoTl = this.infoIn(t)), n.forEach((e) => this.inIO.observe(e))), this.scroll.focus({ preventScroll: !0 });
 	}
 	infoIn(e) {
-		let t = e.querySelector(".wc-project-title"), n = [...e.querySelectorAll(".wc-project-desc .wc-w")], r = [...e.querySelectorAll(".wc-project-services li")], i = [[t].filter(Boolean), ...vh(n)], a = xh;
+		let t = e.querySelector(".wc-project-title"), n = [...e.querySelectorAll(".wc-project-desc .wc-w")], r = [...e.querySelectorAll(".wc-project-services li")], i = [[t].filter(Boolean), ...yh(n)], a = Sh;
 		K.set([...i.flat(), ...r], { opacity: 0 });
 		let o = K.timeline({
 			delay: a.delay,
@@ -14281,7 +14294,7 @@ var Ah = class {
 		let t = e.querySelector("img"), n = !1, r = () => {
 			if (n || !e.isConnected) return;
 			n = !0, e.classList.remove("is-pending");
-			let { inset: t, duration: r, fade: i } = Sh;
+			let { inset: t, duration: r, fade: i } = Ch;
 			K.fromTo(e, { opacity: 0 }, {
 				opacity: 1,
 				duration: i,
@@ -14295,7 +14308,7 @@ var Ah = class {
 			});
 		};
 		if (!t || t.complete && t.naturalWidth) return r();
-		t.addEventListener("load", r, { once: !0 }), t.addEventListener("error", r, { once: !0 }), setTimeout(r, Sh.waitForLoad * 1e3);
+		t.addEventListener("load", r, { once: !0 }), t.addEventListener("error", r, { once: !0 }), setTimeout(r, Ch.waitForLoad * 1e3);
 	}
 	hide() {
 		this.el.setAttribute("aria-hidden", "true"), this.el.querySelectorAll("video").forEach((e) => e.pause()), this.el.querySelectorAll(".is-loop iframe[src]").forEach((e) => dm(e, !1)), clearTimeout(this.clearTimer), this.clearTimer = setTimeout(() => this.clear(), 500);
@@ -14308,7 +14321,7 @@ var Ah = class {
 	destroy() {
 		this.clear(), this.io.disconnect(), this.loopIO.disconnect(), window.removeEventListener("message", this._onMessage), this.el.remove();
 	}
-}, jh = {
+}, Mh = {
 	delay: .15,
 	duration: .45,
 	wordsAt: .12,
@@ -14316,20 +14329,20 @@ var Ah = class {
 	fontWait: 1.2,
 	starTurn: 90,
 	starSpin: .9
-}, Mh = "\n/* Full visible screen: svh leaves out the mobile browser toolbars (100vh would slide under them). */\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);height:100vh;isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n/* About: the hovered client's picture, blurred across the page (blur-backdrop.js). Below everything else, above the root's own background (its isolation keeps it in there). */\n.wc-backdrop{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}\n.wc-backdrop img{position:absolute;display:block;max-width:none;object-fit:cover;will-change:opacity}\n.wc-root.is-hovering-tile{cursor:none} /* the dot stands in for the cursor over a project that opens */\n/* Over a project that opens on click, the cursor is a dot (blends with difference, like the caption, so it reads\n   on any picture). Mouse only: touch has no cursor. */\n.wc-dot{position:absolute;left:0;top:0;z-index:3;width:var(--wc-dot-size,10px);height:var(--wc-dot-size,10px);margin:calc(var(--wc-dot-size,10px) / -2) 0 0 calc(var(--wc-dot-size,10px) / -2);border-radius:50%;background:#f2f2f2;mix-blend-mode:difference;pointer-events:none;opacity:0;will-change:transform}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear;touch-action:none} /* swipes in any direction drive the layouts */\n.wc-root.is-ready .wc-canvas{opacity:1}\n/* Leaving the about section: the work only starts to fade back once the about copy has gone (no cross-fade). */\n.wc-root.is-leaving-about .wc-canvas{transition:opacity .45s linear .45s}\n.wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,400);color:#f2f2f2}\n/* Above everything else (about, project view, caption) so it always blends with what's behind it and stays\n   tappable when project images scroll under it; its own layer keeps Safari blending it against the page. */\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;z-index:2;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference;will-change:transform}\n.wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px);padding:0;border:0;background:none;pointer-events:auto;cursor:pointer}\n.wc-icon:focus-visible{outline:1px solid #f2f2f2;outline-offset:3px}\n.wc-icon img{display:block;width:100%;height:100%;pointer-events:none}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}\n.wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}\n/* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */\n.wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden;translate:0 .105em} /* puts the turned glyph's tip on the text baseline (measured: centred, it ends ~1.7px above at 16px) */\n.wc-arrow-track{position:absolute;left:0;top:0;width:17px;height:17px}\n.wc-arrow-glyph{position:absolute;left:0;top:0;width:17px;height:17px;line-height:17px;text-align:center;transform:rotate(90deg);-webkit-text-stroke:.35px currentColor} /* a touch heavier than the font's 500 (there's no bolder Cassette file) */\n.wc-arrow-glyph.is-next{top:-17px}\n.wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}\n.wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}\n/* About (Figma frame 49, 1542:5601): bottom-anchored headline, then the intro + client columns, then the footer. The\n   section blends with difference (like the top bar), so colours are written inverted against the #f2f2f2 page:\n   #939393 → #5f5f5f grey text; tags #101010 on #e2e2e2 text → #e2e2e2 tags with near-black text. */\n.wc-about{position:absolute;left:0;right:0;bottom:0;translate:0 var(--wc-pull-lift,0px);box-sizing:border-box;max-height:calc(100% - 44px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:0 23px 24px;display:flex;flex-direction:column;gap:48px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}\n.wc-root.is-about .wc-about{opacity:var(--wc-pull-fade,1);visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}\n.wc-about .wc-w{display:inline-block}\n.wc-about-statement{margin:0 0 48px;max-width:24.6em;font-size:clamp(22px,min(3.75vw,6.2vh),48px);line-height:1.25;letter-spacing:.02em;font-weight:500} /* 96px to the row (the section's 48 + 48) */\n.wc-about-statement img{display:inline-block;width:.72em;height:.72em;margin-left:.3em;vertical-align:baseline} /* Cassette cap height: sits on the baseline, tops out with the capitals */\n.wc-about-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}\n.wc-about-intro{margin:0;flex:0 1 311px;min-width:0;font-size:16px;line-height:1.25;font-weight:400;color:#939393}\n.wc-about-clients{display:contents} /* its columns share the row's even spacing with the intro */\n.wc-about-clients ul{list-style:none;margin:0;padding:0;flex:0 1 165px;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:400;font-size:10px;line-height:1;letter-spacing:.02em;text-transform:uppercase} /* type matches the project service tags */\n.wc-about-clients li{padding:3px 6px;border-radius:3px;background:#101010;color:#e2e2e2;white-space:nowrap} /* a tag, like the project services */\n.wc-about-clients li.has-work{transition:background-color .12s linear,color .12s linear}\n@media (hover:hover){.wc-about-clients li.has-work:hover{background:#e2e2e2;color:#101010}} /* a client with work to show, hovered: inverted (shows as a near-black tag with grey text) */\n.wc-about-clients li.wc-about-label{padding:3px 0;background:none;color:inherit} /* plain text, flush with the column (keeps the tag row height so the rows line up) */\n.wc-about-clients li.wc-about-gap{background:none;height:10px}\n/* Hovering a client's tag: one of their pieces as a card above the copy (about-peek.js). Behind the section, so the copy blends over it. */\n.wc-about-peek{position:absolute;inset:0;overflow:hidden;pointer-events:none;visibility:hidden}\n.wc-root.is-about .wc-about-peek{visibility:visible}\n.wc-about-card{position:absolute;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-about-card.is-loaded{background:none} /* the placeholder grey would otherwise show as a dotted hairline along a turned card's antialiased edges */\n.wc-about-card img,.wc-about-card video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}\n.wc-about-card video{opacity:0}\n.wc-about-card video.is-playing{opacity:1}\n.wc-about-footer{display:flex;align-items:center;justify-content:space-between;margin-top:48px;line-height:1;font-weight:500} /* 96px above the footer (the section's 48 + 48), same as the headline to the row */\n.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:500;letter-spacing:.02em} /* same size as the tagline */\n.wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}\n/* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */\n.wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}\n.wc-link-track{position:absolute;inset:0}\n.wc-link-track>span{position:absolute;left:0;top:0;width:1em;line-height:1em;text-align:center}\n.wc-link-track>span.is-next{left:-1em}\n.wc-about-links a:focus-visible{outline:1px solid currentColor;outline-offset:3px}\n.wc-about-copy{margin:0;font-size:16px}\n/* Email: after a click the link reads \"copied\" in place of \"email →\" (laid over it, so the link keeps its width and the others stay put). */\n.wc-copy{position:relative}\n.wc-copy-done{position:absolute;left:0;top:0;opacity:0;white-space:nowrap;pointer-events:none}\n.wc-caption{position:absolute;left:0;top:0;transform-origin:0 0;font-size:16px;font-weight:500;letter-spacing:0;line-height:1.3;text-wrap:balance;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .4s linear;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 12px;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n/* Paragraphs avoid orphans and ragged endings; headings get evenly balanced lines. */\n.wc-ui p{text-wrap:pretty} /* paragraphs: no lone last word */\n.wc-ui h1,.wc-ui h2,.wc-ui h3,.wc-ui h4,.wc-ui h5,.wc-ui h6,.wc-ui .wc-about-statement{text-wrap:balance} /* headlines (the about headline is a <p>): even lines */\n.wc-ui .wc-about-intro,.wc-ui .wc-project-desc{text-wrap:balance} /* info text: even lines (browsers balance up to ~6 lines; longer text wraps normally) */\n.wc-seo{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@supports (height:100svh){.wc-root{height:100svh}}\n.wc-about::-webkit-scrollbar{display:none}\n@media (max-width:1080px){.wc-about-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.wc-about-intro{grid-column:1/-1;max-width:clamp(340px,75%,560px);margin-bottom:80px}} /* stacked (same breakpoint as the project view's wider text): the intro above the client columns, 3 balanced lines from ~760px wide; 96px intro → clients (16 + 80), same as headline → intro (phones: 44 = 16 + 28) */\n@media (max-width:600px){.wc-tagline,.wc-about-links{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-row{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:16px}.wc-about-intro{max-width:none;margin-bottom:28px}.wc-about-footer{margin-top:16px}}\n", Nh = !1;
-function Ph() {
-	if (Nh) return;
-	Nh = !0;
+}, Nh = "\n/* Full visible screen: svh leaves out the mobile browser toolbars (100vh would slide under them). */\n.wc-root{position:relative;overflow:hidden;background:var(--wc-bg,#f2f2f2);height:100vh;isolation:isolate;touch-action:pan-y;-webkit-user-select:none;user-select:none}\n.wc-root.is-dragging{cursor:grabbing}\n/* About: the hovered client's picture, blurred across the page (blur-backdrop.js). Below everything else, above the root's own background (its isolation keeps it in there). */\n.wc-backdrop{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}\n.wc-backdrop img{position:absolute;display:block;max-width:none;object-fit:cover;will-change:opacity}\n.wc-root.is-hovering-tile{cursor:none} /* the dot stands in for the cursor over a project that opens */\n/* Over a project that opens on click, the cursor is a dot (blends with difference, like the caption, so it reads\n   on any picture). Mouse only: touch has no cursor. */\n.wc-dot{position:absolute;left:0;top:0;z-index:3;width:var(--wc-dot-size,10px);height:var(--wc-dot-size,10px);margin:calc(var(--wc-dot-size,10px) / -2) 0 0 calc(var(--wc-dot-size,10px) / -2);border-radius:50%;background:#f2f2f2;mix-blend-mode:difference;pointer-events:none;opacity:0;will-change:transform}\n.wc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s linear;touch-action:none} /* swipes in any direction drive the layouts */\n.wc-root.is-ready .wc-canvas{opacity:1}\n/* Leaving the about section: the work only starts to fade back once the about copy has gone (no cross-fade). */\n.wc-root.is-leaving-about .wc-canvas{transition:opacity .45s linear .45s}\n.wc-root.is-about .wc-canvas,.wc-root.is-about .wc-fallback,.wc-root.is-project .wc-canvas,.wc-root.is-project .wc-fallback{opacity:0;pointer-events:none}\n/* no z-index here: a stacking context would stop mix-blend-mode reaching the canvas */\n.wc-ui{position:absolute;inset:0;pointer-events:none;font-family:var(--wc-font,inherit);font-weight:var(--wc-font-weight,400);color:#f2f2f2}\n/* Above everything else (about, project view, caption) so it always blends with what's behind it and stays\n   tappable when project images scroll under it; its own layer keeps Safari blending it against the page. */\n.wc-topbar{position:absolute;left:13px;right:13px;top:13px;z-index:2;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:difference;will-change:transform}\n.wc-icon{display:block;width:var(--wc-icon-size,16px);height:var(--wc-icon-size,16px);padding:0;border:0;background:none;pointer-events:auto;cursor:pointer}\n.wc-icon:focus-visible{outline:1px solid #f2f2f2;outline-offset:3px}\n.wc-icon img{display:block;width:100%;height:100%;pointer-events:none}\n.wc-tagline{display:flex;gap:8px;align-items:center;font-size:16px;font-weight:500;letter-spacing:.02em;line-height:1;color:#f2f2f2;text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:pointer}\n.wc-tagline:focus-visible{outline:1px solid #f2f2f2;outline-offset:4px}\n/* Arrow: a 17px mask with two stacked glyphs; hover slides one out and the other in. */\n.wc-arrow{position:relative;display:block;width:17px;height:17px;overflow:hidden;translate:0 .105em} /* puts the turned glyph's tip on the text baseline (measured: centred, it ends ~1.7px above at 16px) */\n.wc-arrow-track{position:absolute;left:0;top:0;width:17px;height:17px}\n.wc-arrow-glyph{position:absolute;left:0;top:0;width:17px;height:17px;line-height:17px;text-align:center;transform:rotate(90deg);-webkit-text-stroke:.35px currentColor} /* a touch heavier than the font's 500 (there's no bolder Cassette file) */\n.wc-arrow-glyph.is-next{top:-17px}\n.wc-tagline.is-up .wc-arrow-glyph{transform:rotate(-90deg)}\n.wc-tagline.is-up .wc-arrow-glyph.is-next{top:17px}\n/* About (Figma frame 49, 1542:5601): bottom-anchored headline, then the intro + client columns, then the footer. The\n   section blends with difference (like the top bar), so colours are written inverted against the #f2f2f2 page:\n   #939393 → #5f5f5f grey text; tags #101010 on #e2e2e2 text → #e2e2e2 tags with near-black text. */\n.wc-about{position:absolute;left:0;right:0;bottom:0;translate:0 var(--wc-pull-lift,0px);box-sizing:border-box;max-height:calc(100% - 44px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:0 23px 24px;display:flex;flex-direction:column;gap:48px;color:#f2f2f2;mix-blend-mode:difference;opacity:0;visibility:hidden;transition:opacity .3s linear,visibility 0s linear .3s}\n.wc-root.is-about .wc-about{opacity:var(--wc-pull-fade,1);visibility:visible;pointer-events:auto;-webkit-user-select:text;user-select:text;transition:opacity 0s,visibility 0s}\n.wc-about .wc-w{display:inline-block}\n.wc-about-statement{margin:0 0 48px;max-width:24.6em;font-size:clamp(22px,min(3.75vw,6.2vh),48px);line-height:1.25;letter-spacing:.02em;font-weight:500} /* 96px to the row (the section's 48 + 48) */\n.wc-about-statement img{display:inline-block;width:.72em;height:.72em;margin-left:.3em;vertical-align:baseline} /* Cassette cap height: sits on the baseline, tops out with the capitals */\n.wc-about-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}\n.wc-about-intro{margin:0;flex:0 1 311px;min-width:0;font-size:16px;line-height:1.25;font-weight:400;color:#939393}\n.wc-about-clients{display:contents} /* its columns share the row's even spacing with the intro */\n.wc-about-clients ul{list-style:none;margin:0;padding:0;flex:0 1 165px;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;font-family:var(--wc-font-mono,'Cassette Semi Mono',ui-monospace,monospace);font-weight:400;font-size:10px;line-height:1;letter-spacing:.02em;text-transform:uppercase} /* type matches the project service tags */\n.wc-about-clients li{padding:3px 6px;border-radius:3px;background:#101010;color:#e2e2e2;white-space:nowrap} /* a tag, like the project services */\n.wc-about-clients li.has-work{transition:background-color .12s linear,color .12s linear}\n@media (hover:hover){.wc-about-clients li.has-work:hover{background:#e2e2e2;color:#101010}} /* a client with work to show, hovered: inverted (shows as a near-black tag with grey text) */\n.wc-about-clients li.wc-about-label{padding:3px 0;background:none;color:inherit} /* plain text, flush with the column (keeps the tag row height so the rows line up) */\n.wc-about-clients li.wc-about-gap{background:none;height:10px}\n/* Hovering a client's tag: one of their pieces as a card above the copy (about-peek.js). Behind the section, so the copy blends over it. */\n.wc-about-peek{position:absolute;inset:0;overflow:hidden;pointer-events:none;visibility:hidden}\n.wc-root.is-about .wc-about-peek{visibility:visible}\n.wc-about-card{position:absolute;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-about-card.is-loaded{background:none} /* the placeholder grey would otherwise show as a dotted hairline along a turned card's antialiased edges */\n.wc-about-card img,.wc-about-card video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}\n.wc-about-card video{opacity:0}\n.wc-about-card video.is-playing{opacity:1}\n.wc-about-footer{display:flex;align-items:center;justify-content:space-between;margin-top:48px;line-height:1;font-weight:500} /* 96px above the footer (the section's 48 + 48), same as the headline to the row */\n.wc-about-links{display:flex;gap:16px;font-size:16px;font-weight:500;letter-spacing:.02em} /* same size as the tagline */\n.wc-about-links a{color:inherit;text-decoration:none;white-space:nowrap}\n/* Link arrow: masked like the tagline's; hover slides it out right and a new one in from the left. */\n.wc-link-arrow{position:relative;display:inline-block;width:1em;height:1em;overflow:hidden;vertical-align:-.1em}\n.wc-link-track{position:absolute;inset:0}\n.wc-link-track>span{position:absolute;left:0;top:0;width:1em;line-height:1em;text-align:center}\n.wc-link-track>span.is-next{left:-1em}\n.wc-about-links a:focus-visible{outline:1px solid currentColor;outline-offset:3px}\n.wc-about-copy{margin:0;font-size:16px}\n/* Email: after a click the link reads \"copied\" in place of \"email →\" (laid over it, so the link keeps its width and the others stay put). */\n.wc-copy{position:relative}\n.wc-copy-done{position:absolute;left:0;top:0;opacity:0;white-space:nowrap;pointer-events:none}\n.wc-caption{position:absolute;left:0;top:0;transform-origin:0 0;font-size:16px;font-weight:500;letter-spacing:0;line-height:1.3;text-wrap:balance;mix-blend-mode:difference;overflow:hidden;visibility:hidden;will-change:transform}\n.wc-caption-inner{display:block;transform:translateY(110%)}\n.wc-hint{position:absolute;left:50%;bottom:13px;transform:translateX(-50%);font-size:11px;line-height:1;mix-blend-mode:difference;opacity:.6;white-space:nowrap}\n.wc-fallback{position:absolute;inset:0;columns:160px;column-gap:12px;padding:48px 12px 12px;overflow:auto;transition:opacity .4s linear;cursor:auto}\n.wc-fallback a,.wc-fallback div{display:block;break-inside:avoid;margin:0 0 12px;border-radius:4px;overflow:hidden;background:#e2e2e2}\n.wc-fallback img{display:block;width:100%;height:100%;object-fit:cover}\n/* Paragraphs avoid orphans and ragged endings; headings get evenly balanced lines. */\n.wc-ui p{text-wrap:pretty} /* paragraphs: no lone last word */\n.wc-ui h1,.wc-ui h2,.wc-ui h3,.wc-ui h4,.wc-ui h5,.wc-ui h6,.wc-ui .wc-about-statement{text-wrap:balance} /* headlines (the about headline is a <p>): even lines */\n.wc-ui .wc-about-intro,.wc-ui .wc-project-desc{text-wrap:balance} /* info text: even lines (browsers balance up to ~6 lines; longer text wraps normally) */\n.wc-seo{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}\n.wc-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}\n@supports (height:100svh){.wc-root{height:100svh}}\n.wc-about::-webkit-scrollbar{display:none}\n@media (max-width:1080px){.wc-about-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.wc-about-intro{grid-column:1/-1;max-width:clamp(340px,75%,560px);margin-bottom:80px}} /* stacked (same breakpoint as the project view's wider text): the intro above the client columns, 3 balanced lines from ~760px wide; 96px intro → clients (16 + 80), same as headline → intro (phones: 44 = 16 + 28) */\n@media (max-width:600px){.wc-tagline,.wc-about-links{font-size:13px}.wc-about{padding:0 13px 16px;gap:28px}.wc-about-statement{margin-bottom:16px}.wc-about-row{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:16px}.wc-about-intro{max-width:none;margin-bottom:28px}.wc-about-footer{margin-top:16px}}\n", Ph = !1;
+function Fh() {
+	if (Ph) return;
+	Ph = !0;
 	let e = document.createElement("style");
-	e.dataset.workCanvas = "", e.textContent = Mh, document.head.appendChild(e);
+	e.dataset.workCanvas = "", e.textContent = Nh, document.head.appendChild(e);
 }
-var Fh = class {
+var Ih = class {
 	constructor(e, { layouts: t, current: n, onAbout: r, onHome: i, tagline: a, hint: o, aboutHref: s = "/about", items: c = [] }) {
-		Ph(), this.mount = e, this.layouts = t;
+		Fh(), this.mount = e, this.layouts = t;
 		let l = `wc-about-${Math.random().toString(36).slice(2, 8)}`;
 		this.root = document.createElement("div"), this.root.className = "wc-ui", this.root.innerHTML = `
       <div class="wc-topbar">
-        <button type="button" class="wc-icon"><img src="${qm}" alt="" width="16" height="16"></button>
+        <button type="button" class="wc-icon"><img src="${Jm}" alt="" width="16" height="16"></button>
         <a class="wc-tagline" href="${s}" aria-expanded="false" aria-controls="${l}">
           <span>${a}</span>
           <span class="wc-arrow" aria-hidden="true"><span class="wc-arrow-track"><span class="wc-arrow-glyph">→</span><span class="wc-arrow-glyph is-next">→</span></span></span>
@@ -14337,9 +14350,9 @@ var Fh = class {
       </div>
       <div class="wc-caption" aria-hidden="true"><span class="wc-caption-inner"></span></div>
       <div class="wc-dot" aria-hidden="true"></div>
-      <section class="wc-about" id="${l}" aria-label="About" data-wc-no-input>${oh()}</section>
+      <section class="wc-about" id="${l}" aria-label="About" data-wc-no-input>${sh()}</section>
       ${o ? `<div class="wc-hint" aria-hidden="true">${o}</div>` : ""}
-    `, this.caption = this.root.querySelector(".wc-caption"), this.captionInner = this.root.querySelector(".wc-caption-inner"), this.bindDot(), this.icon = this.root.querySelector(".wc-icon"), this.tagline = this.root.querySelector(".wc-tagline"), _h(this.tagline.querySelector("span")), this.about = this.root.querySelector(".wc-about"), _h(this.about.querySelector(".wc-about-statement")), this.backdrop = new mh(e), this.peek = new dh(this, c), this.aboutOpen = !1, this.aboutPull = new gh({
+    `, this.caption = this.root.querySelector(".wc-caption"), this.captionInner = this.root.querySelector(".wc-caption-inner"), this.bindDot(), this.icon = this.root.querySelector(".wc-icon"), this.tagline = this.root.querySelector(".wc-tagline"), vh(this.tagline.querySelector("span")), this.about = this.root.querySelector(".wc-about"), vh(this.about.querySelector(".wc-about-statement")), this.backdrop = new hh(e), this.peek = new fh(this, c), this.aboutOpen = !1, this.aboutPull = new _h({
 			input: e,
 			scroller: this.about,
 			enabled: () => this.aboutOpen,
@@ -14359,7 +14372,7 @@ var Fh = class {
 				}));
 			};
 			e.addEventListener("pointerenter", r), e.addEventListener("focus", r);
-		}), this.about.querySelectorAll(".wc-about-links a[href^=\"mailto:\"]").forEach((e) => Ih(e)), this.arrowTrack = this.root.querySelector(".wc-arrow-track"), this.tagline.addEventListener("click", (e) => {
+		}), this.about.querySelectorAll(".wc-about-links a[href^=\"mailto:\"]").forEach((e) => Lh(e)), this.arrowTrack = this.root.querySelector(".wc-arrow-track"), this.tagline.addEventListener("click", (e) => {
 			e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1 || (e.preventDefault(), r?.());
 		}), this.tagline.addEventListener("pointerdown", (e) => e.stopPropagation()), this.icon.addEventListener("click", (e) => {
 			e.preventDefault(), i?.();
@@ -14372,13 +14385,13 @@ var Fh = class {
 				overwrite: !0
 			}));
 		};
-		this.icon.addEventListener("pointerenter", u), this.icon.addEventListener("focus", u), this.tagline.addEventListener("pointerenter", () => this.loopArrow()), this.tagline.addEventListener("focus", () => this.loopArrow()), this.setActive(n), e.appendChild(this.root), this.project = new Ah(this.root, {}), this.captionState = {
+		this.icon.addEventListener("pointerenter", u), this.icon.addEventListener("focus", u), this.tagline.addEventListener("pointerenter", () => this.loopArrow()), this.tagline.addEventListener("focus", () => this.loopArrow()), this.setActive(n), e.appendChild(this.root), this.project = new jh(this.root, {}), this.captionState = {
 			target: null,
 			shown: null
 		}, this.intro();
 	}
 	intro() {
-		let e = jh, t = this.icon.querySelector("img"), n = [...this.tagline.querySelectorAll(".wc-w")], r = [
+		let e = Mh, t = this.icon.querySelector("img"), n = [...this.tagline.querySelectorAll(".wc-w")], r = [
 			t,
 			...n,
 			this.arrowTrack
@@ -14427,7 +14440,7 @@ var Fh = class {
 			...n,
 			r
 		].filter(Boolean), { opacity: 0 });
-		let a = vh(t);
+		let a = yh(t);
 		this.aboutTl = K.timeline({
 			delay: .5,
 			defaults: { ease: cm.fade }
@@ -14571,7 +14584,7 @@ var Fh = class {
 		this.mount.removeEventListener("pointermove", this._onDotMove), this.project?.destroy(), this.introTl?.kill(), this.peek?.destroy(), this.backdrop?.destroy(), this.root.remove(), this.fallback?.remove();
 	}
 };
-function Ih(e) {
+function Lh(e) {
 	let t = decodeURIComponent(e.getAttribute("href").replace(/^mailto:/i, "").split("?")[0]), n = document.createElement("span");
 	n.append(...e.childNodes);
 	let r = document.createElement("span");
@@ -14593,12 +14606,12 @@ function Ih(e) {
 	};
 	e.addEventListener("click", async (n) => {
 		if (!(n.metaKey || n.ctrlKey || n.shiftKey || n.altKey)) {
-			if (n.preventDefault(), !await Lh(t)) return void (location.href = e.href);
+			if (n.preventDefault(), !await Rh(t)) return void (location.href = e.href);
 			a(!0), clearTimeout(i), i = setTimeout(() => a(!1), 1600);
 		}
 	});
 }
-async function Lh(e) {
+async function Rh(e) {
 	try {
 		return await navigator.clipboard.writeText(e), !0;
 	} catch {}
@@ -14612,13 +14625,13 @@ async function Lh(e) {
 	}
 	return t.remove(), n;
 }
-function Rh(e) {
+function zh(e) {
 	for (let { el: t } of e) (t.matches("a[href]") || t.querySelector("a[href]")) && (t.closest("[data-work-list]") ?? t).classList.add("wc-sr");
 }
 //#endregion
 //#region src/core/shaders.js
-var zh = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }\n", Bh = "\n  uniform sampler2D uTex;\n  uniform float uTexReady;  // 0 → placeholder colour, 1 → texture (tweened for a fade-in)\n  uniform vec2 uTexSize;    // texture px (only the ratio matters)\n  uniform vec2 uSize;       // tile CSS px\n  uniform float uRadius;    // corner radius, CSS px\n  uniform float uDpr;\n  uniform vec3 uBase;       // placeholder colour\n\n  uniform float uZoom;      // extra texture zoom (0 = cover)\n  uniform vec2 uShift;      // where the picture's centre sits off the frame's (frame uv; y up) — a frame growing to one side\n  uniform float uGray;      // 0..1 desaturation\n  uniform float uAlpha;\n  uniform float uReveal;    // 0..1 wipe from the bottom\n\n  varying vec2 vUv;\n\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n\n  void main() {\n    vec2 uv = vUv;\n\n    // object-fit: cover (+ optional zoom around the centre)\n    float planeA = uSize.x / max(uSize.y, 1.0);\n    float texA = uTexSize.x / max(uTexSize.y, 1.0);\n    vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);\n    vec2 tuv = (uv - 0.5 - uShift) * cover / (1.0 + uZoom) + 0.5;\n\n    vec3 col = mix(uBase, texture2D(uTex, tuv).rgb, uTexReady);\n    col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);\n\n    // rounded corners, ~1 device px of antialiasing\n    float d = sdRoundBox((uv - 0.5) * uSize, uSize * 0.5, uRadius);\n    float aa = 0.75 / uDpr;\n    float mask = 1.0 - smoothstep(-aa, aa, d);\n\n    // reveal wipe (uv.y = 0 at the bottom edge)\n    float reveal = uReveal >= 1.0 ? 1.0 : step(uv.y, uReveal);\n\n    gl_FragColor = vec4(col, uAlpha * mask * reveal);\n  }\n", Vh = (e) => e ? new URL(e, location.href).href : void 0;
-function Hh(e, t) {
+var Bh = "\n  varying vec2 vUv;\n\n  void main() {\n    vUv = uv;\n    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  }\n", Vh = "\n  uniform sampler2D uTex;\n  uniform float uTexReady;  // 0 → placeholder colour, 1 → texture (tweened for a fade-in)\n  uniform vec2 uTexSize;    // texture px (only the ratio matters)\n  uniform vec2 uSize;       // tile CSS px\n  uniform float uRadius;    // corner radius, CSS px\n  uniform float uDpr;\n  uniform vec3 uBase;       // placeholder colour\n\n  uniform float uZoom;      // extra texture zoom (0 = cover)\n  uniform vec2 uShift;      // where the picture's centre sits off the frame's (frame uv; y up) — a frame growing to one side\n  uniform float uGray;      // 0..1 desaturation\n  uniform float uAlpha;\n  uniform float uReveal;    // 0..1 wipe from the bottom\n\n  varying vec2 vUv;\n\n  float sdRoundBox(vec2 p, vec2 b, float r) {\n    vec2 q = abs(p) - b + r;\n    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n  }\n\n  void main() {\n    vec2 uv = vUv;\n\n    // object-fit: cover (+ optional zoom around the centre)\n    float planeA = uSize.x / max(uSize.y, 1.0);\n    float texA = uTexSize.x / max(uTexSize.y, 1.0);\n    vec2 cover = planeA > texA ? vec2(1.0, texA / planeA) : vec2(planeA / texA, 1.0);\n    vec2 tuv = (uv - 0.5 - uShift) * cover / (1.0 + uZoom) + 0.5;\n\n    vec3 col = mix(uBase, texture2D(uTex, tuv).rgb, uTexReady);\n    col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), uGray);\n\n    // rounded corners, ~1 device px of antialiasing\n    float d = sdRoundBox((uv - 0.5) * uSize, uSize * 0.5, uRadius);\n    float aa = 0.75 / uDpr;\n    float mask = 1.0 - smoothstep(-aa, aa, d);\n\n    // reveal wipe (uv.y = 0 at the bottom edge)\n    float reveal = uReveal >= 1.0 ? 1.0 : step(uv.y, uReveal);\n\n    gl_FragColor = vec4(col, uAlpha * mask * reveal);\n  }\n", Hh = (e) => e ? new URL(e, location.href).href : void 0;
+function Uh(e, t) {
 	let n = document.createElement("nav");
 	n.className = "wc-sr", n.setAttribute("aria-label", "Projects");
 	let r = document.createElement("ul"), i = e.map((e) => {
@@ -14633,54 +14646,54 @@ function Hh(e, t) {
 		links: i
 	};
 }
-function Uh(e, t, n) {
+function Wh(e, t, n) {
 	let r = (e.services || "").split(/\s*(?:,|→|\n)\s*/).filter(Boolean);
 	return {
 		"@type": "CreativeWork",
 		name: e.title,
 		url: t,
 		description: e.description || void 0,
-		image: n.filter(Boolean).map(Vh),
+		image: n.filter(Boolean).map(Hh),
 		keywords: r.length ? r.join(", ") : void 0,
 		creator: {
 			"@type": "Person",
 			name: "Zach Allott",
-			url: Vh("/")
+			url: Hh("/")
 		}
 	};
 }
-function Wh(e) {
+function Gh(e) {
 	let t = document.head.querySelector("script[data-wc-seo]");
 	t || (t = document.createElement("script"), t.type = "application/ld+json", t.dataset.wcSeo = "", document.head.appendChild(t)), t.textContent = JSON.stringify({
 		"@context": "https://schema.org",
 		...e
 	});
 }
-function Gh(e, t, n) {
-	Wh({
+function Kh(e, t, n) {
+	Gh({
 		"@type": "ItemList",
 		name: "Selected work",
 		itemListElement: e.map((e, r) => ({
 			"@type": "ListItem",
 			position: r + 1,
-			url: Vh(t(e.slug)),
-			item: Uh(e, Vh(t(e.slug)), [n(e)])
+			url: Hh(t(e.slug)),
+			item: Wh(e, Hh(t(e.slug)), [n(e)])
 		}))
 	});
 }
-function Kh(e, t, n) {
-	Wh(Uh(e, Vh(t), n));
+function qh(e, t, n) {
+	Gh(Wh(e, Hh(t), n));
 }
 //#endregion
 //#region src/core/engine.js
-function qh(e) {
+function Jh(e) {
 	return new Promise((t) => {
 		if (!e) return t();
 		let n = new Image();
 		n.crossOrigin = "anonymous", n.onload = n.onerror = () => t(), n.src = e;
 	});
 }
-var Jh = class {
+var Yh = class {
 	constructor(e, t = {}) {
 		this.mount = e, this.options = {
 			...Mp,
@@ -14695,9 +14708,9 @@ var Jh = class {
 	async init() {
 		let { mount: e } = this;
 		if (e.classList.add("wc-root"), this.items = km(e), !this.items.length) return console.warn("[work-canvas] no .work-item elements found — nothing to render."), this;
-		await jm(this.items), Rh(this.items), this.projectPage = !!this.pathSlug() && new Set(this.items.map((e) => e.slug)).size === 1, this._homeTitle = this.isHomePath() ? document.title : this.options.homeTitle;
+		await jm(this.items), zh(this.items), this.projectPage = !!this.pathSlug() && new Set(this.items.map((e) => e.slug)).size === 1, this._homeTitle = this.isHomePath() ? document.title : this.options.homeTitle;
 		let t = this.layoutDefs.map((e) => e.key), n = t.includes(this.options.layout) ? this.options.layout : t[0];
-		this.options.rotate && (n = (this.options.rotate === "next" ? Qh(t) ?? t[0] : $h(t)) ?? n), this.ui = new Fh(e, {
+		this.options.rotate && (n = (this.options.rotate === "next" ? $h(t) ?? t[0] : eg(t)) ?? n), this.ui = new Ih(e, {
 			layouts: this.layoutDefs,
 			current: n,
 			aboutHref: this.options.aboutPath,
@@ -14705,13 +14718,13 @@ var Jh = class {
 			onHome: () => this.canCycle ? this.nextLayout() : this.projectOpen ? this.closeProject() : this.toggleAbout(!1),
 			tagline: this.options.tagline,
 			hint: this.options.hint,
-			items: [...this.items, ...nh(e.dataset.mediaBase || document.baseURI)]
+			items: [...this.items, ...rh(e.dataset.mediaBase || document.baseURI)]
 		}), this.ui.setAbout(!1), this.ui.project.onEnd = () => {
-			sh("project_complete", {
+			ch("project_complete", {
 				project: this.openSlug,
 				project_title: this.openTitle
 			}), this.closeProject();
-		}, lh(), this.ui.onAboutEnd = () => this.toggleAbout(!1), this._onKey = (e) => {
+		}, uh(), this.ui.onAboutEnd = () => this.toggleAbout(!1), this._onKey = (e) => {
 			e.key === "Escape" && (this.projectOpen ? this.closeProject() : this.aboutOpen && this.toggleAbout(!1));
 		}, document.addEventListener("keydown", this._onKey);
 		try {
@@ -14719,7 +14732,7 @@ var Jh = class {
 		} catch (t) {
 			return console.warn("[work-canvas] WebGL unavailable, showing the static grid.", t), this.ui.renderFallback(this.items), e.classList.add("is-fallback"), this;
 		}
-		if (this.media = new Gm(this.renderer, {
+		if (this.media = new Km(this.renderer, {
 			maxVideos: this.options.maxVideos,
 			videoPolicy: this.isMobile && this.options.mobileVideo === "focused" || this.reducedMotion ? "focused" : "all",
 			downgradeAfter: this.options.downgradeAfter,
@@ -14760,11 +14773,11 @@ var Jh = class {
 		let e = [...new Map(this.mediaItems.filter((e) => e.caseStudy && e.slug).map((e) => [e.slug, e])).values()];
 		if (this.projectPage) {
 			let t = e[0];
-			t && Kh(t.project, location.href, [t.images.at(-1)?.src || t.poster, ...(t.project.gallery ?? []).map((e) => e.src)]);
+			t && qh(t.project, location.href, [t.images.at(-1)?.src || t.poster, ...(t.project.gallery ?? []).map((e) => e.src)]);
 			return;
 		}
 		if (!e.length) return;
-		let { nav: t, links: n } = Hh(e.map((e) => e.project), (e) => this.projectUrl(e));
+		let { nav: t, links: n } = Uh(e.map((e) => e.project), (e) => this.projectUrl(e));
 		n.forEach(({ a: t }, n) => {
 			let r = e[n];
 			t.addEventListener("focus", () => {
@@ -14778,7 +14791,7 @@ var Jh = class {
 					source: "link"
 				});
 			});
-		}), this.mount.appendChild(t), this.seoNav = t, Gh(e.map((e) => e.project), (e) => this.projectUrl(e), (t) => e.find((e) => e.project === t)?.poster);
+		}), this.mount.appendChild(t), this.seoNav = t, Kh(e.map((e) => e.project), (e) => this.projectUrl(e), (t) => e.find((e) => e.project === t)?.poster);
 	}
 	createRenderer() {
 		let e = new jp({
@@ -14794,8 +14807,8 @@ var Jh = class {
 			226,
 			255
 		]), 1, 1), this.emptyTexture.needsUpdate = !0, this.baseMaterial = new ml({
-			vertexShader: zh,
-			fragmentShader: Bh,
+			vertexShader: Bh,
+			fragmentShader: Vh,
 			transparent: !0,
 			depthTest: !1,
 			depthWrite: !1,
@@ -14859,14 +14872,14 @@ var Jh = class {
 		if (t || (this.aboutOpen && this.toggleAbout(!1), this.projectOpen && this.closeProject({ cycle: !1 })), this.switching || e === this.layoutKey || !this.renderer) return;
 		let r = this.layoutDefs.find((t) => t.key === e);
 		if (r) {
-			if (this.switching = !0, this.ui?.setActive(e), eg(e), this.options.syncUrl) {
+			if (this.switching = !0, this.ui?.setActive(e), tg(e), this.options.syncUrl) {
 				let t = new URL(location.href);
 				t.searchParams.set("v", e), history.replaceState(history.state, "", t);
 			}
 			this.layout && (n || await this.layout.leave(), this.layout.dispose(), this.hovered = null), this.layoutKey = e, this.layout = new r.Layout(this, {
 				...r.Layout.defaults,
 				...r.config
-			}), sh("layout_view", { layout: this.layoutName }), this.media.maxVideos = this.layout.config.maxVideos ?? this.options.maxVideos, this.layout.resize(this.viewport), await this.layout.enter({ initial: t }), this.switching = !1;
+			}), ch("layout_view", { layout: this.layoutName }), this.media.maxVideos = this.layout.config.maxVideos ?? this.options.maxVideos, this.layout.resize(this.viewport), await this.layout.enter({ initial: t }), this.switching = !1;
 		}
 	}
 	get layoutName() {
@@ -14952,9 +14965,9 @@ var Jh = class {
 			aspect: i.aspect,
 			alt: a.title
 		};
-		this.opening = !0, await qh(s.bestSrc).finally(() => this.opening = !1);
+		this.opening = !0, await Jh(s.bestSrc).finally(() => this.opening = !1);
 		let c = n && e.rect ? this.isCovered(e) : !1;
-		this.projectOpen = !0, this.openSlug = a.slug, this.openTitle = a.title, r && sh("project_open", {
+		this.projectOpen = !0, this.openSlug = a.slug, this.openTitle = a.title, r && ch("project_open", {
 			project: a.slug,
 			project_title: a.title,
 			opened_from: r,
@@ -15038,7 +15051,7 @@ var Jh = class {
 	}
 	bindInput() {
 		let e = this.mount.dataset.wheel || this.options.wheel;
-		this.input = new Km(this.mount, {
+		this.input = new qm(this.mount, {
 			clickSlop: this.options.clickSlop,
 			wheel: e
 		});
@@ -15093,33 +15106,33 @@ var Jh = class {
 	destroy() {
 		this.stop(), K.killTweensOf(this), this.resizeObserver?.disconnect(), this.intersection?.disconnect(), document.removeEventListener("visibilitychange", this._onVisibility), document.removeEventListener("keydown", this._onKey), clearTimeout(this._aboutTimer), window.removeEventListener("pageshow", this._onPageShow), window.removeEventListener("popstate", this._onPopState), this.seoNav?.remove(), clearTimeout(this._projectTimer), this._reducedQuery.removeEventListener?.("change", this._onReducedChange), this._focusHandlers?.forEach((e) => e()), this.input?.destroy(), this.layout?.dispose(), this.media?.dispose(), this.geometry?.dispose(), this.baseMaterial?.dispose(), this.emptyTexture?.dispose(), this.renderer && (this.renderer.dispose(), this.renderer.forceContextLoss(), this.renderer.domElement.remove()), this.ui?.destroy(), this.mount.classList.remove("wc-root", "is-ready", "is-fallback", "is-hovering-tile", "is-dragging");
 	}
-}, Yh = "work-canvas:last-version", Xh = /(?:^|;)wc-last=([^;]*)/;
-function Zh() {
+}, Xh = "work-canvas:last-version", Zh = /(?:^|;)wc-last=([^;]*)/;
+function Qh() {
 	try {
-		let e = localStorage.getItem(Yh);
+		let e = localStorage.getItem(Xh);
 		if (e) return e;
 	} catch {}
-	return Xh.exec(window.name || "")?.[1] ?? null;
-}
-function Qh(e) {
-	let t = e.indexOf(Zh());
-	return t >= 0 ? e[(t + 1) % e.length] : null;
+	return Zh.exec(window.name || "")?.[1] ?? null;
 }
 function $h(e) {
-	let t = Zh(), n = e.length > 1 ? e.filter((e) => e !== t) : e;
-	return n[Math.floor(Math.random() * n.length)] ?? null;
+	let t = e.indexOf(Qh());
+	return t >= 0 ? e[(t + 1) % e.length] : null;
 }
 function eg(e) {
+	let t = Qh(), n = e.length > 1 ? e.filter((e) => e !== t) : e;
+	return n[Math.floor(Math.random() * n.length)] ?? null;
+}
+function tg(e) {
 	try {
-		localStorage.setItem(Yh, e);
+		localStorage.setItem(Xh, e);
 	} catch {}
 	try {
-		window.name = `${(window.name || "").replace(new RegExp(Xh.source, "g"), "")};wc-last=${e}`;
+		window.name = `${(window.name || "").replace(new RegExp(Zh.source, "g"), "")};wc-last=${e}`;
 	} catch {}
 }
 //#endregion
 //#region src/core/tile.js
-var tg = class {
+var ng = class {
 	constructor(e, t, n = 0) {
 		this.engine = e, this.item = t, this.index = n, this.x = 0, this.y = 0, this.w = 100, this.h = 100, this.z = 0, this.rotation = 0, this.alpha = 1, this.reveal = 1, this.gray = 0, this.zoom = 0, this.priority = 0, this.interactive = !0, this.hover = 0, this.texReady = 0, this.onScreen = !1, this.override = null, this.material = e.baseMaterial.clone(), this.uniforms = this.material.uniforms, this.uniforms.uSize.value = new Y(100, 100), this.uniforms.uShift.value = new Y(0, 0), this.uniforms.uTexSize.value = t.texSize, this.mesh = new Gc(e.geometry, this.material), this.mesh.frustumCulled = !1, this.mesh.userData.tile = this, e.scene.add(this.mesh);
 	}
@@ -15159,36 +15172,36 @@ var tg = class {
 };
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/typeof.js
-function ng(e) {
+function rg(e) {
 	"@babel/helpers - typeof";
-	return ng = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
+	return rg = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
 		return typeof e;
 	} : function(e) {
 		return e && typeof Symbol == "function" && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
-	}, ng(e);
+	}, rg(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/toPrimitive.js
-function rg(e, t) {
-	if (ng(e) != "object" || !e) return e;
+function ig(e, t) {
+	if (rg(e) != "object" || !e) return e;
 	var n = e[Symbol.toPrimitive];
 	if (n !== void 0) {
 		var r = n.call(e, t || "default");
-		if (ng(r) != "object") return r;
+		if (rg(r) != "object") return r;
 		throw TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return (t === "string" ? String : Number)(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/toPropertyKey.js
-function ig(e) {
-	var t = rg(e, "string");
-	return ng(t) == "symbol" ? t : t + "";
+function ag(e) {
+	var t = ig(e, "string");
+	return rg(t) == "symbol" ? t : t + "";
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.151.0/helpers/esm/defineProperty.js
-function ag(e, t, n) {
-	return (t = ig(t)) in e ? Object.defineProperty(e, t, {
+function og(e, t, n) {
+	return (t = ag(t)) in e ? Object.defineProperty(e, t, {
 		value: n,
 		enumerable: !0,
 		configurable: !0,
@@ -15197,7 +15210,7 @@ function ag(e, t, n) {
 }
 //#endregion
 //#region src/core/layout.js
-var og = (e) => Math.min(1, Math.max(0, e)), sg = class {
+var sg = (e) => Math.min(1, Math.max(0, e)), cg = class {
 	constructor(e, t) {
 		this.engine = e, this.config = t, this.tiles = [], this.featured = null, this.progress = 0, this.introEase = K.parseEase(t.easing ?? "none");
 	}
@@ -15211,7 +15224,7 @@ var og = (e) => Math.min(1, Math.max(0, e)), sg = class {
 		return this.engine.reducedMotion;
 	}
 	makeTiles(e) {
-		return this.tiles = e.map((e, t) => new tg(this.engine, e, t)), this.tiles;
+		return this.tiles = e.map((e, t) => new ng(this.engine, e, t)), this.tiles;
 	}
 	repeatItems(e) {
 		let t = [];
@@ -15220,7 +15233,7 @@ var og = (e) => Math.min(1, Math.max(0, e)), sg = class {
 	}
 	tileProgress(e) {
 		let t = this.leaving || this.reduced ? 0 : this.config.stagger ?? .3;
-		return this.introEase(og(this.progress * (1 + t) - e * t));
+		return this.introEase(sg(this.progress * (1 + t) - e * t));
 	}
 	applyTransition(e, t) {
 		let n = this.tileProgress(t);
@@ -15264,7 +15277,7 @@ var og = (e) => Math.min(1, Math.max(0, e)), sg = class {
 	}
 	centerScore(e) {
 		let t = (e.x + e.w / 2 - this.vp.width / 2) / this.vp.width, n = (e.y + e.h / 2 - this.vp.height / 2) / this.vp.height;
-		return og(1 - Math.hypot(t, n)) * .99 + .01;
+		return sg(1 - Math.hypot(t, n)) * .99 + .01;
 	}
 	resize() {}
 	update() {}
@@ -15272,10 +15285,10 @@ var og = (e) => Math.min(1, Math.max(0, e)), sg = class {
 		K.killTweensOf(this), this.fadeCanvas(1), this.tiles.forEach((e) => e.dispose()), this.tiles = [];
 	}
 };
-ag(sg, "defaults", {});
+og(cg, "defaults", {});
 //#endregion
 //#region src/core/sizing.js
-function cg(e, t, n = 1) {
+function lg(e, t, n = 1) {
 	let r = n * 2654435769, i = () => {
 		r = r + 1831565813 | 0;
 		let e = Math.imul(r ^ r >>> 15, 1 | r);
@@ -15290,7 +15303,7 @@ function cg(e, t, n = 1) {
 	}
 	return a;
 }
-function lg(e, t, { minW: n, maxW: r, maxH: i }) {
+function ug(e, t, { minW: n, maxW: r, maxH: i }) {
 	let a = t, o = a * e;
 	return o > r && ([o, a] = [r, r / e]), o < n && ([o, a] = [n, n / e]), a > i && (a = i), {
 		w: o,
@@ -15299,7 +15312,7 @@ function lg(e, t, { minW: n, maxW: r, maxH: i }) {
 }
 //#endregion
 //#region src/core/spring.js
-var ug = class {
+var dg = class {
 	constructor(e = 6, { maxLead: t = Infinity } = {}) {
 		this.omega = e, this.maxLead = t, this.x = 0, this.v = 0, this.target = 0;
 	}
@@ -15311,9 +15324,9 @@ var ug = class {
 		for (let e = 0; e < n; e++) this.v += (t * t * (this.target - this.x) - 2 * t * this.v) * r, this.x += this.v * r;
 		return this.x;
 	}
-}, dg = class {
+}, fg = class {
 	constructor(e) {
-		this.config = e, this.spring = new ug(e.omega), this.last = null, this.speed = 0;
+		this.config = e, this.spring = new dg(e.omega), this.last = null, this.speed = 0;
 	}
 	update(e, t, n = !1) {
 		let r = this.config;
@@ -15322,7 +15335,7 @@ var ug = class {
 		return this.spring.target = i, this.spring.omega = i < this.spring.x ? r.closing ?? r.omega : r.omega, Math.max(0, this.spring.update(t));
 	}
 };
-function fg(e, t, n, r, i) {
+function pg(e, t, n, r, i) {
 	if (!(r > .05) || !e.length) return;
 	let a = t === "x" ? "w" : "h", o = (e) => e[a] + n, s = e.findIndex((e) => e[t] <= i && i < e[t] + o(e));
 	if (s < 0) return;
@@ -15334,7 +15347,7 @@ function fg(e, t, n, r, i) {
 }
 //#endregion
 //#region src/layouts/filmstrip.js
-var pg = {
+var mg = {
 	heights: [
 		215,
 		250,
@@ -15400,9 +15413,9 @@ var pg = {
 	enterDuration: .8,
 	leaveDuration: .25,
 	captionInset: [20, 12]
-}, mg = 2, hg = class extends sg {
+}, hg = 2, gg = class extends cg {
 	constructor(e, t) {
-		super(e, t), this.velocity = 0, this.scrolled = new ug(t.scroll.omega, { maxLead: t.scroll.maxLead }), this.rows = Array.from({ length: mg }, (e, n) => {
+		super(e, t), this.velocity = 0, this.scrolled = new dg(t.scroll.omega, { maxLead: t.scroll.maxLead }), this.rows = Array.from({ length: hg }, (e, n) => {
 			let r = t.rowDirections?.[n] ?? 1;
 			return {
 				tiles: [],
@@ -15410,7 +15423,7 @@ var pg = {
 				target: 0,
 				dir: r,
 				drift: -t.idleSpeed * r,
-				spread: new dg(t.spread)
+				spread: new fg(t.spread)
 			};
 		});
 	}
@@ -15419,7 +15432,7 @@ var pg = {
 		this.s = n, this.engine.scale = n, this.gapPx = t.gap;
 		let r = this.vertical = !!t.vertical && e.height > e.width, i, a, o;
 		if (r) {
-			let n = t.vertical, r = (e.width - 2 * n.inset - t.gap) / mg, s = r * n.minHeight, c = r * n.maxHeight;
+			let n = t.vertical, r = (e.width - 2 * n.inset - t.gap) / hg, s = r * n.minHeight, c = r * n.maxHeight;
 			a = n.widths.map((e) => e * r), i = (e, t) => {
 				let n = t, i = n / e;
 				return i < s && (n = Math.min(r, s * e), i = n / e), {
@@ -15428,16 +15441,16 @@ var pg = {
 				};
 			}, o = c;
 		} else {
-			let r = (e.height - t.topInset * n - t.bottomInset - t.gap) / mg, s = Math.min(1, r / (Math.max(...t.heights) * n)), c = Math.min(t.maxWidth * n * s, e.width * t.mobileMaxWidth), l = Math.min(t.minWidth * n * s, c), u = Math.max(...t.heights) * n * s;
-			a = t.heights.map((e) => e * n * s), i = (e, t) => lg(e, t, {
+			let r = (e.height - t.topInset * n - t.bottomInset - t.gap) / hg, s = Math.min(1, r / (Math.max(...t.heights) * n)), c = Math.min(t.maxWidth * n * s, e.width * t.mobileMaxWidth), l = Math.min(t.minWidth * n * s, c), u = Math.max(...t.heights) * n * s;
+			a = t.heights.map((e) => e * n * s), i = (e, t) => ug(e, t, {
 				minW: l,
 				maxW: c,
 				maxH: u
 			}), o = c, this.rowHeight = u;
 		}
-		let s = (e) => r ? e.h : e.w, c = r ? e.height : e.width, l = Array.from({ length: mg }, (e, t) => this.items.filter((e, n) => n % mg === t)), u = c + 2 * (o + this.gapPx), d = l.map((e, n) => {
+		let s = (e) => r ? e.h : e.w, c = r ? e.height : e.width, l = Array.from({ length: hg }, (e, t) => this.items.filter((e, n) => n % hg === t)), u = c + 2 * (o + this.gapPx), d = l.map((e, n) => {
 			if (!e.length) return 0;
-			let r = cg(e.length, a.length, t.seed + n), o = e.reduce((e, t, n) => e + s(i(t.aspect, a[r[n]])) + this.gapPx, 0);
+			let r = lg(e.length, a.length, t.seed + n), o = e.reduce((e, t, n) => e + s(i(t.aspect, a[r[n]])) + this.gapPx, 0);
 			return e.length * Math.max(1, Math.ceil(u / o));
 		});
 		if (d.some((e, t) => e !== this.rows[t].tiles.length)) {
@@ -15454,7 +15467,7 @@ var pg = {
 			});
 		}
 		this.rows.forEach((o, c) => {
-			let l = cg(o.tiles.length, a.length, t.seed + c), u = 0;
+			let l = lg(o.tiles.length, a.length, t.seed + c), u = 0;
 			o.tiles.forEach((e, t) => {
 				let n = i(e.item.aspect, a[l[t]]);
 				e.w = n.w, e.h = n.h, e.baseX = u, u += s(n) + this.gapPx;
@@ -15477,7 +15490,7 @@ var pg = {
 			d.tiles.forEach((e) => {
 				let t = d.start + e.baseX + p;
 				e[i] = ((t + c) % h + h) % h - c;
-			}), fg(d.tiles, i, this.gapPx, m, s);
+			}), pg(d.tiles, i, this.gapPx, m, s);
 			let g = this.reduced || this.engine.touch ? 0 : t.hover.expand ?? 0;
 			if (g) for (let e of d.tiles) {
 				let t = e.item.caseStudy ? g * e.hover : 0;
@@ -15509,10 +15522,10 @@ var pg = {
 		n && (n.target += this.vertical ? this.vp.height / 2 - (t.y + t.h / 2) : this.vp.width / 2 - (t.x + t.w / 2));
 	}
 };
-ag(hg, "defaults", pg), ag(hg, "label", "Filmstrip");
+og(gg, "defaults", mg), og(gg, "label", "Filmstrip");
 //#endregion
 //#region src/layouts/deck.js
-var gg = {
+var _g = {
 	heights: [
 		300,
 		350,
@@ -15602,7 +15615,7 @@ var gg = {
 	enterDuration: .7,
 	leaveDuration: .25,
 	captionInset: [16, 12]
-}, _g = class extends sg {
+}, vg = class extends cg {
 	constructor(e, t) {
 		super(e, t), this.makeTiles(this.items);
 		let n = this.tiles.length;
@@ -15618,9 +15631,9 @@ var gg = {
 		this.s = n, this.engine.scale = n;
 		let r = Math.min(t.maxWidth * n, e.width * t.mobileMaxWidth), i = Math.min(t.minWidth * n, r);
 		this.k = r / t.maxWidth;
-		let a = Math.max(...t.heights) * this.k, o = cg(this.tiles.length, t.heights.length, t.seed);
+		let a = Math.max(...t.heights) * this.k, o = lg(this.tiles.length, t.heights.length, t.seed);
 		this.tiles.forEach((e, n) => {
-			let { w: s, h: c } = lg(e.item.aspect, t.heights[o[n]] * this.k, {
+			let { w: s, h: c } = ug(e.item.aspect, t.heights[o[n]] * this.k, {
 				minW: i,
 				maxW: r,
 				maxH: a
@@ -15727,10 +15740,10 @@ var gg = {
 		this.finishFade(), super.dispose();
 	}
 };
-ag(_g, "defaults", gg), ag(_g, "label", "Deck");
+og(vg, "defaults", _g), og(vg, "label", "Deck");
 //#endregion
 //#region src/layouts/universe.js
-var vg = {
+var yg = {
 	tileWidth: 400,
 	field: {
 		width: 4269,
@@ -15934,7 +15947,7 @@ var vg = {
 	enterDuration: 1.4,
 	leaveDuration: .25,
 	captionInset: [20, 12]
-}, yg = (e) => e.slug || e.title, bg = class extends sg {
+}, bg = (e) => e.slug || e.title, xg = class extends cg {
 	constructor(e, t) {
 		super(e, t), this.pan = {
 			x: 0,
@@ -15946,7 +15959,7 @@ var vg = {
 			x: 0,
 			y: 0
 		};
-		let n = () => new ug(t.scroll.omega, { maxLead: t.scroll.maxLead });
+		let n = () => new dg(t.scroll.omega, { maxLead: t.scroll.maxLead });
 		this.scrolled = {
 			x: n(),
 			y: n()
@@ -15966,14 +15979,14 @@ var vg = {
 					x: i + 200 + s % l * t.field.width,
 					y: a + o / 2 + Math.floor(s / l) * t.field.height
 				};
-			}), a = Math.hypot(e.width, e.height) / o, s = xm(n, i, yg, {
+			}), a = Math.hypot(e.width, e.height) / o, s = xm(n, i, bg, {
 				x: t.field.width * l,
 				y: t.field.height * u
 			}, a);
 			this.makeTiles(s.map((e) => i[e]));
 		}
 		this.tiles.forEach((e) => e.inView = !1);
-		let f = cg(r, t.layers.pace.length, t.seed);
+		let f = lg(r, t.layers.pace.length, t.seed);
 		this.period = {
 			x: t.field.width * l * o,
 			y: t.field.height * u * o
@@ -16024,10 +16037,10 @@ var vg = {
 		this.frame++;
 		for (let e of y) {
 			if (v.has(e.item)) {
-				let t = new Set([...v].map(yg)), n = null, r = null;
+				let t = new Set([...v].map(bg)), n = null, r = null;
 				for (let e of this.items) {
 					if (v.has(e)) continue;
-					let i = [+!t.has(yg(e)), -(this.seenAt.get(e) ?? -1)];
+					let i = [+!t.has(bg(e)), -(this.seenAt.get(e) ?? -1)];
 					(!r || i[0] > r[0] || i[0] === r[0] && i[1] > r[1]) && ([n, r] = [e, i]);
 				}
 				n && this.give(e, n);
@@ -16066,30 +16079,30 @@ var vg = {
 		this.scrolled.x.target += (this.vp.width / 2 - (t.x + t.w / 2)) / t.pace, this.scrolled.y.target += (this.vp.height / 2 - (t.y + t.h / 2)) / t.pace;
 	}
 };
-ag(bg, "defaults", vg), ag(bg, "label", "Universe");
+og(xg, "defaults", yg), og(xg, "label", "Universe");
 //#endregion
 //#region src/main.js
-var xg = [
+var Sg = [
 	{
 		key: "e",
 		name: "Universe",
-		Layout: bg,
-		config: vg
+		Layout: xg,
+		config: yg
 	},
 	{
 		key: "b",
 		name: "Deck",
-		Layout: _g,
-		config: gg
+		Layout: vg,
+		config: _g
 	},
 	{
 		key: "a",
 		name: "Filmstrip",
-		Layout: hg,
-		config: pg
+		Layout: gg,
+		config: mg
 	}
 ];
-async function Sg(e, t = {}) {
+async function Cg(e, t = {}) {
 	if (e.__workCanvas) return e.__workCanvas;
 	let n = e.dataset, r = new URLSearchParams(location.search), i = r.get("v");
 	if (i && !(t.syncUrl ?? n.syncUrl === "true")) {
@@ -16097,7 +16110,7 @@ async function Sg(e, t = {}) {
 		let e = new URL(location.href);
 		e.search = r.toString(), history.replaceState(history.state, "", e);
 	}
-	let a = parseInt(t.maxVideos ?? n.maxVideos, 10), o = xg.map((e) => ({
+	let a = parseInt(t.maxVideos ?? n.maxVideos, 10), o = Sg.map((e) => ({
 		...e,
 		config: {
 			...e.config,
@@ -16105,7 +16118,7 @@ async function Sg(e, t = {}) {
 		}
 	}));
 	a && o.forEach((e) => e.config.maxVideos = a);
-	let s = new Jh(e, {
+	let s = new Yh(e, {
 		layouts: o,
 		layout: t.layout ?? i ?? n.layout ?? "a",
 		rotate: t.rotate ?? ((t.layout ?? i) || n.rotate === "false" ? !1 : n.rotate === "random" ? "random" : "next"),
@@ -16120,14 +16133,14 @@ async function Sg(e, t = {}) {
 	});
 	return e.__workCanvas = s, await s.init(), s;
 }
-function Cg() {
-	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Sg(e));
+function wg() {
+	document.querySelectorAll("#work-canvas, [data-work-canvas]").forEach((e) => Cg(e));
 }
 typeof window < "u" && (window.WorkCanvas = {
-	mount: Sg,
-	LAYOUTS: xg
-}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", Cg, { once: !0 }) : Cg());
+	mount: Cg,
+	LAYOUTS: Sg
+}, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", wg, { once: !0 }) : wg());
 //#endregion
-export { xg as LAYOUTS, Jh as WorkCanvas, Sg as mount };
+export { Sg as LAYOUTS, Yh as WorkCanvas, Cg as mount };
 
 //# sourceMappingURL=work-canvas.js.map
