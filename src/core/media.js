@@ -79,6 +79,24 @@ function canPlay(type) {
   return probe.canPlayType(type) !== '';
 }
 
+/**
+ * Calls `fn` once `video` has a decoded frame to show: its next presented frame (requestVideoFrameCallback), or
+ * where that's missing, the first timeupdate past the start with a current frame.
+ */
+export function afterFirstFrame(video, fn) {
+  if ('requestVideoFrameCallback' in video) {
+    video.requestVideoFrameCallback(() => fn());
+    return;
+  }
+  const check = () => {
+    if (video.readyState < video.HAVE_CURRENT_DATA || video.currentTime <= 0) return;
+    video.removeEventListener('timeupdate', check);
+    fn();
+  };
+  video.addEventListener('timeupdate', check);
+  check();
+}
+
 const AV1 = 'video/webm; codecs="av01.0.05M.08"';
 let av1;
 /**
@@ -345,16 +363,27 @@ export class MediaManager {
       source.type = s.type;
       v.appendChild(source);
     }
-    // Swap poster → live video once real frames are flowing.
+    // Swap poster → live video once a frame has been presented, and upload it before any tile samples it.
+    // `playing` comes before that: a VideoTexture swapped in then is still empty (three uploads it on its first
+    // video frame callback), so the tile drew black for a frame or two as each video started.
+    let waiting = false;
     v.addEventListener('playing', () => {
-      if (!item.videoTexture) {
-        item.videoTexture = new THREE.VideoTexture(v);
-        item.videoTexture.colorSpace = THREE.NoColorSpace;
-        item.videoTexture.minFilter = THREE.LinearFilter;
-        item.videoTexture.generateMipmaps = false;
-      }
-      item.playing = true;
-      item.setTexture(item.videoTexture, v.videoWidth, v.videoHeight);
+      if (item.playing || waiting) return;
+      waiting = true;
+      afterFirstFrame(v, () => {
+        waiting = false;
+        if (item.video !== v) return; // disposed meanwhile
+        if (!item.videoTexture) {
+          item.videoTexture = new THREE.VideoTexture(v);
+          item.videoTexture.colorSpace = THREE.NoColorSpace;
+          item.videoTexture.minFilter = THREE.LinearFilter;
+          item.videoTexture.generateMipmaps = false;
+        }
+        item.videoTexture.needsUpdate = true; // this frame, not the next one
+        this.renderer.initTexture(item.videoTexture);
+        item.playing = true;
+        item.setTexture(item.videoTexture, v.videoWidth, v.videoHeight);
+      });
     });
     item.video = v;
   }
